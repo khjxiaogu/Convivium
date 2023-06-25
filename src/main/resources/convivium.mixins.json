@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "1.7",
+  "package": "com.teammoeg.convivium.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "convivium.refmap.json",
+  "mixins": [
+
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

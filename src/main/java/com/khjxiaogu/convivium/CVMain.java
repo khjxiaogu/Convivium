@@ -24,12 +24,12 @@ import org.apache.logging.log4j.Logger;
 import com.khjxiaogu.convivium.client.CVParticles;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 import com.khjxiaogu.convivium.network.PacketHandler;
+import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeMod;
@@ -49,8 +49,8 @@ public class CVMain {
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 	public static final String BOOK_NBT_TAG=CVMain.MODID+":book_given";
 	public static DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
-	public static RegistryObject<CreativeModeTab> main=TABS.register("main",()->CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.SPAWN_EGGS).icon(()->new ItemStack(Items.AIR)).title(Utils.translate("itemGroup.convivium")).build());
-	public static RegistryObject<CreativeModeTab> foods=TABS.register("beverage", ()->CreativeModeTab.builder().withTabsBefore(CVMain.rl("main")).icon(()->new ItemStack(Items.AIR)).title(Utils.translate("itemGroup.convivium_beverage")).build());
+	public static RegistryObject<CreativeModeTab> main=TABS.register("main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(Items.AIR)).title(Utils.translate("itemGroup.convivium")).build());
+	
 	public static ResourceLocation rl(String path) {
 		return new ResourceLocation(MODID, path);
 	}

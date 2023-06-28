@@ -4,11 +4,11 @@
 	"ambientocclusion": false,
 	"render_type": "cutout",
 	"textures": {
-		"0": "caupona:block/camellia_leaves_side",
-		"1": "caupona:block/camellia_leaves_top",
-		"2": "caupona:block/camellia_wood",
-		"3": "caupona:block/camellia_leaves_bottom",
-		"particle": "caupona:block/camellia_leaves_side"
+		"0": "convivium:block/camellia_leaves_side",
+		"1": "convivium:block/camellia_leaves_top",
+		"2": "convivium:block/camellia_wood",
+		"3": "convivium:block/camellia_leaves_bottom",
+		"particle": "convivium:block/camellia_leaves_side"
 	},
 	"elements": [
 		{

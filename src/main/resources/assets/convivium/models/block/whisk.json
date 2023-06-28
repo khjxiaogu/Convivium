@@ -4,8 +4,8 @@
 	"ambientocclusion": false,
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "caupona:block/whisk",
-		"particle": "caupona:block/whisk"
+		"0": "convivium:block/whisk",
+		"particle": "convivium:block/whisk"
 	},
 	"elements": [
 		{

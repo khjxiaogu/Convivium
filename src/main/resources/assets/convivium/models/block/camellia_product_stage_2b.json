@@ -4,8 +4,8 @@
 	"ambientocclusion": false,
 	"render_type": "cutout",
 	"textures": {
-		"0": "caupona:block/camellia_flower",
-		"particle": "caupona:block/camellia_flower"
+		"0": "convivium:block/camellia_flower",
+		"particle": "convivium:block/camellia_flower"
 	},
 	"elements": [
 		{

@@ -2,6 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube",
 	"ambientocclusion": false,
+	"render_type": "cutout",
 	"textures": {
 		"0": "convivium:block/camellia_shoots",
 		"particle": "convivium:block/camellia_shoots"

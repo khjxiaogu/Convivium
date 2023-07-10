@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM
+ * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -18,6 +18,9 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
+import com.teammoeg.caupona.data.CPRecipeSerializer;
+
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -32,6 +35,7 @@ public class CVRecipes {
 		/*StewCookingRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("cooking",
 				() -> new CPRecipeSerializer<StewCookingRecipe>(StewCookingRecipe::new, StewCookingRecipe::new,
 						StewCookingRecipe::write));*/
+		TasteRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("taste",()->new CPRecipeSerializer<>(TasteRecipe::new,TasteRecipe::new,TasteRecipe::write));
 	}
 
 	static {

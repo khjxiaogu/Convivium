@@ -27,8 +27,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'maven-publish'
+apply plugin: 'eclipse'
 
-group = 'com.teammoeg'
+group = 'com.khjxiaogu'
 version = "${minecraft_version}-${mod_version}"
 archivesBaseName = 'convivium'
 compileJava.options.encoding = "UTF-8"
@@ -145,6 +146,14 @@ repositories {
     maven {
         url "https://maven.architectury.dev/"
     }
+    //My own maven
+    maven {
+    	url "https://www.khjxiaogu.com/maven"
+    	content {
+            includeGroup "com.teammoeg"
+            includeGroup "com.khjxiaogu"
+        }
+    }
     maven {
         url "https://maven.saps.dev/minecraft"
         content {
@@ -152,6 +161,7 @@ repositories {
             includeGroup "dev.latvian.mods"
         }
     }
+    
 }
 
 dependencies {
@@ -175,7 +185,7 @@ dependencies {
 	
 	//implementation fg.deobf("curse.maven:crock-pot-404523:3782459")
 	
-	implementation fg.deobf("curse.maven:caupona-656147:4608792")
+	implementation "com.teammoeg:Caupona:1.20.1-0.4.1:deobf"
 
 	
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78:api")
@@ -184,6 +194,12 @@ dependencies {
     // FG5 requires 0.8.3
     annotationProcessor "org.spongepowered:mixin:0.8.3:processor"
     testAnnotationProcessor "org.spongepowered:mixin:0.8.3:processor"
+}
+
+eclipse {
+    classpath {
+       downloadSources=true
+    }
 }
 
 jar {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM
+ * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *

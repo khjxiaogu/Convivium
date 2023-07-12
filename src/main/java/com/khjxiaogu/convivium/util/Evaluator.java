@@ -559,11 +559,16 @@ public class Evaluator{
 	            }
 	            if(!param.isEmpty()) {
 	            	Function<Node[], Node> prod=functions.get(func);
-	            	x=prod.apply(param.toArray(new Node[0]));
-		            if(prod==null)
+	            	if(prod==null)
 		            	throw new RuntimeException("Unknown function: " + func);
+	            	x=prod.apply(param.toArray(new Node[0]));
+		            
 	            }else {
-	            	x=new VarNode(func);
+	            	Double d=constants.get(func);
+	            	if(d!=null)
+	            		x=new ConstNode(d);
+	            	else
+	            		x=new VarNode(func);
 	            }
 	        } else {
 	            throw new RuntimeException("Unexpected: " + (char)ch);
@@ -595,6 +600,6 @@ public class Evaluator{
 	    	constants.put("E",Math.E);
 	    }
 	    public static void main(String[] args) {
-	    	System.out.println(eval("sin(v+1+2+3*5*n)*(v*2*5*8*1)*cos(90)").simplify());
+	    	System.out.println(eval("sin(v+1+2+3*5*n)*(v*2*5*8*1)*cos(90)+PI").simplify());
 	    }
 	}

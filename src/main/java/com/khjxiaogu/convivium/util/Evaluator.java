@@ -1,20 +1,25 @@
 package com.khjxiaogu.convivium.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import net.minecraft.world.level.lighting.BlockLightEngine;
+import net.minecraft.util.Mth;
 
 public class Evaluator{
+	public static Map<String,Function<Node[],Node>> functions=new HashMap<>();
+	public static Map<String,Double> constants=new HashMap<>();
 		public interface Node{
 			double eval(Map<String,Double> env);
 			boolean isPrimary();
 			Node simplify();
 		}
+		
 		static abstract class BiNode implements Node{
 			Node left;
 			Node right;
@@ -369,6 +374,55 @@ public class Evaluator{
 				return name + "(" + nested + ")";
 			}
 		}
+		static class FuncCallNode implements Node{
+			Function<double[],Double> calc;
+			Node[] nested;
+			String name;
+			boolean isDeterministic;
+			public FuncCallNode(Node[] nested,String name,Function<double[],Double> calc,boolean isDeterministic) {
+				this.calc = calc;
+				this.nested = nested;
+				this.name=name;
+				this.isDeterministic=isDeterministic;
+			}
+
+			@Override
+			public double eval(Map<String, Double> env) {
+				double[] par=new double[nested.length];
+				for(int i=0;i<par.length;i++) {
+					par[i]=nested[i].eval(env);
+				}
+				return calc.apply(par);
+			}
+			
+			@Override
+			public boolean isPrimary() {
+				if(!isDeterministic)
+					return false;
+				boolean isPrime=true;
+				for(int i=0;i<nested.length;i++) {
+					isPrime&=nested[i].isPrimary();
+				}
+				return isPrime;
+			}
+			
+			@Override
+			public Node simplify() {
+				for(int i=0;i<nested.length;i++) {
+					nested[i]=nested[i].simplify();
+				}
+				if(isPrimary()) {
+					return new ConstNode(eval(null));
+				}
+				return this;
+			}
+
+			@Override
+			public String toString() {
+				
+				return name + "(" + Arrays.toString(nested) + ")";
+			}
+		}
 		static class ConstNode implements Node{
 			double val;
 
@@ -484,26 +538,30 @@ public class Evaluator{
 	        } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
 	            while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
 	            x = new ConstNode(Double.parseDouble(str.substring(startPos, this.pos)));
-	        } else if (ch >= 'a' && ch <= 'z') { // functions
-	            while (ch >= 'a' && ch <= 'z') nextChar();
+	        } else if ((ch >= 'a' && ch <= 'z')||(ch >= 'A' && ch <= 'Z')) { // functions
+	            while ((ch >= 'a' && ch <= 'z')||(ch >= 'A' && ch <= 'Z')||(ch >= '0' && ch <= '9')) nextChar();
 	            String func = str.substring(startPos, this.pos);
 	            //System.out.println(String.valueOf(Character.toString(str.charAt(pos))));
 	            //this.pos--;
+	            List<Node> param=new ArrayList<>();
 	            if(eat('(')) {
 	            	//this.pos--;
 	            	//this.pos--;
-	            	x = parseExpression();
-	            	eat(')');
+	            	do {
+	            	param.add(parseExpression());
+	            	}while(eat(','));
+	            	if(!eat(')')) {
+	            		throw new RuntimeException("Expect ')' at end of func: " + func);
+	            	}
 	            	//System.out.println(str.substring(pos));
 	            	//System.out.println(eat(')'));
 	            	//eat(')');
 	            }
-	            if(x!=null) {
-		            if (func.equals("sqrt")) x = new CalcNode(x,"sqrt",v->Math.sqrt(v));
-		            else if (func.equals("sin")) x = new CalcNode(x,"sin",v->Math.sin(Math.toRadians(v)));
-		            else if (func.equals("cos")) x = new CalcNode(x,"cos",v->Math.cos(Math.toRadians(v)));
-		            else if (func.equals("tan")) x = new CalcNode(x,"tan",v->Math.tan(Math.toRadians(v)));
-		            else throw new RuntimeException("Unknown function: " + func);
+	            if(!param.isEmpty()) {
+	            	Function<Node[], Node> prod=functions.get(func);
+	            	x=prod.apply(param.toArray(new Node[0]));
+		            if(prod==null)
+		            	throw new RuntimeException("Unknown function: " + func);
 	            }else {
 	            	x=new VarNode(func);
 	            }
@@ -515,7 +573,28 @@ public class Evaluator{
 	        if (eat('%')) x = new BiCalcNode(x, parseFactor(),BiCalcNode.mod); // modular
 	        return x;
 	    }
+	    static {
+	    	functions.put("sqrt",x->new FuncCallNode(x,"sqrt",v->Math.sqrt(v[0]),true));
+	    	functions.put("sin",x->new FuncCallNode(x,"sin",v->Math.sin(v[0]),true));
+	    	functions.put("cos",x->new FuncCallNode(x,"cos",v->Math.cos(v[0]),true));
+	    	functions.put("tan",x->new FuncCallNode(x,"tan",v->Math.tan(v[0]),true));
+	    	functions.put("sinf",x->new FuncCallNode(x,"sinf",v->(double)Mth.sin((float) v[0]),true));
+	    	functions.put("cosf",x->new FuncCallNode(x,"cosf",v->(double)Mth.cos((float)v[0]),true));
+	    	functions.put("rad",x->new FuncCallNode(x,"rad",v->Math.toRadians(v[0]),true));
+	    	functions.put("deg",x->new FuncCallNode(x,"deg",v->Math.toDegrees(v[0]),true));
+	    	functions.put("abs",x->new FuncCallNode(x,"abs",v->Math.abs(v[0]),true));
+	    	functions.put("ceil",x->new FuncCallNode(x,"ceil",v->Math.ceil(v[0]),true));
+	    	functions.put("floor",x->new FuncCallNode(x,"floor",v->Math.floor(v[0]),true));
+	    	functions.put("round",x->new FuncCallNode(x,"round",v->(double)Math.round(v[0]),true));
+	    	functions.put("log",x->new FuncCallNode(x,"log",v->Math.log(v[0]),true));
+	    	functions.put("log10",x->new FuncCallNode(x,"log10",v->Math.log10(v[0]),true));
+	    	functions.put("exp",x->new FuncCallNode(x,"exp",v->Math.exp(v[0]),true));
+	    	functions.put("max",x->new FuncCallNode(x,"max",v->Math.max(v[0],v[1]),true));
+	    	functions.put("min",x->new FuncCallNode(x,"min",v->Math.min(v[0],v[1]),true));
+	    	constants.put("PI",Math.PI);
+	    	constants.put("E",Math.E);
+	    }
 	    public static void main(String[] args) {
-	    	System.out.println(eval("(v+1+2+3*5*n)*(v*2*5*8*1)").simplify());
+	    	System.out.println(eval("sin(v+1+2+3*5*n)*(v*2*5*8*1)*cos(90)").simplify());
 	    }
 	}

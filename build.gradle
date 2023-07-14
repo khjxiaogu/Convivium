@@ -130,11 +130,6 @@ repositories {
             includeGroup "mezz.jei"
         }
     }
-    // Needed for Curios API
-    maven {
-        name = "theillusivec4 maven"
-        url = "https://maven.theillusivec4.top/"
-    }
     maven {
         url "https://www.cursemaven.com"
         content {

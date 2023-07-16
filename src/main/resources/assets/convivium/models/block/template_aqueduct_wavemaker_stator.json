@@ -3,10 +3,6 @@
 	"parent": "minecraft:block/cube",
 	"ambientocclusion": false,
 	"texture_size": [64, 32],
-	"textures": {
-		"0": "convivium:block/stone_aquiduct",
-		"particle": "convivium:block/stone_aquiduct"
-	},
 	"elements": [
 		{
 			"name": "post",

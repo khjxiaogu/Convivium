@@ -1,0 +1,7 @@
+{
+	"parent": "convivium:block/template_aqueduct_end",
+	"textures": {
+		"material": "convivium:block/stone_aqueduct",
+		"particle": "convivium:block/stone_aqueduct"
+	}
+}

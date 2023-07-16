@@ -37,7 +37,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-public class CPBookGenerator extends JsonGenerator {
+public class CVBookGenerator extends JsonGenerator {
 	private Map<String, JsonObject> langs = new HashMap<>();
 
 	class DatagenTranslationProvider implements TranslationProvider {
@@ -66,7 +66,7 @@ public class CPBookGenerator extends JsonGenerator {
 
 
 
-	public CPBookGenerator(PackOutput output, ExistingFileHelper helper) {
+	public CVBookGenerator(PackOutput output, ExistingFileHelper helper) {
 		super(PackType.SERVER_DATA,output, helper,"Convivium Patchouli");
 	}
 

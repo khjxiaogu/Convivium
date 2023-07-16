@@ -23,7 +23,6 @@ package com.khjxiaogu.convivium.client.renderer;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.util.RotationUtils;
@@ -34,7 +33,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CogRenderer implements BlockEntityRenderer<CogeCageBlockEntity> {
@@ -62,12 +60,13 @@ public class CogRenderer implements BlockEntityRenderer<CogeCageBlockEntity> {
 			model=cog;
 		if(model==null)
 			return;
-		if(state.getValue(KineticBasedBlock.ACTIVE)) {
-			matrixStack.pushPose();
+		
+		matrixStack.pushPose();
+		if(state.getValue(KineticBasedBlock.ACTIVE)) 
 			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
-			ModelUtils.renderModel(cage,buffer.getBuffer(RenderType.solid()), matrixStack, combinedLightIn, combinedOverlayIn);
-			matrixStack.popPose();
-		}
+		ModelUtils.renderModel(model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
+		matrixStack.popPose();
+		
 
 
 	}

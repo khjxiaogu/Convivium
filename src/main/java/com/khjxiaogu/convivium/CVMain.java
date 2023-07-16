@@ -50,7 +50,7 @@ public class CVMain {
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 	public static final String BOOK_NBT_TAG=CVMain.MODID+":book_given";
 	public static DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
-	public static RegistryObject<CreativeModeTab> main=TABS.register("main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(Items.AIR)).title(Utils.translate("itemGroup.convivium")).build());
+	public static RegistryObject<CreativeModeTab> main=TABS.register("main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
 	public static final TabType MAIN_TAB=new TabType(v->main.getKey().equals(v));
 	public static ResourceLocation rl(String path) {
 		return new ResourceLocation(MODID, path);

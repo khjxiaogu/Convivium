@@ -12,14 +12,16 @@ public class RotationUtils {
 	}
 	public static void tick() {
 		ticksOfSecond++;
+		if(ticksOfSecond>=40)
+			ticksOfSecond=0;
 	}
 	public static float getCycle(float pt,BlockPos pos) {
 		return getCycle(pt,isBlackGrid(pos));
 	}
 	public static float getCycle(float pt,boolean black) {
 		if(black)
-			return (ticksOfSecond+pt)/20f;
-		return (20-(ticksOfSecond+pt))/20f;
+			return (ticksOfSecond+pt)/40f;
+		return (20-(ticksOfSecond+pt))/40f;
 	}
 	public static boolean isBlackGrid(BlockPos pos) {
 		return ((pos.getX()&1)==1)^((pos.getZ()&1)==1);

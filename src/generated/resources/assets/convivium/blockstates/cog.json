@@ -3,9 +3,6 @@
     {
       "apply": {
         "model": "convivium:block/dynamic/cog"
-      },
-      "when": {
-        "active": "false"
       }
     }
   ]

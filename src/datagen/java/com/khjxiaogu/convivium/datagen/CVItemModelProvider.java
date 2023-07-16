@@ -28,9 +28,9 @@ import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-public class CPItemModelProvider extends ItemModelProvider {
+public class CVItemModelProvider extends ItemModelProvider {
 
-	public CPItemModelProvider(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
+	public CVItemModelProvider(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
 		super(generator.getPackOutput(), modid, existingFileHelper);
 	}
 

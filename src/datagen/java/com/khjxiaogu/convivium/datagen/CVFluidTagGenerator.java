@@ -36,9 +36,9 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class CPFluidTagGenerator extends TagsProvider<Fluid> {
+public class CVFluidTagGenerator extends TagsProvider<Fluid> {
 
-	public CPFluidTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper,CompletableFuture<HolderLookup.Provider> provider) {
+	public CVFluidTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper,CompletableFuture<HolderLookup.Provider> provider) {
 		super(dataGenerator.getPackOutput(), Registries.FLUID, provider,modId,existingFileHelper);
 	}
 

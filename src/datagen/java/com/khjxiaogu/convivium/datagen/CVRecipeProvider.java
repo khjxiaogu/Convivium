@@ -36,13 +36,13 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CPRecipeProvider extends RecipeProvider {
+public class CVRecipeProvider extends RecipeProvider {
 	private final HashMap<String, Integer> PATH_COUNT = new HashMap<>();
 
 	static final Fluid water = fluid(mrl("nail_soup")), milk = fluid(mrl("scalded_milk")), stock = fluid(mrl("stock"));
 	public static List<IDataRecipe> recipes = new ArrayList<>();
 
-	public CPRecipeProvider(DataGenerator generatorIn) {
+	public CVRecipeProvider(DataGenerator generatorIn) {
 		super(generatorIn.getPackOutput());
 	}
 

@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -57,7 +58,7 @@ public class CVCommonBootStrap {
 		registerDispensers();
 		compositables.forEach(p->ComposterBlock.COMPOSTABLES.put(p.getFirst().get(),(float)p.getSecond()));
 	}
-	
+
 
 	public static void registerDispensers() {
 		

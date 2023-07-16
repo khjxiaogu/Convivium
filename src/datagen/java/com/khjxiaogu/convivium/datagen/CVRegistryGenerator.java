@@ -36,14 +36,14 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CPRegistryGenerator extends DatapackBuiltinEntriesProvider {
+public class CVRegistryGenerator extends DatapackBuiltinEntriesProvider {
 
 	@SuppressWarnings("unchecked")
-	public CPRegistryGenerator(PackOutput output, CompletableFuture<Provider> registries) {
+	public CVRegistryGenerator(PackOutput output, CompletableFuture<Provider> registries) {
 		super(output, registries,new RegistrySetBuilder()
 				
-				.add(Registries.CONFIGURED_FEATURE,(RegistrySetBuilder.RegistryBootstrap)CPRegistryGenerator::bootstrapCFeatures)
-				.add(Registries.PLACED_FEATURE,CPRegistryGenerator::bootstrapPFeatures),
+				.add(Registries.CONFIGURED_FEATURE,(RegistrySetBuilder.RegistryBootstrap)CVRegistryGenerator::bootstrapCFeatures)
+				.add(Registries.PLACED_FEATURE,CVRegistryGenerator::bootstrapPFeatures),
 				Set.of(CVMain.MODID));
 		
 	}

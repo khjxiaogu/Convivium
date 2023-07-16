@@ -2,50 +2,10 @@
   "multipart": [
     {
       "apply": {
-        "model": "convivium:block/aeolipile",
-        "y": 180
-      },
-      "when": {
-        "active": "false",
-        "facing": "north"
-      }
-    },
-    {
-      "apply": {
-        "model": "convivium:block/aeolipile"
-      },
-      "when": {
-        "active": "false",
-        "facing": "south"
-      }
-    },
-    {
-      "apply": {
-        "model": "convivium:block/aeolipile",
-        "y": 90
-      },
-      "when": {
-        "active": "false",
-        "facing": "west"
-      }
-    },
-    {
-      "apply": {
-        "model": "convivium:block/aeolipile",
-        "y": 270
-      },
-      "when": {
-        "active": "false",
-        "facing": "east"
-      }
-    },
-    {
-      "apply": {
         "model": "convivium:block/aeolipile_stator",
         "y": 180
       },
       "when": {
-        "active": "true",
         "facing": "north"
       }
     },
@@ -54,7 +14,6 @@
         "model": "convivium:block/aeolipile_stator"
       },
       "when": {
-        "active": "true",
         "facing": "south"
       }
     },
@@ -64,7 +23,6 @@
         "y": 90
       },
       "when": {
-        "active": "true",
         "facing": "west"
       }
     },
@@ -74,7 +32,6 @@
         "y": 270
       },
       "when": {
-        "active": "true",
         "facing": "east"
       }
     }

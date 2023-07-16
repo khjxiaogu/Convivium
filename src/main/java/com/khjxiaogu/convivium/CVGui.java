@@ -18,11 +18,17 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
+
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CVGui {
 	public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES,
 			CVMain.MODID);
+	public static final RegistryObject<MenuType<PlatterContainer>> PLATTER = CONTAINERS.register("platter",
+			() -> IForgeMenuType.create(PlatterContainer::new));
 }

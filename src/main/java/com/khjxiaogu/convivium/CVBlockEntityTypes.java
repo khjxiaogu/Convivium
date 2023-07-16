@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableSet;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
+import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 
 import net.minecraft.world.level.block.Block;
@@ -41,7 +42,8 @@ public class CVBlockEntityTypes {
 			REGISTER.register("cog_cage",makeTypes2(CogeCageBlockEntity::new,()->List.of(CVBlocks.cog,CVBlocks.cage)));
 	public static final RegistryObject<BlockEntityType<AeolipileBlockEntity>> AOELIPILE=
 			REGISTER.register("aoelipile",makeType(AeolipileBlockEntity::new,()->CVBlocks.aeolipile));
-
+	public static final RegistryObject<BlockEntityType<PlatterBlockEntity>> PLATTER=
+			REGISTER.register("platter",makeType(PlatterBlockEntity::new,()->CVBlocks.platter));
 	
 	
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,

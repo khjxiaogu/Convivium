@@ -40,9 +40,9 @@ import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CPLootGenerator extends LootTableProvider {
+public class CVLootGenerator extends LootTableProvider {
 
-	public CPLootGenerator(DataGenerator dataGeneratorIn) {
+	public CVLootGenerator(DataGenerator dataGeneratorIn) {
 		super(dataGeneratorIn.getPackOutput(), Set.of(), VanillaLootTableProvider.create(dataGeneratorIn.getPackOutput()).getTables());
 	}
 

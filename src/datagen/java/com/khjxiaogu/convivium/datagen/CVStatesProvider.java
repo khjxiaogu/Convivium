@@ -26,7 +26,8 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import com.google.common.collect.ImmutableList;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
+import com.khjxiaogu.convivium.CVMain;
+import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -66,47 +67,58 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticBlockModel("cog");
 		kineticBlockModel("cage_wheel");
 		kineticDirectionalBlockModel("aeolipile","aeolipile_stator");
+		blockItemModel("fruit_platter");
+		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));
+		
 	}
 
 	private Block cvblock(String name) {
 		return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(this.modid, name));
 	}
 	protected void kineticDirectionalBlockModel(String name,String stator) {
-		horizontalMultipart(
-				horizontalMultipart(
-						this.getMultipartBuilder(cvblock(name)),bmf(name),c->c.condition(KineticBasedBlock.ACTIVE,false)
-				),bmf(stator),c->c.condition(KineticBasedBlock.ACTIVE,true)
-		);
+		horizontalMultipart(this.getMultipartBuilder(cvblock(name)),bmf(stator),c->c);
 		blockItemModel(name);
 		
 	} 
 	protected void kineticBlockModel(String name) {
-		this.getMultipartBuilder(cvblock(name)).part().modelFile(bmf("dynamic/"+name)).addModel().condition(KineticBasedBlock.ACTIVE,false).end();
-		itemModels().getBuilder(name).parent(bmf("dynamic/"+name));
+		
+		this.getMultipartBuilder(cvblock(name)).part().modelFile(bmf("dynamic/"+name)).addModel().end();
+		blockItemModel(name);
 	} 
 	protected void blockItemModel(String n) {
-		itemModels().getBuilder(n).parent(bmf(n));
+		blockItemModel(n, "");
 	}
 
 	protected void blockItemModel(String n, String p) {
-		itemModels().getBuilder(n).parent(bmf(n + p));
+		if (this.existingFileHelper.exists(new ResourceLocation(CVMain.MODID, "textures/item/" + n + p + ".png"),
+				PackType.CLIENT_RESOURCES)) {
+			itemModels().basicItem(new ResourceLocation(CVMain.MODID, n));
+		} else {
+			itemModels().getBuilder(n).parent(bmf(n + p));
+		}
 	}
-
-
-	public ModelFile bmf(String name) {
-		ResourceLocation rl = new ResourceLocation(this.modid, "block/" + name);
+	public ModelFile obmf(String modid,String name) {
+		ResourceLocation rl = new ResourceLocation(modid, "block/" + name);
+		return new ModelFile.UncheckedModelFile(rl);
+	}
+	
+	public ModelFile bmf(String modid,String name) {
+		ResourceLocation rl = new ResourceLocation(modid, "block/" + name);
 		if (!existingFileHelper.exists(rl, MODEL)) {// not exists, let's guess
 			List<String> rn = Arrays.asList(name.split("_"));
 			for (int i = rn.size(); i >= 0; i--) {
 				List<String> rrn = new ArrayList<>(rn);
 				rrn.add(i, "0");
-				rl = new ResourceLocation(this.modid, "block/" + String.join("_", rrn));
+				rl = new ResourceLocation(modid, "block/" + String.join("_", rrn));
 				if (existingFileHelper.exists(rl, MODEL))
 					break;
 			}
 
 		}
 		return new ModelFile.ExistingModelFile(rl, existingFileHelper);
+	}
+	public ModelFile bmf(String name) {
+		return bmf(this.modid,name);
 	}
 
 	public void simpleBlockItem(Block b, ModelFile model) {

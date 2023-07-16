@@ -35,23 +35,23 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class CPDataGenerator {
+public class CVDataGenerator {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
 		ExistingFileHelper exHelper = event.getExistingFileHelper();
 		
 		CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
-		gen.addProvider(event.includeClient(),new CPItemModelProvider(gen, CVMain.MODID, exHelper));
-		gen.addProvider(event.includeServer(),new CPRecipeProvider(gen));
-		gen.addProvider(event.includeServer(),new CPItemTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
-		gen.addProvider(event.includeServer(),new CPBlockTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
-		gen.addProvider(event.includeServer(),new CPFluidTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
-		gen.addProvider(event.includeServer(),new CPLootGenerator(gen));
+		gen.addProvider(event.includeClient(),new CVItemModelProvider(gen, CVMain.MODID, exHelper));
+		gen.addProvider(event.includeServer(),new CVRecipeProvider(gen));
+		gen.addProvider(event.includeServer(),new CVItemTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
+		gen.addProvider(event.includeServer(),new CVBlockTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
+		gen.addProvider(event.includeServer(),new CVFluidTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
+		gen.addProvider(event.includeServer(),new CVLootGenerator(gen));
 		gen.addProvider(event.includeClient()||event.includeServer(),new CVStatesProvider(gen, CVMain.MODID, exHelper));
-		gen.addProvider(event.includeServer(),new CPBookGenerator(gen.getPackOutput(), exHelper));
+		gen.addProvider(event.includeServer(),new CVBookGenerator(gen.getPackOutput(), exHelper));
 		gen.addProvider(event.includeServer()||event.includeClient(),new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,new PackMetadataSection(Utils.string(CVMain.MODNAME+" Resources"),6)));
-		gen.addProvider(event.includeServer(),new CPRegistryGenerator(gen.getPackOutput(),completablefuture));
+		gen.addProvider(event.includeServer(),new CVRegistryGenerator(gen.getPackOutput(),completablefuture));
 		gen.addProvider(event.includeClient(),new FluidAnimationGenerator(gen.getPackOutput(),exHelper));
 		gen.addProvider(event.includeClient()||event.includeServer(), new RegistryJavaGenerator(gen.getPackOutput(),exHelper));
 	}

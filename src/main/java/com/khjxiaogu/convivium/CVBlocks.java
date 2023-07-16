@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
+import com.khjxiaogu.convivium.blocks.platter.PlatterBlock;
 import com.teammoeg.caupona.item.CPBlockItem;
 
 import net.minecraft.core.BlockPos;
@@ -44,6 +45,7 @@ public class CVBlocks {
 	public static final RegistryObject<CogCageBlock> cage=baseblock("cage_wheel",()->new CogCageBlock(getKineticProps()));
 	public static final RegistryObject<CogCageBlock> cog=baseblock("cog",()->new CogCageBlock(getKineticProps()));
 	public static final RegistryObject<AeolipileBlock> aeolipile=baseblock("aeolipile",()->new AeolipileBlock(getKineticProps()));
+	public static final RegistryObject<PlatterBlock> platter=baseblock("fruit_platter",()->new PlatterBlock(getKineticProps()));
 	
 	//register any block to registry
 	static <T extends Block> RegistryObject<T> baseblock(String name, Supplier<T> bl) {
@@ -75,7 +77,7 @@ public class CVBlocks {
 
 	private static Properties getTransparentProps() {
 		return Block.Properties.of().sound(SoundType.STONE).requiresCorrectToolForDrops()
-				.strength(3.5f, 10).noOcclusion();
+				.strength(3.5f, 10).noOcclusion().isViewBlocking(CVBlocks::isntSolid);
 	}
 
 	@SuppressWarnings("unused")

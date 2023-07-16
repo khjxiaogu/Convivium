@@ -19,7 +19,6 @@
 package com.khjxiaogu.convivium.datagen;
 
 
-
 import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVMain;
@@ -31,38 +30,43 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class CPItemTagGenerator extends TagsProvider<Item> {
+public class CVBlockTagGenerator extends TagsProvider<Block> {
 
-	public CPItemTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper,CompletableFuture<HolderLookup.Provider> provider) {
-		super(dataGenerator.getPackOutput(), Registries.ITEM,provider, modId, existingFileHelper);
+	public CVBlockTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper,CompletableFuture<HolderLookup.Provider> provider) {
+		super(dataGenerator.getPackOutput(), Registries.BLOCK,provider,modId, existingFileHelper);
 	}
-
-	static final String fd = "farmersdelight";
-	static final String sf = "simplefarming:";
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
 
 	}
-
-	private TagAppender<Item> tag(String s) {
-		return this.tag(ItemTags.create(mrl(s)));
+	@SafeVarargs
+	private void adds(TagAppender<Block> ta,ResourceKey<? extends Block>... keys) {
+		ResourceKey[] rk=keys;
+		ta.add(rk);
+	}
+	private TagAppender<Block> tag(String s) {
+		return this.tag(BlockTags.create(mrl(s)));
 	}
 
-	private TagAppender<Item> tag(ResourceLocation s) {
-		return this.tag(ItemTags.create(s));
+	private ResourceKey<Block> cp(String s) {
+		return ResourceKey.create(Registries.BLOCK,mrl(s));
 	}
-	private ResourceKey<Item> rk(Item b) {
-		
-		return ForgeRegistries.ITEMS.getResourceKey(b).orElseGet(()->b.builtInRegistryHolder().key());
+	private ResourceKey<Block> rk(Block  b) {
+		return ForgeRegistries.BLOCKS.getResourceKey(b).orElseGet(()->b.builtInRegistryHolder().key());
+	}
+	private TagAppender<Block> tag(ResourceLocation s) {
+		return this.tag(BlockTags.create(s));
 	}
 	private ResourceLocation rl(RegistryObject<Item> it) {
 		return it.getId();
@@ -72,8 +76,8 @@ public class CPItemTagGenerator extends TagsProvider<Item> {
 		return new ResourceLocation(r);
 	}
 
-	private TagKey<Item> otag(String s) {
-		return ItemTags.create(mrl(s));
+	private TagKey<Block> otag(String s) {
+		return BlockTags.create(mrl(s));
 	}
 
 	private TagKey<Item> atag(ResourceLocation s) {
@@ -88,29 +92,18 @@ public class CPItemTagGenerator extends TagsProvider<Item> {
 		return new ResourceLocation("forge", s);
 	}
 
-	private TagKey<Item> ftag(String s) {
-		TagKey<Item> tag = ItemTags.create(new ResourceLocation("forge", s));
-		this.tag(tag);
-		return tag;
-	}
-
 	private ResourceLocation mcrl(String s) {
 		return new ResourceLocation(s);
 	}
 
 	@Override
 	public String getName() {
-		return CVMain.MODID + " item tags";
+		return CVMain.MODID + " block tags";
 	}
 
-	private ResourceKey<Item> cp(String s) {
-		return ResourceKey.create(Registries.ITEM,mrl(s));
-	}
-/*
-	@Override
+
+	/*@Override
 	protected Path getPath(ResourceLocation id) {
-		return this.generator.getOutputFolder()
-				.resolve("data/" + id.getNamespace() + "/tags/items/" + id.getPath() + ".json");
+		return super.pathProvider.json("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
 	}*/
-
 }

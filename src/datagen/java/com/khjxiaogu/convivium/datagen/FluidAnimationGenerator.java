@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.datagen.JsonGenerator;
 import com.teammoeg.caupona.datagen.JsonStorage;
 
@@ -28,7 +29,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class FluidAnimationGenerator extends JsonGenerator {
 
 	public FluidAnimationGenerator(PackOutput output, ExistingFileHelper helper) {
-		super(PackType.CLIENT_RESOURCES, output, helper,"Caupona Fluid Animation");
+		super(PackType.CLIENT_RESOURCES, output, helper,CVMain.MODNAME+" Fluid Animation");
 	}
 
 	@Override

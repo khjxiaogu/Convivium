@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube",
+	"loader": "caupona:layered",
 	"ambientocclusion": false,
 	"elements": [
 		{

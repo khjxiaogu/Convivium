@@ -69,6 +69,6 @@ public class CPRegistryGenerator extends DatapackBuiltinEntriesProvider {
 	}
 	@Override
 	public String getName() {
-		return "Caupona Registry Generator";
+		return CVMain.MODNAME+" Registry Generator";
 	}
 }

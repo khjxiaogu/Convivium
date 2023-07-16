@@ -1,6 +1,6 @@
 {
     "parent": "convivium:block/dynamic/template_fruit_platter_pile_components",
-    "loader": "convivium:layered",
+    
     "textures": {
         "fruit": "convivium:block/fruit_platter/wolfberries"
     }

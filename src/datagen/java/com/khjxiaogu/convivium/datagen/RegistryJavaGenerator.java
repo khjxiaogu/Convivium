@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.datagen.FileGenerator;
 
 import net.minecraft.data.PackOutput;
@@ -27,7 +28,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class RegistryJavaGenerator extends FileGenerator {
 
 	public RegistryJavaGenerator(PackOutput output, ExistingFileHelper helper) {
-		super(PackType.SERVER_DATA, output, helper,"Caupona Registry Java");
+		super(PackType.SERVER_DATA, output, helper,CVMain.MODNAME+" Registry Java");
 	}
 	
 	

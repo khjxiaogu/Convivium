@@ -21,8 +21,9 @@ package com.khjxiaogu.convivium;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlock;
+import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.teammoeg.caupona.item.CPBlockItem;
-import com.teammoeg.caupona.util.TabType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
@@ -40,11 +41,14 @@ import net.minecraftforge.registries.RegistryObject;
 public class CVBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CVMain.MODID);
 
+	public static final RegistryObject<CogCageBlock> cage=baseblock("cage_wheel",()->new CogCageBlock(getKineticProps()));
+	public static final RegistryObject<CogCageBlock> cog=baseblock("cog",()->new CogCageBlock(getKineticProps()));
+	public static final RegistryObject<AeolipileBlock> aeolipile=baseblock("aeolipile",()->new AeolipileBlock(getKineticProps()));
 	
 	//register any block to registry
 	static <T extends Block> RegistryObject<T> baseblock(String name, Supplier<T> bl) {
 		RegistryObject<T> blx = BLOCKS.register(name, bl);
-		CVItems.ITEMS.register(name, () -> new CPBlockItem(blx.get(), CVItems.createProps(), TabType.MAIN));
+		CVItems.ITEMS.register(name, () -> new CPBlockItem(blx.get(), CVItems.createProps(), CVMain.MAIN_TAB));
 		return blx;
 	}
 	//register any block to registry with custom item factory
@@ -56,7 +60,7 @@ public class CVBlocks {
 	//register basic block to registry
 	static RegistryObject<Block> block(String name, Properties props) {
 		RegistryObject<Block> blx = BLOCKS.register(name, () -> new Block(props));
-		CVItems.ITEMS.register(name, () -> new CPBlockItem(blx.get(), CVItems.createProps(), TabType.MAIN));
+		CVItems.ITEMS.register(name, () -> new CPBlockItem(blx.get(), CVItems.createProps(), CVMain.MAIN_TAB));
 		return blx;
 	}
 	//Property functions
@@ -64,7 +68,10 @@ public class CVBlocks {
 		return Block.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(2.0f,
 				6);
 	}
-
+	private static Properties getKineticProps() {
+		return Block.Properties.of().sound(SoundType.STONE)
+				.strength(3.5f, 10).noOcclusion();
+	}
 
 	private static Properties getTransparentProps() {
 		return Block.Properties.of().sound(SoundType.STONE).requiresCorrectToolForDrops()

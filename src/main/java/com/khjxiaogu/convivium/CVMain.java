@@ -25,6 +25,7 @@ import com.khjxiaogu.convivium.client.CVParticles;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 import com.khjxiaogu.convivium.network.PacketHandler;
 import com.teammoeg.caupona.CPMain;
+import com.teammoeg.caupona.util.TabType;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.registries.Registries;
@@ -50,7 +51,7 @@ public class CVMain {
 	public static final String BOOK_NBT_TAG=CVMain.MODID+":book_given";
 	public static DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
 	public static RegistryObject<CreativeModeTab> main=TABS.register("main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(Items.AIR)).title(Utils.translate("itemGroup.convivium")).build());
-	
+	public static final TabType MAIN_TAB=new TabType(v->main.getKey().equals(v));
 	public static ResourceLocation rl(String path) {
 		return new ResourceLocation(MODID, path);
 	}

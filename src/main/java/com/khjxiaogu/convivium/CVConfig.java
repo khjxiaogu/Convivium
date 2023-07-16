@@ -21,6 +21,7 @@ package com.khjxiaogu.convivium;
 import java.util.ArrayList;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -52,8 +53,13 @@ public class CVConfig {
 	}
 
 	public static class Server {
+		public IntValue kineticRange;
+		public IntValue kineticValidation;
 		Server(ForgeConfigSpec.Builder builder) {
-		
+			builder.push("kinetics");
+			kineticRange=builder.defineInRange("kineticTransferRange",4, 1, Integer.MAX_VALUE);
+			kineticValidation=builder.defineInRange("kineticValidationTicks",20, 1, Integer.MAX_VALUE);
+			builder.pop();
 		}
 	}
 

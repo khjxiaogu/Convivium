@@ -23,6 +23,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableSet;
+import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
+import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,6 +37,13 @@ import net.minecraftforge.registries.RegistryObject;
 public class CVBlockEntityTypes {
 	public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister
 			.create(ForgeRegistries.BLOCK_ENTITY_TYPES, CVMain.MODID);
+	public static final RegistryObject<BlockEntityType<CogeCageBlockEntity>> COG_CAGE=
+			REGISTER.register("cog_cage",makeTypes2(CogeCageBlockEntity::new,()->List.of(CVBlocks.cog,CVBlocks.cage)));
+	public static final RegistryObject<BlockEntityType<AeolipileBlockEntity>> AOELIPILE=
+			REGISTER.register("aoelipile",makeType(AeolipileBlockEntity::new,()->CVBlocks.aeolipile));
+
+	
+	
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 			Supplier<RegistryObject<? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);

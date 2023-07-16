@@ -48,9 +48,9 @@ public class CPDataGenerator {
 		gen.addProvider(event.includeServer(),new CPBlockTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
 		gen.addProvider(event.includeServer(),new CPFluidTagGenerator(gen, CVMain.MODID, exHelper,event.getLookupProvider()));
 		gen.addProvider(event.includeServer(),new CPLootGenerator(gen));
-		gen.addProvider(event.includeClient()||event.includeServer(),new CPStatesProvider(gen, CVMain.MODID, exHelper));
+		gen.addProvider(event.includeClient()||event.includeServer(),new CVStatesProvider(gen, CVMain.MODID, exHelper));
 		gen.addProvider(event.includeServer(),new CPBookGenerator(gen.getPackOutput(), exHelper));
-		gen.addProvider(event.includeServer()||event.includeClient(),new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,new PackMetadataSection(Utils.string("Caupona Resources"),6)));
+		gen.addProvider(event.includeServer()||event.includeClient(),new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,new PackMetadataSection(Utils.string(CVMain.MODNAME+" Resources"),6)));
 		gen.addProvider(event.includeServer(),new CPRegistryGenerator(gen.getPackOutput(),completablefuture));
 		gen.addProvider(event.includeClient(),new FluidAnimationGenerator(gen.getPackOutput(),exHelper));
 		gen.addProvider(event.includeClient()||event.includeServer(), new RegistryJavaGenerator(gen.getPackOutput(),exHelper));

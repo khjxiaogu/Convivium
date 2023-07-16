@@ -20,12 +20,27 @@ package com.khjxiaogu.convivium.client;
 
 
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.util.RotationUtils;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
-	
+	@SubscribeEvent
+	public static void JoinWorld(LevelEvent.Load load)
+	{
+		RotationUtils.resetTimer();
+	}
+	@SubscribeEvent
+	public static void tick(TickEvent.ClientTickEvent tick)
+	{
+		if(tick.phase==Phase.START)
+			RotationUtils.tick();;
+	}
 }

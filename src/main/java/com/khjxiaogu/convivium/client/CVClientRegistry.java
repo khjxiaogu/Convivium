@@ -18,9 +18,15 @@
 
 package com.khjxiaogu.convivium.client;
 
+import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.client.renderer.AeolipileRenderer;
+import com.khjxiaogu.convivium.client.renderer.CogRenderer;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,10 +39,15 @@ public class CVClientRegistry {
 	@SubscribeEvent
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
 		//MenuScreens.register(CPGui.STEWPOT.get(), StewPotScreen::new);
-		//BlockEntityRenderers.register(CPBlockEntityTypes.PAN.get(), PanRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 
 	}
-
+	@SubscribeEvent
+	public static void registerModels(ModelEvent.RegisterAdditional ev)
+	{
+		Minecraft.getInstance().getResourceManager().listResources("models/block/dynamic",e->e.getPath().endsWith(".json")).keySet().forEach(System.out::println);
+	}
 	@SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
 	}

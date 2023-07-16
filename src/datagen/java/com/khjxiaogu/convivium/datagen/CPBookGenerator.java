@@ -67,10 +67,10 @@ public class CPBookGenerator extends JsonGenerator {
 
 
 	public CPBookGenerator(PackOutput output, ExistingFileHelper helper) {
-		super(PackType.SERVER_DATA,output, helper,"Caupona Patchouli");
+		super(PackType.SERVER_DATA,output, helper,"Convivium Patchouli");
 	}
 
-	String[] allangs = { "zh_cn", "en_us", "es_es", "ru_ru" };
+	String[] allangs = { "zh_cn", "en_us" };
 
 	private void loadLang(String locale) {
 		try {

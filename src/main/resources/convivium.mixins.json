@@ -1,8 +1,8 @@
 {
   "required": true,
-  "minVersion": "1.7",
+  "minVersion": "0.8",
   "package": "com.teammoeg.convivium.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "refmap": "convivium.refmap.json",
   "mixins": [
 

@@ -180,8 +180,8 @@ dependencies {
 	
 	//implementation fg.deobf("curse.maven:crock-pot-404523:3782459")
 	
-	implementation "com.teammoeg:Caupona:1.20.1-0.4.1:deobf"
-
+	implementation "com.teammoeg:Caupona:1.20.1-${caupona_version}:deobf"
+	//runtimeOnly fg.deobf("com.teammoeg:Caupona:1.20.1-0.4.5-build1")
 	
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78:api")
     //runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78")

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import com.google.common.collect.ImmutableList;
+import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -46,7 +47,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ExistingFileHelper.ResourceType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CPStatesProvider extends BlockStateProvider {
+public class CVStatesProvider extends BlockStateProvider {
 	protected static final List<Vec3i> COLUMN_THREE = ImmutableList.of(BlockPos.ZERO, BlockPos.ZERO.above(),
 			BlockPos.ZERO.above(2));
 	protected static final ResourceType MODEL = new ResourceType(PackType.CLIENT_RESOURCES, ".json", "models");
@@ -54,7 +55,7 @@ public class CPStatesProvider extends BlockStateProvider {
 	protected final ExistingFileHelper existingFileHelper;
 	String modid;
 
-	public CPStatesProvider(DataGenerator gen, String modid, ExistingFileHelper exFileHelper) {
+	public CVStatesProvider(DataGenerator gen, String modid, ExistingFileHelper exFileHelper) {
 		super(gen.getPackOutput(), modid, exFileHelper);
 		this.modid = modid;
 		this.existingFileHelper = exFileHelper;
@@ -62,12 +63,27 @@ public class CPStatesProvider extends BlockStateProvider {
 
 	@Override
 	protected void registerStatesAndModels() {
+		kineticBlockModel("cog");
+		kineticBlockModel("cage_wheel");
+		kineticDirectionalBlockModel("aeolipile","aeolipile_stator");
 	}
 
-	private Block cpblock(String name) {
+	private Block cvblock(String name) {
 		return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(this.modid, name));
 	}
-
+	protected void kineticDirectionalBlockModel(String name,String stator) {
+		horizontalMultipart(
+				horizontalMultipart(
+						this.getMultipartBuilder(cvblock(name)),bmf(name),c->c.condition(KineticBasedBlock.ACTIVE,false)
+				),bmf(stator),c->c.condition(KineticBasedBlock.ACTIVE,true)
+		);
+		blockItemModel(name);
+		
+	} 
+	protected void kineticBlockModel(String name) {
+		this.getMultipartBuilder(cvblock(name)).part().modelFile(bmf("dynamic/"+name)).addModel().condition(KineticBasedBlock.ACTIVE,false).end();
+		itemModels().getBuilder(name).parent(bmf("dynamic/"+name));
+	} 
 	protected void blockItemModel(String n) {
 		itemModels().getBuilder(n).parent(bmf(n));
 	}

@@ -1,0 +1,6 @@
+{
+    "parent": "convivium:block/fruit_platters/template_fruit_platter_slices_center_4",
+    "textures": {
+        "fruit": "convivium:block/fruit_platter/glistering_melon"
+    }
+}

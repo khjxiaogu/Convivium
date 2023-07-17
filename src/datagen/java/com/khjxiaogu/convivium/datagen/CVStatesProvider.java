@@ -74,6 +74,7 @@ public class CVStatesProvider extends BlockStateProvider {
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
+			
 			this.getVariantBuilder(cvblock(s+"_aqueduct"))
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.X).modelForState().modelFile(bmf(s+"_aqueduct_straight")).addModel()
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.Z).modelForState().modelFile(bmf(s+"_aqueduct_straight")).rotationY(90).addModel()
@@ -85,6 +86,7 @@ public class CVStatesProvider extends BlockStateProvider {
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.NW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(0).addModel()//
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.SW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(270).addModel()
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.SE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(180).addModel();
+			this.itemModel(cvblock(s+"_aqueduct"), bmf(s+"_aqueduct_corner"));
 		}
 	}
 

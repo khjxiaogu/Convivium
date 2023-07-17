@@ -48,10 +48,23 @@
 	],
 	"groups": [
 		{
-			"name": "FPSC",
-			"origin": [8, 5, 0],
+			"name": "FruitUnit1",
+			"origin": [8, 8, 8],
 			"color": 0,
-			"children": [0, 1, 2]
+			"children": [0]
+		},
+		{
+			"name": "FruitUnit2",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [1]
+		},
+		{
+			"name": "FruitUnit3",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [2]
 		}
-	]
+	],
+	"loader": "caupona:layered"
 }

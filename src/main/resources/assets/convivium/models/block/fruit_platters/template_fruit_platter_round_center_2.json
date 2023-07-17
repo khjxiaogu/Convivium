@@ -34,10 +34,17 @@
 	],
 	"groups": [
 		{
-			"name": "FPRC",
+			"name": "FruitUnit1",
 			"origin": [8, 8, 8],
 			"color": 0,
-			"children": [0, 1]
+			"children": [0]
+		},
+		{
+			"name": "FruitUnit2",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [1]
 		}
-	]
+	],
+	"loader": "caupona:layered"
 }

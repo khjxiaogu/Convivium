@@ -18,6 +18,20 @@
 			}
 		},
 		{
+			"name": "fruit3",
+			"from": [5, 2, 9],
+			"to": [9, 6, 13],
+			"rotation": {"angle": 22.5, "axis": "y", "origin": [7, 0, 11]},
+			"faces": {
+				"north": {"uv": [12, 0, 16, 4], "rotation": 90, "texture": "#fruit"},
+				"east": {"uv": [0, 4, 4, 8], "texture": "#fruit"},
+				"south": {"uv": [4, 0, 8, 4], "rotation": 270, "texture": "#fruit"},
+				"west": {"uv": [4, 4, 8, 8], "texture": "#fruit"},
+				"up": {"uv": [0, 0, 4, 4], "rotation": 270, "texture": "#fruit"},
+				"down": {"uv": [8, 0, 12, 4], "rotation": 270, "texture": "#fruit"}
+			}
+		},
+		{
 			"name": "fruit2",
 			"from": [9, 2, 5],
 			"to": [13, 6, 9],
@@ -30,28 +44,27 @@
 				"up": {"uv": [4, 0, 8, 4], "rotation": 90, "texture": "#fruit"},
 				"down": {"uv": [12, 0, 16, 4], "rotation": 90, "texture": "#fruit"}
 			}
-		},
-		{
-			"name": "fruit4",
-			"from": [5, 2, 9],
-			"to": [9, 6, 13],
-			"rotation": {"angle": 22.5, "axis": "y", "origin": [7, 0, 11]},
-			"faces": {
-				"north": {"uv": [12, 0, 16, 4], "rotation": 90, "texture": "#fruit"},
-				"east": {"uv": [0, 4, 4, 8], "texture": "#fruit"},
-				"south": {"uv": [4, 0, 8, 4], "rotation": 270, "texture": "#fruit"},
-				"west": {"uv": [4, 4, 8, 8], "texture": "#fruit"},
-				"up": {"uv": [0, 0, 4, 4], "rotation": 270, "texture": "#fruit"},
-				"down": {"uv": [8, 0, 12, 4], "rotation": 270, "texture": "#fruit"}
-			}
 		}
 	],
 	"groups": [
 		{
-			"name": "FPRC",
-			"origin": [8, 8, 8],
+			"name": "FruitUnit1",
+			"origin": [5, 0, 5],
 			"color": 0,
-			"children": [0, 1, 2]
+			"children": [0]
+		},
+		{
+			"name": "FruitUnit3",
+			"origin": [5, 0, 5],
+			"color": 0,
+			"children": [1]
+		},
+		{
+			"name": "FruitUnit2",
+			"origin": [5, 0, 5],
+			"color": 0,
+			"children": [2]
 		}
-	]
+	],
+	"loader": "caupona:layered"
 }

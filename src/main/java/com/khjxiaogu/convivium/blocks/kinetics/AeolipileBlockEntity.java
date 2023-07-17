@@ -57,8 +57,12 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity {
 		process = new LazyTickWorker(Mth.ceil(CVConfig.SERVER.kineticValidation.get() / 2f),()->{
 			Set<BlockPos> pss = getAll();
 			for (BlockPos pos : pss) {
-				if (level.getBlockEntity(pos) instanceof KineticTransferBlockEntity bath)
-					bath.setSpeed(speed);
+				if (level.getBlockEntity(pos) instanceof KineticTransferBlockEntity cog) {
+					cog.setSpeed(speed);
+					if (level.getBlockEntity(pos.below()) instanceof KineticTransferBlockEntity cog2&&cog2.isReceiver()) {
+						cog2.setSpeed(speed);
+					}
+				}
 			}
 			return true;
 		});

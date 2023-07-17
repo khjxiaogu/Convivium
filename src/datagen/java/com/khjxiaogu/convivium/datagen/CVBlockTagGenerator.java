@@ -22,6 +22,7 @@ package com.khjxiaogu.convivium.datagen;
 import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.CVTags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -48,7 +49,9 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
-
+		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
+			this.tag(CVTags.Blocks.aqueduct).add(cp(s+"_aqueduct"));
+		}
 	}
 	@SafeVarargs
 	private void adds(TagAppender<Block> ta,ResourceKey<? extends Block>... keys) {

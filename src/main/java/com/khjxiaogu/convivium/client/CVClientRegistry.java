@@ -24,7 +24,10 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.gui.PlatterScreen;
 import com.khjxiaogu.convivium.client.renderer.AeolipileRenderer;
 import com.khjxiaogu.convivium.client.renderer.CogRenderer;
+import com.khjxiaogu.convivium.client.renderer.FruitModel;
 import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
+import com.khjxiaogu.convivium.client.renderer.PamRenderer;
+import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.ModelUtils;
@@ -51,28 +54,25 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(),FruitPlatterRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.WHISK.get(),WhiskRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.PAM.get(),PamRenderer::new);
 	}
 	
 	@SubscribeEvent
 	public static void onCommonSetup(@SuppressWarnings("unused") FMLClientSetupEvent event) {
-		registerFruitModel(Items.APPLE,"apple");
-		registerFruitModel(get(CPMain.MODID,"fig"),"fig");
-		registerFruitModel(Items.GLISTERING_MELON_SLICE,"glistering_melon");
-		registerFruitModel(Items.GLOW_BERRIES,"glow_berries");
-		registerFruitModel(Items.ENCHANTED_GOLDEN_APPLE,"golden_apple");
-		registerFruitModel(Items.GOLDEN_APPLE,"golden_apple");
-		registerFruitModel(Items.MELON_SLICE,"melon");
-		registerFruitModel(Items.SWEET_BERRIES,"sweet_berries");
-		registerFruitModel(get(CPMain.MODID,"walnut"),"walnut");
-		registerFruitModel(get(CPMain.MODID,"wolfberries"),"wolfberries");
+		registerFruitModel(Items.APPLE,"apple",FruitModel.ModelType.ROUND);
+		registerFruitModel(get(CPMain.MODID,"fig"),"fig",FruitModel.ModelType.ROUND);
+		registerFruitModel(Items.GLISTERING_MELON_SLICE,"glistering_melon",FruitModel.ModelType.SLICE);
+		registerFruitModel(Items.GLOW_BERRIES,"glow_berries",FruitModel.ModelType.MISC);
+		registerFruitModel(Items.ENCHANTED_GOLDEN_APPLE,"golden_apple",FruitModel.ModelType.ROUND);
+		registerFruitModel(Items.GOLDEN_APPLE,"golden_apple",FruitModel.ModelType.ROUND);
+		registerFruitModel(Items.MELON_SLICE,"melon",FruitModel.ModelType.SLICE);
+		registerFruitModel(Items.SWEET_BERRIES,"sweet_berries",FruitModel.ModelType.MISC);
+		registerFruitModel(get(CPMain.MODID,"walnut"),"walnut",FruitModel.ModelType.ROUND);
+		registerFruitModel(get(CPMain.MODID,"wolfberries"),"wolfberries",FruitModel.ModelType.MISC);
 	}
-	private static void registerFruitModel(Item item,String name) {
-		FruitPlatterRenderer.models.put(item,ModelUtils.getModel(CVMain.MODID, name+"_components"));
-		DynamicBlockModelReference[] drs=new DynamicBlockModelReference[4];
-		for(int i=1;i<=4;i++) {
-			drs[i-1]=ModelUtils.getModel(CVMain.MODID, name+"_center_"+i);
-		}
-		FruitPlatterRenderer.cmodels.put(item, drs);
+	private static void registerFruitModel(Item item,String name,FruitModel.ModelType type) {
+		FruitPlatterRenderer.models.put(item,new FruitModel(name,type));
 	}
 	private static Item get(String modid,String id) {
 		return ForgeRegistries.ITEMS.getValue(new ResourceLocation(modid,id));

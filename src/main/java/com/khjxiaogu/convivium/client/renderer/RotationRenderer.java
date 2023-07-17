@@ -21,9 +21,6 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import com.khjxiaogu.convivium.CVBlocks;
-import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,26 +29,33 @@ import com.teammoeg.caupona.client.util.ModelUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CogRenderer extends RotationRenderer<CogeCageBlockEntity> {
-	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"cog");
-	public static final DynamicBlockModelReference cage=ModelUtils.getModel(CVMain.MODID,"cage_wheel");
+public abstract class RotationRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
 	/**
 	 * @param rendererDispatcherIn  
 	 */
-	public CogRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+	public RotationRenderer() {
 	}
+	public abstract DynamicBlockModelReference getMainRotor(BlockState bs,T be);
 
+	@SuppressWarnings({ "deprecation", "resource" })
 	@Override
-	public DynamicBlockModelReference getMainRotor(BlockState state, CogeCageBlockEntity be) {
-		if(state.is(CVBlocks.cage.get()))
-			return cage;
-		if(state.is(CVBlocks.cog.get()))
-			return cog;
-		return null;
+	public void render(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLightIn, int combinedOverlayIn) {
+		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
+			return;
+		BlockState state = blockEntity.getBlockState();
+		DynamicBlockModelReference model=getMainRotor(state,blockEntity);
+		if(model==null)return;
+		matrixStack.pushPose();
+		this.customRender(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+		if(state.getValue(KineticBasedBlock.ACTIVE)) 
+			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
+		ModelUtils.renderModel(model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
+		matrixStack.popPose();
 	}
-
-
+	public void customRender(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLightIn, int combinedOverlayIn) {};
 }

@@ -24,7 +24,10 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableSet;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
+import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
+import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 
 import net.minecraft.world.level.block.Block;
@@ -44,8 +47,12 @@ public class CVBlockEntityTypes {
 			REGISTER.register("aoelipile",makeType(AeolipileBlockEntity::new,()->CVBlocks.aeolipile));
 	public static final RegistryObject<BlockEntityType<PlatterBlockEntity>> PLATTER=
 			REGISTER.register("platter",makeType(PlatterBlockEntity::new,()->CVBlocks.platter));
-	
-	
+	public static final RegistryObject<BlockEntityType<WhiskBlockEntity>> WHISK=
+			REGISTER.register("whisk",makeType(WhiskBlockEntity::new,()->CVBlocks.whisk));
+	public static final RegistryObject<BlockEntityType<PamBlockEntity>> PAM=
+			REGISTER.register("pestle_and_mortar",makeType(PamBlockEntity::new,()->CVBlocks.pam));
+	public static final RegistryObject<BlockEntityType<AqueductBlockEntity>> AQUEDUCT=
+			REGISTER.register("aqueduct",makeType(AqueductBlockEntity::new,()->CVBlocks.pam));
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 			Supplier<RegistryObject<? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);

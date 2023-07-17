@@ -76,6 +76,7 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		case 4:slotconfig[2]=SlotConfig.values()[data];break;
 		case 5:slotconfig[3]=SlotConfig.values()[data];break;
 		}
+		this.syncData();
 	}
 
 	@Override

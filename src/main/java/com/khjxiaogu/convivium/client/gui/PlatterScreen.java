@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -73,15 +74,40 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 		this.clearWidgets();
 		this.addRenderableWidget(btn1 = new ImageButton(
 				Button.builder(cpile, btn -> 
-			blockEntity.sendMessage((short) 0,2-btn1.state)).pos(leftPos + 154, topPos + 2).size(20, 20)
-				, 176, 40, 256, 256, TEXTURE,
+			blockEntity.sendMessage((short) 0,(2-btn1.state+1)%3)).pos(leftPos + 154, topPos + 2).size(20, 20)
+				, 176, 0, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(cpile) :(btn1.state==1 ? Tooltip.create(cgrid):Tooltip.create(csep))));
-		
+		this.addRenderableWidget(btnsl1 = new ImageButton(
+				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 2,btnsl1.state%2)).pos(leftPos + 82, topPos + 9).size(12, 12)
+				, 176, 140, 256, 256, TEXTURE,
+				() -> (btnsl1.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
+		this.addRenderableWidget(btnsl2 = new ImageButton(
+				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 3,btnsl2.state%2)).pos(leftPos + 115, topPos + 32).size(12, 12)
+				, 176, 140, 256, 256, TEXTURE,
+				() -> (btnsl2.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
+		this.addRenderableWidget(btnsl3 = new ImageButton(
+				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 4,btnsl3.state%2)).pos(leftPos + 82, topPos + 55).size(12, 12)
+				, 176, 140, 256, 256, TEXTURE,
+				() -> (btnsl3.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
+		this.addRenderableWidget(btnsl4 = new ImageButton(
+				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 5,btnsl4.state%2)).pos(leftPos + 49, topPos + 32).size(12, 12)
+				, 176, 140, 256, 256, TEXTURE,
+				() -> (btnsl4.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 	}
 
 	@Override
 	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
 		tooltip.clear();
+		btn1.state=2-blockEntity.config.ordinal();
+		if(blockEntity.config==GlobalConfig.SEPERATE) {
+			btnsl1.visible=btnsl2.visible=btnsl3.visible=btnsl4.visible=true;
+		}else {
+			btnsl1.visible=btnsl2.visible=btnsl3.visible=btnsl4.visible=false;
+		}
+		btnsl1.state=blockEntity.slotconfig[0].ordinal()+1;
+		btnsl2.state=blockEntity.slotconfig[1].ordinal()+1;
+		btnsl3.state=blockEntity.slotconfig[2].ordinal()+1;
+		btnsl4.state=blockEntity.slotconfig[3].ordinal()+1;
 		super.render(transform, mouseX, mouseY, partial);
 		if (!tooltip.isEmpty())
 			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);

@@ -29,20 +29,14 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class PlatterContainer extends CPBaseContainer {
-	public final PlatterBlockEntity tile;
-
-	public PlatterBlockEntity getBlock() {
-		return tile;
-	}
+public class PlatterContainer extends CPBaseContainer<PlatterBlockEntity> {
 
 	public PlatterContainer(int id, Inventory inv, FriendlyByteBuf buffer) {
 		this(id, inv, (PlatterBlockEntity) inv.player.level().getBlockEntity(buffer.readBlockPos()));
 	}
 
 	public PlatterContainer(int id, Inventory inv, PlatterBlockEntity blockEntity) {
-		super(CVGui.PLATTER.get(), id,4);
-		tile = blockEntity;
+		super(CVGui.PLATTER.get(),blockEntity , id,4);
 		this.addSlot(new SlotItemHandler(blockEntity.storage, 0, 80, 22));
 		this.addSlot(new SlotItemHandler(blockEntity.storage, 1, 98, 30));
 		this.addSlot(new SlotItemHandler(blockEntity.storage, 2, 80, 38));

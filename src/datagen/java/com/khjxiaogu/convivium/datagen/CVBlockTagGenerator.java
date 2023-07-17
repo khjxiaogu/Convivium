@@ -21,8 +21,11 @@ package com.khjxiaogu.convivium.datagen;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.CVTags;
+import com.teammoeg.caupona.CPBlocks;
+import com.teammoeg.caupona.CPItems;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -50,8 +53,14 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 	@Override
 	protected void addTags(Provider pProvider) {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
-			this.tag(CVTags.Blocks.aqueduct).add(cp(s+"_aqueduct"));
+			this.tag(CVTags.Blocks.aqueduct).add(cv(s+"_aqueduct"));
 		}
+		adds(this.tag(CVTags.Blocks.aqueductMove),CPBlocks.BOWL.getKey(),CPBlocks.DISH.getKey(),CVBlocks.platter.getKey(),CPBlocks.WOLF.getKey(),
+				CPBlocks.COPPER_PAN.getKey(),CPBlocks.LEAD_PAN.getKey(),CPBlocks.IRON_PAN.getKey(),CPBlocks.GRAVY_BOAT.getKey(),CPBlocks.STONE_PAN.getKey());
+		for(String s:CPItems.dishes) {
+			this.tag(CVTags.Blocks.aqueductMove).add(cpn(s));
+		}
+
 	}
 	@SafeVarargs
 	private void adds(TagAppender<Block> ta,ResourceKey<? extends Block>... keys) {
@@ -61,8 +70,10 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 	private TagAppender<Block> tag(String s) {
 		return this.tag(BlockTags.create(mrl(s)));
 	}
-
-	private ResourceKey<Block> cp(String s) {
+	private ResourceKey<Block> cpn(String s) {
+		return ResourceKey.create(Registries.BLOCK,cpmrl(s));
+	}
+	private ResourceKey<Block> cv(String s) {
 		return ResourceKey.create(Registries.BLOCK,mrl(s));
 	}
 	private ResourceKey<Block> rk(Block  b) {
@@ -85,6 +96,9 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 
 	private TagKey<Item> atag(ResourceLocation s) {
 		return ItemTags.create(s);
+	}
+	private ResourceLocation cpmrl(String s) {
+		return new ResourceLocation(CVMain.MODID, s);
 	}
 
 	private ResourceLocation mrl(String s) {

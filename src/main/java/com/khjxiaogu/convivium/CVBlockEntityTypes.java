@@ -28,6 +28,7 @@ import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 
 import net.minecraft.world.level.block.Block;
@@ -52,14 +53,16 @@ public class CVBlockEntityTypes {
 	public static final RegistryObject<BlockEntityType<PamBlockEntity>> PAM=
 			REGISTER.register("pestle_and_mortar",makeType(PamBlockEntity::new,()->CVBlocks.pam));
 	public static final RegistryObject<BlockEntityType<AqueductBlockEntity>> AQUEDUCT=
-			REGISTER.register("aqueduct",makeType(AqueductBlockEntity::new,()->CVBlocks.pam));
+			REGISTER.register("aqueduct",makeTypes2(AqueductBlockEntity::new,()->CVBlocks.aqueducts));
+	public static final RegistryObject<BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN=
+			REGISTER.register("aqueduct_controller",makeTypes2(AqueductControllerBlockEntity::new,()->CVBlocks.aqueducts));
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 			Supplier<RegistryObject<? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);
 	}
-	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeTypes2(BlockEntitySupplier<T> create,
-			Supplier<List<RegistryObject<? extends Block>>> valid) {
-		return () -> new BlockEntityType<>(create, valid.get().stream().map(RegistryObject<? extends Block>::get).collect(Collectors.toSet()), null);
+	private static <T extends BlockEntity,E extends Block> Supplier<BlockEntityType<T>> makeTypes2(BlockEntitySupplier<T> create,
+			Supplier<List<RegistryObject<E>>> valid) {
+		return () -> new BlockEntityType<>(create, valid.get().stream().map(RegistryObject<E>::get).collect(Collectors.toSet()), null);
 	}
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeTypes(BlockEntitySupplier<T> create,
 			Supplier<List<Block>> valid) {

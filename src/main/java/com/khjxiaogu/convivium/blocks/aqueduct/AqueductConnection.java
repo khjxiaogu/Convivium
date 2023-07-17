@@ -105,6 +105,18 @@ public enum AqueductConnection implements StringRepresentable{
 			}
 			return new Direction[] {Direction.NORTH,Direction.SOUTH};
 		}
+		if(this==N&&from!=Direction.NORTH) {
+			return new Direction[] {Direction.NORTH};
+		}
+		if(this==E&&from!=Direction.EAST) {
+			return new Direction[] {Direction.EAST};
+		}
+		if(this==S&&from!=Direction.SOUTH) {
+			return new Direction[] {Direction.SOUTH};
+		}
+		if(this==W&&from!=Direction.WEST) {
+			return new Direction[] {Direction.WEST};
+		}
 		return new Direction[0];
 	}
 	public AqueductConnection disconnects(Direction another) {

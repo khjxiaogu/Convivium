@@ -53,7 +53,7 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 		this.titleLabelX = 7;
 		this.inventoryLabelY = this.imageHeight - 92;
 		this.inventoryLabelX = 4;
-		blockEntity = container.tile;
+		blockEntity = container.getBlock();
 	}
 	public static MutableComponent cpile = Utils.translate("gui." + CVMain.MODID + ".fruit_platter.piled");
 	public static MutableComponent cgrid = Utils.translate("gui." + CVMain.MODID + ".fruit_platter.grided");

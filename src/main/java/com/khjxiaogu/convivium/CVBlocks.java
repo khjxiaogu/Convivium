@@ -53,7 +53,7 @@ public class CVBlocks {
 	public static final RegistryObject<PlatterBlock> platter=baseblock("fruit_platter",()->new PlatterBlock(getKineticProps()));
 	public static final RegistryObject<WhiskBlock> whisk=baseblock("whisk",()->new WhiskBlock(getKineticProps()));
 	public static final RegistryObject<PamBlock> pam=baseblock("pestle_and_mortar",()->new PamBlock(getKineticProps()));
-	public static final List<RegistryObject<AqueductBlock>> aqueducts=new ArrayList<>();
+	public static final List<RegistryObject<Block>> aqueducts=new ArrayList<>();
 	static {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
 			aqueducts.add(baseblock(s+"_aqueduct",()->new AqueductBlock(getKineticProps())));

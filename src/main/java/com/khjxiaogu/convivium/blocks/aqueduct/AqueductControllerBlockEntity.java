@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AqueductBlockEntity extends CPBaseBlockEntity {
+public class AqueductControllerBlockEntity extends CPBaseBlockEntity {
 	
-	public AqueductBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-		super(CVBlockEntityTypes.AQUEDUCT.get(), pWorldPosition, pBlockState);
+	public AqueductControllerBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+		super(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), pWorldPosition, pBlockState);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -49,11 +49,10 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			}
 		}
 	}
-	public boolean move(BlockPos pos1,BlockPos pos2) {
+	public void move(BlockPos pos1,BlockPos pos2) {
 		BlockEntity be=this.level.getBlockEntity(pos1);
 		BlockState bs=this.level.getBlockState(pos1);
-		BlockState bs2=this.level.getBlockState(pos2);
-		if(bs.is(Blocks.AIR)||!bs2.is(Blocks.AIR))return false;
+		if(bs.is(Blocks.AIR))return;
 		if(be!=null) {
 			CompoundTag nbt=be.serializeNBT();
 			this.level.removeBlockEntity(pos1);
@@ -64,7 +63,6 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			this.level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2);
 			this.level.setBlock(pos2, bs, 2);
 		}
-		return true;
 	}
 
 }

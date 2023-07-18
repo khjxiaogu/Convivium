@@ -44,5 +44,8 @@ public class CogeCageBlockEntity extends KineticTransferBlockEntity {
 		super.tick();
 
 	}
-
+	@Override
+	public boolean isReceiver() {
+		return false;
+	}
 }

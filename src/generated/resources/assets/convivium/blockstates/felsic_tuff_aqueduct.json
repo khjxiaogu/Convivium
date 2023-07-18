@@ -1,0 +1,41 @@
+{
+  "variants": {
+    "connection=e": {
+      "model": "convivium:block/felsic_tuff_aqueduct_end",
+      "y": 180
+    },
+    "connection=n": {
+      "model": "convivium:block/felsic_tuff_aqueduct_end",
+      "y": 90
+    },
+    "connection=ne": {
+      "model": "convivium:block/felsic_tuff_aqueduct_corner",
+      "y": 90
+    },
+    "connection=nw": {
+      "model": "convivium:block/felsic_tuff_aqueduct_corner"
+    },
+    "connection=s": {
+      "model": "convivium:block/felsic_tuff_aqueduct_end",
+      "y": 270
+    },
+    "connection=se": {
+      "model": "convivium:block/felsic_tuff_aqueduct_corner",
+      "y": 180
+    },
+    "connection=sw": {
+      "model": "convivium:block/felsic_tuff_aqueduct_corner",
+      "y": 270
+    },
+    "connection=w": {
+      "model": "convivium:block/felsic_tuff_aqueduct_end"
+    },
+    "connection=x": {
+      "model": "convivium:block/felsic_tuff_aqueduct_straight"
+    },
+    "connection=z": {
+      "model": "convivium:block/felsic_tuff_aqueduct_straight",
+      "y": 90
+    }
+  }
+}

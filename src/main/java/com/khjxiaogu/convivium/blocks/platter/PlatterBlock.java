@@ -97,6 +97,19 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 
 	}
 
+	public int getSlot(PlatterBlockEntity be,boolean dx,boolean dz) {
+		if(dx) {
+			if(dz) 
+				return 3;//
+			else
+				return 1;
+		}else {
+			if(dz)
+				return 2;//
+			else
+				return 0;
+		}
+	}
 	@SuppressWarnings("deprecation")
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
@@ -104,9 +117,46 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 		InteractionResult p = super.use(state, worldIn, pos, player, handIn, hit);
 		if (p.consumesAction())
 			return p;
-		if (worldIn.getBlockEntity(pos) instanceof PlatterBlockEntity blockEntity&&handIn == InteractionHand.MAIN_HAND) {
-			if (!worldIn.isClientSide)
-				NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockEntity.getBlockPos());
+		if (worldIn.getBlockEntity(pos) instanceof PlatterBlockEntity blockEntity) {
+			if (!worldIn.isClientSide) {
+				if(player.isShiftKeyDown()) {
+					double dx=hit.getLocation().x-pos.getX();
+					double dz=hit.getLocation().z-pos.getZ();
+					boolean ddx=dx>0.5;
+					boolean ddz=dz>0.5;
+					if(blockEntity.config==GlobalConfig.PILED) {
+						ItemStack hand=player.getItemInHand(handIn);
+						if(!hand.isEmpty()) {
+							for(int i=0;i<4;i++) {
+								if(blockEntity.storage.getStackInSlot(i).isEmpty()) {
+									blockEntity.storage.setStackInSlot(i,hand.split(1));
+									player.setItemInHand(handIn, hand);
+									break;
+								}
+							}
+						}else
+							for(int i=3;i>=0;i--) {
+								ItemStack ret=blockEntity.storage.getStackInSlot(i);
+								if(!ret.isEmpty()) {
+									ItemHandlerHelper.giveItemToPlayer(player, ret);
+									blockEntity.storage.setStackInSlot(i,ItemStack.EMPTY);
+									break;
+								}
+							}
+					}else {
+						int slot=getSlot(blockEntity,ddx,ddz);
+						ItemStack orig=blockEntity.storage.getStackInSlot(slot);
+						if(!orig.isEmpty()) {
+							ItemHandlerHelper.giveItemToPlayer(player, orig);
+							orig=ItemStack.EMPTY;
+						}else {
+							orig=player.getItemInHand(handIn).split(1);
+						}
+						blockEntity.storage.setStackInSlot(slot,orig);
+					}
+				}else
+					NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockEntity.getBlockPos());
+			}
 			return InteractionResult.SUCCESS;
 		}
 		return p;
@@ -125,7 +175,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 			int sign=0;
 			for(int i=0;i<dish.storage.getSlots();i++) {
 				if(!dish.storage.getStackInSlot(i).isEmpty()) {
-					sign+=4;
+					sign|=1<<i;
 				}
 			}
 			return Math.min(sign,15);

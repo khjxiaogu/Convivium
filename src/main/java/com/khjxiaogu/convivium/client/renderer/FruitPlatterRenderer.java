@@ -31,8 +31,8 @@ import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.SlotConfig;
+import com.khjxiaogu.convivium.client.renderer.FruitModel.ModelType;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.ModelUtils;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,8 +47,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEntity> {
-	public static final Map<Item,DynamicBlockModelReference> models=new HashMap<>();
-	public static final Map<Item,DynamicBlockModelReference[]> cmodels=new HashMap<>();
+	public static final Map<Item,FruitModel> models=new HashMap<>();
 	private final ItemRenderer render;
 	/**
 	 * @param rendererDispatcherIn
@@ -68,41 +67,70 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 		if (!state.is(CVBlocks.platter.get()))
 			return;
 		//System.out.println("render");
-		Item crn=null;
-		int icnt=0;
+		Map<Item,Integer> items=new HashMap<>();
 		boolean canFull=blockEntity.config==GlobalConfig.PILED;
-		DynamicBlockModelReference[] model=new DynamicBlockModelReference[4];
+		FruitModel[] model=new FruitModel[4];
 		for(int i=0;i<4;i++) {
 			ItemStack is=blockEntity.storage.getStackInSlot(i);
-			
 			if(!is.isEmpty()) {
 				Item it=is.getItem();
-				if(canFull) {
-					if(crn==null) {
-						crn=is.getItem();
-					}else if(crn!=it) {
-						crn=null;
-						canFull=false;
-					}
-					icnt++;
-				}
-				if(blockEntity.config!=GlobalConfig.SEPERATE||blockEntity.slotconfig[i]==SlotConfig.MODEL)
+				items.compute(it, (k,v)->v==null?1:v+1);
+				if(blockEntity.config!=GlobalConfig.SEPERATE||blockEntity.slotconfig[i]==SlotConfig.MODEL) {
 					model[i]=models.get(it);
+					if(model[i]!=null)continue;
+				}
+				canFull=false;
 			}
 		}
-		if(crn!=null) {
-			DynamicBlockModelReference[] rss=cmodels.get(crn);
-			if(rss!=null) {
-				ModelUtils.renderModel(rss[icnt-1], buffer.getBuffer(RenderType.cutout()),matrixStack, combinedLightIn, combinedOverlayIn);
-				return;
+		if(canFull) {
+			if(items.size()==1) {
+				Item is=items.keySet().stream().findFirst().orElse(null);
+				FruitModel rss=models.get(is);
+				if(rss!=null) {
+					ModelUtils.renderModel(rss.getPiled(items.get(is)-1), buffer.getBuffer(RenderType.cutout()),matrixStack, combinedLightIn, combinedOverlayIn);
+					return;
+				}
+			}else {
+				ModelType mt=null;
+				int total=0;
+				for(int i=0;i<4;i++) {
+					if(model[i]==null)continue;
+					ModelType crn=model[i].getType();
+					total++;
+					if(crn==ModelType.MISC) {
+						canFull=false;
+						break;
+					}else if(mt==null) {
+						mt=crn;
+					}else if(model[i].getType()!=mt) {
+						canFull=false;
+						break;
+					}
+				}
+				if(canFull) {
+					int j=0;
+					for(int i=0;i<4;i++) {
+						if(model[i]==null)continue;
+						j++;
+						ModelUtils.renderModelGroups(model[i].getPiled(total-1), buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("FruitUnit"+j),
+								matrixStack, combinedLightIn, combinedOverlayIn);
+					}
+					return;
+				}
+				
 			}
+			
+			
+			/*else if(!hasModel&&blockEntity.config==GlobalConfig.PILED) {
+				
+			}*/
 		}
 		
 		for(int i=1;i<=4;i++) {
 			ItemStack is=blockEntity.storage.getStackInSlot(i-1);
 			if(!is.isEmpty()) {
 				if(model[i-1]!=null) {
-				ModelUtils.renderModelGroups(model[i-1], buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("FruitUnit"+i),
+				ModelUtils.renderModelGroups(model[i-1].getGrid(), buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("FruitUnit"+i),
 						matrixStack, combinedLightIn, combinedOverlayIn);
 				}else {
 					float rx=0;

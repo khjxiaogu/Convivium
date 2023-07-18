@@ -80,5 +80,5 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity {
 			this.syncData();
 		}
 	}
-
+	public abstract boolean isReceiver() ;
 }

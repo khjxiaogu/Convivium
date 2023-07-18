@@ -59,4 +59,6 @@ public class CogCageBlock extends KineticBasedBlock<CogeCageBlockEntity> {
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
+
+
 }

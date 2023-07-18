@@ -29,6 +29,8 @@ import net.minecraft.world.level.material.Fluid;
 
 public class CVTags {
 	public static class Blocks{
+		public static TagKey<Block> aqueduct=create("aqueduct");
+		public static TagKey<Block> aqueductMove=create("aqueduct_movable");
 		private static TagKey<Block> create(String s){
 			return  BlockTags.create(new ResourceLocation(CVMain.MODID, s));
 		}

@@ -23,32 +23,23 @@ package com.khjxiaogu.convivium.client.renderer;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.khjxiaogu.convivium.util.RotationUtils;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.ModelUtils;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CogRenderer extends RotationRenderer<CogeCageBlockEntity> {
-	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"cog");
-	public static final DynamicBlockModelReference cage=ModelUtils.getModel(CVMain.MODID,"cage_wheel");
+public class WhiskRenderer extends RotationRenderer<WhiskBlockEntity> {
+	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"whisk_rotor");
 	/**
 	 * @param rendererDispatcherIn  
 	 */
-	public CogRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+	public WhiskRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 	}
 
 	@Override
-	public DynamicBlockModelReference getMainRotor(BlockState state, CogeCageBlockEntity be) {
-		if(state.is(CVBlocks.cage.get()))
-			return cage;
-		if(state.is(CVBlocks.cog.get()))
+	public DynamicBlockModelReference getMainRotor(BlockState state, WhiskBlockEntity be) {
+		if(state.is(CVBlocks.whisk.get()))
 			return cog;
 		return null;
 	}

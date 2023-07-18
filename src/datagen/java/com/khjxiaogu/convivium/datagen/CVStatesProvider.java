@@ -27,6 +27,8 @@ import java.util.function.UnaryOperator;
 
 import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
@@ -67,9 +69,25 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticBlockModel("cog");
 		kineticBlockModel("cage_wheel");
 		kineticDirectionalBlockModel("aeolipile","aeolipile_stator");
+		kineticMixedBlockModel("whisk","whisk_stator");
+		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));
-		
+		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
+			
+			this.getVariantBuilder(cvblock(s+"_aqueduct"))
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.X).modelForState().modelFile(bmf(s+"_aqueduct_straight")).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.Z).modelForState().modelFile(bmf(s+"_aqueduct_straight")).rotationY(90).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.N).modelForState().modelFile(bmf(s+"_aqueduct_end")).rotationY(90).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.E).modelForState().modelFile(bmf(s+"_aqueduct_end")).rotationY(180).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.S).modelForState().modelFile(bmf(s+"_aqueduct_end")).rotationY(270).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.W).modelForState().modelFile(bmf(s+"_aqueduct_end")).rotationY(0).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.NE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(90).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.NW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(0).addModel()//
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.SW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(270).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.SE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(180).addModel();
+			this.itemModel(cvblock(s+"_aqueduct"), bmf(s+"_aqueduct_corner"));
+		}
 	}
 
 	private Block cvblock(String name) {
@@ -77,6 +95,11 @@ public class CVStatesProvider extends BlockStateProvider {
 	}
 	protected void kineticDirectionalBlockModel(String name,String stator) {
 		horizontalMultipart(this.getMultipartBuilder(cvblock(name)),bmf(stator),c->c);
+		blockItemModel(name);
+		
+	} 
+	protected void kineticMixedBlockModel(String name,String stator) {
+		this.getVariantBuilder(cvblock(name)).partialState().modelForState().modelFile(bmf(stator)).addModel();
 		blockItemModel(name);
 		
 	} 

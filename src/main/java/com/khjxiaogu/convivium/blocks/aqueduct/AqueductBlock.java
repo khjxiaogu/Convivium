@@ -2,16 +2,23 @@ package com.khjxiaogu.convivium.blocks.aqueduct;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVTags;
+import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
+import com.teammoeg.caupona.util.Utils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -20,9 +27,10 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 	public static final EnumProperty<AqueductConnection> CONN=EnumProperty.create("connection", AqueductConnection.class);
 	public AqueductBlock(Properties blockProps) {
 		super(blockProps, CVBlockEntityTypes.AQUEDUCT);
+		this.registerDefaultState(this.defaultBlockState().setValue(CONN, AqueductConnection.A));
 		// TODO Auto-generated constructor stub
 	}
-	private static VoxelShape shape=Shapes.or(Block.box(2, 0, 2, 14, 10, 14),Block.box(0, 10, 0, 16, 15, 16));
+	private static VoxelShape shape=Shapes.or(Block.box(2, 0, 2, 14, 10, 14),Block.box(0, 10, 0, 16, 16, 16));
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		// TODO Auto-generated method stub
@@ -30,9 +38,17 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		pBuilder.add(CONN);
 	}
 
+	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-		BlockState blockstate = this.defaultBlockState().setValue(CONN,AqueductConnection.get(pContext.getClickedFace().getOpposite(),pContext.getHorizontalDirection()));
-		return blockstate;
+		AqueductConnection conn=AqueductConnection.A;
+		for(Direction d:Utils.horizontals) {
+			BlockPos pos=pContext.getClickedPos().relative(d);
+			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.aqueduct)) {
+				conn=conn.connects(d);
+			}
+		}
+		
+		return super.getStateForPlacement(pContext).setValue(CONN, conn);
 	}
 
 	/**
@@ -69,6 +85,27 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		// TODO Auto-generated method stub
 		return shape;
 	}
+
+	@Override
+	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
+		
+		if(pLevel.getBlockEntity(pPos) instanceof AqueductBlockEntity aq) {
+			if(aq.tonxt>0&&aq.from!=null) {
+				Direction[] dirs=pState.getValue(AqueductBlock.CONN).getNext(aq.from);
+				if(dirs.length>0) {
+					Vec3i v3=dirs[pLevel.random.nextInt(dirs.length)].getNormal();
+					Vec3i vd=v3.offset(aq.from.getOpposite().getNormal());
+					//System.out.println(v3);
+					float spd=40f/aq.tonxt;
+					pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0125).add(Vec3.atLowerCornerOf(vd).scale(0.0125)).scale(spd*0.5));
+					
+				}
+			}
+		}
+		
+	}
+
+
 
 
 }

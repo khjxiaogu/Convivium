@@ -12,10 +12,10 @@ public class SplashParticle extends TextureSheetParticle {
    private final SpriteSet sprites;
 
    SplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
-      super(pLevel, pX, pY, pZ, 0.0D, 0.0D, 0.0D);
+      super(pLevel, pX, pY, pZ);
       this.sprites = pSprites;
       this.setSize(0.01F, 0.01F);
-      this.lifetime = 4;
+      this.lifetime = 20;
       this.setSpriteFromAge(pSprites);
       this.gravity = 0.0F;
       this.xd = pXSpeed;
@@ -23,6 +23,7 @@ public class SplashParticle extends TextureSheetParticle {
       this.zd = pZSpeed;
       this.pickSprite(sprites);
       hasPhysics=false;
+      this.setColor(0.3F, 0.5F, 1.0F);
    }
 
    public ParticleRenderType getRenderType() {

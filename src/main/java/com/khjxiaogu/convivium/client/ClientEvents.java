@@ -22,6 +22,7 @@ package com.khjxiaogu.convivium.client;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.util.RotationUtils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -40,7 +41,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void tick(TickEvent.ClientTickEvent tick)
 	{
-		if(tick.phase==Phase.START)
+		if(tick.phase==Phase.START&&!Minecraft.getInstance().isPaused())
 			RotationUtils.tick();;
 	}
 }

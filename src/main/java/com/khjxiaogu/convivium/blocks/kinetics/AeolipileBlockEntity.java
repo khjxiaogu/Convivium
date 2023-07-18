@@ -31,6 +31,7 @@ import com.teammoeg.caupona.blocks.CPHorizontalBlock;
 import com.teammoeg.caupona.blocks.pot.StewPotBlockEntity;
 import com.teammoeg.caupona.blocks.stove.IStove;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
+import com.teammoeg.caupona.util.IInfinitable;
 import com.teammoeg.caupona.util.LazyTickWorker;
 import com.teammoeg.caupona.util.Utils;
 
@@ -45,12 +46,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class AeolipileBlockEntity extends CPBaseBlockEntity {
+public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinitable{
 	LazyTickWorker process;
 	public int speed;
 	public int waterTick;
 	private int r;
-
+	private boolean inf;
 	public AeolipileBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.AOELIPILE.get(), pWorldPosition, pBlockState);
 		r = CVConfig.SERVER.kineticRange.get();
@@ -76,12 +77,14 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity {
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
 		speed = nbt.getInt("heatSpeed");
 		waterTick = nbt.getInt("water");
+		inf=nbt.getBoolean("inf");
 	}
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
 		nbt.putInt("heatSpeed", speed);
 		nbt.putInt("water", waterTick);
+		nbt.putBoolean("inf", inf);
 	}
 
 	private boolean dist(BlockPos crn, BlockPos orig) {
@@ -131,7 +134,7 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity {
 			FluidTank tank=stew_pot.getTank();
 			if(tank.getFluid().getFluid().isSame(Fluids.WATER)) {
 				if(waterTick==0) {
-					if(!tank.drain(new FluidStack(Fluids.WATER,1),FluidAction.EXECUTE).isEmpty())
+					if(inf||!tank.drain(new FluidStack(Fluids.WATER,1),FluidAction.EXECUTE).isEmpty())
 						waterTick=20;
 				}
 				if(waterTick>0) {
@@ -156,6 +159,11 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity {
 			speed = 0;
 			this.setChanged();
 		}
+	}
+
+	@Override
+	public boolean setInfinity() {
+		return inf=!inf;
 	}
 
 }

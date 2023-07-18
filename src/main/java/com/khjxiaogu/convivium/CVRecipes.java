@@ -18,13 +18,17 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.teammoeg.caupona.data.CPRecipeSerializer;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CVRecipes {
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
@@ -36,9 +40,15 @@ public class CVRecipes {
 				() -> new CPRecipeSerializer<StewCookingRecipe>(StewCookingRecipe::new, StewCookingRecipe::new,
 						StewCookingRecipe::write));*/
 		TasteRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("taste",()->new CPRecipeSerializer<>(TasteRecipe::new,TasteRecipe::new,TasteRecipe::write));
+		GrindingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("grind",()->new CPRecipeSerializer<>(GrindingRecipe::new,GrindingRecipe::new,GrindingRecipe::write));
 	}
 
 	static {
+		TasteRecipe.TYPE=createType("taste");
+		GrindingRecipe.TYPE=createType("grind");
 		//StewCookingRecipe.TYPE = RECIPE_TYPES.register("stew",()->RecipeType.simple(new ResourceLocation(CPMain.MODID ,"stew")));
+	}
+	public static RegistryObject<RecipeType<Recipe<?>>> createType(String s){
+		return RECIPE_TYPES.register(s,()->RecipeType.simple(new ResourceLocation(CVMain.MODID ,s)));
 	}
 }

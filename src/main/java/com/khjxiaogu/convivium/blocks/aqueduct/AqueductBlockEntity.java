@@ -1,6 +1,7 @@
 package com.khjxiaogu.convivium.blocks.aqueduct;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.client.CVParticles;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 
 import net.minecraft.core.BlockPos;
@@ -38,23 +39,25 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 
 	@Override
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
-		// TODO Auto-generated method stub
-		if(!isClient) {
+		if(nbt.contains("from"))
 			from=Direction.values()[nbt.getInt("from")];
-			tonxt=nbt.getInt("processMax");
+		snxt=nbt.getInt("processA");
+		tonxt=nbt.getInt("processMax");
+		if(!isClient) {
+			
 			nxt=nbt.getInt("process");
-			snxt=nbt.getInt("processA");
 		}
 	}
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
-		// TODO Auto-generated method stub
-		if(!isClient) {
+		if(from!=null)
 			nbt.putInt("from", from.ordinal());
-			nbt.putInt("processMax", tonxt);
+		nbt.putInt("processA", snxt);
+		nbt.putInt("processMax", tonxt);
+		if(!isClient) {
+			
 			nbt.putInt("process", nxt);
-			nbt.putInt("processA", snxt);
 		}
 	}
 	
@@ -64,8 +67,9 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			this.nxt=nxt;
 		}
 		tonxt=nxt;
-		if(tonxt>0)
+		if(tonxt>0) 
 			snxt=Mth.ceil(tonxt/8f)*8;
+		this.syncData();
 	}
 	@Override
 	public void tick() {
@@ -74,15 +78,29 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 		// TODO Auto-generated method stub
 		if(snxt>0) {
 			snxt--;
-			int pos=snxt%8;
-			Vec3 center=this.getBlockPos().getCenter();
-			int dx=from.getStepX();
-			int dz=from.getStepZ();
-			for(int i=0;i<2;i++) {
-				double rx=from.getClockWise().getStepX()*(Math.random()-0.5)*7/8f;
-				double rz=from.getClockWise().getStepZ()*(Math.random()-0.5)*7/8f;
-				((ServerLevel)this.level).sendParticles(ParticleTypes.DOLPHIN,center.x()+0.5*dx+rx,center.y()+0.95,center.z()+0.5*dz+rz,1,-dx, 0,-dz,0.1);
-				System.out.println("tic"+dx+","+dz);
+			if(from!=null) {
+				Vec3 center=this.getBlockPos().getCenter();
+	
+				if(Math.random()<0.25d) {
+					int dx=from.getStepX();
+					int dz=from.getStepZ();
+					double rx=from.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
+					double rz=from.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
+					((ServerLevel)this.level).sendParticles(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,0,-dx, 0,-dz,0.048);
+					//System.out.println("tic"+dx+","+dz);
+				}
+				Direction[] dirs=this.getBlockState().getValue(AqueductBlock.CONN).getNext(from);
+				for(Direction d:dirs) {
+					if(Math.random()<0.25d/dirs.length) {
+						Direction di=d.getOpposite();
+						int dx=di.getStepX();
+						int dz=di.getStepZ();
+						double rx=di.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
+						double rz=di.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
+						((ServerLevel)this.level).sendParticles(CVParticles.SPLASH.get(),center.x()+0.46*dx+rx,center.y()+0.45,center.z()+0.46*dz+rz,0,-dx, 0,-dz,0.048);
+						//System.out.println("tic"+dx+","+dz);
+					}
+				}
 			}
 			//System.out.println("tic"+center);
 		}
@@ -94,14 +112,8 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 				if(dirs.length>0) {
 					Direction moving=dirs[this.level.random.nextInt(dirs.length)];
 					move(moving);
-					//if(move(moving)) {
-					if(tonxt>0)
-						snxt=Mth.ceil(tonxt/8f)*8;
 					tonxt=0;
 					nxt=0;
-					/*}else
-						nxt=5;*/
-					
 				}
 			}
 		}

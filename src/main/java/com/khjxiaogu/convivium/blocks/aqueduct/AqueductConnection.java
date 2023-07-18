@@ -13,10 +13,11 @@ public enum AqueductConnection implements StringRepresentable{
 	SE,
 	SW,
 	X,
-	Z;
+	Z,
+	A;
 	public static AqueductConnection get(Direction dir,Direction cand) {
 		 AqueductConnection s1=get(dir);
-		 return s1==null?get(cand):s1;
+		 return A;
 	}
 	public static AqueductConnection get(Direction dir) {
 		switch(dir) {
@@ -25,7 +26,7 @@ public enum AqueductConnection implements StringRepresentable{
 		case NORTH:return N;
 		case SOUTH:return S;
 		}
-		return null;
+		return A;
 	}
 	public AqueductConnection connects(Direction another) {
 		if(this==N) {
@@ -60,64 +61,84 @@ public enum AqueductConnection implements StringRepresentable{
 			}
 			return this;
 		}
+		if(this==A) {
+			switch(another) {
+			case WEST:return W;
+			case EAST:return E;
+			case SOUTH:return S;
+			case NORTH:return N;
+			}
+		}
 		return this;
 	}
+	private static final Direction[] NORTH=new Direction[] {Direction.NORTH};
+	private static final Direction[] WEST=new Direction[] {Direction.WEST};
+	private static final Direction[] SOUTH=new Direction[] {Direction.SOUTH};
+	private static final Direction[] EAST=new Direction[] {Direction.EAST};
+	private static final Direction[] NONE=new Direction[0];
+	private static final Direction[] NRW=new Direction[] {Direction.NORTH,Direction.WEST};
+	private static final Direction[] SUW=new Direction[] {Direction.SOUTH,Direction.WEST};
+	private static final Direction[] SUE=new Direction[] {Direction.SOUTH,Direction.EAST};
+	private static final Direction[] NRE=new Direction[] {Direction.NORTH,Direction.EAST};
+	private static final Direction[] WE=new Direction[] {Direction.EAST,Direction.WEST};
+	private static final Direction[] NS=new Direction[] {Direction.NORTH,Direction.SOUTH};
+	
 	public Direction[] getNext(Direction from) {
 		if(this==NW) {
 			switch(from) {
-			case WEST:return new Direction[] {Direction.NORTH};
-			case NORTH:return new Direction[] {Direction.WEST};
+			case WEST:return NORTH;
+			case NORTH:return WEST;
 			}
-			return new Direction[] {Direction.NORTH,Direction.WEST};
+			return NRW;
 		}
 		if(this==SW) {
 			switch(from) {
-			case WEST:return new Direction[] {Direction.SOUTH};
-			case SOUTH:return new Direction[] {Direction.WEST};
+			case WEST:return SOUTH;
+			case SOUTH:return WEST;
 			}
-			return new Direction[] {Direction.SOUTH,Direction.WEST};
+			return SUW;
 		}
 		if(this==SE) {
 			switch(from) {
-			case SOUTH:return new Direction[] {Direction.EAST};
-			case EAST:return new Direction[] {Direction.SOUTH};
+			case SOUTH:return EAST;
+			case EAST:return SOUTH;
 			}
-			return new Direction[] {Direction.SOUTH,Direction.EAST};
+			return SUE;
 		}
 		if(this==NE) {
 			switch(from) {
-			case EAST:return new Direction[] {Direction.NORTH};
-			case NORTH:return new Direction[] {Direction.EAST};
+			case EAST:return NORTH;
+			case NORTH:return EAST;
 			}
-			return new Direction[] {Direction.NORTH,Direction.EAST};
+			return NRE;
 		}
 		if(this==X) {
 			switch(from) {
-			case EAST:return new Direction[] {Direction.WEST};
-			case WEST:return new Direction[] {Direction.EAST};
+			case EAST:return WEST;
+			case WEST:return EAST;
 			}
-			return new Direction[] {Direction.EAST,Direction.WEST};
+			return WE;
 		}
 		if(this==Z) {
 			switch(from) {
-			case SOUTH:return new Direction[] {Direction.NORTH};
-			case NORTH:return new Direction[] {Direction.SOUTH};
+			case SOUTH:return NORTH;
+			case NORTH:return SOUTH;
 			}
-			return new Direction[] {Direction.NORTH,Direction.SOUTH};
+			return NS;
 		}
 		if(this==N&&from!=Direction.NORTH) {
-			return new Direction[] {Direction.NORTH};
+			return NORTH;
 		}
 		if(this==E&&from!=Direction.EAST) {
-			return new Direction[] {Direction.EAST};
+			return EAST;
 		}
 		if(this==S&&from!=Direction.SOUTH) {
-			return new Direction[] {Direction.SOUTH};
+			return SOUTH;
 		}
 		if(this==W&&from!=Direction.WEST) {
-			return new Direction[] {Direction.WEST};
+			return WEST;
 		}
-		return new Direction[0];
+		return NONE;
 	}
 	public AqueductConnection disconnects(Direction another) {
 		if(this==NW) {
@@ -162,6 +183,14 @@ public enum AqueductConnection implements StringRepresentable{
 			}
 			return this;
 		}
+		if(this==N&&another==Direction.NORTH)
+			return A;
+		if(this==S&&another==Direction.SOUTH)
+			return A;
+		if(this==E&&another==Direction.EAST)
+			return A;
+		if(this==W&&another==Direction.WEST)
+			return A;
 		return this;
 	}
 	@Override

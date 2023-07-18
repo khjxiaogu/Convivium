@@ -83,6 +83,7 @@ public class CVClientRegistry {
 	}
 	@SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+		event.registerSpriteSet(CVParticles.SPLASH.get(), SplashParticle.Provider::new);
 	}
 
 	@SubscribeEvent

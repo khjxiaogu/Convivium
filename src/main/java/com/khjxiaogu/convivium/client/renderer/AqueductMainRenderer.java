@@ -71,17 +71,16 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 		BlockState state = blockEntity.getBlockState();
 		Direction facing=state.getValue(AqueductControllerBlock.FACING);
 		BlockPos facingPos=blockEntity.getBlockPos().relative(facing);
-		//if(aeolipile.get()==Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getModelManager().getMissingModel())
-		//	throw new RuntimeException("Missing model aeolipile");
-		//BlockPos facingPos=blockEntity.getFacingPos();
+
 		boolean isBlack=RotationUtils.isBlackGrid(facingPos);
+		
 		matrixStack.pushPose();
 		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
-		//if(state.getValue(KineticBasedBlock.ACTIVE))
+		if(state.getValue(KineticBasedBlock.ACTIVE))
 			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,0f,0f,1f,isBlack),0.5f,0.5f,0.5f);
-		//System.out.println("render");
 		ModelUtils.renderModel(aeolipile,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
 		matrixStack.popPose();
+		
 		matrixStack.pushPose();
 		matrixStack.translate(0, 15/16f, 0);
 		matrixStack.mulPose(GuiUtils.rotate90);

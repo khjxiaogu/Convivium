@@ -1,7 +1,10 @@
 {
   "values": [
     "convivium:felsic_tuff_aqueduct",
+    "convivium:felsic_tuff_aqueduct_wavemaker",
     "convivium:stone_aqueduct",
-    "convivium:sandstone_aqueduct"
+    "convivium:stone_aqueduct_wavemaker",
+    "convivium:sandstone_aqueduct",
+    "convivium:sandstone_aqueduct_wavemaker"
   ]
 }

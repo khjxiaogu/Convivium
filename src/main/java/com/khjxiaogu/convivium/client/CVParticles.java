@@ -30,8 +30,6 @@ public class CVParticles {
 	public static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister
 			.create(ForgeRegistries.PARTICLE_TYPES, CVMain.MODID);
 
-	public static final RegistryObject<SimpleParticleType> STEAM = REGISTER.register("steam",
-			() -> new SimpleParticleType(false));
-	public static final RegistryObject<SimpleParticleType> SOOT = REGISTER.register("soot_smoke",
+	public static final RegistryObject<SimpleParticleType> SPLASH = REGISTER.register("splash",
 			() -> new SimpleParticleType(false));
 }

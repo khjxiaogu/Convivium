@@ -54,7 +54,7 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 	@Override
 	protected void addTags(Provider pProvider) {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
-			this.tag(CVTags.Blocks.aqueduct).add(cv(s+"_aqueduct"));
+			this.tag(CVTags.Blocks.aqueduct).add(cv(s+"_aqueduct")).add(cv(s+"_aqueduct_wavemaker"));
 		}
 		adds(this.tag(CVTags.Blocks.aqueductMove),CPBlocks.BOWL.getKey(),CPBlocks.DISH.getKey(),CVBlocks.platter.getKey(),CPBlocks.WOLF.getKey(),
 				CPBlocks.COPPER_PAN.getKey(),CPBlocks.LEAD_PAN.getKey(),CPBlocks.IRON_PAN.getKey(),CPBlocks.GRAVY_BOAT.getKey(),CPBlocks.STONE_PAN.getKey());

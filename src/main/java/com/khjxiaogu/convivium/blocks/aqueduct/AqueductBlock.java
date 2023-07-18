@@ -22,7 +22,7 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		super(blockProps, CVBlockEntityTypes.AQUEDUCT);
 		// TODO Auto-generated constructor stub
 	}
-	private static VoxelShape shape=Shapes.or(Block.box(2, 0, 2, 14, 9, 14),Block.box(0, 9, 0, 16, 16, 16));
+	private static VoxelShape shape=Shapes.or(Block.box(2, 0, 2, 14, 10, 14),Block.box(0, 10, 0, 16, 15, 16));
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		// TODO Auto-generated method stub
@@ -60,6 +60,13 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+		return Shapes.block();
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+			CollisionContext pContext) {
+		// TODO Auto-generated method stub
 		return shape;
 	}
 

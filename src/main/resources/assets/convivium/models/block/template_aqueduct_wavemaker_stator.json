@@ -18,7 +18,7 @@
 			}
 		},
 		{
-			"name": "lintel",
+			"name": "lintel1",
 			"from": [0, 8, 2],
 			"to": [5, 12, 14],
 			"faces": {
@@ -27,11 +27,11 @@
 				"south": {"uv": [0, 2, 1.25, 4], "texture": "#material"},
 				"west": {"uv": [8.5, 2, 11.5, 4], "texture": "#material"},
 				"up": {"uv": [8, 9, 9.25, 15], "texture": "#material"},
-				"down": {"uv": [7.5, 8, 4.5, 10.5], "rotation": 90, "texture": "#material", "cullface": "down"}
+				"down": {"uv": [7.5, 8, 4.5, 10.5], "rotation": 90, "texture": "#material"}
 			}
 		},
 		{
-			"name": "lintel",
+			"name": "lintel2",
 			"from": [11, 8, 2],
 			"to": [16, 12, 14],
 			"faces": {
@@ -40,7 +40,7 @@
 				"south": {"uv": [2.75, 2, 4, 4], "texture": "#material"},
 				"west": {"uv": [8.5, 2, 11.5, 4], "texture": "#material"},
 				"up": {"uv": [10.75, 9, 12, 15], "texture": "#material"},
-				"down": {"uv": [7.5, 8, 4.5, 10.5], "rotation": 90, "texture": "#material", "cullface": "down"}
+				"down": {"uv": [7.5, 8, 4.5, 10.5], "rotation": 90, "texture": "#material"}
 			}
 		},
 		{

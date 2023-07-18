@@ -86,7 +86,11 @@ public class CVStatesProvider extends BlockStateProvider {
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.NW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(0).addModel()//
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.SW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(270).addModel()
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.SE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(180).addModel();
-			this.itemModel(cvblock(s+"_aqueduct"), bmf(s+"_aqueduct_corner"));
+			
+			this.horizontalBlock(cvblock(s+"_aqueduct_wavemaker"), bmf(s+"_aqueduct_wavemaker_stator"));
+			this.itemModel(cvblock(s+"_aqueduct"), bmf(s+"_aqueduct_straight"));
+			
+			this.itemModel(cvblock(s+"_aqueduct_wavemaker"), bmf(s+"_aqueduct_wavemaker_stator"));
 		}
 	}
 

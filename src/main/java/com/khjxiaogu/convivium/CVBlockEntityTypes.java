@@ -55,7 +55,7 @@ public class CVBlockEntityTypes {
 	public static final RegistryObject<BlockEntityType<AqueductBlockEntity>> AQUEDUCT=
 			REGISTER.register("aqueduct",makeTypes2(AqueductBlockEntity::new,()->CVBlocks.aqueducts));
 	public static final RegistryObject<BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN=
-			REGISTER.register("aqueduct_controller",makeTypes2(AqueductControllerBlockEntity::new,()->CVBlocks.aqueducts));
+			REGISTER.register("aqueduct_controller",makeTypes2(AqueductControllerBlockEntity::new,()->CVBlocks.aqueduct_mains));
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 			Supplier<RegistryObject<? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);

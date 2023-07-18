@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "convivium:block/sandstone_aqueduct_wavemaker_stator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "convivium:block/sandstone_aqueduct_wavemaker_stator"
+    },
+    "facing=south": {
+      "model": "convivium:block/sandstone_aqueduct_wavemaker_stator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "convivium:block/sandstone_aqueduct_wavemaker_stator",
+      "y": 270
+    }
+  }
+}

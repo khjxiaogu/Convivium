@@ -26,6 +26,7 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.CVTags;
 import com.teammoeg.caupona.CPBlocks;
 import com.teammoeg.caupona.CPItems;
+import com.teammoeg.caupona.CPMain;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -98,7 +99,7 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 		return ItemTags.create(s);
 	}
 	private ResourceLocation cpmrl(String s) {
-		return new ResourceLocation(CVMain.MODID, s);
+		return new ResourceLocation(CPMain.MODID, s);
 	}
 
 	private ResourceLocation mrl(String s) {

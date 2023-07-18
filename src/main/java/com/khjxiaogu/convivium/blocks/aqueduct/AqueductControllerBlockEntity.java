@@ -1,19 +1,18 @@
 package com.khjxiaogu.convivium.blocks.aqueduct;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
-import com.teammoeg.caupona.network.CPBaseBlockEntity;
-
+import com.khjxiaogu.convivium.util.RotationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AqueductControllerBlockEntity extends CPBaseBlockEntity {
+public class AqueductControllerBlockEntity extends AqueductBlockEntity {
 	
 	public AqueductControllerBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), pWorldPosition, pBlockState);
+		tonxt=20;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,30 +38,24 @@ public class AqueductControllerBlockEntity extends CPBaseBlockEntity {
 	public void tick() {
 		if(this.level.isClientSide)
 			return;
+		BlockPos src=this.getBlockPos().above();
+		if(this.level.getBlockState(src).is(Blocks.AIR)) {
+			nxt=20;
+			return;
+		}
+		if(nxt--==0) {
+			nxt=20;
+			tonxt=20;
+			Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
+			Direction moving;
+			if(RotationUtils.isBlackGrid(getBlockPos().relative(dir))) {
+				moving=dir.getClockWise();
+			}else
+				moving=dir.getCounterClockWise();
+			move(moving);
+		}
+		//if()
 		// TODO Auto-generated method stub
-		i++;
-		if(i>=20) {
-			i=0;
-			Direction[] dirs=this.getBlockState().getValue(AqueductBlock.CONN).getNext(Direction.NORTH);
-			if(dirs.length>0) {
-				move(this.getBlockPos().above(),this.getBlockPos().relative(dirs[this.level.random.nextInt(dirs.length)]).above());
-			}
-		}
-	}
-	public void move(BlockPos pos1,BlockPos pos2) {
-		BlockEntity be=this.level.getBlockEntity(pos1);
-		BlockState bs=this.level.getBlockState(pos1);
-		if(bs.is(Blocks.AIR))return;
-		if(be!=null) {
-			CompoundTag nbt=be.serializeNBT();
-			this.level.removeBlockEntity(pos1);
-			this.level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2);
-			this.level.setBlock(pos2, bs, 2);
-			this.level.getBlockEntity(pos2).load(nbt);;
-		}else {
-			this.level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 2);
-			this.level.setBlock(pos2, bs, 2);
-		}
 	}
 
 }

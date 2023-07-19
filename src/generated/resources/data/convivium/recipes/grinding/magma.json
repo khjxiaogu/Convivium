@@ -32,8 +32,8 @@
     },
     {
       "type": "forge:nbt",
-      "count": 0,
-      "item": "minecraft:air"
+      "count": 5,
+      "item": "caupona:soot"
     }
   ],
   "time": 200

@@ -78,7 +78,7 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 		if(pState.getValue(KineticBasedBlock.ACTIVE)) {
 			Direction dir=pState.getValue(AqueductControllerBlock.FACING);
 			Direction moving;
-			if(RotationUtils.isBlackGrid(pPos.relative(dir))) {
+			if(RotationUtils.isBlackGrid(pPos)) {
 				moving=dir.getClockWise();
 			}else {
 				moving=dir.getCounterClockWise();

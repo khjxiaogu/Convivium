@@ -138,7 +138,7 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 						waterTick=20;
 				}
 				if(waterTick>0) {
-					waterTick--;
+					
 					int nh = stove.requestHeat();
 					if (speed != nh) {
 						if(speed==0) {
@@ -151,6 +151,8 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 						process.enqueue();
 						speed = nh;
 					}
+					if(speed>0)
+						waterTick--;
 					this.setChanged();
 					return;
 				}

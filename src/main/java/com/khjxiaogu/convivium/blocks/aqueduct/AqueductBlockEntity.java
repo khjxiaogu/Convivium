@@ -62,6 +62,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 	
 	public void addPush(Direction from,int nxt) {
+		if(this.from!=null&&tonxt!=0)return;
 		this.from=from;
 		if(tonxt==0) {
 			this.nxt=nxt;
@@ -114,6 +115,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 					move(moving);
 					tonxt=0;
 					nxt=0;
+					this.syncData();
 				}
 			}
 		}

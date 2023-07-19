@@ -18,7 +18,13 @@
 
 package com.khjxiaogu.convivium.compat.jei;
 
+import java.util.ArrayList;
+
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.client.gui.PamScreen;
+import com.khjxiaogu.convivium.compat.jei.category.GrindingCategory;
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -31,6 +37,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
@@ -41,12 +48,12 @@ public class JEICompat implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		//registration.addRecipeCatalyst(new ItemStack(CPItems.pbrazier.get()), BrazierCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(CVBlocks.pam.get()), GrindingCategory.TYPE);
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		//registration.addRecipes(BrazierCategory.TYPE,new ArrayList<>(AspicMeltingRecipe.recipes));
+		registration.addRecipes(GrindingCategory.TYPE,new ArrayList<>(GrindingRecipe.recipes));
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class JEICompat implements IModPlugin {
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
-		//registration.addRecipeCategories(new BrazierCategory(guiHelper));
+		registration.addRecipeCategories(new GrindingCategory(guiHelper));
 	}
 
 	@Override
@@ -66,7 +73,7 @@ public class JEICompat implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 
-		//registry.addRecipeClickArea(PanScreen.class, 125, 30, 38, 16, FryingCategory.TYPE);
+		registry.addRecipeClickArea(PamScreen.class, 108, 23,22, 15, GrindingCategory.TYPE);
 	}
 
 	@Override

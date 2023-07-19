@@ -73,7 +73,7 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 		Direction facing=state.getValue(AqueductControllerBlock.FACING);
 		BlockPos facingPos=blockEntity.getBlockPos().relative(facing);
 
-		boolean isBlack=RotationUtils.isBlackGrid(facingPos);
+		boolean isBlack=RotationUtils.isBlackGrid(blockEntity.getBlockPos());
 		
 		matrixStack.pushPose();
 		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);

@@ -117,11 +117,11 @@ public class GrindingRecipe extends IDataRecipe {
 			output = List.of(Ingredient.fromJson(jo.get("output")).getItems()[0]);
 		else if(jo.has("outputs")) {
 			output = SerializeUtil.parseJsonElmList(jo.get("outputs"),t->Ingredient.fromJson(t).getItems()[0]);
-		}
+		}else
+			throw new InvalidRecipeException("cannot load" + id + ": no output found!");
 		if(jo.has("time"))
 			processTime=jo.get("time").getAsInt();
-		if (output == null)
-			throw new InvalidRecipeException("cannot load" + id + ": no output found!");
+
 	}
 
 

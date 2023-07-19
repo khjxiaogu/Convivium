@@ -76,7 +76,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity {
 		if(active) {
 			Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
 			Direction moving;
-			if(RotationUtils.isBlackGrid(getBlockPos().relative(dir))) {
+			if(RotationUtils.isBlackGrid(getBlockPos())) {
 				moving=dir.getClockWise();
 			}else
 				moving=dir.getCounterClockWise();

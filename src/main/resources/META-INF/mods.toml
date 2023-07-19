@@ -16,3 +16,15 @@ Build a party with this.
     versionRange = "[1.20,1.21)"
     ordering = "NONE"
     side = "BOTH"
+[[dependencies.convivium]]
+    modId="forge"
+	mandatory=true
+    versionRange = "[47.0.3,)"
+    ordering = "NONE"
+    side = "BOTH"
+[[dependencies.convivium]]
+    modId="caupona"
+	mandatory=true
+    versionRange = "[0.4.5,)"
+    ordering = "NONE"
+    side = "BOTH"

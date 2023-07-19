@@ -1,0 +1,7 @@
+{
+	"parent": "convivium:block/template_aqueduct_wavemaker_stator_isolated",
+	"textures": {
+		"material": "convivium:block/sandstone_aqueduct",
+		"particle": "convivium:block/sandstone_aqueduct"
+	}
+}

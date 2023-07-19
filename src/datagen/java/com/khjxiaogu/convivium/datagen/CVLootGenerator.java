@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 
 import net.minecraft.data.DataGenerator;
@@ -39,6 +40,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CVLootGenerator extends LootTableProvider {
 
@@ -66,7 +68,18 @@ public class CVLootGenerator extends LootTableProvider {
 
 		@Override
 		protected void generate() {
-	
+			dropSelf(CVBlocks.aeolipile.get());
+			dropSelf(CVBlocks.cage.get());
+			dropSelf(CVBlocks.cog.get());
+			dropSelf(CVBlocks.pam.get());
+			dropSelf(CVBlocks.platter.get());
+			dropSelf(CVBlocks.whisk.get());
+			for(RegistryObject<Block> b:CVBlocks.aqueducts) {
+				dropSelf(b.get());
+			}
+			for(RegistryObject<Block> b:CVBlocks.aqueduct_mains) {
+				dropSelf(b.get());
+			}
 		}
 
 		private Block cp(String name) {

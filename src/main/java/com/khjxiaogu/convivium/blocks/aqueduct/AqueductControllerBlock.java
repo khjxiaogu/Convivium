@@ -20,13 +20,13 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	public AqueductControllerBlock(Properties blockProps) {
 		super(CVBlockEntityTypes.AQUEDUCT_MAIN,blockProps);
 		// TODO Auto-generated constructor stub
-		this.registerDefaultState(this.defaultBlockState().setValue(KineticBasedBlock.ACTIVE, false));
+		this.registerDefaultState(this.defaultBlockState().setValue(KineticBasedBlock.ACTIVE, false).setValue(KineticBasedBlock.LOCKED, false));
 	}
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		// TODO Auto-generated method stub
 		super.createBlockStateDefinition(builder);
-		builder.add(KineticBasedBlock.ACTIVE);
+		builder.add(KineticBasedBlock.ACTIVE).add(KineticBasedBlock.LOCKED);
 	}
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {

@@ -4,6 +4,7 @@
 	"textures": {
 		"1": "convivium:block/stone_aqueduct"
 	},
+	"loader": "caupona:layered",
 	"elements": [
 		{
 			"name": "shaft",

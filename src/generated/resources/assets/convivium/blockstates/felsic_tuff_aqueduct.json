@@ -1,5 +1,8 @@
 {
   "variants": {
+    "connection=a": {
+      "model": "convivium:block/felsic_tuff_aqueduct_isolated"
+    },
     "connection=e": {
       "model": "convivium:block/felsic_tuff_aqueduct_end",
       "y": 180

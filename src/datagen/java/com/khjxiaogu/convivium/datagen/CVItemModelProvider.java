@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.util.Utils;
 
@@ -36,6 +37,9 @@ public class CVItemModelProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
+		for(String mt:CVItems.base_material) {
+			texture(mt);
+		}
 	}
 
 	public void itemModel(Item item, String name) {

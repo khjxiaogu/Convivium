@@ -24,6 +24,7 @@ package com.khjxiaogu.convivium.client.renderer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import com.google.common.collect.ImmutableSet;
@@ -33,7 +34,9 @@ import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.SlotConfig;
 import com.khjxiaogu.convivium.client.renderer.FruitModel.ModelType;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.client.util.ModelUtils;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -56,7 +59,12 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 		render=rendererDispatcherIn.getItemRenderer();
 	}
 
-
+	private static Quaternionf[] rotations=new Quaternionf[] {
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*2/4),0,1,0)),
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*3/4),0,1,0)),
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*4/4),0,1,0)),
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*5/4),0,1,0))
+	};
 	@SuppressWarnings({ "resource" })
 	@Override
 	public void render(PlatterBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
@@ -124,6 +132,28 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			/*else if(!hasModel&&blockEntity.config==GlobalConfig.PILED) {
 				
 			}*/
+		}else if(blockEntity.config==GlobalConfig.PILED) {
+			int j=0;
+			matrixStack.pushPose();
+			matrixStack.translate(0.375, 4/16f, 0.5f);
+			matrixStack.scale(1.5f,1, 1.5f);
+			
+			
+			for(int i=1;i<=4;i++) {
+				ItemStack is=blockEntity.storage.getStackInSlot(4-i);
+				if(is.isEmpty())continue;
+				matrixStack.pushPose();
+				matrixStack.mulPose(rotations[i-1]);
+				matrixStack.mulPose(GuiUtils.rotate90);
+				matrixStack.translate(0,0,-(j++)/32f);
+				
+				
+				render.render(is, ItemDisplayContext.GROUND, false,
+						matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
+				matrixStack.popPose();
+			}
+			matrixStack.popPose();
+			return;
 		}
 		
 		for(int i=1;i<=4;i++) {

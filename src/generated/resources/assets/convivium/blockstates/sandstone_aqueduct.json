@@ -1,5 +1,8 @@
 {
   "variants": {
+    "connection=a": {
+      "model": "convivium:block/sandstone_aqueduct_isolated"
+    },
     "connection=e": {
       "model": "convivium:block/sandstone_aqueduct_end",
       "y": 180

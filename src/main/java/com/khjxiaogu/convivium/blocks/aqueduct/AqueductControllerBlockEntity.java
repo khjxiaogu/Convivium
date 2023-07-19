@@ -49,11 +49,23 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity {
 		BlockPos facingPos=getBlockPos().relative(facing);
 		BlockState bs=this.getLevel().getBlockState(facingPos);
 		int spd=0;
-		if(bs.hasProperty(KineticBasedBlock.ACTIVE)&&bs.getValue(KineticBasedBlock.ACTIVE)&&!level.hasNeighborSignal(this.worldPosition)) {
+		if(bs.hasProperty(KineticBasedBlock.ACTIVE)&&bs.getValue(KineticBasedBlock.ACTIVE)) {
+			boolean isChanged=false;
 			if(!active) {
 				active=true;
-				this.level.setBlockAndUpdate(this.getBlockPos(), state.setValue(KineticBasedBlock.ACTIVE, active));
+				state=state.setValue(KineticBasedBlock.ACTIVE, active);
+				isChanged=true;
 			}
+			boolean hasSignal=level.hasNeighborSignal(this.worldPosition);
+			boolean locked=state.getValue(KineticBasedBlock.LOCKED);
+			if(locked!=hasSignal) {
+				state=state.setValue(KineticBasedBlock.LOCKED, hasSignal);
+				isChanged=true;
+			}
+			if(isChanged)
+				this.level.setBlockAndUpdate(this.getBlockPos(),state);
+			if(hasSignal)
+				active=false;
 			if(level.getBlockEntity(facingPos) instanceof KineticTransferBlockEntity ent) {
 				spd=ent.getSpeed();
 			}

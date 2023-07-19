@@ -143,6 +143,10 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 					if (speed != nh) {
 						if(speed==0) {
 							this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, true));
+						}else if(nh==0) {
+							process.enqueue();
+							this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE,false));
+							this.setChanged();
 						}
 						process.enqueue();
 						speed = nh;

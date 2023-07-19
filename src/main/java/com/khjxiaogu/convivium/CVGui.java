@@ -21,7 +21,6 @@ package com.khjxiaogu.convivium;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamContainer;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;

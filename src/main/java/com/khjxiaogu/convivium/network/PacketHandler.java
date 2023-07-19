@@ -43,7 +43,7 @@ public class PacketHandler {
 	}
 
 	public static void register() {
-		int id = 0;
+		//int id = 0;
 		//CHANNEL.registerMessage(id++, ClientDataMessage.class, ClientDataMessage::encode, ClientDataMessage::new,
 		//		ClientDataMessage::handle);
 	}

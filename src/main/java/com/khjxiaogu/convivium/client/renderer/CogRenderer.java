@@ -24,14 +24,9 @@ package com.khjxiaogu.convivium.client.renderer;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.khjxiaogu.convivium.util.RotationUtils;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.ModelUtils;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 

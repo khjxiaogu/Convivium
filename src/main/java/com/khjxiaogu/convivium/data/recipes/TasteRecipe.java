@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.realmsclient.util.JsonUtils;
-import com.teammoeg.caupona.data.CPRecipeSerializer;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.data.SerializeUtil;
 

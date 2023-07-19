@@ -2,9 +2,7 @@ package com.khjxiaogu.convivium.blocks.pestle_and_mortar;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.teammoeg.caupona.blocks.pot.StewPotBlockEntity;
 import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
-import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

@@ -36,7 +36,6 @@ import com.khjxiaogu.convivium.client.renderer.FruitModel.ModelType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.client.util.ModelUtils;
-import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -65,7 +64,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*4/4),0,1,0)),
 			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*5/4),0,1,0))
 	};
-	@SuppressWarnings({ "resource" })
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public void render(PlatterBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {

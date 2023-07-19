@@ -29,7 +29,6 @@ import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.util.Utils;
 

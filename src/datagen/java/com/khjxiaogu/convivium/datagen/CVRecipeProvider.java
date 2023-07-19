@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-
 import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;

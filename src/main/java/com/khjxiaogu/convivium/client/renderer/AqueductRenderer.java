@@ -21,16 +21,10 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import org.joml.Vector3f;
-
 import com.khjxiaogu.convivium.CVTags;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.GuiUtils;
-import com.teammoeg.caupona.client.util.ModelUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

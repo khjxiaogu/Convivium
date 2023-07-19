@@ -22,7 +22,6 @@
 package com.khjxiaogu.convivium.compat.jei.category;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.khjxiaogu.convivium.CVBlocks;
@@ -50,7 +49,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
@@ -93,23 +91,6 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 			sl.add(ItemHandlerHelper.copyStackWithSize(is, ps.getSecond() > 0 ? ps.getSecond() : 1));
 		return sl;
 	}
-
-	private static List<ItemStack> unpack(Ingredient ps) {
-		if (ps instanceof AbstractIngredient)
-			return Arrays.asList(ps.getItems());
-		List<ItemStack> sl = new ArrayList<>();
-		for (ItemStack is : ps.getItems())
-			if (is.isDamageableItem())
-				for (int i = 0; i <= is.getMaxDamage(); i++) {
-					ItemStack iss = is.copy();
-					iss.setDamageValue(i);
-					sl.add(iss);
-				}
-			else
-				sl.add(is);
-		return sl;
-	}
-
 	private static RecipeIngredientRole type(Pair<Ingredient, Integer> ps) {
 		return ps.getSecond() == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
 	}

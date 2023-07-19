@@ -9,11 +9,15 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
+import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.util.SyncedFluidHandler;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -22,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -34,7 +39,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
 public class PamBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
-	ItemStackHandler inv = new ItemStackHandler(6) {
+	public ItemStackHandler inv = new ItemStackHandler(6) {
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
 			return slot < 3&&GrindingRecipe.testInput(stack);
@@ -138,12 +143,29 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	public void spawnParticleFor(ItemStack is) {
+		if(is.isEmpty())return;
+		ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, is);
+		Vec3 rot=new Vec3(0,0,1).yRot((float) RotationUtils.getRotationAngle(0,this.getBlockPos())).scale(0.3f);
+		Vec3 center = Vec3.atCenterOf(this.getBlockPos()).add(rot);
+		Vec3 target=Vec3.ZERO.offsetRandom(this.level.random,0.2f).multiply(1,0,1).add(0, 0.2, 0);
+		level.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
+	}
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
 		super.tick();
-		if(level.isClientSide)return;
+		if(level.isClientSide) {
+			if(process!=0)
+				for(int i=0;i<3;i++) {
+					ItemStack stackInSlot = inv.getStackInSlot(i);
+					if (!stackInSlot.isEmpty()){
+						if(Math.random()<0.05)
+							spawnParticleFor(stackInSlot);
+					}
+				}
+			return;
+		}
 		if(processMax!=0) {
 			
 			if(process<=0) {

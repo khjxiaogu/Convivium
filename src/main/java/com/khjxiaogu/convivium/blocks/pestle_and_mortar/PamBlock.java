@@ -51,8 +51,9 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 			}
 			if (FluidUtil.interactWithFluidHandler(player, handIn, pam.tanks))
 				return InteractionResult.SUCCESS;
-			if (handIn == InteractionHand.MAIN_HAND&& !worldIn.isClientSide) {
-				NetworkHooks.openScreen((ServerPlayer) player, pam, pam.getBlockPos());
+			if (handIn == InteractionHand.MAIN_HAND) {
+				if(!worldIn.isClientSide)
+					NetworkHooks.openScreen((ServerPlayer) player, pam, pam.getBlockPos());
 				return InteractionResult.SUCCESS;
 			}
 		}

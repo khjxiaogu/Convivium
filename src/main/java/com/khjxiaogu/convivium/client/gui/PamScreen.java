@@ -84,7 +84,7 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY,4210752, false);
 
 		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX+2, this.inventoryLabelY-9,4210752, false);
+		matrixStack.drawString(this.font, name, this.inventoryLabelX+2, this.inventoryLabelY-7,4210752, false);
 	}
 
 	@Override

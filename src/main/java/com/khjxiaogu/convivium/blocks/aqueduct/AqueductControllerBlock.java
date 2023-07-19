@@ -1,32 +1,77 @@
 package com.khjxiaogu.convivium.blocks.aqueduct;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 
 public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductControllerBlockEntity> {
+	public static final EnumProperty<AqueductMainConnection> CONN=EnumProperty.create("connection", AqueductMainConnection.class);
+	
 	public AqueductControllerBlock(Properties blockProps) {
 		super(CVBlockEntityTypes.AQUEDUCT_MAIN,blockProps);
 		// TODO Auto-generated constructor stub
-		this.registerDefaultState(this.defaultBlockState().setValue(KineticBasedBlock.ACTIVE, false).setValue(KineticBasedBlock.LOCKED, false));
+		this.registerDefaultState(this.defaultBlockState().setValue(KineticBasedBlock.ACTIVE, false).setValue(KineticBasedBlock.LOCKED, false).setValue(CONN,AqueductMainConnection.N));
+	}
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		BlockState p=super.getStateForPlacement(pContext);
+		AqueductMainConnection conn=AqueductMainConnection.N;
+		Direction dir=p.getValue(FACING);
+		for(Direction d:Utils.horizontals) {
+			BlockPos pos=pContext.getClickedPos().relative(d);
+			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.aqueduct)) {
+				conn=conn.connects(dir,d);
+			}
+		}
+		
+		return p.setValue(CONN, conn);
+	}
+
+	/**
+	 * Update the provided state given the provided neighbor direction and neighbor
+	 * state, returning a new state.
+	 * For example, fences make their connections to the passed in state if
+	 * possible, and wet concrete powder immediately
+	 * returns its solidified counterpart.
+	 * Note that this method should ideally consider only the specific direction
+	 * passed in.
+	 */
+	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
+			BlockPos pCurrentPos, BlockPos pFacingPos) {
+		Direction dir=pState.getValue(FACING);
+		if(pFacingState.is(CVTags.Blocks.aqueduct)) {
+			AqueductMainConnection c=pState.getValue(CONN).connects(dir,pFacing);
+			if(c!=null)
+				return pState.setValue(CONN, c);
+		}else {
+			AqueductMainConnection c=pState.getValue(CONN).disconnects(dir,pFacing);
+			if(c!=null)
+				return pState.setValue(CONN, c);
+		}
+		return pState;
 	}
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		// TODO Auto-generated method stub
 		super.createBlockStateDefinition(builder);
-		builder.add(KineticBasedBlock.ACTIVE).add(KineticBasedBlock.LOCKED);
+		builder.add(KineticBasedBlock.ACTIVE).add(KineticBasedBlock.LOCKED).add(CONN);
 	}
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {

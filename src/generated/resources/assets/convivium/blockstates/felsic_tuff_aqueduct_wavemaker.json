@@ -1,63 +1,63 @@
 {
   "variants": {
-    "active=false,facing=east,locked=false": {
+    "connection=a,facing=east": {
       "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
       "y": 90
     },
-    "active=false,facing=east,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
-      "y": 90
-    },
-    "active=false,facing=north,locked=false": {
+    "connection=a,facing=north": {
       "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator"
     },
-    "active=false,facing=north,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator"
-    },
-    "active=false,facing=south,locked=false": {
+    "connection=a,facing=south": {
       "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
       "y": 180
     },
-    "active=false,facing=south,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
-      "y": 180
-    },
-    "active=false,facing=west,locked=false": {
+    "connection=a,facing=west": {
       "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
       "y": 270
     },
-    "active=false,facing=west,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
+    "connection=l,facing=east": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end",
       "y": 270
     },
-    "active=true,facing=east,locked=false": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
-      "y": 90
-    },
-    "active=true,facing=east,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
-      "y": 90
-    },
-    "active=true,facing=north,locked=false": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator"
-    },
-    "active=true,facing=north,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator"
-    },
-    "active=true,facing=south,locked=false": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
+    "connection=l,facing=north": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end",
       "y": 180
     },
-    "active=true,facing=south,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
+    "connection=l,facing=south": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end"
+    },
+    "connection=l,facing=west": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end",
+      "y": 90
+    },
+    "connection=n,facing=east": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_isolated",
+      "y": 90
+    },
+    "connection=n,facing=north": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_isolated"
+    },
+    "connection=n,facing=south": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_isolated",
       "y": 180
     },
-    "active=true,facing=west,locked=false": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
+    "connection=n,facing=west": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_isolated",
       "y": 270
     },
-    "active=true,facing=west,locked=true": {
-      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator",
+    "connection=r,facing=east": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end",
+      "y": 90
+    },
+    "connection=r,facing=north": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end"
+    },
+    "connection=r,facing=south": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end",
+      "y": 180
+    },
+    "connection=r,facing=west": {
+      "model": "convivium:block/felsic_tuff_aqueduct_wavemaker_stator_end",
       "y": 270
     }
   }

@@ -120,7 +120,7 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 		matrixStack.drawString(this.font, this.title, this.titleLabelX-2, this.titleLabelY, 4210752, false);
 
 		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX+3, this.inventoryLabelY-9, 4210752, false);
+		matrixStack.drawString(this.font, name, this.inventoryLabelX+3, this.inventoryLabelY-7, 4210752, false);
 	}
 
 	@Override

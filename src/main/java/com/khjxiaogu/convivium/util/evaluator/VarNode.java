@@ -10,8 +10,8 @@ class VarNode implements Node{
 	}
 
 	@Override
-	public double eval(Map<String, Double> env) {
-		return env.getOrDefault(token,0.0);
+	public double eval(IEnvironment env) {
+		return env.get(token);
 	}
 	@Override
 	public String toString() {

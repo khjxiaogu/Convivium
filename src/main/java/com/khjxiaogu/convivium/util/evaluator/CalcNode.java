@@ -14,7 +14,7 @@ class CalcNode implements Node{
 	}
 
 	@Override
-	public double eval(Map<String, Double> env) {
+	public double eval(IEnvironment env) {
 		return calc.apply(nested.eval(env));
 	}
 	

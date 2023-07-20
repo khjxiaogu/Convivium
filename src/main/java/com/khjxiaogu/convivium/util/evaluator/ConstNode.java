@@ -15,7 +15,7 @@ class ConstNode implements Node{
 	}
 
 	@Override
-	public double eval(Map<String, Double> env) {
+	public double eval(IEnvironment env) {
 		return val;
 	}
 	@Override

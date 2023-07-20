@@ -20,7 +20,7 @@ class FuncCallNode implements Node{
 	}
 
 	@Override
-	public double eval(Map<String, Double> env) {
+	public double eval(IEnvironment env) {
 		double[] par=new double[nested.length];
 		for(int i=0;i<par.length;i++) {
 			par[i]=nested[i].eval(env);

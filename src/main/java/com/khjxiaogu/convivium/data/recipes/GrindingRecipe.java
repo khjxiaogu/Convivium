@@ -22,9 +22,7 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
@@ -32,9 +30,7 @@ import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.data.InvalidRecipeException;
 import com.teammoeg.caupona.data.SerializeUtil;
 import com.teammoeg.caupona.fluid.SoupFluid;
-import com.teammoeg.caupona.item.StewItem;
 import com.teammoeg.caupona.util.StewInfo;
-import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -43,12 +39,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class GrindingRecipe extends IDataRecipe {
@@ -72,14 +66,17 @@ public class GrindingRecipe extends IDataRecipe {
 	public FluidStack in= FluidStack.EMPTY;
 	public FluidStack out= FluidStack.EMPTY;
 	public List<ItemStack> output;
-	
+	public int processTime=200;
 	public boolean keepInfo = false;
 	
+	
+
+
 
 
 
 	public GrindingRecipe(ResourceLocation id, List<Pair<Ingredient, Integer>> items, ResourceLocation base,
-			float density, FluidStack in, FluidStack out, List<ItemStack> output, boolean keepInfo) {
+			float density, FluidStack in, FluidStack out, List<ItemStack> output, int processTime, boolean keepInfo) {
 		super(id);
 		this.items = items;
 		this.base = base;
@@ -87,17 +84,18 @@ public class GrindingRecipe extends IDataRecipe {
 		this.in = in;
 		this.out = out;
 		this.output = output;
+		this.processTime = processTime;
 		this.keepInfo = keepInfo;
 	}
 
-
 	public GrindingRecipe(ResourceLocation id, List<Pair<Ingredient, Integer>> items, ResourceLocation base,
-			float density, List<ItemStack> output, boolean keepInfo) {
+			float density, List<ItemStack> output, int processTime,boolean keepInfo) {
 		super(id);
 		this.items = items;
 		this.base = base;
 		this.density = density;
 		this.output = output;
+		this.processTime = processTime;
 		this.keepInfo = keepInfo;
 	}
 
@@ -121,9 +119,11 @@ public class GrindingRecipe extends IDataRecipe {
 			output = List.of(Ingredient.fromJson(jo.get("output")).getItems()[0]);
 		else if(jo.has("outputs")) {
 			output = SerializeUtil.parseJsonElmList(jo.get("outputs"),t->Ingredient.fromJson(t).getItems()[0]);
-		}
-		if (output == null)
+		}else
 			throw new InvalidRecipeException("cannot load" + id + ": no output found!");
+		if(jo.has("time"))
+			processTime=jo.get("time").getAsInt();
+
 	}
 
 
@@ -132,7 +132,7 @@ public class GrindingRecipe extends IDataRecipe {
 		return recipes.stream().anyMatch(t -> t.items.stream().anyMatch(i -> i.getFirst().test(stack)));
 	}
 
-	public static GrindingRecipe testDolium(FluidStack f, ItemStackHandler inv) {
+	public static GrindingRecipe test(FluidStack f, ItemStackHandler inv) {
 		ItemStack is0 = inv.getStackInSlot(0);
 		ItemStack is1 = inv.getStackInSlot(1);
 		ItemStack is2 = inv.getStackInSlot(2);
@@ -186,7 +186,7 @@ public class GrindingRecipe extends IDataRecipe {
 		f.shrink(in.getAmount());
 		List<ItemStack> fss=new ArrayList<>();
 		for(ItemStack is:output)
-			fss.add(is);
+			fss.add(is.copy());
 		return fss;
 	}
 
@@ -215,7 +215,10 @@ public class GrindingRecipe extends IDataRecipe {
 		density = data.readFloat();
 		keepInfo = data.readBoolean();
 		output = SerializeUtil.readList(data, t->t.readItem());
+		processTime=data.readVarInt();
 	}
+
+
 
 	public void write(FriendlyByteBuf data) {
 		SerializeUtil.writeList(data, items, (r, d) -> {
@@ -228,6 +231,7 @@ public class GrindingRecipe extends IDataRecipe {
 		data.writeFloat(density);
 		data.writeBoolean(keepInfo);
 		SerializeUtil.writeList(data, output, (t,d)->d.writeItem(t));
+		data.writeVarInt(processTime);
 	}
 
 	@Override
@@ -250,6 +254,7 @@ public class GrindingRecipe extends IDataRecipe {
 		json.addProperty("density", density);
 		json.addProperty("keepInfo", keepInfo);
 		json.add("outputs",SerializeUtil.toJsonList(output, t->StrictNBTIngredient.of(t).toJson()));
+		json.addProperty("time", processTime);
 	}
 
 }

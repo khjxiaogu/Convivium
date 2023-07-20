@@ -138,15 +138,21 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 						waterTick=20;
 				}
 				if(waterTick>0) {
-					waterTick--;
+					
 					int nh = stove.requestHeat();
 					if (speed != nh) {
 						if(speed==0) {
 							this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, true));
+						}else if(nh==0) {
+							process.enqueue();
+							this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE,false));
+							this.setChanged();
 						}
 						process.enqueue();
 						speed = nh;
 					}
+					if(speed>0)
+						waterTick--;
 					this.setChanged();
 					return;
 				}

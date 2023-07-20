@@ -6,7 +6,6 @@ import com.teammoeg.caupona.network.CPBaseBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -62,6 +61,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 	
 	public void addPush(Direction from,int nxt) {
+		if(this.from!=null&&tonxt!=0)return;
 		this.from=from;
 		if(tonxt==0) {
 			this.nxt=nxt;
@@ -114,6 +114,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 					move(moving);
 					tonxt=0;
 					nxt=0;
+					this.syncData();
 				}
 			}
 		}

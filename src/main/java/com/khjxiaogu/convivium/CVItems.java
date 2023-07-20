@@ -18,14 +18,27 @@
 
 package com.khjxiaogu.convivium;
 
+import com.teammoeg.caupona.item.CPItem;
+import com.teammoeg.caupona.util.TabType;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CVItems {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CVMain.MODID);
+	public static final String[] base_material = new String[] { "camellia_flower","camellia_seeds","clay_basin","dolium_lid","fresh_camellia_shoots","powdered_tea","steamed_camellia_shoots"};
 
+	static {
+		for (String s : base_material) {
+			item(s, createProps(),CVMain.MAIN_TAB);
+		}
+	}
+	public static RegistryObject<Item> item(String name,Properties props,TabType tab){
+		return ITEMS.register(name,()->new CPItem(props,tab));
+	}
 	static Properties createProps() {
 		return new Item.Properties();
 	}

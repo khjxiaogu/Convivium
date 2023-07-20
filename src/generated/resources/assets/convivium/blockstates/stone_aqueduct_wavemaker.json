@@ -1,18 +1,63 @@
 {
   "variants": {
-    "facing=east": {
+    "connection=a,facing=east": {
       "model": "convivium:block/stone_aqueduct_wavemaker_stator",
       "y": 90
     },
-    "facing=north": {
+    "connection=a,facing=north": {
       "model": "convivium:block/stone_aqueduct_wavemaker_stator"
     },
-    "facing=south": {
+    "connection=a,facing=south": {
       "model": "convivium:block/stone_aqueduct_wavemaker_stator",
       "y": 180
     },
-    "facing=west": {
+    "connection=a,facing=west": {
       "model": "convivium:block/stone_aqueduct_wavemaker_stator",
+      "y": 270
+    },
+    "connection=l,facing=east": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end",
+      "y": 270
+    },
+    "connection=l,facing=north": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end",
+      "y": 180
+    },
+    "connection=l,facing=south": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end"
+    },
+    "connection=l,facing=west": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end",
+      "y": 90
+    },
+    "connection=n,facing=east": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_isolated",
+      "y": 90
+    },
+    "connection=n,facing=north": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_isolated"
+    },
+    "connection=n,facing=south": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_isolated",
+      "y": 180
+    },
+    "connection=n,facing=west": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_isolated",
+      "y": 270
+    },
+    "connection=r,facing=east": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end",
+      "y": 90
+    },
+    "connection=r,facing=north": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end"
+    },
+    "connection=r,facing=south": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end",
+      "y": 180
+    },
+    "connection=r,facing=west": {
+      "model": "convivium:block/stone_aqueduct_wavemaker_stator_end",
       "y": 270
     }
   }

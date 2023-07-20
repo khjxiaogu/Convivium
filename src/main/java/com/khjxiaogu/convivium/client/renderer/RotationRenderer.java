@@ -26,6 +26,7 @@ import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.ModelUtils;
+
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -53,9 +54,12 @@ public abstract class RotationRenderer<T extends BlockEntity> implements BlockEn
 		this.customRender(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
 		if(state.getValue(KineticBasedBlock.ACTIVE)) 
 			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
+		this.customRenderRotated(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
 		ModelUtils.renderModel(model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
 		matrixStack.popPose();
 	}
 	public void customRender(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLightIn, int combinedOverlayIn) {};
+	public void customRenderRotated(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {};
 }

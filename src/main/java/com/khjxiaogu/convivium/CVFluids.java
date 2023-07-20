@@ -20,8 +20,6 @@ package com.khjxiaogu.convivium;
 
 import java.util.function.Consumer;
 
-import com.teammoeg.caupona.generated.CPStewTexture;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluid;
@@ -42,8 +40,6 @@ public class CVFluids {
 			this.c = c;
 		}
 		public FluidType create(String n){
-			ResourceLocation rt=CPStewTexture.texture.getOrDefault(n, texture);
-			int cx=CPStewTexture.texture.containsKey(n)?0xffffffff:c;
 			FluidType ft=new FluidType(FluidType.Properties.create().viscosity(1200)
 					.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item."+CVMain.MODID+"."+n)) {
 
@@ -53,17 +49,17 @@ public class CVFluids {
 
 								@Override
 								public int getTintColor() {
-									return cx;
+									return c;
 								}
 
 								@Override
 								public ResourceLocation getStillTexture() {
-									return rt;
+									return texture;
 								}
 
 								@Override
 								public ResourceLocation getFlowingTexture() {
-									return rt;
+									return texture;
 								}
 								
 							});

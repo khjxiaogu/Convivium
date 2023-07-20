@@ -29,6 +29,8 @@ import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
@@ -85,9 +87,26 @@ public class CVStatesProvider extends BlockStateProvider {
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.NE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(90).addModel()
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.NW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(0).addModel()//
 			.partialState().with(AqueductBlock.CONN,AqueductConnection.SW).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(270).addModel()
-			.partialState().with(AqueductBlock.CONN,AqueductConnection.SE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(180).addModel();
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.SE).modelForState().modelFile(bmf(s+"_aqueduct_corner")).rotationY(180).addModel()
+			.partialState().with(AqueductBlock.CONN,AqueductConnection.A).modelForState().modelFile(bmf(s+"_aqueduct_isolated")).addModel();
+	        getVariantBuilder(cvblock(s+"_aqueduct_wavemaker"))
+            .forAllStatesExcept(state -> {
+            	var builder=ConfiguredModel.builder();
+            	boolean rev=false;
+            	switch(state.getValue(AqueductControllerBlock.CONN)) {
+            	case N:builder.modelFile(bmf(s+"_aqueduct_wavemaker_stator_isolated"));break;
+            	case L:builder.modelFile(bmf(s+"_aqueduct_wavemaker_stator_end"));rev=true;break;
+            	case R:builder.modelFile(bmf(s+"_aqueduct_wavemaker_stator_end"));break;
+            	case A:builder.modelFile(bmf(s+"_aqueduct_wavemaker_stator"));break;
+            	}
+            	
+            	return builder
+                    .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot()+(rev?0:180)) % 360)
+                    .build();
+            },KineticBasedBlock.LOCKED,KineticBasedBlock.ACTIVE
+            );
 			
-			this.horizontalBlock(cvblock(s+"_aqueduct_wavemaker"), bmf(s+"_aqueduct_wavemaker_stator"));
+			
 			this.itemModel(cvblock(s+"_aqueduct"), bmf(s+"_aqueduct_straight"));
 			
 			this.itemModel(cvblock(s+"_aqueduct_wavemaker"), bmf(s+"_aqueduct_wavemaker_stator"));

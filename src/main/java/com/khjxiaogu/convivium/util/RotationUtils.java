@@ -38,4 +38,10 @@ public class RotationUtils {
 	public static Quaternionf getRotation(float pt,float x,float y,float z,BlockPos pos) {
 		return getRotation(pt,x,y,z,isBlackGrid(pos));
 	}
+	public static double getRotationAngle(float pt,boolean black) {
+		return getCycle(pt,black)*2*Math.PI;
+	}
+	public static double getRotationAngle(float pt,BlockPos pos) {
+		return getRotationAngle(pt,isBlackGrid(pos));
+	}
 }

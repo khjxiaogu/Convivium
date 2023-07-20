@@ -33,6 +33,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public abstract class KineticBasedBlock<V extends CPBaseBlockEntity> extends CPHorizontalEntityBlock<V> {
 	public static final BooleanProperty ACTIVE=BooleanProperty.create("active");
+	public static final BooleanProperty LOCKED=BooleanProperty.create("locked");
 	public KineticBasedBlock(RegistryObject<BlockEntityType<V>> blockEntity, Properties p_54120_) {
 		super(blockEntity, p_54120_);
 		super.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));

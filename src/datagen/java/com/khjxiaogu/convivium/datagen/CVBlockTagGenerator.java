@@ -27,6 +27,7 @@ import com.khjxiaogu.convivium.CVTags;
 import com.teammoeg.caupona.CPBlocks;
 import com.teammoeg.caupona.CPItems;
 import com.teammoeg.caupona.CPMain;
+import com.teammoeg.caupona.CPTags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -56,6 +57,7 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
 			this.tag(CVTags.Blocks.aqueduct).add(cv(s+"_aqueduct")).add(cv(s+"_aqueduct_wavemaker"));
 		}
+		adds(this.tag(CPTags.Blocks.CHIMNEY_IGNORES),CVBlocks.aeolipile.getKey());
 		adds(this.tag(CVTags.Blocks.aqueductMove),CPBlocks.BOWL.getKey(),CPBlocks.DISH.getKey(),CVBlocks.platter.getKey(),CPBlocks.WOLF.getKey(),
 				CPBlocks.COPPER_PAN.getKey(),CPBlocks.LEAD_PAN.getKey(),CPBlocks.IRON_PAN.getKey(),CPBlocks.GRAVY_BOAT.getKey(),CPBlocks.STONE_PAN.getKey());
 		for(String s:CPItems.dishes) {

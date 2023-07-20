@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamContainer;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 
 import net.minecraft.world.inventory.MenuType;
@@ -31,4 +32,6 @@ public class CVGui {
 			CVMain.MODID);
 	public static final RegistryObject<MenuType<PlatterContainer>> PLATTER = CONTAINERS.register("platter",
 			() -> IForgeMenuType.create(PlatterContainer::new));
+	public static final RegistryObject<MenuType<PamContainer>> PAM = CONTAINERS.register("pestle_and_mortar",
+			() -> IForgeMenuType.create(PamContainer::new));
 }

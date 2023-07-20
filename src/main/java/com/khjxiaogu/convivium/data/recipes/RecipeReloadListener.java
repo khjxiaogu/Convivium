@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -80,7 +81,7 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 	
 		logger.info("Building recipes...");
 		Stopwatch sw = Stopwatch.createStarted();
-		
+		GrindingRecipe.recipes=filterRecipes(recipes,GrindingRecipe.class,GrindingRecipe.TYPE).collect(Collectors.toList());
 		sw.stop();
 		logger.info("Recipes built, cost {}", sw);
 	}

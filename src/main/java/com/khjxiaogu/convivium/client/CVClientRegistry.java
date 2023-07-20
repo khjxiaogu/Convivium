@@ -21,6 +21,7 @@ package com.khjxiaogu.convivium.client;
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVGui;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.client.gui.PamScreen;
 import com.khjxiaogu.convivium.client.gui.PlatterScreen;
 import com.khjxiaogu.convivium.client.renderer.AeolipileRenderer;
 import com.khjxiaogu.convivium.client.renderer.AqueductMainRenderer;
@@ -31,8 +32,6 @@ import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.teammoeg.caupona.CPMain;
-import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import com.teammoeg.caupona.client.util.ModelUtils;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -53,6 +52,7 @@ public class CVClientRegistry {
 	@SubscribeEvent
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
 		MenuScreens.register(CVGui.PLATTER.get(), PlatterScreen::new);
+		MenuScreens.register(CVGui.PAM.get(), PamScreen::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(),FruitPlatterRenderer::new);

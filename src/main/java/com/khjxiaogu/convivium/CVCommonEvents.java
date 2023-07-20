@@ -20,7 +20,7 @@ package com.khjxiaogu.convivium;
 
 import javax.annotation.Nonnull;
 
-import com.teammoeg.caupona.data.RecipeReloadListener;
+import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;

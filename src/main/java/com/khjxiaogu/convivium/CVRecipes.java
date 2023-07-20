@@ -40,12 +40,12 @@ public class CVRecipes {
 				() -> new CPRecipeSerializer<StewCookingRecipe>(StewCookingRecipe::new, StewCookingRecipe::new,
 						StewCookingRecipe::write));*/
 		TasteRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("taste",()->new CPRecipeSerializer<>(TasteRecipe::new,TasteRecipe::new,TasteRecipe::write));
-		GrindingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("grind",()->new CPRecipeSerializer<>(GrindingRecipe::new,GrindingRecipe::new,GrindingRecipe::write));
+		GrindingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("grinding",()->new CPRecipeSerializer<>(GrindingRecipe::new,GrindingRecipe::new,GrindingRecipe::write));
 	}
 
 	static {
 		TasteRecipe.TYPE=createType("taste");
-		GrindingRecipe.TYPE=createType("grind");
+		GrindingRecipe.TYPE=createType("grinding");
 		//StewCookingRecipe.TYPE = RECIPE_TYPES.register("stew",()->RecipeType.simple(new ResourceLocation(CPMain.MODID ,"stew")));
 	}
 	public static RegistryObject<RecipeType<Recipe<?>>> createType(String s){

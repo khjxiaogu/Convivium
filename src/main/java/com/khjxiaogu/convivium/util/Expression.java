@@ -5,7 +5,9 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import com.khjxiaogu.convivium.util.evaluator.Evaluator;
+import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
 import com.khjxiaogu.convivium.util.evaluator.Node;
+import com.khjxiaogu.convivium.util.evaluator.VEnvironment;
 
 public class Expression implements Function<Map<String,Double>,Double>{
 	Node node;
@@ -17,6 +19,9 @@ public class Expression implements Function<Map<String,Double>,Double>{
 	}
 	@Override
 	public Double apply(Map<String, Double> t) {
+		return run(new VEnvironment(t));
+	}
+	public double run(IEnvironment t) {
 		return node.eval(t);
 	}
 	@Override

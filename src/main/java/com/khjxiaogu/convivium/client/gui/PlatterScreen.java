@@ -29,7 +29,6 @@ import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.util.Utils;
 
@@ -117,11 +116,10 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 	}
 
 	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
-		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
+		matrixStack.drawString(this.font, this.title, this.titleLabelX-2, this.titleLabelY, 4210752, false);
 
 		Component name = this.playerInventoryTitle;
-		int w = this.font.width(name.getString());
-		matrixStack.drawString(this.font, name, this.imageWidth - w - this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+		matrixStack.drawString(this.font, name, this.inventoryLabelX+3, this.inventoryLabelY-7, 4210752, false);
 	}
 
 	@Override

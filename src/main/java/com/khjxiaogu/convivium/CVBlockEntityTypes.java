@@ -23,13 +23,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableSet;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
+import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
-import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
-import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
-import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

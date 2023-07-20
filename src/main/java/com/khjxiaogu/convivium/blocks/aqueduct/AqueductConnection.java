@@ -16,7 +16,6 @@ public enum AqueductConnection implements StringRepresentable{
 	Z,
 	A;
 	public static AqueductConnection get(Direction dir,Direction cand) {
-		 AqueductConnection s1=get(dir);
 		 return A;
 	}
 	public static AqueductConnection get(Direction dir) {

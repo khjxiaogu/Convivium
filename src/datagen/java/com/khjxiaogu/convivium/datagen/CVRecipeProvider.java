@@ -25,6 +25,9 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
+import com.mojang.datafixers.util.Pair;
+import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.data.IDataRecipe;
 
 import net.minecraft.data.DataGenerator;
@@ -32,8 +35,13 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class CVRecipeProvider extends RecipeProvider {
@@ -78,18 +86,21 @@ public class CVRecipeProvider extends RecipeProvider {
 
 			});
 		};
-		
+		out.accept(new GrindingRecipe(rl("grinding/magma"),List.of(Pair.of(Ingredient.of(Items.MAGMA_CREAM),2),Pair.of(Ingredient.of(cvitem("dolium_lid")),1)), null, 0f, new FluidStack(Fluids.WATER,500),new FluidStack(Fluids.LAVA,500),List.of(new ItemStack(Items.SLIME_BALL,1),new ItemStack(cpitem("soot"),5)), 200, false));
 
 	}
 
 
 
-	private Fluid cpfluid(String name) {
+	private Fluid cvfluid(String name) {
 		return ForgeRegistries.FLUIDS.getValue(new ResourceLocation(CVMain.MODID, name));
 	}
 
-	private Item cpitem(String name) {
+	private Item cvitem(String name) {
 		return ForgeRegistries.ITEMS.getValue(new ResourceLocation(CVMain.MODID, name));
+	}
+	private Item cpitem(String name) {
+		return ForgeRegistries.ITEMS.getValue(new ResourceLocation(CPMain.MODID, name));
 	}
 
 	private Item mitem(String name) {

@@ -24,11 +24,10 @@ package com.khjxiaogu.convivium.client.renderer;
 import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
-import com.khjxiaogu.convivium.CVBlocks;
+import com.google.common.collect.ImmutableSet;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
-import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -53,7 +52,7 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControllerBlockEntity> {
-	public static final DynamicBlockModelReference aeolipile=ModelUtils.getModel(CVMain.MODID,"aqueduct_wavemaker_rotor");
+	public static final DynamicBlockModelReference rotor=ModelUtils.getModel(CVMain.MODID,"aqueduct_wavemaker_rotor");
 
 	/**
 	 * @param rendererDispatcherIn  
@@ -72,13 +71,19 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 		Direction facing=state.getValue(AqueductControllerBlock.FACING);
 		BlockPos facingPos=blockEntity.getBlockPos().relative(facing);
 
-		boolean isBlack=RotationUtils.isBlackGrid(facingPos);
+		boolean isBlack=RotationUtils.isBlackGrid(blockEntity.getBlockPos());
 		
 		matrixStack.pushPose();
 		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		boolean shouldApart=state.getValue(KineticBasedBlock.ACTIVE)&&state.getValue(KineticBasedBlock.LOCKED);
+		if(shouldApart)
+			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Wheels"),matrixStack, combinedLightIn, combinedOverlayIn);
 		if(state.getValue(KineticBasedBlock.ACTIVE))
 			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,0f,0f,1f,isBlack),0.5f,0.5f,0.5f);
-		ModelUtils.renderModel(aeolipile,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
+		if(shouldApart)
+			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Cogs"),matrixStack, combinedLightIn, combinedOverlayIn);
+		else
+			ModelUtils.renderModel(rotor,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();

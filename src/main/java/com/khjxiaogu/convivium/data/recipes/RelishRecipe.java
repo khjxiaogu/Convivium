@@ -17,15 +17,17 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.common.util.JsonUtils;
 import net.minecraftforge.registries.RegistryObject;
 
 public class RelishRecipe extends IDataRecipe {
 	public ResourceLocation tag;
+	public String relishName;
 	public Map<String,Float> variantData;
 	public String color;
-	public RelishRecipe(ResourceLocation id, ResourceLocation tag, String color) {
+	public static Map<ResourceLocation,RelishRecipe> recipes;
+	public RelishRecipe(ResourceLocation id,String name, ResourceLocation tag, String color) {
 		super(id);
+		this.relishName=name;
 		this.tag = tag;
 		this.color = color;
 	}
@@ -37,12 +39,14 @@ public class RelishRecipe extends IDataRecipe {
 
 	public RelishRecipe(ResourceLocation id,FriendlyByteBuf pb) {
 		super(id);
+		relishName=pb.readUtf();
 		tag=pb.readResourceLocation();
 		color=pb.readUtf();
 		variantData=SUtils.fromPacket(pb);
 	}
 	public RelishRecipe(ResourceLocation id,JsonObject jo) {
 		super(id);
+		relishName=GsonHelper.getAsString(jo, "name",id.toString());
 		tag=new ResourceLocation(GsonHelper.getAsString(jo, "tag"));
 		color=GsonHelper.getAsString(jo, "color","WHITE");
 		variantData=SUtils.fromJson(jo,"variants");
@@ -52,7 +56,10 @@ public class RelishRecipe extends IDataRecipe {
 		return SERIALIZER.get();
 	}
 	public MutableComponent getText() {
-		return Utils.translate("gui." + CVMain.MODID +"relish.name").setStyle(Style.EMPTY.withColor(TextColor.parseColor(color)));
+		return getText(relishName);
+	}
+	public static MutableComponent getText(String relishName) {
+		return Utils.translate("gui." + CVMain.MODID +".relish."+relishName+".name").setStyle(Style.EMPTY.withColor(TextColor.parseColor(color)));
 	}
 	@Override
 	public RecipeType<?> getType() {

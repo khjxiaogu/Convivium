@@ -18,7 +18,11 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
+import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.teammoeg.caupona.data.CPRecipeSerializer;
 
@@ -46,6 +50,11 @@ public class CVRecipes {
 	static {
 		TasteRecipe.TYPE=createType("taste");
 		GrindingRecipe.TYPE=createType("grinding");
+		ContainingRecipe.TYPE=createType("containing");
+		ConvertionRecipe.TYPE=createType("convertion");
+		RelishFluidRecipe.TYPE=createType("relish_fluid");
+		RelishRecipe.TYPE=createType("relish");
+		
 		//StewCookingRecipe.TYPE = RECIPE_TYPES.register("stew",()->RecipeType.simple(new ResourceLocation(CPMain.MODID ,"stew")));
 	}
 	public static RegistryObject<RecipeType<Recipe<?>>> createType(String s){

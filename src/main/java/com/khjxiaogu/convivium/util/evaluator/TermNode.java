@@ -3,7 +3,6 @@ package com.khjxiaogu.convivium.util.evaluator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 class TermNode implements Node{
 	List<Node> positive=new ArrayList<>();

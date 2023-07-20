@@ -1,7 +1,5 @@
 package com.khjxiaogu.convivium.util.evaluator;
 
-import java.util.Map;
-
 class VarNode implements Node{
 	String token;
 

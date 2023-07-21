@@ -118,15 +118,15 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, GrindingRecipe recipe, IFocusGroup focuses) {
 		if (recipe.items.size() > 0) {
-			builder.addSlot(type(recipe.items.get(0)), 4, 6)
+			builder.addSlot(type(recipe.items.get(0)), 7, 6)
 					.addIngredients(VanillaTypes.ITEM_STACK, unpack(recipe.items.get(0)))
 					.addTooltipCallback(cb(recipe.items.get(0)));
 			if (recipe.items.size() > 1) {
-				builder.addSlot(type(recipe.items.get(1)), 4, 24)
+				builder.addSlot(type(recipe.items.get(1)), 7, 24)
 						.addIngredients(VanillaTypes.ITEM_STACK, unpack(recipe.items.get(1)))
 						.addTooltipCallback(cb(recipe.items.get(1)));
 				if (recipe.items.size() > 2) {
-					builder.addSlot(type(recipe.items.get(2)), 4, 42)
+					builder.addSlot(type(recipe.items.get(2)), 7, 42)
 							.addIngredients(VanillaTypes.ITEM_STACK, unpack(recipe.items.get(2)))
 							.addTooltipCallback(cb(recipe.items.get(2)));
 				}
@@ -134,17 +134,17 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 		}
 		for(int i=0;i<3;i++) {
 			if(i>=recipe.output.size())break;
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 6+18*i).addIngredient(VanillaTypes.ITEM_STACK, recipe.output.get(i));
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 6+18*i).addIngredient(VanillaTypes.ITEM_STACK, recipe.output.get(i));
 		}
 		if (!recipe.in.isEmpty())
-			builder.addSlot(RecipeIngredientRole.INPUT, 26, 9)
+			builder.addSlot(RecipeIngredientRole.INPUT, 29, 14)
 					.addIngredient(ForgeTypes.FLUID_STACK,recipe.in)
-					.setFluidRenderer(1000, false, 16, 46)
+					.setFluidRenderer(1000, false, 16, 37)
 					.addTooltipCallback(new BaseCallback(recipe.base, recipe.density));
 		if(!recipe.out.isEmpty())
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 67, 9)
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 81, 14)
 			.addIngredient(ForgeTypes.FLUID_STACK,recipe.out)
-			.setFluidRenderer(1000, false, 16, 46);
+			.setFluidRenderer(1000, false, 16, 37);
 	}
 
 

@@ -1,4 +1,4 @@
-package com.khjxiaogu.convivium.data.recipes.nnumbers;
+package com.khjxiaogu.convivium.data.recipes.numbers;
 
 import java.util.function.Function;
 

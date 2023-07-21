@@ -2,6 +2,7 @@ package com.khjxiaogu.convivium.data.recipes.compare;
 
 import java.util.function.Function;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.teammoeg.caupona.data.CachedDataDeserializer;
 import com.teammoeg.caupona.data.Deserializer;
@@ -29,9 +30,12 @@ public class Compares {
 			Function<FriendlyByteBuf, Compare> rpacket) {
 		compares.register(name, rjson, rpacket);
 	}
-
-	public static Compare of(JsonObject jsonElement) {
-		return compares.of(jsonElement);
+	private static final JsonObject dummy=new JsonObject();
+	public static Compare of(JsonElement jsonElement) {
+		if(jsonElement.isJsonPrimitive()) {
+			return compares.getDeserializer(jsonElement.getAsString()).read(dummy);
+		}
+		return compares.of(jsonElement.getAsJsonObject());
 	}
 
 	public static Compare of(FriendlyByteBuf buffer) {

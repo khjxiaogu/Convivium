@@ -44,7 +44,7 @@ class FuncCallNode implements Node{
 			nested[i]=nested[i].simplify();
 		}
 		if(isPrimary()) {
-			return new ConstNode(eval(null));
+			return new ConstNode(eval(NullEnvironment.INSTANCE));
 		}
 		return this;
 	}

@@ -7,17 +7,17 @@ import net.minecraft.network.FriendlyByteBuf;
 public class LT extends Compare {
 
 	@Override
-	public boolean test(float t1, float num) {
-		return Float.compare(t1, num)<0;
+	public boolean test(Float t1, Float num) {
+		return Float.compare(t1!=null?t1:0, num!=0?num:0)<0;
 	}
 
 	@Override
 	public String getType() {
-		return "less";
+		return "lesser";
 	}
 
-	public LT(float num) {
-		super(num);
+	public LT() {
+		super();
 	}
 
 	public LT(FriendlyByteBuf num) {

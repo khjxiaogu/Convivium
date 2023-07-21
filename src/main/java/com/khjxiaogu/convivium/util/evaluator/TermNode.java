@@ -88,7 +88,7 @@ class TermNode implements Node{
 		List<Node> primaryExprp=new ArrayList<>();
 		positive.removeIf(s->{//calc all primaries
 			if(s.isPrimary()) {
-				primaries*=s.eval(null);
+				primaries*=s.eval(NullEnvironment.INSTANCE);
 				return true;
 			}else if(!(s instanceof ExprNode)) {
 				primaryExprp.add(s);
@@ -99,7 +99,7 @@ class TermNode implements Node{
 
 		negative.removeIf(s->{
 			if(s.isPrimary()) {
-				primaries/=s.eval(null);
+				primaries/=s.eval(NullEnvironment.INSTANCE);
 				return true;
 			}
 			return false;

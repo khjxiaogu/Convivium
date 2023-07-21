@@ -7,8 +7,8 @@ import net.minecraft.network.FriendlyByteBuf;
 public class GT extends Compare {
 
 	@Override
-	public boolean test(float t1, float num) {
-		return Float.compare(t1, num)>0;
+	public boolean test(Float t1, Float num) {
+		return Float.compare(t1!=null?t1:0, num!=0?num:0)>0;
 	}
 
 	@Override
@@ -16,8 +16,8 @@ public class GT extends Compare {
 		return "greater";
 	}
 
-	public GT(float num) {
-		super(num);
+	public GT() {
+		super();
 	}
 
 	public GT(FriendlyByteBuf num) {

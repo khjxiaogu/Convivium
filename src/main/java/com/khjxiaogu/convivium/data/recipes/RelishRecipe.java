@@ -24,7 +24,7 @@ public class RelishRecipe extends IDataRecipe {
 	public String relishName;
 	public Map<String,Float> variantData;
 	public String color;
-	public static Map<ResourceLocation,RelishRecipe> recipes;
+	public static Map<String,RelishRecipe> recipes;
 	public RelishRecipe(ResourceLocation id,String name, ResourceLocation tag, String color) {
 		super(id);
 		this.relishName=name;
@@ -56,10 +56,10 @@ public class RelishRecipe extends IDataRecipe {
 		return SERIALIZER.get();
 	}
 	public MutableComponent getText() {
-		return getText(relishName);
+		return getText(relishName,color);
 	}
-	public static MutableComponent getText(String relishName) {
-		return Utils.translate("gui." + CVMain.MODID +".relish."+relishName+".name").setStyle(Style.EMPTY.withColor(TextColor.parseColor(color)));
+	public static MutableComponent getText(String relishName,String color2) {
+		return Utils.translate("gui." + CVMain.MODID +".relish."+relishName+".name").setStyle(Style.EMPTY.withColor(TextColor.parseColor(color2)));
 	}
 	@Override
 	public RecipeType<?> getType() {

@@ -90,7 +90,7 @@ class ExprNode implements Node{
 		}
 		positive.removeIf(s->{//calc all primaries
 			if(s.isPrimary()) {
-				primaries+=s.eval(null);
+				primaries+=s.eval(NullEnvironment.INSTANCE);
 				return true;
 			}
 			return false;
@@ -98,7 +98,7 @@ class ExprNode implements Node{
 
 		negative.removeIf(s->{
 			if(s.isPrimary()) {
-				primaries-=s.eval(null);
+				primaries-=s.eval(NullEnvironment.INSTANCE);
 				return true;
 			}
 			return false;

@@ -1,9 +1,8 @@
 package com.khjxiaogu.convivium.data.recipes.compare;
 
-import java.util.function.Predicate;
-
+import java.util.function.BiPredicate;
 import com.teammoeg.caupona.data.Writeable;
 
-public interface ICompare extends  Writeable,Predicate<Float>{
+public interface ICompare extends  Writeable,BiPredicate<Float,Float>{
 
 }

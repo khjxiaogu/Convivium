@@ -28,7 +28,13 @@ public class MajorRelishCondition extends AbstractRelishCondition {
 
 	@Override
 	public String getTranslation(TranslationProvider p) {
-		return p.getTranslation("recipe.convivium.relish_cond.major",RelishRecipe.getText(super.relish));
+		return p.getTranslation("recipe.convivium.relish_cond.major",RelishRecipe.recipes.get(relish).getText());
+	}
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return "major";
 	}
 
 }

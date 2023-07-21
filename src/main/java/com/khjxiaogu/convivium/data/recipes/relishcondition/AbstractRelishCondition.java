@@ -20,6 +20,7 @@ public abstract class AbstractRelishCondition implements RelishCondition{
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUtf(relish);
 	}
+	
 
 	public AbstractRelishCondition(FriendlyByteBuf buffer) {
 		this(buffer.readUtf());

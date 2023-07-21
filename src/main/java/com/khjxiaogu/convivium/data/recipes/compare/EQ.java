@@ -7,12 +7,12 @@ import net.minecraft.network.FriendlyByteBuf;
 public class EQ extends Compare {
 
 	@Override
-	public boolean test(float t1, float num) {
-		return Float.compare(t1, num)==0;
+	public boolean test(Float t1, Float num) {
+		return Float.compare(t1!=null?t1:0, num!=0?num:0)==0;
 	}
 
-	public EQ(float num) {
-		super(num);
+	public EQ() {
+
 	}
 
 	public EQ(FriendlyByteBuf num) {

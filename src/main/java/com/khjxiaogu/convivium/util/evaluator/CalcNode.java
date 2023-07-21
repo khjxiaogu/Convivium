@@ -26,7 +26,7 @@ class CalcNode implements Node{
 	public Node simplify() {
 		nested=nested.simplify();
 		if(nested.isPrimary())
-			return new ConstNode(eval(null));
+			return new ConstNode(eval(NullEnvironment.INSTANCE));
 		return this;
 	}
 

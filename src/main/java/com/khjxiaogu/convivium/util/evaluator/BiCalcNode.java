@@ -36,7 +36,7 @@ class BiCalcNode extends BiNode{
 		left=left.simplify();
 		right=right.simplify();
 		if(left.isPrimary()&&right.isPrimary())
-			return new ConstNode(eval(null));
+			return new ConstNode(eval(NullEnvironment.INSTANCE));
 		else if(calc==add||calc==min) {
 			return new ExprNode(calc==add,left,right).simplify();
 		}else if(calc==mul||calc==div) {

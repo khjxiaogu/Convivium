@@ -21,12 +21,16 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
+import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.teammoeg.caupona.CPTags;
 import com.teammoeg.caupona.CPTags.Items;
@@ -44,6 +48,7 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -53,7 +58,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class BeverageTypeRecipe extends IDataRecipe implements IConditionalRecipe {
+public class BeverageTypeRecipe extends IDataRecipe {
 	public static List<BeverageTypeRecipe> sorted;
 	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
 	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
@@ -69,12 +74,14 @@ public class BeverageTypeRecipe extends IDataRecipe implements IConditionalRecip
 		return TYPE.get();
 	}
 
-	List<IngredientCondition> allow;
-	List<IngredientCondition> deny;
+	List<Ingredient> must;
+	List<Ingredient> optional;
+	List<RelishCondition> relish;
+	List<String> allowedRelish;
 	int priority = 0;
 	public int time;
 	float density;
-	List<RelishCondition> base;
+	
 	public Fluid output;
 	public boolean removeNBT=false;
 	public BeverageTypeRecipe(ResourceLocation id) {
@@ -83,21 +90,19 @@ public class BeverageTypeRecipe extends IDataRecipe implements IConditionalRecip
 
 	public BeverageTypeRecipe(ResourceLocation id, JsonObject data) {
 		super(id);
-		if (data.has("allow")) {
-			allow = SerializeUtil.parseJsonList(data.get("allow"), Conditions::of);
-			Conditions.checkConditions(allow);
-		}
-		if (data.has("deny")) {
-			deny = SerializeUtil.parseJsonList(data.get("deny"), Conditions::of);
-			Conditions.checkConditions(deny);
-		}
+		if (data.has("required")) 
+			must = SerializeUtil.parseJsonList(data.get("required"), Ingredient::fromJson);
+		if (data.has("optional")) 
+			optional = SerializeUtil.parseJsonList(data.get("optional"), Ingredient::fromJson);
+		if(data.has("relish"))
+			relish = SerializeUtil.parseJsonList(data.get("relish"), RelishConditions::of);
+		if(data.has("allowedRelish"))
+			allowedRelish = SerializeUtil.parseJsonElmList(data.get("allowedRelish"), JsonElement::getAsString);
 		if (data.has("priority"))
 			priority = data.get("priority").getAsInt();
+		time = data.get("time").getAsInt();
 		if (data.has("density"))
 			density = data.get("density").getAsFloat();
-		time = data.get("time").getAsInt();
-		if (data.has("base"))
-			base = SerializeUtil.parseJsonList(data.get("base"), BaseConditions::of);
 		output = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(data.get("output").getAsString()));
 		if (output == Fluids.EMPTY)
 			throw new InvalidRecipeException();
@@ -107,112 +112,109 @@ public class BeverageTypeRecipe extends IDataRecipe implements IConditionalRecip
 
 	public BeverageTypeRecipe(ResourceLocation id, FriendlyByteBuf data) {
 		super(id);
-		allow = SerializeUtil.readList(data, Conditions::of);
-		deny = SerializeUtil.readList(data, Conditions::of);
+		must = SerializeUtil.readList(data,Ingredient::fromNetwork);
+		optional = SerializeUtil.readList(data, Ingredient::fromNetwork);
+		relish= SerializeUtil.readList(data, RelishConditions::of);
+		allowedRelish = SerializeUtil.readList(data,FriendlyByteBuf::readUtf);
 		priority = data.readVarInt();
-		density = data.readFloat();
 		time = data.readVarInt();
-		base = SerializeUtil.readList(data, BaseConditions::of);
+		density = data.readFloat();
 		output = data.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
 		removeNBT=data.readBoolean();
 	}
 
-	public BeverageTypeRecipe(ResourceLocation id, List<IngredientCondition> allow, List<IngredientCondition> deny,
-			int priority, int time, float density, List<RelishCondition> base, Fluid output,boolean removeNBT) {
+
+
+	public BeverageTypeRecipe(ResourceLocation id, List<Ingredient> must, List<Ingredient> optional,
+			List<RelishCondition> relish, List<String> allowedRelish, int priority, int time, float density,
+			Fluid output, boolean removeNBT) {
 		super(id);
-		this.allow = allow;
-		this.deny = deny;
+		this.must = must;
+		this.optional = optional;
+		this.relish = relish;
+		this.allowedRelish = allowedRelish;
 		this.priority = priority;
 		this.time = time;
 		this.density = density;
-		this.base = base;
 		this.output = output;
-		this.removeNBT=removeNBT;
+		this.removeNBT = removeNBT;
 	}
 
 	public void write(FriendlyByteBuf data) {
-		SerializeUtil.writeList(data, allow, Conditions::write);
-		SerializeUtil.writeList(data, deny, Conditions::write);
+		SerializeUtil.writeList(data, must, Ingredient::toNetwork);
+		SerializeUtil.writeList(data, optional, Ingredient::toNetwork);
+		SerializeUtil.writeList(data, relish, RelishConditions::write);
+		SerializeUtil.writeList2(data, allowedRelish, FriendlyByteBuf::writeUtf);
 		data.writeVarInt(priority);
-		data.writeFloat(density);
 		data.writeVarInt(time);
-		SerializeUtil.writeList(data, base, BaseConditions::write);
-		data.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS,output);
+		data.writeFloat(density);
+		data.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS, output);
 		data.writeBoolean(removeNBT);
 	}
 
-	public int matches(BeveragePendingContext ctx) {
+	public boolean matches(BeveragePendingContext ctx) {
 		if (ctx.getTotalItems() < density)
-			return 0;
-		int matchtype = 0;
-		if (base != null) {
-			for (RelishCondition e : base) {
-				matchtype = ctx.compute(e);
-				if (matchtype != 0)
-					break;
-			}
-			if (matchtype == 0)
-				return 0;
+			return false;
+		
+		List<Ingredient> igd;
+		if(relish!=null)
+			if(!relish.stream().anyMatch(t->t.test(ctx)))
+				return false;
+		if(allowedRelish!=null&&!allowedRelish.isEmpty()) {
+			if(ctx.relishes.keySet().stream().anyMatch(t->!allowedRelish.contains(t)))
+				return false;
 		}
-		if (matchtype == 0)
-			matchtype = 1;
-		if (allow != null)
-			if (!allow.stream().allMatch(ctx::compute))
-				return 0;
-		if (deny != null)
-			if (deny.stream().anyMatch(ctx::compute))
-				return 0;
-		return matchtype;
+		if(must!=null&&!must.isEmpty()) {
+			if(!must.stream().allMatch(t->ctx.getItems().stream().map(e->e.getStack()).anyMatch(t)))
+				return false;
+		}
+		if(optional!=null&&!optional.isEmpty())
+			for(FloatemTagStack is:ctx.getItems()) {
+				if(must!=null) {
+					if(must.stream().anyMatch(e->e.test(is.getStack())))
+						continue;
+				}
+				if(!optional.stream().anyMatch(e->e.test(is.getStack())))
+					return false;
+			}
+
+		return true;
 	}
 
 	@Override
 	public void serializeRecipeData(JsonObject json) {
-		if (allow != null && !allow.isEmpty()) {
-			json.add("allow", SerializeUtil.toJsonList(allow, IngredientCondition::serialize));
+		if (must != null && !must.isEmpty()) {
+			json.add("required", SerializeUtil.toJsonList(must, Ingredient::toJson));
 		}
-		if (deny != null && !deny.isEmpty()) {
-			json.add("deny", SerializeUtil.toJsonList(deny, IngredientCondition::serialize));
+		if (optional != null && !optional.isEmpty()) {
+			json.add("optional", SerializeUtil.toJsonList(optional, Ingredient::toJson));
+		}
+		if(relish!=null&&!relish.isEmpty()) {
+			json.add("relish", SerializeUtil.toJsonList(relish, RelishCondition::serialize));
+		}
+		if(allowedRelish!=null&&!allowedRelish.isEmpty()) {
+			json.add("allowedRelish", SerializeUtil.toJsonList(allowedRelish,e->new JsonPrimitive(e)));
 		}
 		if (priority != 0)
 			json.addProperty("priority", priority);
 		json.addProperty("density", density);
 		json.addProperty("time", time);
-		if (base != null && !base.isEmpty()) {
-			json.add("base", SerializeUtil.toJsonList(base, RelishCondition::serialize));
-		}
 		json.addProperty("output",Utils.getRegistryName(output).toString());
 		if(removeNBT)
 			json.addProperty("removeNBT",removeNBT);
 	}
 
-	public Stream<CookIngredients> getAllNumbers() {
+	public Stream<Ingredient> getAllIngredients() {
 		return Stream.concat(
-				allow == null ? Stream.empty() : allow.stream().flatMap(IngredientCondition::getAllNumbers),
-				deny == null ? Stream.empty() : deny.stream().flatMap(IngredientCondition::getAllNumbers));
+				must == null ? Stream.empty() : must.stream(),
+				optional == null ? Stream.empty() : optional.stream());
 	}
 
-	public Stream<ResourceLocation> getTags() {
-		return Stream.concat(allow == null ? Stream.empty() : allow.stream().flatMap(IngredientCondition::getTags),
-				deny == null ? Stream.empty() : deny.stream().flatMap(IngredientCondition::getTags));
-	}
 
 	public int getPriority() {
 		return priority;
 	}
 
-	public List<RelishCondition> getBase() {
-		return base;
-	}
-
-	@Override
-	public List<IngredientCondition> getAllow() {
-		return allow;
-	}
-
-	@Override
-	public List<IngredientCondition> getDeny() {
-		return deny;
-	}
 
 	public float getDensity() {
 		return density;

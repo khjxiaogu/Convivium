@@ -1,15 +1,10 @@
 package com.khjxiaogu.convivium.data.recipes.compare;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Function;
 
 import com.google.gson.JsonObject;
 import com.teammoeg.caupona.data.CachedDataDeserializer;
 import com.teammoeg.caupona.data.Deserializer;
-import com.teammoeg.caupona.data.InvalidRecipeException;
-
 import net.minecraft.network.FriendlyByteBuf;
 
 public class Compares {
@@ -22,11 +17,9 @@ public class Compares {
 		
 	};
 	static {
-		register("half", Halfs::new, Halfs::new);
-		register("mainly", Mainly::new, Mainly::new);
-		register("contains", Must::new, Must::new);
-		register("mainlyOf", MainlyOfType::new, MainlyOfType::new);
-		register("only", Only::new, Only::new);
+		register("greater", GT::new, GT::new);
+		register("equals", EQ::new, EQ::new);
+		register("lesser", LT::new, LT::new);
 	}
 	public static void register(String name, Deserializer<JsonObject, Compare> des) {
 		compares.register(name, des);

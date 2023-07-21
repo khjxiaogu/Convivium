@@ -18,7 +18,11 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Stopwatch;
 import com.khjxiaogu.convivium.CVMain;
+import com.teammoeg.caupona.data.recipes.StewCookingRecipe;
 
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -36,6 +41,7 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -81,7 +87,20 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 	
 		logger.info("Building recipes...");
 		Stopwatch sw = Stopwatch.createStarted();
+		BeverageTypeRecipe.sorted = filterRecipes(recipes, BeverageTypeRecipe.class, BeverageTypeRecipe.TYPE).collect(Collectors.toList());
+		BeverageTypeRecipe.sorted.sort((t2, t1) -> t1.getPriority() - t2.getPriority());
+		ContainingRecipe.recipes=new HashMap<>();
+		Function<Fluid,List<ContainingRecipe>> fs=f->new ArrayList<>();
+		filterRecipes(recipes,ContainingRecipe.class,ContainingRecipe.TYPE)
+		.forEach(t->{
+			ContainingRecipe.recipes.computeIfAbsent(t.fluid,fs).add(t);
+		});
+		ConvertionRecipe.recipes=filterRecipes(recipes,ConvertionRecipe.class,ConvertionRecipe.TYPE).collect(Collectors.toList());
 		GrindingRecipe.recipes=filterRecipes(recipes,GrindingRecipe.class,GrindingRecipe.TYPE).collect(Collectors.toList());
+		RelishFluidRecipe.recipes=filterRecipes(recipes,RelishFluidRecipe.class,RelishFluidRecipe.TYPE).collect(Collectors.toMap(t->t.fluid, t->t));
+		RelishRecipe.recipes=filterRecipes(recipes,RelishRecipe.class,RelishRecipe.TYPE).collect(Collectors.toMap(t->t.relishName, t->t));
+		SwayRecipe.recipes=filterRecipes(recipes,SwayRecipe.class,SwayRecipe.TYPE).collect(Collectors.toList());
+		TasteRecipe.recipes=filterRecipes(recipes,TasteRecipe.class,TasteRecipe.TYPE).collect(Collectors.toList());
 		sw.stop();
 		logger.info("Recipes built, cost {}", sw);
 	}

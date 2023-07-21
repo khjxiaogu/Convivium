@@ -47,7 +47,7 @@ public class CompareCondition implements Writeable {
 	public void write(FriendlyByteBuf buffer) {
 		// TODO Auto-generated method stub
 		expr1.write(buffer);
-		compare.write(buffer);
+		Compares.write(compare, buffer);
 		expr2.write(buffer);
 
 	}

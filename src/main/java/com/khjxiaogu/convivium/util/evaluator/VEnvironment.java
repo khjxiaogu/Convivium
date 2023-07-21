@@ -3,24 +3,29 @@ package com.khjxiaogu.convivium.util.evaluator;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
+
 public class VEnvironment implements IEnvironment{
 	Map<String,Double> map;
+	Map<String,INumber> exp;
 	IEnvironment parent;
 	public VEnvironment() {
 		super();
 		map=new HashMap<>();
 	}
 
-	public VEnvironment(Map<String, Double> map) {
+
+
+
+	public VEnvironment(IEnvironment parent, Map<String, INumber> exp) {
 		super();
-		this.map = map;
+		this.parent = parent;
+		this.map = new HashMap<>();
+		this.exp = exp;
 	}
 
-	public VEnvironment(IEnvironment parent,Map<String, Double> map) {
-		super();
-		this.map = map;
-		this.parent = parent;
-	}
+
+
 
 	public VEnvironment(IEnvironment parent) {
 		this();
@@ -29,11 +34,19 @@ public class VEnvironment implements IEnvironment{
 
 	@Override
 	public Double getOptional(String key) {
-		Double d=null;
-		if(parent!=null)
-			d=parent.getOptional(key);
-		if(d!=null)return d;
-		return map.get(key);
+		Double d=map.get(key);
+		if(d==null) {
+			INumber num=exp.get(key);
+			if(num!=null) {
+				map.put(key, 0D);
+				double res=num.apply(this);
+				map.put(key,res);
+				return res;
+			}
+			if(parent!=null)
+				d=parent.getOptional(key);
+		}
+		return d;
 	}
 
 	@Override

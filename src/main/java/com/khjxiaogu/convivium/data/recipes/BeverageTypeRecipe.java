@@ -21,9 +21,7 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import com.google.gson.JsonElement;
@@ -32,29 +30,20 @@ import com.google.gson.JsonPrimitive;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
-import com.teammoeg.caupona.CPTags;
-import com.teammoeg.caupona.CPTags.Items;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.data.InvalidRecipeException;
 import com.teammoeg.caupona.data.SerializeUtil;
-import com.teammoeg.caupona.data.recipes.IConditionalRecipe;
-import com.teammoeg.caupona.data.recipes.IngredientCondition;
-import com.teammoeg.caupona.data.recipes.baseconditions.BaseConditions;
-import com.teammoeg.caupona.data.recipes.conditions.Conditions;
-import com.teammoeg.caupona.fluid.SoupFluid;
 import com.teammoeg.caupona.util.FloatemTagStack;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 

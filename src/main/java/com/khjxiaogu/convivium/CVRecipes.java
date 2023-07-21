@@ -24,6 +24,7 @@ import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
+import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.teammoeg.caupona.data.CPRecipeSerializer;
 
@@ -41,9 +42,6 @@ public class CVRecipes {
 	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister
 			.create(ForgeRegistries.RECIPE_TYPES, CVMain.MODID);
 	static {
-		/*StewCookingRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("cooking",
-				() -> new CPRecipeSerializer<StewCookingRecipe>(StewCookingRecipe::new, StewCookingRecipe::new,
-						StewCookingRecipe::write));*/
 		TasteRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("taste",()->new CPRecipeSerializer<>(TasteRecipe::new,TasteRecipe::new,TasteRecipe::write));
 		GrindingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("grinding",()->new CPRecipeSerializer<>(GrindingRecipe::new,GrindingRecipe::new,GrindingRecipe::write));
 		ContainingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("containing",()->new CPRecipeSerializer<>(ContainingRecipe::new,ContainingRecipe::new,ContainingRecipe::write));
@@ -51,6 +49,7 @@ public class CVRecipes {
 		RelishFluidRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("relish_fluid",()->new CPRecipeSerializer<>(RelishFluidRecipe::new,RelishFluidRecipe::new,RelishFluidRecipe::write));
 		RelishRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("relish",()->new CPRecipeSerializer<>(RelishRecipe::new,RelishRecipe::new,RelishRecipe::write));
 		BeverageTypeRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("beverage",()->new CPRecipeSerializer<>(BeverageTypeRecipe::new,BeverageTypeRecipe::new,BeverageTypeRecipe::write));
+		SwayRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("sway",()->new CPRecipeSerializer<>(SwayRecipe::new,SwayRecipe::new,SwayRecipe::write));
 	}
 
 	static {
@@ -61,8 +60,7 @@ public class CVRecipes {
 		RelishFluidRecipe.TYPE=createType("relish_fluid");
 		RelishRecipe.TYPE=createType("relish");
 		BeverageTypeRecipe.TYPE=createType("beverage");
-		
-		//StewCookingRecipe.TYPE = RECIPE_TYPES.register("stew",()->RecipeType.simple(new ResourceLocation(CPMain.MODID ,"stew")));
+		SwayRecipe.TYPE=createType("sway");
 	}
 	public static RegistryObject<RecipeType<Recipe<?>>> createType(String s){
 		return RECIPE_TYPES.register(s,()->RecipeType.simple(new ResourceLocation(CVMain.MODID ,s)));

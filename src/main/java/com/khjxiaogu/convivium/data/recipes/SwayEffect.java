@@ -4,9 +4,7 @@ import java.util.Optional;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.khjxiaogu.convivium.data.recipes.compare.Compare;
 import com.khjxiaogu.convivium.data.recipes.compare.CompareCondition;
-import com.khjxiaogu.convivium.data.recipes.compare.Compares;
 import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;

@@ -12,7 +12,7 @@ public abstract class AbstractRelishCondition implements RelishCondition{
 	public JsonElement serialize() {
 		JsonObject jo=new JsonObject();
 		jo.addProperty("relish", relish);
-		
+		jo.addProperty("type", getType());
 		return jo;
 	}
 

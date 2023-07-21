@@ -8,11 +8,11 @@ import com.teammoeg.caupona.data.Deserializer;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class RelishConditions {
-	private static CachedDataDeserializer<RelishCondition,JsonObject> compares=new CachedDataDeserializer<>() {
+	private static CachedDataDeserializer<RelishCondition,JsonObject> relishes=new CachedDataDeserializer<>() {
 
 		@Override
 		protected RelishCondition internalOf(JsonObject json) {
-			return getDeserializer(json.get("comparator").getAsString()).read(json);
+			return getDeserializer(json.get("type").getAsString()).read(json);
 		}
 		
 	};
@@ -20,22 +20,25 @@ public class RelishConditions {
 		register("major", MajorRelishCondition::new, MajorRelishCondition::new);
 		register("only_major", OnlyMajorRelishCondition::new, OnlyMajorRelishCondition::new);
 		register("compare", RelishCompareCondition::new, RelishCompareCondition::new);
+		
+		register("and", AndRelishCondition::new, AndRelishCondition::new);
+		register("or", OrRelishCondition::new, OrRelishCondition::new);
 	}
 	public static void register(String name, Deserializer<JsonObject, RelishCondition> des) {
-		compares.register(name, des);
+		relishes.register(name, des);
 	}
 
 	public static void register(String name, Function<JsonObject, RelishCondition> rjson,
 			Function<FriendlyByteBuf, RelishCondition> rpacket) {
-		compares.register(name, rjson, rpacket);
+		relishes.register(name, rjson, rpacket);
 	}
 
 	public static RelishCondition of(JsonObject jsonElement) {
-		return compares.of(jsonElement);
+		return relishes.of(jsonElement);
 	}
 
 	public static RelishCondition of(FriendlyByteBuf buffer) {
-		return compares.of(buffer);
+		return relishes.of(buffer);
 	}
 
 	public static void write(RelishCondition e, FriendlyByteBuf buffer) {
@@ -44,6 +47,6 @@ public class RelishConditions {
 	}
 
 	public static void clearCache() {
-		compares.clearCache();
+		relishes.clearCache();
 	}
 }

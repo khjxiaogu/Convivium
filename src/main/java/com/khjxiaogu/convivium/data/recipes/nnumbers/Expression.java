@@ -12,17 +12,13 @@ import net.minecraft.network.FriendlyByteBuf;
 public class Expression implements INumber{
 	public static class Constant implements INumber{
 		float num=0;
-		public Constant(float num) {
+		private Constant(float num) {
 			super();
 			this.num = num;
 		}
-		public Constant(FriendlyByteBuf num) {
+		private Constant(FriendlyByteBuf num) {
 			super();
 			this.num = num.readFloat();
-		}
-		public Constant(JsonElement num) {
-			super();
-			this.num = num.getAsFloat();
 		}
 
 		@Override
@@ -45,6 +41,8 @@ public class Expression implements INumber{
 		}
 		
 	}
+	public static final INumber ZERO=new Constant(0);
+	public static final INumber ONE=new Constant(1);
 	Node node;
 	String expr;
 	public Expression(String expr,Node node) {
@@ -57,22 +55,35 @@ public class Expression implements INumber{
 		this.expr = expr;
 		this.node = Evaluator.eval(expr);
 	}
-	public Expression(FriendlyByteBuf expr) {
+	private Expression(FriendlyByteBuf expr) {
 		super();
 		this.expr = expr.readUtf();
 		
+	}
+	public static INumber of(FriendlyByteBuf expr) {
+		switch(expr.readVarInt()) {
+		case 1:return new Expression(expr);
+		case 2:return new Constant(expr);
+		}
+		throw new IllegalArgumentException("Expression must be number or string");
 	}
 	public static INumber of(JsonElement expr) {
 		if(expr.isJsonPrimitive()) {
 			JsonPrimitive jp=expr.getAsJsonPrimitive();
 			if(jp.isNumber())
 				return new Constant(jp.getAsFloat());
-			Node node = Evaluator.eval(jp.getAsString());
-			if(node.isPrimary())
-				return new Constant((float) node.eval(NullEnvironment.INSTANCE));
-			return new Expression(expr.getAsString(),node);
+			return of(jp.getAsString());
 		}
 		throw new IllegalArgumentException("Expression must be number or string");
+	}
+	public static INumber of(float expr) {
+		return new Constant(expr);
+	}
+	public static INumber of(String expr) {
+		Node node = Evaluator.eval(expr);
+		if(node.isPrimary())
+			return new Constant((float) node.eval(NullEnvironment.INSTANCE));
+		return new Expression(expr,node);
 	}
 	public Double apply(IEnvironment t) {
 		return node.eval(t);

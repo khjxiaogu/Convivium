@@ -35,9 +35,9 @@ public class Expression implements INumber{
 		}
 
 		@Override
-		public Double apply(IEnvironment t) {
+		public double applyAsDouble(IEnvironment t) {
 			// TODO Auto-generated method stub
-			return (double) num;
+			return num;
 		}
 		
 	}
@@ -85,7 +85,7 @@ public class Expression implements INumber{
 			return new Constant((float) node.eval(NullEnvironment.INSTANCE));
 		return new Expression(expr,node);
 	}
-	public Double apply(IEnvironment t) {
+	public double applyAsDouble(IEnvironment t) {
 		return node.eval(t);
 	}
 	@Override

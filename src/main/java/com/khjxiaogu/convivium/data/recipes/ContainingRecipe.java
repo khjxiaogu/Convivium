@@ -21,7 +21,6 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
-import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
@@ -46,7 +45,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ContainingRecipe extends IDataRecipe {
-	public static Map<Fluid,List<ContainingRecipe>> recipes;
+	public static Map<Fluid,ContainingRecipe> recipes;
 	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
 	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
  
@@ -61,15 +60,13 @@ public class ContainingRecipe extends IDataRecipe {
 	}
 
 	public Item output;
-	public Ingredient input;
 	public Fluid fluid;
 
 	public ContainingRecipe(ResourceLocation id, JsonObject jo) {
 		super(id);
 		output = ForgeRegistries.ITEMS.getValue(new ResourceLocation(jo.get("item").getAsString()));
 		fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(jo.get("fluid").getAsString()));
-		input=Ingredient.fromJson(jo.get("input"));
-		if (output == null || output == Items.AIR || fluid == null || fluid == Fluids.EMPTY||input.isEmpty())
+		if (output == null || output == Items.AIR || fluid == null || fluid == Fluids.EMPTY)
 			throw new InvalidRecipeException();
 	}
 
@@ -77,27 +74,23 @@ public class ContainingRecipe extends IDataRecipe {
 		super(id);
 		output = pb.readRegistryIdUnsafe(ForgeRegistries.ITEMS);
 		fluid = pb.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
-		input=Ingredient.fromNetwork(pb);
 	}
 
 
-	public ContainingRecipe(ResourceLocation id, Item output, Ingredient input, Fluid fluid) {
+	public ContainingRecipe(ResourceLocation id, Item output, Fluid fluid) {
 		super(id);
 		this.output = output;
-		this.input = input;
 		this.fluid = fluid;
 	}
 
 	public void write(FriendlyByteBuf pack) {
 		pack.writeRegistryIdUnsafe(ForgeRegistries.ITEMS, output);
 		pack.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS, fluid);
-		input.toNetwork(pack);
 	}
 
 	public void serializeRecipeData(JsonObject jo) {
 		jo.addProperty("item", Utils.getRegistryName(output).toString());
 		jo.addProperty("fluid", Utils.getRegistryName(fluid).toString());
-		jo.add("input", input.toJson());
 	}
 
 	public ItemStack handle(Fluid f) {

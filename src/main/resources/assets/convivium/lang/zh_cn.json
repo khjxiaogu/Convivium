@@ -1,3 +1,9 @@
 {
-	"itemGroup.convivium":"会饮"
+	"itemGroup.convivium":"会饮",
+	"block.convivium.fruit_platter":"果盘",
+	"block.convivium.whisk":"搅拌器",
+	"block.convivium.aeolipile":"蒸汽引擎",
+	"block.convivium.pestle_and_mortar":"研磨器",
+	"block.convivium.cog":"销齿轮",
+	"block.convivium.cage_wheel":"笼齿轮"
 }

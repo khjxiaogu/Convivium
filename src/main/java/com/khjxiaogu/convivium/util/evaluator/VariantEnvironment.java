@@ -5,11 +5,11 @@ import java.util.Map;
 
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
 
-public class VEnvironment implements IEnvironment{
+public class VariantEnvironment implements IEnvironment{
 	Map<String,Double> map;
 	Map<String,INumber> exp;
 	IEnvironment parent;
-	public VEnvironment() {
+	public VariantEnvironment() {
 		super();
 		map=new HashMap<>();
 	}
@@ -17,7 +17,7 @@ public class VEnvironment implements IEnvironment{
 
 
 
-	public VEnvironment(IEnvironment parent, Map<String, INumber> exp) {
+	public VariantEnvironment(IEnvironment parent, Map<String, INumber> exp) {
 		super();
 		this.parent = parent;
 		this.map = new HashMap<>();
@@ -27,7 +27,7 @@ public class VEnvironment implements IEnvironment{
 
 
 
-	public VEnvironment(IEnvironment parent) {
+	public VariantEnvironment(IEnvironment parent) {
 		this();
 		this.parent = parent;
 	}
@@ -39,7 +39,7 @@ public class VEnvironment implements IEnvironment{
 			INumber num=exp.get(key);
 			if(num!=null) {
 				map.put(key, 0D);
-				double res=num.apply(this);
+				double res=num.applyAsDouble(this);
 				map.put(key,res);
 				return res;
 			}

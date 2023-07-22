@@ -66,11 +66,13 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity {
 	@Override
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
 		speed = nbt.getInt("speed");
+		process.read(nbt,"kttic");
 	}
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
 		nbt.putInt("speed", speed);
+		process.write(nbt,"kttic");
 	}
 
 	@Override

@@ -90,14 +90,11 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 		if(dx) {
 			if(dz) 
 				return 3;//
-			else
-				return 1;
-		}else {
-			if(dz)
-				return 2;//
-			else
-				return 0;
+			return 1;
 		}
+		if(dz)
+			return 2;//
+		return 0;
 	}
 	@SuppressWarnings("deprecation")
 	@Override

@@ -15,7 +15,7 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
-import com.khjxiaogu.convivium.util.evaluator.VEnvironment;
+import com.khjxiaogu.convivium.util.evaluator.VariantEnvironment;
 import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.data.SerializeUtil;
@@ -43,11 +43,11 @@ public class SwayRecipe  extends IDataRecipe{
 		this.icon = icon;
 	}
 
-	List<RelishCondition> relish;
-	int priority;
-	Map<String,INumber> locals;
-	List<SwayEffect> effects;
-	ResourceLocation icon;
+	public List<RelishCondition> relish;
+	public int priority;
+	public Map<String,INumber> locals;
+	public List<SwayEffect> effects;
+	public ResourceLocation icon;
 	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
 	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
 	public static List<SwayRecipe> recipes;
@@ -105,12 +105,12 @@ public class SwayRecipe  extends IDataRecipe{
 		pb.writeResourceLocation(icon);
 	}
 	public IEnvironment createChildEnv(IEnvironment par) {
-		return new VEnvironment(par,locals);
+		return new VariantEnvironment(par,locals);
 	}
 	public boolean canApply(BeveragePendingContext ctx) {
 		return relish.stream().anyMatch(t->t.test(ctx));
 	}
 	public List<MobEffectInstance> getEffects(IEnvironment env){
-		return effects.stream().map(t->t.getEffect(env)).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+		return effects.stream().map(t->t.getEffect(env)).flatMap(Optional::stream).collect(Collectors.toList());
 	}
 }

@@ -90,11 +90,8 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 		BeverageTypeRecipe.sorted = filterRecipes(recipes, BeverageTypeRecipe.class, BeverageTypeRecipe.TYPE).collect(Collectors.toList());
 		BeverageTypeRecipe.sorted.sort((t2, t1) -> t1.getPriority() - t2.getPriority());
 		ContainingRecipe.recipes=new HashMap<>();
-		Function<Fluid,List<ContainingRecipe>> fs=f->new ArrayList<>();
-		filterRecipes(recipes,ContainingRecipe.class,ContainingRecipe.TYPE)
-		.forEach(t->{
-			ContainingRecipe.recipes.computeIfAbsent(t.fluid,fs).add(t);
-		});
+		ContainingRecipe.recipes=filterRecipes(recipes,ContainingRecipe.class,ContainingRecipe.TYPE).collect(Collectors.toMap(t->t.fluid, t->t));
+
 		ConvertionRecipe.recipes=filterRecipes(recipes,ConvertionRecipe.class,ConvertionRecipe.TYPE).collect(Collectors.toList());
 		GrindingRecipe.recipes=filterRecipes(recipes,GrindingRecipe.class,GrindingRecipe.TYPE).collect(Collectors.toList());
 		RelishFluidRecipe.recipes=filterRecipes(recipes,RelishFluidRecipe.class,RelishFluidRecipe.TYPE).collect(Collectors.toMap(t->t.fluid, t->t));

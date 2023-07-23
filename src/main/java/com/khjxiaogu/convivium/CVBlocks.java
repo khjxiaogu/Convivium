@@ -25,6 +25,8 @@ import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.foods.BeverageBlock;
+import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlock;
@@ -35,6 +37,7 @@ import com.teammoeg.caupona.item.CPBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -54,8 +57,10 @@ public class CVBlocks {
 	public static final RegistryObject<PlatterBlock> platter=baseblock("fruit_platter",()->new PlatterBlock(getKineticProps()));
 	public static final RegistryObject<WhiskBlock> whisk=baseblock("whisk",()->new WhiskBlock(getKineticProps()));
 	public static final RegistryObject<PamBlock> pam=baseblock("pestle_and_mortar",()->new PamBlock(getKineticProps()));
+	public static final RegistryObject<BeverageBlock> BEVERAGE=baseblock("beverage", ()->new BeverageBlock(getBProps()),r->new BeverageItem(r,CVItems.createProps(),false));
 	public static final List<RegistryObject<Block>> aqueducts=new ArrayList<>();
 	public static final List<RegistryObject<Block>> aqueduct_mains=new ArrayList<>();
+	public static final List<Block> beverage=new ArrayList<>();
 	static {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
 			aqueducts.add(baseblock(s+"_aqueduct",()->new AqueductBlock(getKineticProps())));
@@ -89,7 +94,10 @@ public class CVBlocks {
 		return Block.Properties.of().sound(SoundType.STONE)
 				.strength(3.5f, 10).noOcclusion();
 	}
-
+	private static Properties getBProps() {
+		return Block.Properties.of().sound(SoundType.GLASS)
+				.strength(3.5f, 10).noOcclusion().instabreak().isViewBlocking(CVBlocks::isntSolid);
+	}
 	private static Properties getTransparentProps() {
 		return Block.Properties.of().sound(SoundType.STONE).requiresCorrectToolForDrops()
 				.strength(3.5f, 10).noOcclusion().isViewBlocking(CVBlocks::isntSolid);

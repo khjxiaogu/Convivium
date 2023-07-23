@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableSet;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
+import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
@@ -56,6 +57,9 @@ public class CVBlockEntityTypes {
 			REGISTER.register("aqueduct",makeTypes2(AqueductBlockEntity::new,()->CVBlocks.aqueducts));
 	public static final RegistryObject<BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN=
 			REGISTER.register("aqueduct_controller",makeTypes2(AqueductControllerBlockEntity::new,()->CVBlocks.aqueduct_mains));
+	public static final RegistryObject<BlockEntityType<BeverageBlockEntity>> BEVERAGE=
+			REGISTER.register("beverage",makeType(BeverageBlockEntity::new,()->CVBlocks.BEVERAGE));
+	
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 			Supplier<RegistryObject<? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);

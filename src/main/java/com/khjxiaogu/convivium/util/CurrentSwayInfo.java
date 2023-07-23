@@ -17,6 +17,7 @@ public class CurrentSwayInfo {
 			Codec.INT.fieldOf("thickness").forGetter(i->i.dthick),
 			Codec.INT.fieldOf("soothingness").forGetter(i->i.drousing),
 			Codec.DOUBLE.fieldOf("display").forGetter(i->i.display),
+			Codec.INT.fieldOf("active").forGetter(i->i.active),
 			ResourceLocation.CODEC.fieldOf("icon").forGetter(i->i.icon)).apply(t,CurrentSwayInfo::new));
 	public int dsweet;
 	public int dastringent;
@@ -24,19 +25,20 @@ public class CurrentSwayInfo {
 	public int dthick;
 	public int drousing;
 	public double display;
+	public int active;
 	public ResourceLocation icon;
 	public CurrentSwayInfo(ResourceLocation ic,VariantEnvironment env) {
-		display=env.get("display");
-		if(display>0) {
-			icon=ic;
-			dsweet=fromVal(env.get("sweetnessDelta"));
-			dastringent=fromVal(env.get("astringencyDelta"));
-			dpungent=fromVal(env.get("pungencyDelta"));
-			dthick=fromVal(env.get("thicknessDelta"));
-			drousing=fromVal(env.get("soothingnessDelta"));
+		display=env.get(Constants.DISPLAY);
+		icon=ic;
+		if(display>0) {	
+			dsweet=fromVal(env.get(Constants.SWEETNESS_DELTA));
+			dastringent=fromVal(env.get(Constants.ASTRINGENCY_DELTA));
+			dpungent=fromVal(env.get(Constants.PUNGENCY_DELTA));
+			dthick=fromVal(env.get(Constants.THICKNESS_DELTA));
+			drousing=fromVal(env.get(Constants.SOOTHINGNESS_DELTA));
 		}
 	}
-	public CurrentSwayInfo(int dsweet, int dastringent, int dpungent, int dthick, int drousing, double display,
+	public CurrentSwayInfo(int dsweet, int dastringent, int dpungent, int dthick, int drousing, double display,int active,
 			ResourceLocation icon) {
 		super();
 		this.dsweet = dsweet;
@@ -45,10 +47,11 @@ public class CurrentSwayInfo {
 		this.dthick = dthick;
 		this.drousing = drousing;
 		this.display = display;
+		this.active=active;
 		this.icon = icon;
 	}
 	public boolean shouldShow() {
-		return display>0;
+		return display>0||active>0;
 	}
 	public Optional<CurrentSwayInfo> toOptional(){
 		return shouldShow()?Optional.of(this):Optional.empty();

@@ -1,6 +1,7 @@
 package com.khjxiaogu.convivium.blocks.aqueduct;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.client.CVParticles;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 
@@ -129,6 +130,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			BlockState bs=this.level.getBlockState(src);
 			BlockState bs2=this.level.getBlockState(dest);
 			if(bs.is(Blocks.AIR))return true;
+			if(!bs.is(CVTags.Blocks.aqueductMove))return false;
 			if(!bs2.is(Blocks.AIR))return false;
 			if(be!=null) {
 				CompoundTag nbt=be.serializeNBT();

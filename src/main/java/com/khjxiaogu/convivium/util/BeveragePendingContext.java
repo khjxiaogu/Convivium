@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.Optional;
 
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
@@ -47,10 +48,36 @@ public class BeveragePendingContext extends IPendingContext {
 			}
 			totalItems += fs.getCount();
 		}
+		int cnt=info.getRelishCount();
 		taste=new ConstantEnvironment(variant);
 		for(Fluid s:info.relishes) {
 			if(s==null)continue;
-			relishes.compute(RelishFluidRecipe.recipes.get(s).relish,(k,v)->v==null?1:v+1);
+			RelishFluidRecipe rfr=RelishFluidRecipe.recipes.get(s);
+			if(rfr!=null) {
+				relishes.compute(rfr.relish,(k,v)->v==null?1:v+1);
+				rfr.variantData.forEach((e,d)->{
+					double actual=d.doubleValue()/cnt;
+					variant.compute(e,(k,v)->v==null?actual:actual+v);
+				});
+			}
+		}
+		checkActiveRelish();
+		info.activeRelish1="";
+		info.activeRelish2="";
+		if(activerelish.size()>0) {
+			if(activerelish.size()>1)
+				info.activeRelish2=activerelish.get(1);
+			info.activeRelish1=activerelish.get(0);
+		}
+		for(String rel:activerelish) {
+			
+			RelishRecipe rr1=RelishRecipe.recipes.get(rel);
+			if(rr1!=null) {
+				rr1.variantData.forEach((e,d)->{
+					double actual=d.doubleValue();
+					variant.compute(e,(k,v)->v==null?actual:actual+v);
+				});
+			}
 		}
 		
 	}
@@ -91,6 +118,8 @@ public class BeveragePendingContext extends IPendingContext {
 		if(sway.canApply(this)) {
 			VariantEnvironment env=new VariantEnvironment(taste,sway.locals);
 			CurrentSwayInfo csi=new CurrentSwayInfo(sway.icon,env);
+			if(sway.hasEffects(env))
+				csi.active=1;
 			return csi.toOptional();
 		}
 		return Optional.empty();
@@ -99,8 +128,11 @@ public class BeveragePendingContext extends IPendingContext {
 		if(sway.canApply(this)) {
 			VariantEnvironment env=new VariantEnvironment(taste,sway.locals);
 			CurrentSwayInfo csi=new CurrentSwayInfo(sway.icon,env);
-			List<MobEffectInstance> effs=sway.getEffects(env);
-			return Optional.of(Pair.of(effs,csi.toOptional()));
+			Pair<Boolean, List<MobEffectInstance>> effs=sway.getEffects(env);
+			if(effs.getFirst()) {
+				csi.active=1;
+			}
+			return Optional.of(Pair.of(effs.getSecond(),csi.toOptional()));
 		}
 		return Optional.empty();
 	}

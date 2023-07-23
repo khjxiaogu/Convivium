@@ -8,6 +8,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.joml.Vector3f;
+
+import com.khjxiaogu.convivium.CVFluids;
+import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.data.SerializeUtil;
@@ -20,6 +26,7 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
@@ -28,6 +35,11 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BeverageInfo implements IFoodInfo {
@@ -36,6 +48,8 @@ public class BeverageInfo implements IFoodInfo {
 	public List<MobEffectInstance> swayeffects;
 	public List<Pair<MobEffectInstance, Float>> foodeffect;
 	public Fluid[] relishes=new Fluid[5];
+	public String activeRelish1="";
+	public String activeRelish2="";
 	public int healing;
 	public float saturation;
 	public int heat;
@@ -59,10 +73,74 @@ public class BeverageInfo implements IFoodInfo {
 		swayeffects=nbt.getList("sway", 10).stream().map(e->MobEffectInstance.load((CompoundTag)e))
 				.collect(Collectors.toList());
 		heat=nbt.getInt("heat");
+		activeRelish1=nbt.getString("activeRelish1");
+		activeRelish2=nbt.getString("activeRelish2");
 		ListTag list=nbt.getList("relish",8);
-		for(int i=0;i<5;i++) {
+		for(int i=0;i<list.size();i++) {
+			if(i>=5)break;
 			relishes[i]=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(list.getString(i)));
+			if(relishes[i]==Fluids.EMPTY)
+				relishes[i]=null;
 		}
+	}
+	public void appendTooltip(List<Component> tt) {
+		RelishRecipe r1=RelishRecipe.recipes.get(activeRelish1);
+		RelishRecipe r2=RelishRecipe.recipes.get(activeRelish2);
+		if(r1!=null) {
+			if(r2!=null) {
+				tt.add(Utils.translate("tooltip."+CVMain.MODID+".major_relish_2",r1.getText(),r2.getText()));
+			}else
+				tt.add(Utils.translate("tooltip."+CVMain.MODID+".major_relish_1",r1.getText()));	
+		}
+	}
+	@OnlyIn(Dist.CLIENT)
+	public Vector3f getColor() {
+		return getColor(relishes);
+	}
+	@OnlyIn(Dist.CLIENT)
+	public static Vector3f getColor(CompoundTag tag) {
+		Vector3f clr=new Vector3f();
+		int cnt=0;
+		ListTag list=tag.getCompound("beverage").getList("relish",8);
+		for(int i=0;i<list.size();i++) {
+			Fluid f=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(list.getString(i)));
+			if(f!=Fluids.EMPTY) {
+				clr.add(tclr(IClientFluidTypeExtensions.of(f).getTintColor()));
+				cnt++;
+			}
+		}
+		if(cnt==0)cnt=1;
+		clr=clr.div(cnt);
+		return clr;
+	}
+	@OnlyIn(Dist.CLIENT)
+	public static Vector3f getColor(Fluid[] relishes) {
+		Vector3f clr=new Vector3f();
+		int cnt=0;
+		for(int i=0;i<5;i++) {
+			Fluid f=relishes[i];
+			if(f!=null) {
+				clr.add(tclr(IClientFluidTypeExtensions.of(f).getTintColor()));
+				cnt++;
+			}
+		}
+		if(cnt==0)cnt=1;
+		clr=clr.div(cnt);
+		return clr;
+	}
+	private static Vector3f tclr(int col) {
+		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
+	}
+	@OnlyIn(Dist.CLIENT)
+	public static int getIColor(CompoundTag tag) {
+		Vector3f clr=getColor(tag);
+		return ((int)(clr.x*0xff))<<16|((int)(clr.y*0xff))<<8|((int)(clr.z*0xff));
+	}
+	@OnlyIn(Dist.CLIENT)
+	public static int getIColor(Fluid[] relishes) {
+		Vector3f clr=getColor(relishes);
+		
+		return 0xff<<24|((int)(clr.x*0xff))<<16|((int)(clr.y*0xff))<<8|((int)(clr.z*0xff));
 	}
 	public float getDensity() {
 		return stacks.stream().map(FloatemStack::getCount).reduce(0f, Float::sum);
@@ -70,7 +148,7 @@ public class BeverageInfo implements IFoodInfo {
 	public int getRelishCount() {
 		for(int i=0;i<5;i++) {
 			if(relishes[i]==null)
-				return i+1;
+				return i;
 		}
 		return 5;
 	}
@@ -79,7 +157,7 @@ public class BeverageInfo implements IFoodInfo {
 		write(tag);
 		return tag;
 	}
-	public List<CurrentSwayInfo> adjustParts(float oparts, float parts) {
+	public Pair<List<CurrentSwayInfo>, Fluid> adjustParts(float oparts, float parts) {
 		for (FloatemStack fs : stacks) {
 			fs.setCount(fs.getCount() * oparts / parts);
 		}
@@ -113,7 +191,7 @@ public class BeverageInfo implements IFoodInfo {
 			effects.add(copy);
 		}
 	}
-	public List<CurrentSwayInfo> handleSway() {
+	public Pair<List<CurrentSwayInfo>,Fluid> handleSway() {
 		BeveragePendingContext ctx=new BeveragePendingContext(this);
 		swayeffects.clear();
 		List<CurrentSwayInfo> swi=
@@ -128,7 +206,14 @@ public class BeverageInfo implements IFoodInfo {
 		swayeffects.sort(Comparator.<MobEffectInstance>comparingInt(e -> MobEffect.getId(e.getEffect()))
 				.thenComparingInt(e->e.getAmplifier()).thenComparingInt(e->e.getDuration()));
 		recalculateHAS();
-		return swi;
+		return Pair.of(swi,
+				BeverageTypeRecipe.sorted.stream().filter(t->t.matches(ctx)).map(t->t.output).findFirst()
+				.orElse(CVFluids.mixedf.get()));
+	}
+	public Fluid checkFluidType() {
+		BeveragePendingContext ctx=new BeveragePendingContext(this);
+		return BeverageTypeRecipe.sorted.stream().filter(t->t.matches(ctx)).map(t->t.output).findFirst()
+		.orElse(CVFluids.mixedf.get());
 	}
 	public void merge(BeverageInfo f, float cparts, float oparts) {
 
@@ -169,6 +254,8 @@ public class BeverageInfo implements IFoodInfo {
 		for(Fluid s:this.relishes) {
 			relishes.add(StringTag.valueOf(Utils.getRegistryName(s).toString()));
 		}
+		nbt.putString("activeRelish1", activeRelish1);
+		nbt.putString("activeRelish2", activeRelish2);
 		nbt.put("relish", relishes);
 		nbt.putInt("heal", healing);
 		nbt.putFloat("sat", saturation);

@@ -5,5 +5,14 @@
 	"block.convivium.aeolipile":"蒸汽引擎",
 	"block.convivium.pestle_and_mortar":"研磨器",
 	"block.convivium.cog":"销齿轮",
-	"block.convivium.cage_wheel":"笼齿轮"
+	"block.convivium.cage_wheel":"笼齿轮",
+	"tooltip.convivium.major_relish_2":"生效旨：[%s,%s]",
+	"tooltip.convivium.major_relish_1":"生效旨：[%s]",
+	"gui.convivium.relish.wine.name":"酒",
+	"gui.convivium.relish.bath.name":"荡",
+	"gui.convivium.relish.cereal.name":"谷",
+	"gui.convivium.relish.hearth.name":"灶",
+	"gui.convivium.relish.seasons.name":"季",
+	"gui.convivium.relish.fire.name":"火",
+	"gui.convivium.relish.none.name":"无"
 }

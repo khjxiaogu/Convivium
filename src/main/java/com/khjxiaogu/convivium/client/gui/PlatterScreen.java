@@ -49,9 +49,9 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 	public PlatterScreen(PlatterContainer container, Inventory inv, Component titleIn) {
 		super(container, inv, titleIn);
 		this.titleLabelY = 4;
-		this.titleLabelX = 7;
-		this.inventoryLabelY = this.imageHeight - 92;
-		this.inventoryLabelX = 4;
+		this.titleLabelX = 5;
+		this.inventoryLabelY = this.imageHeight - 99;
+		this.inventoryLabelX = 7;
 		blockEntity = container.getBlock();
 	}
 	public static MutableComponent cpile = Utils.translate("gui." + CVMain.MODID + ".fruit_platter.piled");
@@ -116,10 +116,10 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 	}
 
 	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
-		matrixStack.drawString(this.font, this.title, this.titleLabelX-2, this.titleLabelY, 4210752, false);
+		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 
 		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX+3, this.inventoryLabelY-7, 4210752, false);
+		matrixStack.drawString(this.font, name, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
 	}
 
 	@Override

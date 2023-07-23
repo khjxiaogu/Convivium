@@ -1,0 +1,5 @@
+{
+  "type": "convivium:containing",
+  "fluid": "minecraft:water",
+  "item": "convivium:water"
+}

@@ -24,6 +24,13 @@ public class SwayEffect implements Writeable{
 	INumber amplifier;
 	INumber duration;
 	List<CompareCondition> compare;
+	public SwayEffect(MobEffect effect, INumber amplifier, INumber duration, List<CompareCondition> compare) {
+		super();
+		this.effect = effect;
+		this.amplifier = amplifier;
+		this.duration = duration;
+		this.compare = compare;
+	}
 	public SwayEffect(JsonObject jo) {
 		
 		if (jo.has("level"))
@@ -53,11 +60,22 @@ public class SwayEffect implements Writeable{
 		jo.add("condition",SerializeUtil.toJsonList(compare, CompareCondition::serialize));
 		return jo;
 	}
+	public Optional<MobEffectInstance> getEffectNoChecck(IEnvironment env) {
+		if(effect!=null) 
+			return Optional.of(new MobEffectInstance(effect,(int)duration.applyAsDouble(env),(int)amplifier.applyAsDouble(env)));
+		return Optional.empty();
+	}
 	public Optional<MobEffectInstance> getEffect(IEnvironment env) {
 		if(effect!=null&&compare.stream().allMatch(t->t.test(env))) {
 			return Optional.of(new MobEffectInstance(effect,(int)duration.applyAsDouble(env),(int)amplifier.applyAsDouble(env)));
 		}
 		return Optional.empty();
+	}
+	public boolean hasEffect(IEnvironment env) {
+		if(compare.stream().allMatch(t->t.test(env))) {
+			return true;
+		}
+		return false;
 	}
 	@Override
 	public void write(FriendlyByteBuf buffer) {

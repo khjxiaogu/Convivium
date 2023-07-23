@@ -1,5 +1,6 @@
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class SwayRecipe  extends IDataRecipe{
 		relish=SerializeUtil.parseJsonList(jo.get("relish"), RelishConditions::of);
 		priority=GsonHelper.getAsInt(jo, "priority",0);
 		locals=new LinkedHashMap<>();
-		for(Entry<String, JsonElement> s:jo.getAsJsonObject().entrySet()) {
+		for(Entry<String, JsonElement> s:jo.get("locals").getAsJsonObject().entrySet()) {
 			locals.put(s.getKey(), Expression.of(s.getValue()));
 		}
 		effects=SerializeUtil.parseJsonList(jo.get("effects"),SwayEffect::new);
@@ -110,7 +111,21 @@ public class SwayRecipe  extends IDataRecipe{
 	public boolean canApply(BeveragePendingContext ctx) {
 		return relish.stream().anyMatch(t->t.test(ctx));
 	}
-	public List<MobEffectInstance> getEffects(IEnvironment env){
-		return effects.stream().map(t->t.getEffect(env)).flatMap(Optional::stream).collect(Collectors.toList());
+	public boolean hasEffects(IEnvironment env){
+		for(SwayEffect sw:effects) {
+			if(sw.hasEffect(env))return true;
+		}
+		return false;
+	}
+	public Pair<Boolean,List<MobEffectInstance>> getEffects(IEnvironment env){
+		List<MobEffectInstance> result=new ArrayList<>();
+		boolean res=false;
+		for(SwayEffect sw:effects) {
+			if(sw.hasEffect(env)) {
+				sw.getEffect(env).ifPresent(result::add);
+				res=true;
+			}
+		}
+		return Pair.of(res, result);
 	}
 }

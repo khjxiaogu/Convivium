@@ -163,6 +163,7 @@ public class Evaluator {
 		functions.put("exp", x -> new FuncCallNode(x, "exp",1, v -> Math.exp(v[0]), true));
 		functions.put("max", x -> new FuncCallNode(x, "max",2, v -> Math.max(v[0], v[1]), true));
 		functions.put("min", x -> new FuncCallNode(x, "min",2, v -> Math.min(v[0], v[1]), true));
+		functions.put("if", x -> new FuncCallNode(x, "if",3, v -> v[0]>0?v[1]:v[2], true));
 		constants.put("PI", Math.PI);
 		constants.put("E", Math.E);
 	}

@@ -37,7 +37,7 @@ public class WhiskContainer extends CPBaseContainer<WhiskBlockEntity> {
 	}
 
 	public WhiskContainer(int id, Inventory inv, WhiskBlockEntity blockEntity) {
-		super(CVGui.PLATTER.get(),blockEntity , id,6);
+		super(CVGui.WHISK.get(),blockEntity , id,6);
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 0, 107, 24));
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 1, 91, 32));
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 2, 91, 48));

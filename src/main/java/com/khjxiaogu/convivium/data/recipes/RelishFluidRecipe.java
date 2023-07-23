@@ -1,5 +1,6 @@
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
@@ -20,7 +21,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class RelishFluidRecipe extends IDataRecipe {
 	public Fluid fluid;
 	public String relish;
-	public Map<String,Float> variantData;
+	public Map<String,Float> variantData=new HashMap<>();
 	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
 	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
 	public static Map<Fluid,RelishFluidRecipe> recipes;

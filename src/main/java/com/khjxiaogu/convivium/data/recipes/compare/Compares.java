@@ -18,9 +18,9 @@ public class Compares {
 		
 	};
 	static {
-		register("greater", GT::new, GT::new);
-		register("equals", EQ::new, EQ::new);
-		register("lesser", LT::new, LT::new);
+		register("greater",v-> GT.C,v-> GT.C);
+		register("equals",v-> EQ.C,v-> EQ.C);
+		register("lesser",v-> LT.C,v-> LT.C);
 	}
 	public static void register(String name, Deserializer<JsonObject, Compare> des) {
 		compares.register(name, des);

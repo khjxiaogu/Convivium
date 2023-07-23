@@ -74,6 +74,7 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticMixedBlockModel("whisk","whisk_stator");
 		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
 		blockItemModel("fruit_platter");
+		simpleBlock(cvblock("beverage"),bmf(CVMain.MODID,"beverage"));
 		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
 			

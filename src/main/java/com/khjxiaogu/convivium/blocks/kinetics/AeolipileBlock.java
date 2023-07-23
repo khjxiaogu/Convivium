@@ -30,6 +30,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -39,7 +40,11 @@ public class AeolipileBlock extends KineticBasedBlock<AeolipileBlockEntity> {
 	public AeolipileBlock(Properties blockProps) {
 		super(CVBlockEntityTypes.AOELIPILE, blockProps);
 	}
-
+	static final VoxelShape shape = Block.box(3, 0, 3, 13, 13, 13);
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return shape;
+	}
 	public VoxelShape getVisualShape(BlockState pState, BlockGetter pReader, BlockPos pPos, CollisionContext pContext) {
 		return Shapes.empty();
 	}

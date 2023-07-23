@@ -21,17 +21,10 @@
 
 package com.khjxiaogu.convivium.fluid;
 
-import java.util.List;
 import java.util.Optional;
 
-import com.google.common.collect.Lists;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.util.FloatemStack;
-import com.teammoeg.caupona.util.StewInfo;
-import com.teammoeg.caupona.util.Utils;
-
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;

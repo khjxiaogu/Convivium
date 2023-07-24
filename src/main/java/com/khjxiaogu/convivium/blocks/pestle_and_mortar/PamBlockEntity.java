@@ -47,6 +47,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		protected void onContentsChanged(int slot) {
 			// TODO Auto-generated method stub
 			super.onContentsChanged(slot);
+			syncData();
 		}
 	};
 	public final FluidTank tankin = new FluidTank(1000);

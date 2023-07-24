@@ -52,7 +52,7 @@ public class CompareCondition implements Writeable {
 
 	}
 	public boolean test(IEnvironment env) {
-		return compare.test((float)(double)expr1.apply(env), (float)(double)expr2.apply(env));
+		return compare.test((float)expr1.applyAsDouble(env), (float)expr2.applyAsDouble(env));
 	}
 
 }

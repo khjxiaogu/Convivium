@@ -20,7 +20,9 @@ package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamContainer;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
+import com.khjxiaogu.convivium.blocks.whisk.WhiskContainer;
 
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -34,4 +36,6 @@ public class CVGui {
 			() -> IForgeMenuType.create(PlatterContainer::new));
 	public static final RegistryObject<MenuType<PamContainer>> PAM = CONTAINERS.register("pestle_and_mortar",
 			() -> IForgeMenuType.create(PamContainer::new));
+	public static final RegistryObject<MenuType<WhiskContainer>> WHISK = CONTAINERS.register("whisk",
+			() -> IForgeMenuType.create(WhiskContainer::new));
 }

@@ -1,0 +1,33 @@
+{
+  "type": "convivium:sway",
+  "effects": [
+    {
+      "condition": [
+        {
+          "compare": "greater",
+          "left": 3.0,
+          "right": 1.0
+        }
+      ],
+      "effect": "minecraft:night_vision",
+      "level": 1.0,
+      "time": 100.0
+    }
+  ],
+  "icon": "minecraft:textures/mob_effect/strength.png",
+  "locals": {
+    "astringencyDelta": 3.0,
+    "display": 5.0,
+    "pungencyDelta": -2.0,
+    "soothingnessDelta": 0.0,
+    "sweetnessDelta": 1.0,
+    "thicknessDelta": 2.0
+  },
+  "priority": 0,
+  "relish": [
+    {
+      "type": "major",
+      "relish": "hearth"
+    }
+  ]
+}

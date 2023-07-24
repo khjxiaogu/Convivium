@@ -40,12 +40,20 @@ public class CVItemModelProvider extends ItemModelProvider {
 		for(String mt:CVItems.base_material) {
 			texture(mt);
 		}
+		for(String mt:CVItems.base_drinks) {
+			simpleTexture(mt,"beverages/");
+		}
+		potTexture("beverage","alcohol_bottle","beverages/");
 	}
 
 	public void itemModel(Item item, String name) {
 		super.withExistingParent(Utils.getRegistryName(item).getPath(), new ResourceLocation(CVMain.MODID, "block/" + name));
 	}
-
+	public ItemModelBuilder potTexture(String n,String name, String par) {
+		return withExistingParent(n, new ResourceLocation("minecraft", "item/generated"))
+                .texture("layer0",new ResourceLocation(CVMain.MODID, "item/" + par + name))
+                .texture("layer1",new ResourceLocation(CVMain.MODID, "item/" + par + name+"_overlay"));
+	}
 	public ItemModelBuilder simpleTexture(String name, String par) {
 		return super.singleTexture(name, new ResourceLocation("minecraft", "item/generated"), "layer0",
 				new ResourceLocation(CVMain.MODID, "item/" + par + name));

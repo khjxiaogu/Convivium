@@ -1,5 +1,6 @@
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
@@ -22,7 +23,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class RelishRecipe extends IDataRecipe {
 	public ResourceLocation tag;
 	public String relishName;
-	public Map<String,Float> variantData;
+	public Map<String,Float> variantData=new HashMap<>();
 	public String color;
 	public static Map<String,RelishRecipe> recipes;
 	public RelishRecipe(ResourceLocation id,String name, ResourceLocation tag, String color) {
@@ -68,11 +69,13 @@ public class RelishRecipe extends IDataRecipe {
 
 	@Override
 	public void serializeRecipeData(JsonObject json) {
+		json.addProperty("name", relishName);
 		json.addProperty("tag", tag.toString());
 		json.addProperty("color", color);
 		json.add("variants",SUtils.toJson(variantData));
 	}
 	public void write(FriendlyByteBuf pb) {
+		pb.writeUtf(relishName);
 		pb.writeResourceLocation(tag);
 		pb.writeUtf(color);
 		SUtils.toPacket(pb, variantData);

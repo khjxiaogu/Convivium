@@ -37,7 +37,7 @@ public class CVTags {
 		
 	}
 	public static class Items{
-
+		public static TagKey<Item> drinkMaterial=create("drink_material");
 		private static TagKey<Item> create(String s){
 			return ItemTags.create(new ResourceLocation(CVMain.MODID, s));
 		}

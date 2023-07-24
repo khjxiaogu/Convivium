@@ -1,5 +1,6 @@
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
@@ -19,13 +20,13 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class RelishFluidRecipe extends IDataRecipe {
 	public Fluid fluid;
-	public ResourceLocation relish;
-	public Map<String,Float> variantData;
+	public String relish;
+	public Map<String,Float> variantData=new HashMap<>();
 	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
 	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
 	public static Map<Fluid,RelishFluidRecipe> recipes;
 
-	public RelishFluidRecipe(ResourceLocation id, Fluid fluid, ResourceLocation relish) {
+	public RelishFluidRecipe(ResourceLocation id, Fluid fluid, String relish) {
 		super(id);
 		this.fluid = fluid;
 		this.relish = relish;
@@ -33,13 +34,13 @@ public class RelishFluidRecipe extends IDataRecipe {
 	public RelishFluidRecipe(ResourceLocation id,FriendlyByteBuf pb) {
 		super(id);
 		fluid=pb.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
-		relish=pb.readResourceLocation();
+		relish=pb.readUtf();
 		variantData=SUtils.fromPacket(pb);
 	}
 	public RelishFluidRecipe(ResourceLocation id,JsonObject jo) {
 		super(id);
 		fluid=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(jo, "fluid")));
-		relish=new ResourceLocation(GsonHelper.getAsString(jo, "relish"));
+		relish=GsonHelper.getAsString(jo, "relish");
 		variantData=SUtils.fromJson(jo,"variants");
 	}
 	@Override
@@ -54,12 +55,12 @@ public class RelishFluidRecipe extends IDataRecipe {
 	@Override
 	public void serializeRecipeData(JsonObject json) {
 		json.addProperty("fluid",Utils.getRegistryName(fluid).toString());
-		json.addProperty("relish",relish.toString());
+		json.addProperty("relish",relish);
 		json.add("variants",SUtils.toJson(variantData));
 	}
 	public void write(FriendlyByteBuf pb) {
 		pb.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS, fluid);
-		pb.writeResourceLocation(relish);
+		pb.writeUtf(relish);
 		SUtils.toPacket(pb, variantData);
 	}
 }

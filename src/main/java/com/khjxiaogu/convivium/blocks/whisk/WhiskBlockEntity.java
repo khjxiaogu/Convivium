@@ -1,27 +1,664 @@
 package com.khjxiaogu.convivium.blocks.whisk;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
+import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
+import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
+import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
+import com.khjxiaogu.convivium.fluid.BeverageFluid;
+import com.khjxiaogu.convivium.util.BeverageInfo;
+import com.khjxiaogu.convivium.util.BeveragePendingContext;
+import com.khjxiaogu.convivium.util.CurrentSwayInfo;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.teammoeg.caupona.CPConfig;
+import com.teammoeg.caupona.blocks.stove.IStove;
+import com.teammoeg.caupona.util.FloatemStack;
+import com.teammoeg.caupona.util.IInfinitable;
+import com.teammoeg.caupona.util.LazyTickWorker;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 
-public class WhiskBlockEntity extends KineticTransferBlockEntity {
+public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInfinitable,MenuProvider {
+	public ItemStackHandler inv=new ItemStackHandler(6) {
+	    @Override
+	    public boolean isItemValid(int slot, @NotNull ItemStack stack)
+	    {
+	    	if(slot<4)
+	    		return isValidInput(stack);
+	    	if(slot==4)
+	    		return stack.getItem()==Items.GLASS_BOTTLE||ContainingRecipe.getFluidType(stack)!=Fluids.EMPTY;
+	    	return false;
+	    }
 
+		@Override
+		protected void onContentsChanged(int slot) {
+			super.onContentsChanged(slot);
+			syncData();
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			if(slot<4)
+				return 1;
+			return super.getSlotLimit(slot);
+		}
+	};
+	public FluidTank tank=new FluidTank(1250,e->RelishFluidRecipe.recipes.containsKey(e.getFluid())||e.getFluid() instanceof BeverageFluid);
+	public List<CurrentSwayInfo> swayhint=new ArrayList<>();
+	public static Codec<List<CurrentSwayInfo>> CSI_CODEC=Codec.list(CurrentSwayInfo.CODEC);
+	public BeverageInfo info;
+	public int process;
+	public int processMax;
+	public boolean isStiring;
+	public int heating;
+	public boolean isHeating;
+	public boolean rs;
+	public boolean inf;
+	public boolean isLastHeating;
+	public Fluid target;
+	public LazyTickWorker contain;
 	public WhiskBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.WHISK.get(), pWorldPosition, pBlockState);
+		contain=new LazyTickWorker(CPConfig.SERVER.containerTick.get(),()->{
+			if (inf) {
+				FluidStack fs = new FluidStack(tank.getFluid(), tank.getFluidAmount());
+				if (processMax==0)
+					tryContianFluid();
+				tank.setFluid(fs);
+			} else {
+				if (processMax==0) {
+					if(tryContianFluid())
+						return true;
+				}
+			}
+			return false;
+		});
 
 	}
-
+	@Override
+	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
+		super.readCustomNBT(nbt, isClient);
+		if(nbt.contains("info"))
+			info=new BeverageInfo(nbt.getCompound("info"));
+		else
+			info=null;
+		swayhint=new ArrayList<>(CSI_CODEC.decode(NbtOps.INSTANCE,nbt.get("hint")).result().map(Pair::getFirst).orElse(List.of()));
+		process=nbt.getInt("process");
+		processMax=nbt.getInt("processMax");
+		isStiring=nbt.getBoolean("isStir");
+		heating=nbt.getInt("heat");
+		isHeating=nbt.getBoolean("heating");
+		rs=nbt.getBoolean("rs");
+		inf=nbt.getBoolean("inf");
+		isLastHeating=nbt.getBoolean("last_heat");
+		tank.readFromNBT(nbt.getCompound("tank"));
+		inv.deserializeNBT(nbt.getCompound("inv"));
+		
+	}
+	@Override
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
+		super.writeCustomNBT(nbt, isClient);
+		if(info!=null)
+			nbt.put("info", info.save());
+		if(swayhint!=null)
+			CSI_CODEC.encodeStart(NbtOps.INSTANCE,swayhint).result().ifPresent(t->nbt.put("hint",t));
+			
+		nbt.putInt("process", process);
+		nbt.putInt("processMax", processMax);
+		nbt.putBoolean("isStir", isStiring);
+		nbt.putInt("heat", heating);
+		nbt.putBoolean("heating", isHeating);
+		nbt.putBoolean("rs", rs);
+		nbt.putBoolean("inf", inf);
+		nbt.putBoolean("last_heat",isLastHeating);
+		nbt.put("tank", tank.writeToNBT(new CompoundTag()));
+		nbt.put("inv", inv.serializeNBT());
+	}
 	@Override
 	public void handleMessage(short type, int data) {
-
+		if(type==0) {
+			rs=data!=0;
+		}else if(type==1) {
+			isHeating=data!=0;
+		}
+		this.syncData();
 	}
+	private boolean tryContianFluid() {
+		ItemStack is = inv.getStackInSlot(4);
+		if (!is.isEmpty() && inv.getStackInSlot(5).isEmpty()) {
+			if (is.getItem() == Items.GLASS_BOTTLE && tank.getFluidAmount() >= 250) {
+				ContainingRecipe recipe = ContainingRecipe.recipes.get(this.tank.getFluid().getFluid());
+				if (recipe != null) {
+					is.shrink(1);
+					inv.setStackInSlot(5, recipe.handle(tank.drain(250, FluidAction.EXECUTE)));
+					return true;
+				}
+			}
 
+			FluidStack out=ContainingRecipe.extractFluid(is);
+			if (!out.isEmpty()) {
+				if (this.tank.getFluidAmount()<=1000&&this.accessabletank.fill(out, FluidAction.EXECUTE)!=0) {
+					ItemStack ret = is.getCraftingRemainingItem();
+					is.shrink(1);
+					inv.setStackInSlot(5, ret);
+					return true;
+				}
+				return false;
+			}
+			FluidActionResult far = FluidUtil.tryFillContainer(is, this.accessabletank, 1250, null, true);
+			if (far.isSuccess()) {
+				is.shrink(1);
+				if (far.getResult() != null) {
+					inv.setStackInSlot(5, far.getResult());
+				}
+			}
+		}
+		return false;
+	}
 	@Override
 	public boolean isReceiver() {
 		// TODO Auto-generated method stub
 		return true;
 	}
+	public boolean isValidInput(ItemStack is) {
+		return is.is(CVTags.Items.drinkMaterial)||TasteRecipe.recipes.stream().anyMatch(t->t.item.test(is));
+	}
+	@Override
+	public void tick() {
+		super.tick();
+		if(level.isClientSide)return;
+		contain.tick();
+		if(rs) {
+			isHeating=level.hasNeighborSignal(this.worldPosition);
+		}
+		boolean ilh=isLastHeating;
+		isLastHeating=false;
+		if(getSpeed()==0)return;
+		if(processMax!=0&&getSpeed()>0) {
+			process-=speed;
+			if(isStiring) {
+				boolean flag=false;
+				for (int i = 0; i < 4; i++) {
+					ItemStack is = inv.getStackInSlot(i);
+					if (!is.isEmpty()) {
+						if (is.getItem() != Items.POTION) {
+							flag|=true;
+						}
+					}
+				}
+				if(!flag) {
+					isStiring=false;
+					process=processMax=0;
+				}else
+				if(process<=200) {
+					isStiring=false;
+					if(info==null)
+						info=new BeverageInfo();
+					int amt=tank.getFluidAmount()/250;
+					float cnt=0;
+					boolean hasItem=false;
+					cnt=info.getDensity()*amt;
+					for (int i = 0; i < 4; i++) {
+						ItemStack is = inv.getStackInSlot(i);
+						if (!is.isEmpty()) {
+							if (is.getItem() != Items.POTION) {
+								cnt++;
+							}
+							hasItem=true;
+						}
+					}
+					if(!hasItem||cnt/amt>2) {
+						process=processMax=0;
+					}else {
+						int camt=tank.getFluidAmount()/250;
+						NonNullList<ItemStack> interninv = NonNullList.withSize(4, ItemStack.EMPTY);
+						for (int i = 0; i < 4; i++) {
+							ItemStack is = inv.getStackInSlot(i);
+							if (!is.isEmpty()) {
+								if (is.getItem() == Items.POTION) {
+									for (MobEffectInstance eff : PotionUtils.getMobEffects(is))
+										info.addEffect(eff,camt);
+									inv.setStackInSlot(i, new ItemStack(Items.GLASS_BOTTLE));
+								} else {
+									for (int j = 0; j < 4; j++) {
+										ItemStack ois = interninv.get(j);
+										if (ois.isEmpty()) {
+											interninv.set(j, is.copy());
+											break;
+										} else if (ItemStack.isSameItemSameTags(ois, is)) {
+											ois.setCount(ois.getCount() + is.getCount());
+											break;
+										}
+									}
+									inv.setStackInSlot(i, is.getCraftingRemainingItem());
+								}
+							}
+						}
+						for (int i = 0; i < 4; i++) {
+							ItemStack is = interninv.get(i);
+							if (is.isEmpty())
+								break;
+							info.addItem(is, camt);
+						}
+						Pair<List<CurrentSwayInfo>, Fluid> val=info.handleSway();
+						setSwayhint(val.getFirst());
+						target=val.getSecond();
+					}
+				}
+			}
+			if(process<=0) {
+				process=processMax=0;
+				if(target==null)
+					target=tank.getFluid().getFluid();
+				FluidStack fsn=new FluidStack(target,tank.getFluidAmount(),tank.getFluid().getTag());
+				BeverageFluid.setInfo(fsn, info);
+				tank.setFluid(fsn);
+			}
+			this.syncData();
+		}else { 
+			if(tank.getFluidAmount()%250==0){
+				int amt=tank.getFluidAmount()/250;
+				float cnt=0;
+				boolean hasItem=false;
+				if(info!=null) {
+					cnt=info.getDensity()*amt;
+					for (int i = 0; i < 4; i++) {
+						ItemStack is = inv.getStackInSlot(i);
+						if (!is.isEmpty()) {
+							if (is.getItem() != Items.POTION) {
+								cnt++;
+							}
+							hasItem=true;
+						}
+					}
+				}else {
+					for (int i = 0; i < 4; i++) {
+						ItemStack is = inv.getStackInSlot(i);
+						if (!is.isEmpty()) {
+							if (is.getItem() != Items.POTION) {
+								cnt++;
+							}
+							hasItem=true;
+						}
+					}
+				}
+				if(hasItem&&cnt/amt<=2) {
+					isStiring=true;
+					process=processMax=400;
+				}else if(info!=null){
+					ConvertionRecipe rc=null;
+					outer:for(ConvertionRecipe r:ConvertionRecipe.recipes){
+						if(r.temperature<=info.heat)
+							continue;
+						if(r.in!=Fluids.EMPTY) {
+							boolean flag=false;
+							int cntx=0;
+							for(Fluid f:info.relishes) {
+								if(f==r.in) {
+									flag=true;
+									cntx++;
+								}
+							}
+							if(!flag) continue outer;
+							if(cntx<r.inpart)continue outer;
+						}
+						int newpart=info.getRelishCount()+r.outpart-r.inpart;
+						if(newpart>5||newpart<=0) {
+							continue;
+						}
+						float tccn=info.getDensity();
+						if(!r.items.isEmpty()) {
+							
+							for(Pair<Ingredient, Float> i:r.items) {
+								boolean flag=true;
+								for(FloatemStack fs:info.stacks) {
+									float ccn=i.getSecond()/cnt;
+									tccn-=ccn;
+									if(!i.getFirst().test(fs.getStack())||ccn>fs.getCount()) {
+										flag=false;
+										break;
+									}
+								}
+								if(!flag)
+									continue outer;
+							}
+						}
+						if(!r.output.isEmpty()) {
+							for(Pair<ItemStack, Float> i:r.output) {
+								tccn+=i.getSecond()/cnt;
+							}
+						}
+						if(tccn*cnt/newpart>2)continue;
+						rc=r;
+						break;
+					}
+					if(rc!=null) {
+						List<Fluid> fs=new ArrayList<>();
+						int nin=rc.inpart;
+						if(rc.in!=Fluids.EMPTY) {
+							for(int i=0;i<5;i++) {
+								Fluid f=info.relishes[i];
+								info.relishes[i]=null;
+								if(f==null)continue;
+								if(nin!=0&&f==rc.in) {
+									nin--;
+								}else
+									fs.add(f);
+							}
+							if(rc.out!=Fluids.EMPTY)
+								for(int i=0;i<rc.outpart;i++)
+									fs.add(rc.out);
+							for(int i=0;i<fs.size();i++) {
+								info.relishes[i]=fs.get(i);
+							}
+						}else {
+							int cntx=info.getRelishCount();
+							for(int i=cntx;i<cntx+rc.outpart;i++) {
+								info.relishes[i]=rc.out;
+							}
+						}
+						
+						if(!rc.items.isEmpty()) {
+							for(Pair<Ingredient, Float> i:rc.items) {
+								for(FloatemStack fss:info.stacks) {
+									if(i.getFirst().test(fss.getStack())) {
+										fss.setCount(fss.getCount()-i.getSecond()/cnt);
+										break;
+									}
+								}
+							}
+						}
+						if(!rc.output.isEmpty()) {
+							for(Pair<ItemStack, Float> i:rc.output) {
+								info.addItem(i.getFirst(), cnt/i.getSecond());
+							}
+						}
+						int cn=info.getRelishCount()*250;
+						Pair<List<CurrentSwayInfo>, Fluid> i=info.adjustParts(tank.getFluidAmount(),cn);
+						setSwayhint(i.getFirst());
+						target=i.getSecond();
+						tank.getFluid().setAmount(cn);
+						process=processMax=rc.processTime;
+						this.syncData();
+					}
+				}
+			}
+			
+		}
+
+		if(tank.getFluidAmount()%250==0&&!tank.isEmpty()) {
+			if(isHeating) {
+				if(level.getBlockEntity(worldPosition.below()) instanceof IStove stove&&stove.canEmitHeat()) {
+					heating+=stove.requestHeat()*getSpeed();
+					isLastHeating=true;
+				}
+				if(heating>=4*tank.getFluidAmount()/250) {
+					if(info==null) {
+						info=new BeverageInfo();
+						FluidStack fs=tank.getFluid();
+						for(int i=0;i<fs.getAmount()/250;i++) {
+							info.relishes[i]=fs.getFluid();
+						}
+					}
+					if(info.heat<70)
+						info.heat++;
+					heating=0;
+				}
+			}else if(info!=null){
+				if(heating>=16*tank.getFluidAmount()/250) {
+					if(info.heat>0)
+						info.heat--;
+					else
+						info.heat++;
+					heating=0;
+				}
+			}
+		}
+		if(isLastHeating!=ilh)
+			this.syncData();
+	}
+	ChangeDetectedFluidHandler accessabletank=new ChangeDetectedFluidHandler();
+	LazyOptional<IItemHandler> down = LazyOptional.of(() -> new RangedWrapper(inv, 5, 6));
+	LazyOptional<IItemHandler> side = LazyOptional.of(() -> new RangedWrapper(inv, 0, 5));
+	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> accessabletank);
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (cap == ForgeCapabilities.ITEM_HANDLER) {
+			if (side == Direction.DOWN)
+				return down.cast();
+			return this.side.cast();
+		}
+		if (cap == ForgeCapabilities.FLUID_HANDLER)
+			return fl.cast();
+		return super.getCapability(cap, side);
+	}
+	public class ChangeDetectedFluidHandler implements IFluidHandler {
+		public ChangeDetectedFluidHandler() {
+			super();
+		}
+		@Override
+		public int getTanks() {
+			return tank.getTanks();
+		}
+
+		@Override
+		public FluidStack getFluidInTank(int t) {
+			return tank.getFluidInTank(t);
+		}
+
+		@Override
+		public int getTankCapacity(int t) {
+			return tank.getTankCapacity(t);
+		}
+
+		@Override
+		public boolean isFluidValid(int t, FluidStack stack) {
+			return tank.isFluidValid(t, stack);
+		}
+
+		@Override
+		public int fill(FluidStack resource, FluidAction action) {
+			if(processMax!=0)return 0;
+			boolean isEmpty=tank.getFluid().isEmpty();
+			int filled = tank.fill(resource, action);
+			if (filled != 0) {
+				if(action.execute()) {
+					if(isEmpty) {
+						if(resource.getFluid() instanceof BeverageFluid) {
+							info=BeverageFluid.getInfo(resource).orElse(null);
+							if(info!=null) {
+								BeveragePendingContext context=new BeveragePendingContext(info);
+								setSwayhint(context.getSwayHint());
+								
+							}
+						}
+					}
+					if(tank.getFluidAmount()%250==0){
+						//System.out.print(5);
+						if(info==null) {
+							FluidStack fs=tank.getFluid();
+							int amt=fs.getAmount()/250;
+							info=new BeverageInfo();
+							for(int i=0;i<amt;i++) {
+								info.relishes[i]=fs.getFluid();
+							}
+							BeveragePendingContext context=new BeveragePendingContext(info);
+							setSwayhint(context.getSwayHint());
+						}else if(!(resource.getFluid() instanceof BeverageFluid)){
+							FluidStack fs=tank.getFluid();
+							int amt=fs.getAmount()/250;
+							for(int i=0;i<amt;i++) {
+								info.relishes[i]=fs.getFluid();
+							}
+							BeveragePendingContext context=new BeveragePendingContext(info);
+							setSwayhint(context.getSwayHint());
+						}
+					}
+					syncData();
+				}
+			}else if(tank.isFluidValid(resource)&&resource.getAmount()>=250){
+				//System.out.print(0);
+				FluidStack stack=tank.getFluid();
+				if(stack.getAmount()%250==0) {
+					int amt=stack.getAmount()/250;
+					//System.out.println(1);
+					//System.out.println(info.getRelishCount());
+					if(info!=null&&info.getRelishCount()!=amt)return 0;
+					Fluid actual=resource.getFluid();
+					int famt=Math.min(5-amt,resource.getAmount()/250);
+					if(actual instanceof BeverageFluid) {
+						//System.out.print(2);
+						BeverageInfo other=BeverageFluid.getInfo(resource).orElse(null);
+						if(other!=null) {
+							if(other.equals(info)) {
+								if(action.execute()) {
+									info.merge(other,amt, famt);
+									Pair<List<CurrentSwayInfo>, Fluid> swi=info.adjustParts(amt,amt+famt);
+									setSwayhint(swi.getFirst());
+									FluidStack fsn=new FluidStack(swi.getSecond(),tank.getFluidAmount()+famt*250,tank.getFluid().getTag());
+									BeverageFluid.setInfo(fsn, info);
+									tank.setFluid(fsn);
+								}
+								return famt*250;
+							}
+						}
+					}
+					//System.out.print(3);
+					if(action.execute()) {
+						//System.out.print(4);
+						if(info==null) {
+							//System.out.print(5);
+							info=new BeverageInfo();
+							for(int i=0;i<amt;i++) {
+								info.relishes[i]=stack.getFluid();
+							}
+							for(int i=amt;i<amt+famt;i++) {
+								info.relishes[i]=actual;
+							}
+							Pair<List<CurrentSwayInfo>, Fluid> swi=info.handleSway();
+							setSwayhint(swi.getFirst());
+							target=info.checkFluidType();
+							tank.getFluid().setAmount(tank.getFluidAmount()+famt*250);
+						}else {
+							//System.out.print(6);
+							for(int i=amt;i<amt+famt;i++) {
+								info.relishes[i]=actual;
+							}
+							Pair<List<CurrentSwayInfo>, Fluid> swi=info.adjustParts(amt,amt+famt);
+							setSwayhint(swi.getFirst());
+							tank.getFluid().setAmount(tank.getFluidAmount()+famt*250);
+							target=swi.getSecond();
+						}
+						process=processMax=400;
+						syncData();
+					}
+					return famt*250;
+				}
+				
+			}
+			return filled;
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, FluidAction action) {
+			if(processMax!=0)return FluidStack.EMPTY;
+			FluidStack drained = tank.drain(resource, action);
+			if (!drained.isEmpty() && action.execute()) {
+				if(tank.getFluid().isEmpty()) {
+					tank.setFluid(FluidStack.EMPTY);
+					info=null;
+				}
+				syncData();
+			}
+			return drained;
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, FluidAction action) {
+			if(processMax!=0)return FluidStack.EMPTY;
+			FluidStack drained = tank.drain(maxDrain, action);
+			if (!drained.isEmpty() && action.execute()) {
+				if(tank.getFluid().isEmpty()) {
+					tank.setFluid(FluidStack.EMPTY);
+					info=null;
+				}
+				syncData();
+			}
+			return drained;
+		}
+
+	}
+	public List<CurrentSwayInfo> getSwayhint() {
+		return swayhint;
+	}
+	public void setSwayhint(List<CurrentSwayInfo> swayhint) {
+		this.swayhint.clear();
+		int num1=0;
+		int num2=0;
+		for(CurrentSwayInfo hint:swayhint) {
+			if(hint.active>0) {
+				if(num1++<3) {
+					this.swayhint.add(hint);
+				}
+			}else {
+				if(num2++<3) {
+					this.swayhint.add(hint);
+				}
+			}
+		}
+		
+	}
+	@Override
+	public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+		return new WhiskContainer(pContainerId,pPlayerInventory,this);
+	}
+	@Override
+	public Component getDisplayName() {
+		return Utils.translate("container." + CVMain.MODID + ".whisk.title");
+	}
+	@Override
+	public boolean setInfinity() {
+		return inf=!inf;
+	}
+
 
 }

@@ -18,19 +18,25 @@
 
 package com.khjxiaogu.convivium.client;
 
+import org.joml.Vector3f;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVGui;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.gui.PamScreen;
 import com.khjxiaogu.convivium.client.gui.PlatterScreen;
+import com.khjxiaogu.convivium.client.gui.WhiskScreen;
 import com.khjxiaogu.convivium.client.renderer.AeolipileRenderer;
 import com.khjxiaogu.convivium.client.renderer.AqueductMainRenderer;
 import com.khjxiaogu.convivium.client.renderer.AqueductRenderer;
+import com.khjxiaogu.convivium.client.renderer.BeverageRenderer;
 import com.khjxiaogu.convivium.client.renderer.CogRenderer;
 import com.khjxiaogu.convivium.client.renderer.FruitModel;
 import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
+import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
 
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -38,6 +44,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -53,6 +60,7 @@ public class CVClientRegistry {
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
 		MenuScreens.register(CVGui.PLATTER.get(), PlatterScreen::new);
 		MenuScreens.register(CVGui.PAM.get(), PamScreen::new);
+		MenuScreens.register(CVGui.WHISK.get(), WhiskScreen::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(),FruitPlatterRenderer::new);
@@ -60,6 +68,7 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.PAM.get(),PamRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT.get(), AqueductRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), AqueductMainRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE.get(), BeverageRenderer::new);
 	}
 	
 	@SubscribeEvent
@@ -74,6 +83,7 @@ public class CVClientRegistry {
 		registerFruitModel(Items.SWEET_BERRIES,"sweet_berries",FruitModel.ModelType.MISC);
 		registerFruitModel(get(CPMain.MODID,"walnut"),"walnut",FruitModel.ModelType.ROUND);
 		registerFruitModel(get(CPMain.MODID,"wolfberries"),"wolfberries",FruitModel.ModelType.MISC);
+		
 	}
 	private static void registerFruitModel(Item item,String name,FruitModel.ModelType type) {
 		FruitPlatterRenderer.models.put(item,new FruitModel(name,type));
@@ -92,5 +102,10 @@ public class CVClientRegistry {
 
 	@SubscribeEvent
 	public static void onTint(RegisterColorHandlersEvent.Item ev) {
+		ev.register((a, idx) -> {
+			//System.out.println(idx);
+			return idx==0?-1: BeverageInfo.getIColor(a.getOrCreateTag());
+			
+	      },CVBlocks.BEVERAGE.get());
 	}
 }

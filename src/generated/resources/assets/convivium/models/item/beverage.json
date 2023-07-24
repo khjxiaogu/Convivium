@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "convivium:item/beverages/alcohol_bottle",
+    "layer1": "convivium:item/beverages/alcohol_bottle_overlay"
+  }
+}

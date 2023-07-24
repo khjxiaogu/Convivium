@@ -134,8 +134,10 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 			FluidTank tank=stew_pot.getTank();
 			if(tank.getFluid().getFluid().isSame(Fluids.WATER)) {
 				if(waterTick==0) {
-					if(inf||!tank.drain(new FluidStack(Fluids.WATER,1),FluidAction.EXECUTE).isEmpty())
+					if(inf||!tank.drain(new FluidStack(Fluids.WATER,1),FluidAction.EXECUTE).isEmpty()) {
+						stew_pot.syncData();
 						waterTick=20;
+					}
 				}
 				if(waterTick>0) {
 					

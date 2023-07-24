@@ -59,7 +59,7 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 		}
 		adds(this.tag(CPTags.Blocks.CHIMNEY_IGNORES),CVBlocks.aeolipile.getKey());
 		adds(this.tag(CVTags.Blocks.aqueductMove),CPBlocks.BOWL.getKey(),CPBlocks.DISH.getKey(),CVBlocks.platter.getKey(),CPBlocks.WOLF.getKey(),
-				CPBlocks.COPPER_PAN.getKey(),CPBlocks.LEAD_PAN.getKey(),CPBlocks.IRON_PAN.getKey(),CPBlocks.GRAVY_BOAT.getKey(),CPBlocks.STONE_PAN.getKey());
+				CPBlocks.COPPER_PAN.getKey(),CPBlocks.LEAD_PAN.getKey(),CPBlocks.IRON_PAN.getKey(),CPBlocks.GRAVY_BOAT.getKey(),CPBlocks.STONE_PAN.getKey(),CVBlocks.BEVERAGE.getKey());
 		for(String s:CPItems.dishes) {
 			this.tag(CVTags.Blocks.aqueductMove).add(cpn(s));
 		}

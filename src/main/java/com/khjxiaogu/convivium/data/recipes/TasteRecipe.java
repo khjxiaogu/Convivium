@@ -22,8 +22,12 @@ public class TasteRecipe extends IDataRecipe {
 	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
 	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
 	public static List<TasteRecipe> recipes;
-	public TasteRecipe(ResourceLocation id) {
+
+	public TasteRecipe(ResourceLocation id, Map<String, Float> variantData, int priority, Ingredient item) {
 		super(id);
+		this.variantData = variantData;
+		this.priority = priority;
+		this.item = item;
 	}
 	public TasteRecipe(ResourceLocation id,JsonObject json) {
 		super(id);

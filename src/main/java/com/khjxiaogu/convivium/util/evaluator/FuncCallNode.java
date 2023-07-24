@@ -2,13 +2,14 @@ package com.khjxiaogu.convivium.util.evaluator;
 
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
 
 class FuncCallNode implements Node{
-	Function<double[],Double> calc;
+	ToDoubleFunction<double[]> calc;
 	Node[] nested;
 	String name;
 	boolean isDeterministic;
-	public FuncCallNode(Node[] nested,String name,int paramCount,Function<double[],Double> calc,boolean isDeterministic) {
+	public FuncCallNode(Node[] nested,String name,int paramCount,ToDoubleFunction<double[]> calc,boolean isDeterministic) {
 		this.calc = calc;
 		this.nested = nested;
 		this.name=name;
@@ -24,7 +25,7 @@ class FuncCallNode implements Node{
 		for(int i=0;i<par.length;i++) {
 			par[i]=nested[i].eval(env);
 		}
-		return calc.apply(par);
+		return calc.applyAsDouble(par);
 	}
 	
 	@Override

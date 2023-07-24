@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class GT extends Compare {
-
+	public static final Compare C=new GT();
 	@Override
 	public boolean test(Float t1, Float num) {
 		return Float.compare(t1!=null?t1:0, num!=0?num:0)>0;

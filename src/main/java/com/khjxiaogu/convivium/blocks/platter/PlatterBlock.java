@@ -51,7 +51,10 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 
 
 	static final VoxelShape shape = Block.box(0, 0, 0, 16, 3, 16);
-
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return shape;
+	}
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public float getShadeBrightness(BlockState state, BlockGetter worldIn, BlockPos pos) {
@@ -68,10 +71,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 		return true;
 	}
 
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return shape;
-	}
+
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
@@ -90,14 +90,11 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 		if(dx) {
 			if(dz) 
 				return 3;//
-			else
-				return 1;
-		}else {
-			if(dz)
-				return 2;//
-			else
-				return 0;
+			return 1;
 		}
+		if(dz)
+			return 2;//
+		return 0;
 	}
 	@SuppressWarnings("deprecation")
 	@Override

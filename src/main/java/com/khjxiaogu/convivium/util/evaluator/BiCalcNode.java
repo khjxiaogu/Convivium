@@ -1,23 +1,23 @@
 package com.khjxiaogu.convivium.util.evaluator;
 
-import java.util.function.BiFunction;
+import java.util.function.DoubleBinaryOperator;
 
 class BiCalcNode extends BiNode{
-	BiFunction<Double,Double,Double> calc;
-	public static BiFunction<Double,Double,Double> add=(v1,v2)->v1+v2;
-	public static BiFunction<Double,Double,Double> min=(v1,v2)->v1-v2;
-	public static BiFunction<Double,Double,Double> mul=(v1,v2)->v1*v2;
-	public static BiFunction<Double,Double,Double> div=(v1,v2)->v1/v2;
-	public static BiFunction<Double,Double,Double> pow=(v1,v2)->Math.pow(v1,v2);
-	public static BiFunction<Double,Double,Double> mod=(v1,v2)->v1%v2;
-	public BiCalcNode(Node left, Node right,BiFunction<Double,Double,Double> calc) {
+	DoubleBinaryOperator calc;
+	public static DoubleBinaryOperator add=(v1,v2)->v1+v2;
+	public static DoubleBinaryOperator min=(v1,v2)->v1-v2;
+	public static DoubleBinaryOperator mul=(v1,v2)->v1*v2;
+	public static DoubleBinaryOperator div=(v1,v2)->v1/v2;
+	public static DoubleBinaryOperator pow=(v1,v2)->Math.pow(v1,v2);
+	public static DoubleBinaryOperator mod=(v1,v2)->v1%v2;
+	public BiCalcNode(Node left, Node right,DoubleBinaryOperator calc) {
 		super(left, right);
 		this.calc=calc;
 	}
 
 	@Override
 	public double eval(IEnvironment env) {
-		return calc.apply(left.eval(env),right.eval(env));
+		return calc.applyAsDouble(left.eval(env),right.eval(env));
 	}
 
 	@Override

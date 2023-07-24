@@ -145,7 +145,6 @@ public class BeverageTypeRecipe extends IDataRecipe {
 		if (ctx.getTotalItems() < density)
 			return false;
 		
-		List<Ingredient> igd;
 		if(relish!=null)
 			if(!relish.stream().anyMatch(t->t.test(ctx)))
 				return false;

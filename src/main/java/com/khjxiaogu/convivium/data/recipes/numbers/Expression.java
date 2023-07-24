@@ -1,12 +1,14 @@
 package com.khjxiaogu.convivium.data.recipes.numbers;
 
 import java.util.Objects;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.khjxiaogu.convivium.util.evaluator.Evaluator;
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
 import com.khjxiaogu.convivium.util.evaluator.Node;
 import com.khjxiaogu.convivium.util.evaluator.NullEnvironment;
+
 import net.minecraft.network.FriendlyByteBuf;
 
 public class Expression implements INumber{

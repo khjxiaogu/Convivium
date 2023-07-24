@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.google.gson.JsonObject;
 import com.teammoeg.caupona.data.CachedDataDeserializer;
 import com.teammoeg.caupona.data.Deserializer;
+
 import net.minecraft.network.FriendlyByteBuf;
 
 public class RelishConditions {

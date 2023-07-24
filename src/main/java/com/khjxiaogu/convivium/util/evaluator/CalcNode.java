@@ -1,7 +1,6 @@
 package com.khjxiaogu.convivium.util.evaluator;
 
 import java.util.function.DoubleUnaryOperator;
-import java.util.function.Function;
 
 class CalcNode implements Node{
 	DoubleUnaryOperator calc;

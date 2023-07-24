@@ -1,9 +1,7 @@
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
 import com.google.gson.JsonObject;
-import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
-import com.teammoeg.caupona.data.TranslationProvider;
 
 import net.minecraft.network.FriendlyByteBuf;
 

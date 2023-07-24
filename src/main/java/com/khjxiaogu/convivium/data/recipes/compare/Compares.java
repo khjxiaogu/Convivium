@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.teammoeg.caupona.data.CachedDataDeserializer;
 import com.teammoeg.caupona.data.Deserializer;
+
 import net.minecraft.network.FriendlyByteBuf;
 
 public class Compares {

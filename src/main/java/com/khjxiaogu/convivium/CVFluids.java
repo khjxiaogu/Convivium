@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import com.khjxiaogu.convivium.fluid.BaseFluid;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.fluid.SoupFluid;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;

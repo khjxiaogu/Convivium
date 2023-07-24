@@ -1,0 +1,140 @@
+{
+  "variants": {
+    "age=0": [
+      {
+        "model": "convivium:block/camellia_product_stage_1"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_1",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_1",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_1",
+        "y": 270
+      }
+    ],
+    "age=1": [
+      {
+        "model": "convivium:block/camellia_product_stage_2b"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_2b",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_2b",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_2b",
+        "y": 270
+      }
+    ],
+    "age=2": [
+      {
+        "model": "convivium:block/camellia_product_stage_2a"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_2a",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_2a",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_2a",
+        "y": 270
+      }
+    ],
+    "age=3": [
+      {
+        "model": "convivium:block/camellia_product_stage_c"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 270
+      }
+    ],
+    "age=4": [
+      {
+        "model": "convivium:block/camellia_product_stage_c"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 270
+      }
+    ],
+    "age=5": [
+      {
+        "model": "convivium:block/camellia_product_stage_c"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 270
+      }
+    ],
+    "age=6": [
+      {
+        "model": "convivium:block/camellia_product_stage_c"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 270
+      }
+    ],
+    "age=7": [
+      {
+        "model": "convivium:block/camellia_product_stage_c"
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 90
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 180
+      },
+      {
+        "model": "convivium:block/camellia_product_stage_c",
+        "y": 270
+      }
+    ]
+  }
+}

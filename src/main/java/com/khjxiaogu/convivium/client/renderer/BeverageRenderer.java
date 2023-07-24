@@ -83,7 +83,6 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 			matrixStack.translate(p.getFirst().x, p.getFirst().y, p.getFirst().z);
 			matrixStack.mulPose(p.getSecond());
 			
-			
 			GuiUtils.drawTexturedColoredRect(builder, matrixStack, 0, 0, 3/8f, 3/8f, clr.x(), clr.y(),
 					clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
 					combinedOverlayIn);

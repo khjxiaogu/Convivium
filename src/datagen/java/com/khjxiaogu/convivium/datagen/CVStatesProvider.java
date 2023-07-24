@@ -26,10 +26,12 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import com.google.common.collect.ImmutableList;
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
@@ -74,8 +76,20 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticMixedBlockModel("whisk","whisk_stator");
 		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
 		blockItemModel("fruit_platter");
-		simpleBlock(cvblock("beverage"),bmf(CVMain.MODID,"beverage"));
+		simpleBlock(cvblock("beverage"),bmf("beverage"));
 		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));
+		simpleBlockItem(cvblock("camellia_plant"),bmf("camellia_plant"));
+		itemModel(CVBlocks.CAMELLIA_FLOWER.get(),bmf("camellia_product_stage_c"));
+		this.getVariantBuilder(CVBlocks.CAMELLIA_FLOWER.get())
+		.partialState().with(CamelliaFlowerBlock.AGE,0).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_1"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,1).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_2b"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,2).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_2a"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,3).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,4).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,5).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,6).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false))
+		.partialState().with(CamelliaFlowerBlock.AGE,7).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false));
+		
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
 			
 			this.getVariantBuilder(cvblock(s+"_aqueduct"))

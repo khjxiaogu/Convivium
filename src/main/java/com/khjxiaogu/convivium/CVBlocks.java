@@ -25,6 +25,8 @@ import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.camellia.CamelliaBlock;
+import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlock;
 import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlock;
@@ -41,8 +43,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -59,6 +63,11 @@ public class CVBlocks {
 	public static final RegistryObject<BeverageBlock> BEVERAGE=baseblock("beverage", ()->new BeverageBlock(getBProps()),r->new BeverageItem(r,CVItems.createProps(),false));
 	public static final List<RegistryObject<Block>> aqueducts=new ArrayList<>();
 	public static final List<RegistryObject<Block>> aqueduct_mains=new ArrayList<>();
+	public static final RegistryObject<CamelliaFlowerBlock> CAMELLIA_FLOWER=baseblock("camellia_product",()->new CamelliaFlowerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).replaceable().noCollission()
+			.instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ).ignitedByLava()
+			.pushReaction(PushReaction.DESTROY)));
+	public static final RegistryObject<CamelliaBlock> CAMELLIA=baseblock("camellia_plant",()->new CamelliaBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD)
+			.strength(2.0F).noOcclusion().sound(SoundType.WOOD)));
 	public static final List<Block> beverage=new ArrayList<>();
 	static {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {

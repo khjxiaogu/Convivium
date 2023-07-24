@@ -23,16 +23,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
+
 import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
+import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.compare.GT;
 import com.khjxiaogu.convivium.util.Constants;
+import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.util.Utils;
@@ -124,7 +127,11 @@ public class CVRecipeProvider extends RecipeProvider {
 				out.accept(new ContainingRecipe(rl("bottle/"+s),cvitem(s),cvfluid(s)));
 		}
 		taste(Items.APPLE).vars().astringency(1).end().end(out);
-		
+		out.accept(new ConvertionRecipe(rl("convertion/tea"),List.of(Pair.of(Ingredient.of(cvitem("powdered_tea")),1f)),Fluids.WATER, cvfluid("tea"), 60, 200, false));
+		out.accept(new ConvertionRecipe(rl("convertion/cocoa_from_water"),List.of(Pair.of(Ingredient.of(cvitem("cocoa_powder")),1f)),Fluids.WATER, cvfluid("hot_chocolate"), 40,200, false));
+		out.accept(new ConvertionRecipe(rl("convertion/cocoa_from_milk"),List.of(Pair.of(Ingredient.of(cvitem("cocoa_powder")),1f)),ForgeMod.MILK.get(), cvfluid("hot_chocolate"), 40,200, false));
+		for(String s:List.of("pome","drupe","berry"))
+		out.accept(new ConvertionRecipe(rl("convertion/"+s+"_juice_from_must"),List.of(),cvfluid(s+"_must"), cvfluid(s+"_juice"), 40,200, false));
 	}
 	private TasteRecipeBuilder taste(Item it) {
 		return new TasteRecipeBuilder(rl("taste/"+Utils.getRegistryName(it).getNamespace()+"/"+Utils.getRegistryName(it).getPath())).item(Ingredient.of(it));

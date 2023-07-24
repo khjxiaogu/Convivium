@@ -1,0 +1,10 @@
+{
+  "type": "convivium:convertion",
+  "consumeAll": false,
+  "fluidIn": "convivium:drupe_must",
+  "fluidOut": "convivium:drupe_juice",
+  "inNum": 1,
+  "outNum": 1,
+  "temperature": 40,
+  "time": 200
+}

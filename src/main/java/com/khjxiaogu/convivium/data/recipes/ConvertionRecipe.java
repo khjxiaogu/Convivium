@@ -21,6 +21,7 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonObject;
@@ -59,7 +60,7 @@ public class ConvertionRecipe extends IDataRecipe {
 	}
 
 	public List<Pair<Ingredient, Float>> items;
-	public List<Pair<ItemStack, Float>> output;
+	public List<Pair<ItemStack, Float>> output=new ArrayList<>();
 	public Fluid in= Fluids.EMPTY;
 	public Fluid out= Fluids.EMPTY;
 	public int temperature=0;

@@ -46,6 +46,10 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 		BlockEntity be=worldIn.getBlockEntity(pos);
 		if (be instanceof WhiskBlockEntity pam) {
 			ItemStack held = player.getItemInHand(handIn);
+			if (held.isEmpty() && player.isShiftKeyDown()) {
+				pam.accessabletank.drain(1250, FluidAction.EXECUTE);
+				return InteractionResult.SUCCESS;
+			}
 			FluidStack out=BowlContainingRecipe.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.accessabletank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {

@@ -252,7 +252,24 @@ license {
     ignoreFailures = true
     include '**/*.java'
 }
-
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact jar
+            artifact deobfJar
+            artifact sourcesJar
+        }
+    }
+    repositories {
+        maven {
+            url = 'https://www.khjxiaogu.com/maven'
+            credentials {
+                username = findProperty('khjmavenUser')
+                password = findProperty('khjmavenPass')
+            }
+        }
+    }
+}
 curseforge {
     project {
         def envApiKey = System.getenv('CURSEFORGE_API_KEY')

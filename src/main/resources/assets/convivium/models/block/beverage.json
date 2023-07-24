@@ -194,15 +194,23 @@
 			}
 		},
 		{
-			"name": "peripheral",
-			"from": [2.5, 3, 2.5],
-			"to": [13.5, 8, 13.5],
+			"name": "peripheral1",
+			"from": [6.5, 3, 2.5],
+			"to": [9.5, 8, 13.5],
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [3, 0, 8.5, 2.5], "texture": "#0"},
-				"east": {"uv": [3, 0, 8.5, 2.5], "texture": "#0"},
-				"south": {"uv": [3, 0, 8.5, 2.5], "texture": "#0"},
-				"west": {"uv": [3, 0, 8.5, 2.5], "texture": "#0"}
+				"north": {"uv": [5, 0, 6.5, 2.5], "texture": "#0"},
+				"south": {"uv": [5, 0, 6.5, 2.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "peripheral2",
+			"from": [2.5, 3, 6.5],
+			"to": [13.5, 8, 9.5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [5, 0, 6.5, 2.5], "texture": "#0"},
+				"west": {"uv": [5, 0, 6.5, 2.5], "texture": "#0"}
 			}
 		},
 		{

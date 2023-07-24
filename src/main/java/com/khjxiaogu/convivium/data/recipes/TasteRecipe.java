@@ -8,6 +8,7 @@ import com.mojang.realmsclient.util.JsonUtils;
 import com.teammoeg.caupona.data.IDataRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -27,7 +28,7 @@ public class TasteRecipe extends IDataRecipe {
 	public TasteRecipe(ResourceLocation id,JsonObject json) {
 		super(id);
 		item=Ingredient.fromJson(json.get("item"));
-		priority=JsonUtils.getIntOr("priority", json, 0);
+		priority=GsonHelper.getAsInt(json,"priority", 0);
 		variantData=SUtils.fromJson(json, "variants");
 	}
 	public TasteRecipe(ResourceLocation id,FriendlyByteBuf pb) {

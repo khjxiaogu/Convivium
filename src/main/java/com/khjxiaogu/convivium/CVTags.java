@@ -29,21 +29,26 @@ import net.minecraft.world.level.material.Fluid;
 
 public class CVTags {
 	public static class Blocks{
-		public static TagKey<Block> aqueduct=create("aqueduct");
-		public static TagKey<Block> aqueductMove=create("aqueduct_movable");
+		public static TagKey<Block> AQUEDUCT=create("aqueduct");
+		public static TagKey<Block> AQUEDUCT_MOVE=create("aqueduct_movable");
 		private static TagKey<Block> create(String s){
 			return  BlockTags.create(new ResourceLocation(CVMain.MODID, s));
 		}
 		
 	}
 	public static class Items{
-		public static TagKey<Item> drinkMaterial=create("drink_material");
+		public static TagKey<Item> BEVERAGE_MATERIAL=create("beverage_material");
+		public static TagKey<Item> SPICE=create("spice");
+		public static TagKey<Item> FRUIT=create("fruits");
+		public static TagKey<Item> NUTS=create("nuts");
+		public static TagKey<Item> SWEET=create("sweeteners");
 		private static TagKey<Item> create(String s){
 			return ItemTags.create(new ResourceLocation(CVMain.MODID, s));
 		}
 	}
 	
 	public static class Fluids{
+		
 		private static TagKey<Fluid> create(String s){
 			return FluidTags.create(new ResourceLocation(CVMain.MODID, s));
 		}

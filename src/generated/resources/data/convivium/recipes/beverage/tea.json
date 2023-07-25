@@ -1,0 +1,17 @@
+{
+  "type": "convivium:beverage",
+  "density": 0.0,
+  "optional": [
+    {
+      "item": "convivium:powdered_tea"
+    }
+  ],
+  "output": "convivium:tea",
+  "relish": [
+    {
+      "type": "only_major",
+      "relish": "bath"
+    }
+  ],
+  "time": 400
+}

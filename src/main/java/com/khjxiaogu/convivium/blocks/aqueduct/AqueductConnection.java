@@ -22,17 +22,27 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 
 public enum AqueductConnection implements StringRepresentable{
-	N,
-	W,
-	S,
-	E,
-	NE,
-	NW,
-	SE,
-	SW,
-	X,
-	Z,
-	A;
+	N(false,true,true,true),
+	W(true,true,false,true),
+	S(true,false,true,true),
+	E(true,true,true,false),
+	NE(false,true,true,false),
+	NW(false,true,false,true),
+	SE(true,false,true,false),
+	SW(true,false,false,true),
+	X(true,true,false,false),
+	Z(false,false,true,true),
+	A(true,true,true,true);
+	public final boolean n;
+	public final boolean s;
+	public final boolean w;
+	public final boolean e;
+	private AqueductConnection(boolean n, boolean s, boolean w, boolean e) {
+		this.n = n;
+		this.s = s;
+		this.w = w;
+		this.e = e;
+	}
 	public static AqueductConnection get(Direction dir,Direction cand) {
 		 return A;
 	}

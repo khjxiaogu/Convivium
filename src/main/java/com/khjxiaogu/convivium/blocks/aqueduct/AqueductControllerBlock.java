@@ -31,6 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -38,6 +39,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductControllerBlockEntity> {
 	public static final EnumProperty<AqueductMainConnection> CONN=EnumProperty.create("connection", AqueductMainConnection.class);
@@ -47,6 +51,15 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 		// TODO Auto-generated constructor stub
 		this.registerDefaultState(this.defaultBlockState().setValue(KineticBasedBlock.ACTIVE, false).setValue(KineticBasedBlock.LOCKED, false).setValue(CONN,AqueductMainConnection.N));
 	}
+	private static VoxelShape nw=Block.box( 0,10, 0, 2,16, 2);
+	private static VoxelShape se=Block.box(14,10,14,16,16,16);
+	private static VoxelShape sw=Block.box(14,10, 0,16,16, 2);
+	private static VoxelShape ne=Block.box( 0,10,14, 2,16,16);
+	private static VoxelShape base=Shapes.or(Block.box(2, 0, 2, 14, 10, 14),nw,sw,ne,se);
+	private static VoxelShape n= Block.box( 2,10, 0,14,16, 2);
+	private static VoxelShape s= Block.box( 2,10,14,14,16,16);
+	private static VoxelShape e= Block.box(14,10, 2,16,16,14);
+	private static VoxelShape w= Block.box( 0,10, 2, 2,16,14);
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		BlockState p=super.getStateForPlacement(pContext);
@@ -54,14 +67,26 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 		Direction dir=p.getValue(FACING);
 		for(Direction d:Utils.horizontals) {
 			BlockPos pos=pContext.getClickedPos().relative(d);
-			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.aqueduct)) {
+			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.AQUEDUCT)) {
 				conn=conn.connects(dir,d);
 			}
 		}
-		
 		return p.setValue(CONN, conn);
 	}
-
+	private static VoxelShape[] shapes=new VoxelShape[16];
+	
+	public static int getShapeIndex(Direction dir,AqueductMainConnection con) {
+		return (dir.ordinal()-2)<<2|con.ordinal();
+	}
+	static {
+		shapes[getShapeIndex(Direction.EAST,AqueductMainConnection.L)]=shapes[getShapeIndex(Direction.WEST,AqueductMainConnection.R)]=Shapes.or(base,s,e,w);
+		shapes[getShapeIndex(Direction.EAST,AqueductMainConnection.R)]=shapes[getShapeIndex(Direction.WEST,AqueductMainConnection.L)]=Shapes.or(base,n,e,w);
+		shapes[getShapeIndex(Direction.NORTH,AqueductMainConnection.L)]=shapes[getShapeIndex(Direction.SOUTH,AqueductMainConnection.R)]=Shapes.or(base,n,s,e);
+		shapes[getShapeIndex(Direction.NORTH,AqueductMainConnection.R)]=shapes[getShapeIndex(Direction.SOUTH,AqueductMainConnection.L)]=Shapes.or(base,n,s,w);
+		shapes[getShapeIndex(Direction.NORTH,AqueductMainConnection.A)]=shapes[getShapeIndex(Direction.SOUTH,AqueductMainConnection.A)]=Shapes.or(base, n,s);
+		shapes[getShapeIndex(Direction.EAST,AqueductMainConnection.A)]=shapes[getShapeIndex(Direction.WEST,AqueductMainConnection.A)]=Shapes.or(base, e,w);
+		shapes[getShapeIndex(Direction.EAST,AqueductMainConnection.N)]=shapes[getShapeIndex(Direction.WEST,AqueductMainConnection.N)]=shapes[getShapeIndex(Direction.NORTH,AqueductMainConnection.N)]=shapes[getShapeIndex(Direction.SOUTH,AqueductMainConnection.N)]=Shapes.or(base,n,s,e,w);
+	}
 	/**
 	 * Update the provided state given the provided neighbor direction and neighbor
 	 * state, returning a new state.
@@ -74,7 +99,7 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
 			BlockPos pCurrentPos, BlockPos pFacingPos) {
 		Direction dir=pState.getValue(FACING);
-		if(pFacingState.is(CVTags.Blocks.aqueduct)) {
+		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
 			AqueductMainConnection c=pState.getValue(CONN).connects(dir,pFacing);
 			if(c!=null)
 				return pState.setValue(CONN, c);
@@ -93,23 +118,33 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	}
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-		if(pState.getValue(KineticBasedBlock.ACTIVE)) {
-			Direction dir=pState.getValue(AqueductControllerBlock.FACING);
-			Direction moving;
-			if(RotationUtils.isBlackGrid(pPos)) {
-				moving=dir.getClockWise();
-			}else {
-				moving=dir.getCounterClockWise();
+		if(pPos.equals(pEntity.blockPosition()))
+			if(pState.getValue(KineticBasedBlock.ACTIVE)) {
+				Direction dir=pState.getValue(AqueductControllerBlock.FACING);
+				Direction moving;
+				if(RotationUtils.isBlackGrid(pPos)) {
+					moving=dir.getClockWise();
+				}else {
+					moving=dir.getCounterClockWise();
+				}
+				Vec3i v3=moving.getNormal();
+				
+				BlockPos facingPos=pPos.relative(pState.getValue(AqueductControllerBlock.FACING));
+				if(pLevel.getBlockEntity(facingPos) instanceof KineticTransferBlockEntity ent) {
+					pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0225*ent.getSpeed()));
+				}
+				
+				
 			}
-			Vec3i v3=moving.getNormal();
-			
-			BlockPos facingPos=pPos.relative(pState.getValue(AqueductControllerBlock.FACING));
-			if(pLevel.getBlockEntity(facingPos) instanceof KineticTransferBlockEntity ent) {
-				pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0225*ent.getSpeed()));
-			}
-			
-			
-		}
+	}
+	@Override
+	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+		return Shapes.block();
+	}
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+			CollisionContext pContext) {
+		return shapes[getShapeIndex(pState.getValue(FACING),pState.getValue(CONN))];
 	}
 
 

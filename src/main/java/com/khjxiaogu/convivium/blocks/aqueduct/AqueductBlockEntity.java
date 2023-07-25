@@ -148,7 +148,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			BlockState bs=this.level.getBlockState(src);
 			BlockState bs2=this.level.getBlockState(dest);
 			if(bs.is(Blocks.AIR))return true;
-			if(!bs.is(CVTags.Blocks.aqueductMove))return false;
+			if(!bs.is(CVTags.Blocks.AQUEDUCT_MOVE))return false;
 			if(!bs2.is(Blocks.AIR))return false;
 			if(be!=null) {
 				CompoundTag nbt=be.serializeNBT();

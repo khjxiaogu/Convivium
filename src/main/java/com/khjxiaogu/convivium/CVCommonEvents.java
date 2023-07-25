@@ -63,7 +63,6 @@ public class CVCommonEvents {
 		event.addListener(new RecipeReloadListener(event.getServerResources()));
 	}
 
-	private static TagKey<Item> container = ItemTags.create(new ResourceLocation(CVMain.MODID, "container"));
 	@SubscribeEvent
 	public static void addManualToPlayer(@Nonnull PlayerEvent.PlayerLoggedInEvent event) {
 	}

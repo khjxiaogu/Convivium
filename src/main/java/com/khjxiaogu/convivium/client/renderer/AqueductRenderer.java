@@ -51,7 +51,7 @@ public class AqueductRenderer<T extends BlockEntity> implements BlockEntityRende
 		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
 			return;
 		BlockState state = blockEntity.getBlockState();
-		if(!state.is(CVTags.Blocks.aqueduct))
+		if(!state.is(CVTags.Blocks.AQUEDUCT))
 			return;
 		matrixStack.pushPose();
 		matrixStack.translate(0, 15/16f, 0);

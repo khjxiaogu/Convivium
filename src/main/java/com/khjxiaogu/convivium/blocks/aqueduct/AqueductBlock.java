@@ -18,6 +18,8 @@
 
 package com.khjxiaogu.convivium.blocks.aqueduct;
 
+import java.util.EnumMap;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVTags;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
@@ -47,7 +49,31 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		this.registerDefaultState(this.defaultBlockState().setValue(CONN, AqueductConnection.A));
 		// TODO Auto-generated constructor stub
 	}
-	private static VoxelShape shape=Shapes.or(Block.box(2, 0, 2, 14, 10, 14),Block.box(0, 10, 0, 16, 16, 16));
+	
+	private static VoxelShape nw=Block.box( 0,10, 0, 2,16, 2);
+	private static VoxelShape se=Block.box(14,10,14,16,16,16);
+	private static VoxelShape sw=Block.box(14,10, 0,16,16, 2);
+	private static VoxelShape ne=Block.box( 0,10,14, 2,16,16);
+	private static VoxelShape base=Shapes.or(Block.box(2, 0, 2, 14, 10, 14),nw,sw,ne,se);
+	private static VoxelShape n= Block.box( 2,10, 0,14,16, 2);
+	private static VoxelShape s= Block.box( 2,10,14,14,16,16);
+	private static VoxelShape e= Block.box(14,10, 2,16,16,14);
+	private static VoxelShape w= Block.box( 0,10, 2, 2,16,14);
+	private static EnumMap<AqueductConnection,VoxelShape> shapes=new EnumMap<>(AqueductConnection.class);
+	static {
+		for(AqueductConnection ac:AqueductConnection.values()) {
+			VoxelShape shape=base;
+			if(ac.n)
+				shape=Shapes.or(shape, n);
+			if(ac.e)
+				shape=Shapes.or(shape, e);
+			if(ac.s)
+				shape=Shapes.or(shape, s);
+			if(ac.w)
+				shape=Shapes.or(shape, w);
+			shapes.put(ac, shape);
+		}
+	}
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		// TODO Auto-generated method stub
@@ -60,7 +86,7 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		AqueductConnection conn=AqueductConnection.A;
 		for(Direction d:Utils.horizontals) {
 			BlockPos pos=pContext.getClickedPos().relative(d);
-			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.aqueduct)) {
+			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.AQUEDUCT)) {
 				conn=conn.connects(d);
 			}
 		}
@@ -79,7 +105,7 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 	 */
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
 			BlockPos pCurrentPos, BlockPos pFacingPos) {
-		if(pFacingState.is(CVTags.Blocks.aqueduct)) {
+		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
 			AqueductConnection c=pState.getValue(CONN).connects(pFacing);
 			if(c!=null)
 				return pState.setValue(CONN, c);
@@ -100,25 +126,25 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
 			CollisionContext pContext) {
 		// TODO Auto-generated method stub
-		return shape;
+		return shapes.get(pState.getValue(CONN));
 	}
 
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-		
-		if(pLevel.getBlockEntity(pPos) instanceof AqueductBlockEntity aq) {
-			if(aq.tonxt>0&&aq.from!=null) {
-				Direction[] dirs=pState.getValue(AqueductBlock.CONN).getNext(aq.from);
-				if(dirs.length>0) {
-					Vec3i v3=dirs[pLevel.random.nextInt(dirs.length)].getNormal();
-					Vec3i vd=v3.offset(aq.from.getOpposite().getNormal());
-					//System.out.println(v3);
-					float spd=40f/aq.tonxt;
-					pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0125).add(Vec3.atLowerCornerOf(vd).scale(0.0125)).scale(spd*0.5));
-					
+		if(pPos.equals(pEntity.blockPosition()))
+			if(pLevel.getBlockEntity(pPos) instanceof AqueductBlockEntity aq) {
+				if(aq.tonxt>0&&aq.from!=null) {
+					Direction[] dirs=pState.getValue(AqueductBlock.CONN).getNext(aq.from);
+					if(dirs.length>0) {
+						Vec3i v3=dirs[pLevel.random.nextInt(dirs.length)].getNormal();
+						Vec3i vd=v3.offset(aq.from.getOpposite().getNormal());
+						//System.out.println(v3);
+						float spd=40f/aq.tonxt;
+						pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0125).add(Vec3.atLowerCornerOf(vd).scale(0.0125)).scale(spd*0.5));
+						
+					}
 				}
 			}
-		}
 		
 	}
 

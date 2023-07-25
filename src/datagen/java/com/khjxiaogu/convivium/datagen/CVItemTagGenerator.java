@@ -23,6 +23,8 @@ package com.khjxiaogu.convivium.datagen;
 import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.CVTags;
+import com.teammoeg.caupona.CPMain;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -34,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -50,7 +53,10 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
-
+		tag(CVTags.Items.FRUIT).add(rk(Items.GLOW_BERRIES,Items.SWEET_BERRIES,Items.APPLE,Items.MELON_SLICE,Items.GOLDEN_APPLE,Items.GLISTERING_MELON_SLICE)).add(cp("fig","wolfberries"));
+		tag(CVTags.Items.SPICE).add(cv("neroli","spice_blend")).add(cp("asafoetida"));
+		tag(CVTags.Items.NUTS).add(cp("walnut"));
+		tag(CVTags.Items.SWEET).add(rk(Items.SUGAR,Items.HONEYCOMB,Items.HONEY_BOTTLE));
 	}
 
 	private TagAppender<Item> tag(String s) {
@@ -60,7 +66,14 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	private TagAppender<Item> tag(ResourceLocation s) {
 		return this.tag(ItemTags.create(s));
 	}
-	private ResourceKey<Item> rk(Item b) {
+	private ResourceKey<Item>[] rk(Item... b) {
+		ResourceKey[] rks=new ResourceKey[b.length];
+		for(int i=0;i<b.length;i++) {
+			rks[i]=rki(b[i]);
+		}
+		return rks;
+	}
+	private ResourceKey<Item> rki(Item b) {
 		
 		return ForgeRegistries.ITEMS.getResourceKey(b).orElseGet(()->b.builtInRegistryHolder().key());
 	}
@@ -102,9 +115,25 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	public String getName() {
 		return CVMain.MODID + " item tags";
 	}
-
-	private ResourceKey<Item> cp(String s) {
+	private ResourceKey<Item>[] cv(String... b) {
+		ResourceKey[] rks=new ResourceKey[b.length];
+		for(int i=0;i<b.length;i++) {
+			rks[i]=cvi(b[i]);
+		}
+		return rks;
+	}
+	private ResourceKey<Item> cvi(String s) {
 		return ResourceKey.create(Registries.ITEM,mrl(s));
+	}
+	private ResourceKey<Item>[] cp(String... b) {
+		ResourceKey[] rks=new ResourceKey[b.length];
+		for(int i=0;i<b.length;i++) {
+			rks[i]=cpi(b[i]);
+		}
+		return rks;
+	}
+	private ResourceKey<Item> cpi(String s) {
+		return ResourceKey.create(Registries.ITEM,new ResourceLocation(CPMain.MODID, s));
 	}
 /*
 	@Override

@@ -41,7 +41,7 @@ public class CVItems {
 			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),true));
 		}
 		for(String s:CVFluids.intern.keySet()) {
-			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),true));
+			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),false));
 		}
 	}
 	public static RegistryObject<Item> item(String name,Properties props,TabType tab){

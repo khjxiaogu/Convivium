@@ -18,6 +18,11 @@
 
 package com.khjxiaogu.convivium;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import com.khjxiaogu.convivium.fluid.BaseFluid;
@@ -147,6 +152,31 @@ public class CVFluids {
 			null).slopeFindDistance(1).explosionResistance(100F)));
 	public static final RegistryObject<Fluid> mixedf=FLUIDS.register("mixed", () -> new BeverageFluid(new ForgeFlowingFluid.Properties(mixed,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
+	public static Map<String,TextureColorPair> intern=new HashMap<>();
+	static {
+		intern.put("mulled_wine",bvg(0xac3543));
+		intern.put("jaegertee",bvg(0xc34534));
+		intern.put("posca",bvg(0xe7bc71));
+		intern.put("leicha",bvg(0x90a82f));
+		intern.put("te_mocha",bvg(0xddab85));
+		intern.put("kahwa_tea",bvg(0xd77032));
+		intern.put("saidi_tea",bvg(0x6d221f));
+		intern.put("milk_tea",bvg(0xd8b285));
+		intern.put("sweet_tea",bvg(0xbe6336));
+		intern.put("fruit_tongsui",bvg(0xefe18b));
+		intern.put("ade",bvg(0xf0e3ac));
+		intern.put("punch",bvg(0xe89f56));
+		intern.put("syllabub",bvg(0xf5e6a4));
+		intern.put("posset",bvg(0xfdf7c3));
+		intern.put("chocolate_tea",bvg(0xd3af96));
+		intern.put("cocoa_wine",bvg(0xca9787));
+		intern.put("chocolate_milk",bvg(0xc69f8f));
+		for(Entry<String, TextureColorPair> ent:intern.entrySet()) {
+			RegistryObject<FluidType> type=FLUID_TYPES.register(ent.getKey(),()->ent.getValue().create(ent.getKey()));
+			FLUIDS.register(ent.getKey(), () -> new BeverageFluid(new ForgeFlowingFluid.Properties(type,null,
+					null).slopeFindDistance(1).explosionResistance(100F)));
+		}
+	}
 	public static TextureColorPair water(int c) {
 		return new TextureColorPair(STILL_WATER_TEXTURE, c);
 	}

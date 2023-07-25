@@ -23,6 +23,7 @@ package com.khjxiaogu.convivium.blocks.foods;
 
 import java.util.List;
 
+import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.item.EdibleBlock;
@@ -67,7 +68,7 @@ public class BeverageItem extends EdibleBlock {
 	}
 	@Override
 	public void fillItemCategory(CreativeTabItemHelper helper) {
-		if (helper.isFoodTab()) {
+		if (helper.isType(CVMain.MAIN_TAB)) {
 			ItemStack is = new ItemStack(this);
 			
 			is.getOrCreateTag().putString("type", Utils.getRegistryName(ContainingRecipe.reverseFluidType(this)).toString());

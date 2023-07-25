@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.util.Utils;
@@ -41,6 +42,9 @@ public class CVItemModelProvider extends ItemModelProvider {
 			texture(mt);
 		}
 		for(String mt:CVItems.base_drinks) {
+			simpleTexture(mt,"beverages/");
+		}
+		for(String mt:CVFluids.intern.keySet()) {
 			simpleTexture(mt,"beverages/");
 		}
 		potTexture("beverage","alcohol_bottle","beverages/");

@@ -1,0 +1,95 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "convivium:block/beverage_vending_machine",
+		"particle": "convivium:block/beverage_vending_machine"
+	},
+	"elements": [
+		{
+			"name": "ped",
+			"from": [3, 0, 3],
+			"to": [13, 2, 13],
+			"faces": {
+				"north": {"uv": [11, 11, 12, 16], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [11, 11, 12, 16], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [11, 11, 12, 16], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [11, 11, 12, 16], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [6, 11, 11, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "lowerRim",
+			"from": [1, 2, 1],
+			"to": [15, 4, 15],
+			"faces": {
+				"north": {"uv": [11, 4, 12, 11], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [11, 4, 12, 11], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [11, 4, 12, 11], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [11, 4, 12, 11], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [4, 4, 11, 11], "texture": "#0"},
+				"down": {"uv": [4, 4, 11, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "coinSlot",
+			"from": [4, 14, 4],
+			"to": [12, 15, 12],
+			"faces": {
+				"north": {"uv": [0, 4, 4, 4.5], "texture": "#0"},
+				"east": {"uv": [0, 4, 4, 4.5], "texture": "#0"},
+				"south": {"uv": [0, 4, 4, 4.5], "texture": "#0"},
+				"west": {"uv": [0, 4, 4, 4.5], "texture": "#0"},
+				"up": {"uv": [8, 0, 12, 4], "texture": "#0"}
+			}
+		},
+		{
+			"name": "tank",
+			"from": [2, 4, 2],
+			"to": [14, 14, 14],
+			"faces": {
+				"north": {"uv": [0, 11, 6, 16], "texture": "#0"},
+				"east": {"uv": [0, 11, 6, 16], "texture": "#0"},
+				"south": {"uv": [0, 11, 6, 16], "texture": "#0"},
+				"west": {"uv": [0, 11, 6, 16], "texture": "#0"},
+				"up": {"uv": [4.5, 4.5, 10.5, 10.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "mouthMainPart",
+			"from": [4, 5, 14],
+			"to": [12, 13, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 16]},
+			"faces": {
+				"east": {"uv": [0, 4, 4, 5], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"west": {"uv": [0, 4, 4, 5], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [0, 4, 4, 5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [0, 4, 4, 5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "mouthSide",
+			"from": [4.01, 5.01, 14.01],
+			"to": [11.99, 12.99, 15.99],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 9, 16]},
+			"faces": {
+				"north": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"east": {"uv": [0, 4, 4, 5], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"west": {"uv": [0, 4, 4, 5], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [0, 4, 4, 5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [0, 4, 4, 5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "label",
+			"from": [10, 0, 15.5],
+			"to": [15, 6, 15.5],
+			"faces": {
+				"north": {"uv": [14.5, 0, 12, 3], "texture": "#0"},
+				"south": {"uv": [12, 0, 14.5, 3], "texture": "#0"}
+			}
+		}
+	]
+}

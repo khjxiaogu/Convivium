@@ -125,8 +125,8 @@ public class ConvertionRecipe extends IDataRecipe {
 			d.writeItem(r.getFirst());
 			data.writeFloat(r.getSecond());
 		});
-		in=data.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
-		out=data.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
+		data.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS,in);
+		data.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS,out);
 		data.writeVarInt(inpart);
 		data.writeVarInt(outpart);
 		data.writeVarInt(processTime);

@@ -5,8 +5,8 @@
       "condition": [
         {
           "compare": "greater",
-          "left": 3.0,
-          "right": 1.0
+          "left": 1.0,
+          "right": 3.0
         }
       ],
       "effect": "minecraft:saturation",
@@ -18,16 +18,16 @@
   "locals": {
     "astringencyDelta": 3.0,
     "display": 5.0,
-    "pungencyDelta": -2.0,
+    "pungencyDelta": 0.0,
     "soothingnessDelta": 0.0,
-    "sweetnessDelta": 1.0,
-    "thicknessDelta": 2.0
+    "sweetnessDelta": 3.0,
+    "thicknessDelta": 0.0
   },
   "priority": 0,
   "relish": [
     {
       "type": "major",
-      "relish": "cereal"
+      "relish": "hearth"
     }
   ]
 }

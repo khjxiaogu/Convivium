@@ -78,6 +78,10 @@ public class BeverageFluid extends ForgeFlowingFluid {
 		if(si!=null)
 			stack.getOrCreateTag().put("beverage", si.save());
 	}
+	public static void setInfoForClient(FluidStack stack, BeverageInfo si) {
+		if(si!=null)
+			stack.getOrCreateTag().put("beverage", si.saveClient());
+	}
 	@Override
 	public int getAmount(FluidState p_207192_1_) {
 		return 0;

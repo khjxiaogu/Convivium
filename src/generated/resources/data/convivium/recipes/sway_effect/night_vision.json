@@ -5,8 +5,8 @@
       "condition": [
         {
           "compare": "greater",
-          "left": 1.0,
-          "right": 2.0
+          "left": "astringency",
+          "right": 1.99
         }
       ],
       "effect": "minecraft:night_vision",
@@ -16,18 +16,18 @@
   ],
   "icon": "minecraft:textures/mob_effect/night_vision.png",
   "locals": {
-    "astringencyDelta": 3.0,
-    "display": 5.0,
-    "pungencyDelta": -2.0,
+    "astringencyDelta": "2-astringency",
+    "display": "astringency+0.1",
+    "pungencyDelta": 0.0,
     "soothingnessDelta": 0.0,
-    "sweetnessDelta": 1.0,
-    "thicknessDelta": 2.0
+    "sweetnessDelta": 0.0,
+    "thicknessDelta": 0.0
   },
   "priority": 0,
   "relish": [
     {
       "type": "major",
-      "relish": "hearth"
+      "relish": "bath"
     }
   ]
 }

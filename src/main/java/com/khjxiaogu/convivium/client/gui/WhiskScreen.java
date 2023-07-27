@@ -157,7 +157,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		if (blockEntity.processMax > 0) {
 			transform.blit(TEXTURE, leftPos + 111, topPos + 42, 176, 43,
 					(int) (17 * (blockEntity.processMax - blockEntity.process) * 1f / blockEntity.processMax), 13);
-			int idx=RotationUtils.getTicks()%4;
+			int idx=(RotationUtils.getTicks()/5)%4;
 			transform.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52);
 		}else {
 			if(blockEntity.info!=null) {
@@ -189,7 +189,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					if(swh.active>0) {
 						drawActiveSway(transform,18+20*(n2++),65,swh);
 					}else {
-						drawSway(transform,12+28*(n1++),92,swh);
+						drawSway(transform,12+26*(n1++),92,swh);
 					}
 				}
 			}

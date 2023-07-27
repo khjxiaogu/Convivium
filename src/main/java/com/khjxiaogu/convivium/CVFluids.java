@@ -132,7 +132,7 @@ public class CVFluids {
 	public static final RegistryObject<FluidType> b_wine=FLUID_TYPES.register("berry_must",()->bvg(0xcc6d57).create("berry_must"));
 	public static final RegistryObject<FluidType> d_wine=FLUID_TYPES.register("drupe_must",()->bvg(0xd48e2d).create("drupe_must"));
 	public static final RegistryObject<FluidType> p_wine=FLUID_TYPES.register("pome_must",()->bvg(0xe3c25e).create("pome_must"));
-	public static final RegistryObject<FluidType> mixed=FLUID_TYPES.register("mixed",()->bvg(0xee99999).createBVG("mixed"));
+	public static final RegistryObject<FluidType> mixed=FLUID_TYPES.register("mixed",()->bvg(0xee99999).createBVG("beverage"));
 
 	public static final RegistryObject<Fluid> cocoaf=FLUIDS.register("hot_chocolate", () -> new BaseFluid(new ForgeFlowingFluid.Properties(cocoa,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));

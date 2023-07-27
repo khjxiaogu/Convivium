@@ -151,9 +151,10 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		rs = nbt.getBoolean("rs");
 		inf = nbt.getBoolean("inf");
 		isLastHeating = nbt.getBoolean("last_heat");
-		if(isClient)
+		if(nbt.contains("fluid")) {
 			tank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid")));
-		else
+		}
+		if(nbt.contains("tank"))
 			tank.readFromNBT(nbt.getCompound("tank"));
 		inv.deserializeNBT(nbt.getCompound("inv"));
 
@@ -182,6 +183,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		if(isClient) {
 			FluidStack fs=tank.getFluid();
 			FluidStack tosend=new FluidStack(fs.getFluid(),fs.getAmount());
+			BeverageFluid.setInfoForClient(tosend, info);
 			nbt.put("fluid", tosend.writeToNBT(new CompoundTag()));
 		}else {
 			nbt.put("tank", tank.writeToNBT(new CompoundTag()));
@@ -671,6 +673,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				if (tank.getFluid().isEmpty()) {
 					tank.setFluid(FluidStack.EMPTY);
 					info = null;
+					swayhint.clear();
 				}
 				syncData();
 			}
@@ -686,6 +689,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				if (tank.getFluid().isEmpty()) {
 					tank.setFluid(FluidStack.EMPTY);
 					info = null;
+					swayhint.clear();
 				}
 				syncData();
 			}

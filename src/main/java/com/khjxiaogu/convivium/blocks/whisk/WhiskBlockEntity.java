@@ -164,9 +164,9 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		super.writeCustomNBT(nbt, isClient);
 		if (info != null) {
 			if(isClient)
-				nbt.put("info", info.save());
-			else
 				nbt.put("info", info.saveClient());
+			else
+				nbt.put("info", info.save());
 		}
 		if (swayhint != null)
 			CSI_CODEC.encodeStart(NbtOps.INSTANCE, swayhint).result().ifPresent(t -> nbt.put("hint", t));

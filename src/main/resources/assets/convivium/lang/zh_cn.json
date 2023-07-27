@@ -29,6 +29,8 @@
 	"block.convivium.sandstone_aqueduct_wavemaker": "砂岩流觞水道造浪机",
 	"block.convivium.camellia_plant": "山茶",
 	"block.convivium.camellia_product": "山茶产物",
+	"item.convivium.book": "初筵录",
+	"book.convivium.landing_text": "易曰$(4)。$()云上于天$(4)。$()需$(4)。$()君子以$(l)饮食宴乐$()$(4)。$()",
 	"item.convivium.camellia_flower": "山茶花",
 	"item.convivium.camellia_seeds": "山茶籽",
 	"item.convivium.fresh_camellia_shoots": "山茶嫩叶",

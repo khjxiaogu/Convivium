@@ -1,0 +1,6 @@
+{
+	"name": "World Generation",
+	"description": "New plant(s) that will generate in the world.",
+	"icon": "convivium:fresh_camellia_shoots",
+	"sortnum": 0
+}

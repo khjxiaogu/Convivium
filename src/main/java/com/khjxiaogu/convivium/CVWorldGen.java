@@ -27,7 +27,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 public class CVWorldGen {
 	public static final ResourceKey<PlacedFeature> PATCH_CAMELLIA = PlacementUtils.createKey("convivium:patch_camellia");
 	
-	public static final ResourceKey<ConfiguredFeature<?, ?>> CAMELLIA = FeatureUtils.createKey("caupona:camellia");
+	public static final ResourceKey<ConfiguredFeature<?, ?>> CAMELLIA = FeatureUtils.createKey("convivium:camellia");
 	public CVWorldGen() {
 	}
 

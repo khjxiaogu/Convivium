@@ -82,37 +82,41 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 		if (p.consumesAction())
 			return p;
 		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
-			if (!worldIn.isClientSide) {
-				if(player.getUUID().equals(blockEntity.owner)) {
-					ItemStack held = player.getItemInHand(handIn);
-					FluidStack out=ContainingRecipe.extractFluid(held);
-					if (!out.isEmpty()) {
-						if(blockEntity.tank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-							blockEntity.tank.fill(out, FluidAction.EXECUTE);
-							ItemStack ret = held.getCraftingRemainingItem();
-							held.shrink(1);
-							ItemHandlerHelper.giveItemToPlayer(player, ret);
-							return InteractionResult.sidedSuccess(worldIn.isClientSide);
-						}
+			if(player.getUUID().equals(blockEntity.owner)) {
+				ItemStack held = player.getItemInHand(handIn);
+				FluidStack out=ContainingRecipe.extractFluid(held);
+				if (!out.isEmpty()) {
+					if(blockEntity.tank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
+						blockEntity.tank.fill(out, FluidAction.EXECUTE);
+						ItemStack ret = held.getCraftingRemainingItem();
+						held.shrink(1);
+						ItemHandlerHelper.giveItemToPlayer(player, ret);
+						return InteractionResult.sidedSuccess(worldIn.isClientSide);
 					}
-					if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.tank))
-						return InteractionResult.SUCCESS;
-					NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockEntity.getBlockPos());
+				}
+				if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.tank))
+					return InteractionResult.SUCCESS;
+				if(handIn == InteractionHand.MAIN_HAND) {
+					if (!worldIn.isClientSide)	
+						NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockEntity.getBlockPos());
 					return InteractionResult.SUCCESS;
 				}
-				if(state.getValue(ACTIVE)) {
-					if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.handler))
-						return InteractionResult.SUCCESS;
-				}else {
-					ItemStack held = player.getItemInHand(handIn);
-					if(held.is(CVTags.Items.ASSES)&&held.getCount()>=blockEntity.amt) {
-						ItemHandlerHelper.insertItem(blockEntity.storage,held.split(blockEntity.amt), false);
+			}			
+			if(state.getValue(ACTIVE)) {
+				if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.handler))
+					return InteractionResult.SUCCESS;
+			}else {
+				ItemStack held = player.getItemInHand(handIn);
+				if(held.is(CVTags.Items.ASSES)&&held.getCount()>=blockEntity.amt&&blockEntity.tank.getFluidAmount()>=250) {
+					if(blockEntity.isInfinite||ItemHandlerHelper.insertItem(blockEntity.storage,ItemHandlerHelper.copyStackWithSize(held, blockEntity.amt), true)!=ItemStack.EMPTY) {
+						ItemStack it=held.split(blockEntity.amt);
+						if(!blockEntity.isInfinite)
+							ItemHandlerHelper.insertItem(blockEntity.storage,it, false);
 						if(held.isEmpty())
 							player.setItemInHand(handIn, ItemStack.EMPTY);
 						worldIn.setBlockAndUpdate(pos,state.setValue(ACTIVE, true));
 					}
 				}
-				
 			}
 			return InteractionResult.SUCCESS;
 		}

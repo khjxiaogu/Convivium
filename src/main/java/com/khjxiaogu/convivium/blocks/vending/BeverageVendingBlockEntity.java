@@ -122,11 +122,14 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
 		if(!isClient) {
 			storage.deserializeNBT(nbt.getCompound("storage"));
-			tank.readFromNBT(nbt.getCompound("tank"));
-			isInfinite = nbt.getBoolean("inf");
-			if(nbt.contains("owner"))
-				owner=nbt.getUUID("owner");
+			
+			
+			
 		}
+		isInfinite = nbt.getBoolean("inf");
+		if(nbt.contains("owner"))
+			owner=nbt.getUUID("owner");
+		tank.readFromNBT(nbt.getCompound("tank"));
 		amt=nbt.getInt("amount");
 	}
 
@@ -134,10 +137,13 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
 		if(!isClient) {
 			nbt.put("storage",storage.serializeNBT());
-			nbt.put("tank", tank.writeToNBT(new CompoundTag()));
-			nbt.putBoolean("inf", isInfinite);
-			nbt.putUUID("owner", owner);
+			
+			
+			
 		}
+		nbt.putBoolean("inf", isInfinite);
+		nbt.putUUID("owner", owner);
+		nbt.put("tank", tank.writeToNBT(new CompoundTag()));
 		nbt.putInt("amount", amt);
 	}
 

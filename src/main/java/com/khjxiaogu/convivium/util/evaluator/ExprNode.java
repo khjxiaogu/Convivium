@@ -41,7 +41,7 @@ class ExprNode implements Node{
 
 	@Override
 	public double eval(IEnvironment env) {
-		double rslt=1;
+		double rslt=0;
 		for(Node n:positive)
 			rslt+=n.eval(env);
 		for(Node n:negative)

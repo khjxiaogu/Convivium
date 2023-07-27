@@ -9,15 +9,15 @@
           "right": -1.99
         }
       ],
-      "effect": "minecraft:night_vision",
+      "effect": "minecraft:strength",
       "level": 1.0,
       "time": 100.0
     }
   ],
   "icon": "minecraft:textures/mob_effect/strength.png",
   "locals": {
-    "astringencyDelta": "-(astringency+2)",
-    "display": "-astringency+0.1",
+    "astringencyDelta": "-(astringency+3)",
+    "display": "-astringency+0.01",
     "pungencyDelta": 0.0,
     "soothingnessDelta": 0.0,
     "sweetnessDelta": 0.0,

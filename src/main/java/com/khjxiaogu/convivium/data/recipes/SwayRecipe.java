@@ -84,7 +84,8 @@ public class SwayRecipe  extends IDataRecipe{
 		priority=GsonHelper.getAsInt(jo, "priority",0);
 		locals=new LinkedHashMap<>();
 		for(Entry<String, JsonElement> s:jo.get("locals").getAsJsonObject().entrySet()) {
-			locals.put(s.getKey(), Expression.of(s.getValue()));
+			INumber expr=Expression.of(s.getValue());
+			locals.put(s.getKey(), expr);
 		}
 		effects=SerializeUtil.parseJsonList(jo.get("effects"),SwayEffect::new);
 		icon=new ResourceLocation(jo.get("icon").getAsString());

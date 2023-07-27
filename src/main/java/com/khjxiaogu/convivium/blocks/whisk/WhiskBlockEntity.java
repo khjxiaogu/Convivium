@@ -181,10 +181,14 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		nbt.putBoolean("inf", inf);
 		nbt.putBoolean("last_heat", isLastHeating);
 		if(isClient) {
+			
 			FluidStack fs=tank.getFluid();
-			FluidStack tosend=new FluidStack(fs.getFluid(),fs.getAmount());
-			BeverageFluid.setInfoForClient(tosend, info);
-			nbt.put("fluid", tosend.writeToNBT(new CompoundTag()));
+			if(!fs.isEmpty()) {
+				FluidStack tosend=new FluidStack(fs.getFluid(),fs.getAmount());
+				BeverageFluid.setInfoForClient(tosend, info);
+				nbt.put("fluid", tosend.writeToNBT(new CompoundTag()));
+			}else
+				nbt.put("fluid", FluidStack.EMPTY.writeToNBT(new CompoundTag()));
 		}else {
 			nbt.put("tank", tank.writeToNBT(new CompoundTag()));
 		}
@@ -208,7 +212,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				ContainingRecipe recipe = ContainingRecipe.recipes.get(this.tank.getFluid().getFluid());
 				if (recipe != null) {
 					is.shrink(1);
-					inv.setStackInSlot(5, recipe.handle(tank.drain(250, FluidAction.EXECUTE)));
+					inv.setStackInSlot(5, recipe.handle(accessabletank.drain(250, FluidAction.EXECUTE)));
 					return true;
 				}
 			}
@@ -489,9 +493,11 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 		if (tank.getFluidAmount() % 250 == 0 && !tank.isEmpty()) {
 			if (isHeating) {
-				if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
-					heating += stove.requestHeat() * getSpeed();
-					isLastHeating = true;
+				if(info.heat<70) {
+					if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
+						heating += stove.requestHeat() * getSpeed();
+						isLastHeating = true;
+					}
 				}
 				if (heating >= 4 * tank.getFluidAmount() / 250) {
 					if (info == null) {
@@ -501,8 +507,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 							info.relishes[i] = fs.getFluid();
 						}
 					}
-					if (info.heat < 70)
-						info.heat++;
+					
+					info.heat++;
 					heating = 0;
 				}
 			} else if (info != null) {

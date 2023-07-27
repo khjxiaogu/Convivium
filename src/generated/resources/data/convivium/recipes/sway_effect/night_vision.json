@@ -16,7 +16,7 @@
   ],
   "icon": "minecraft:textures/mob_effect/night_vision.png",
   "locals": {
-    "astringencyDelta": "2-astringency",
+    "astringencyDelta": "3-astringency",
     "display": "astringency+0.1",
     "pungencyDelta": 0.0,
     "soothingnessDelta": 0.0,

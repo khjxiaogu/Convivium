@@ -102,37 +102,6 @@ public class CVCommonEvents {
 		}
 	}
 
-	@SuppressWarnings("resource")
-	@SubscribeEvent
-	public static void onItemUse(PlayerInteractEvent.RightClickItem event) {
-		ItemStack is = event.getItemStack();
-		if (is.getItem() == Items.GLASS_BOTTLE) {
-			Level worldIn = event.getLevel();
-			Player playerIn = event.getEntity();
-			BlockHitResult ray = Item.getPlayerPOVHitResult(worldIn, playerIn, Fluid.SOURCE_ONLY);
-			if (ray.getType() == Type.BLOCK) {
-				BlockPos blockpos = ray.getBlockPos();
-				BlockState blockstate1 = worldIn.getBlockState(blockpos);
-				net.minecraft.world.level.material.Fluid f = blockstate1.getFluidState().getType();
-				if (f != Fluids.EMPTY) {
-					ContainingRecipe recipe = ContainingRecipe.recipes.get(f);
-					if (recipe == null)
-						return;
-					ItemStack ret = recipe.handle(f);
-					event.setCanceled(true);
-					event.setCancellationResult(InteractionResult.sidedSuccess(worldIn.isClientSide));
-					if (is.getCount() > 1) {
-						is.shrink(1);
-						if (!playerIn.addItem(ret)) {
-							playerIn.drop(ret, false);
-						}
-					} else
-						playerIn.setItemInHand(event.getHand(), ret);
-				}
-			}
-		}
-	}
-
 	@SubscribeEvent
 	public static void onBowlUse(PlayerInteractEvent.RightClickItem event) {
 		if (event.getEntity() != null && !event.getEntity().level().isClientSide

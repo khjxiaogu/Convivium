@@ -77,9 +77,10 @@ public class CurrentSwayInfo {
 	public static int fromVal(double d) {
 		boolean sign=d<0;
 		int v=Mth.floor(Math.abs(d));
-		if(sign)v=-v;
 		if(v>3)
 			v=3;
+		if(sign)v=-v;
+		
 		return v;
 	}
 }

@@ -59,6 +59,30 @@ public class Expression implements INumber{
 			// TODO Auto-generated method stub
 			return num;
 		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Float.floatToIntBits(num);
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Constant other = (Constant) obj;
+			if (Float.floatToIntBits(num) != Float.floatToIntBits(other.num))
+				return false;
+			return true;
+		}
+		@Override
+		public String toString() {
+			return ""+ num ;
+		}
 		
 	}
 	public static final INumber ZERO=new Constant(0);
@@ -110,7 +134,7 @@ public class Expression implements INumber{
 	}
 	@Override
 	public String toString() {
-		return expr;
+		return node.toString();
 	}
 	@Override
 	public int hashCode() {

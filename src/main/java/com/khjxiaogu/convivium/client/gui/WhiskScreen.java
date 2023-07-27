@@ -200,6 +200,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	}
 	public void drawSway(GuiGraphics transform,int x,int y,CurrentSwayInfo info) {
 		transform.blit(info.icon, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
+		
 		drawDistMarker(transform,leftPos+x-3,topPos+y+21,info.dsweet);
 		drawDistMarker(transform,leftPos+x+5,topPos+y+21,info.dpungent);
 		drawDistMarker(transform,leftPos+x+13,topPos+y+21,info.drousing);

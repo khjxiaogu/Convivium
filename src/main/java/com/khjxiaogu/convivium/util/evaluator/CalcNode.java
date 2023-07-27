@@ -43,13 +43,14 @@ class CalcNode implements Node{
 	@Override
 	public Node simplify() {
 		nested=nested.simplify();
-		if(nested.isPrimary())
+		if(nested.isPrimary()) {
 			return new ConstNode(eval(NullEnvironment.INSTANCE));
+		}
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return name + "(" + nested + ")";
+		return "(" + name + nested + ")";
 	}
 }

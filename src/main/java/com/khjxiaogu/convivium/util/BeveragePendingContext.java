@@ -67,7 +67,7 @@ public class BeveragePendingContext extends IPendingContext {
 			totalItems += fs.getCount();
 		}
 		int cnt=info.getRelishCount();
-		taste=new ConstantEnvironment(variant);
+		
 		for(Fluid s:info.relishes) {
 			if(s==null)continue;
 			RelishFluidRecipe rfr=RelishFluidRecipe.recipes.get(s);
@@ -97,7 +97,7 @@ public class BeveragePendingContext extends IPendingContext {
 				});
 			}
 		}
-		
+		taste=new ConstantEnvironment(variant);
 	}
 	public void checkActiveRelish() {
 		int max=relishes.values().stream().mapToInt(t->t).max().orElse(0);
@@ -145,6 +145,7 @@ public class BeveragePendingContext extends IPendingContext {
 	public Optional<Pair<List<MobEffectInstance>,Optional<CurrentSwayInfo>>> handleSwayRecipe(SwayRecipe sway) {
 		if(sway.canApply(this)) {
 			VariantEnvironment env=new VariantEnvironment(taste,sway.locals);
+
 			CurrentSwayInfo csi=new CurrentSwayInfo(sway.icon,env);
 			Pair<Boolean, List<MobEffectInstance>> effs=sway.getEffects(env);
 			if(effs.getFirst()) {

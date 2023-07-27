@@ -36,6 +36,9 @@ public class RotationUtils {
 	public static float getCycle(float pt,BlockPos pos) {
 		return getCycle(pt,isBlackGrid(pos));
 	}
+	public static int getTicks() {
+		return ticksOfSecond;
+	}
 	public static float getCycle(float pt,boolean black) {
 		if(black)
 			return (ticksOfSecond+pt)/40f;

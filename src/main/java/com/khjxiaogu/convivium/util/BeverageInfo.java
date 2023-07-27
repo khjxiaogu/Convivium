@@ -173,6 +173,11 @@ public class BeverageInfo implements IFoodInfo {
 		write(tag);
 		return tag;
 	}
+	public CompoundTag saveClient() {
+		CompoundTag tag=new CompoundTag();
+		writeClient(tag);
+		return tag;
+	}
 	public Pair<List<CurrentSwayInfo>, Fluid> adjustParts(float oparts, float parts) {
 		for (FloatemStack fs : stacks) {
 			fs.setCount(fs.getCount() * oparts / parts);
@@ -275,6 +280,27 @@ public class BeverageInfo implements IFoodInfo {
 		nbt.put("relish", relishes);
 		nbt.putInt("heal", healing);
 		nbt.putFloat("sat", saturation);
+		nbt.putInt("heat", heat);
+	}
+	public void writeClient(CompoundTag nbt) {
+		//nbt.put("items", SerializeUtil.toNBTList(stacks, FloatemStack::serializeNBT));
+		/*nbt.put("feffects", SerializeUtil.toNBTList(foodeffect, e -> {
+			CompoundTag cnbt = new CompoundTag();
+			cnbt.put("effect", e.getFirst().save(new CompoundTag()));
+			cnbt.putFloat("chance", e.getSecond());
+			return cnbt;
+		}));
+		nbt.put("effects", SerializeUtil.toNBTList(effects, e -> e.save(new CompoundTag())));*/
+		//nbt.put("sway", SerializeUtil.toNBTList(swayeffects, e -> e.save(new CompoundTag())));
+		ListTag relishes=new ListTag();
+		for(Fluid s:this.relishes) {
+			relishes.add(StringTag.valueOf(Utils.getRegistryName(s).toString()));
+		}
+		nbt.putString("activeRelish1", activeRelish1);
+		nbt.putString("activeRelish2", activeRelish2);
+		nbt.put("relish", relishes);
+		//nbt.putInt("heal", healing);
+		//nbt.putFloat("sat", saturation);
 		nbt.putInt("heat", heat);
 	}
 	@Override

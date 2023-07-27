@@ -151,7 +151,10 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		rs = nbt.getBoolean("rs");
 		inf = nbt.getBoolean("inf");
 		isLastHeating = nbt.getBoolean("last_heat");
-		tank.readFromNBT(nbt.getCompound("tank"));
+		if(isClient)
+			tank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid")));
+		else
+			tank.readFromNBT(nbt.getCompound("tank"));
 		inv.deserializeNBT(nbt.getCompound("inv"));
 
 	}
@@ -159,8 +162,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
 		super.writeCustomNBT(nbt, isClient);
-		if (info != null)
-			nbt.put("info", info.save());
+		if (info != null) {
+			if(isClient)
+				nbt.put("info", info.save());
+			else
+				nbt.put("info", info.saveClient());
+		}
 		if (swayhint != null)
 			CSI_CODEC.encodeStart(NbtOps.INSTANCE, swayhint).result().ifPresent(t -> nbt.put("hint", t));
 
@@ -172,7 +179,13 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		nbt.putBoolean("rs", rs);
 		nbt.putBoolean("inf", inf);
 		nbt.putBoolean("last_heat", isLastHeating);
-		nbt.put("tank", tank.writeToNBT(new CompoundTag()));
+		if(isClient) {
+			FluidStack fs=tank.getFluid();
+			FluidStack tosend=new FluidStack(fs.getFluid(),fs.getAmount());
+			nbt.put("fluid", tosend.writeToNBT(new CompoundTag()));
+		}else {
+			nbt.put("tank", tank.writeToNBT(new CompoundTag()));
+		}
 		nbt.put("inv", inv.serializeNBT());
 	}
 

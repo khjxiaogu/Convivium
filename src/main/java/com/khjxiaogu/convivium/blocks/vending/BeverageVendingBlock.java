@@ -108,13 +108,15 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 			}else {
 				ItemStack held = player.getItemInHand(handIn);
 				if(held.is(CVTags.Items.ASSES)&&held.getCount()>=blockEntity.amt&&blockEntity.tank.getFluidAmount()>=250) {
-					if(blockEntity.isInfinite||ItemHandlerHelper.insertItem(blockEntity.storage,ItemHandlerHelper.copyStackWithSize(held, blockEntity.amt), true)!=ItemStack.EMPTY) {
-						ItemStack it=held.split(blockEntity.amt);
-						if(!blockEntity.isInfinite)
-							ItemHandlerHelper.insertItem(blockEntity.storage,it, false);
-						if(held.isEmpty())
-							player.setItemInHand(handIn, ItemStack.EMPTY);
-						worldIn.setBlockAndUpdate(pos,state.setValue(ACTIVE, true));
+					if(blockEntity.isInfinite||ItemHandlerHelper.insertItem(blockEntity.storage,ItemHandlerHelper.copyStackWithSize(held, blockEntity.amt), true).isEmpty()) {
+						if(!worldIn.isClientSide) {
+							ItemStack it=held.split(blockEntity.amt);
+							if(!blockEntity.isInfinite)
+								ItemHandlerHelper.insertItem(blockEntity.storage,it, false);
+							if(held.isEmpty())
+								player.setItemInHand(handIn, ItemStack.EMPTY);
+							worldIn.setBlockAndUpdate(pos,state.setValue(ACTIVE, true));
+						}
 					}
 				}
 			}

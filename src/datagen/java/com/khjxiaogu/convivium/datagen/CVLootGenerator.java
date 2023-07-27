@@ -74,6 +74,8 @@ public class CVLootGenerator extends LootTableProvider {
 			dropSelf(CVBlocks.pam.get());
 			dropSelf(CVBlocks.platter.get());
 			dropSelf(CVBlocks.whisk.get());
+			dropSelf(CVBlocks.BEVERAGE_VENDING_MACHINE.get());
+			
 			for(RegistryObject<Block> b:CVBlocks.aqueducts) {
 				dropSelf(b.get());
 			}

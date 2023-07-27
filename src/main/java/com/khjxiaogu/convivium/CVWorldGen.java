@@ -18,20 +18,16 @@
 
 package com.khjxiaogu.convivium;
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
-import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
-import net.minecraft.world.level.levelgen.structure.StructureType;
-import net.minecraftforge.registries.DeferredRegister;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class CVWorldGen {
-	public static final DeferredRegister<FoliagePlacerType<?>> FOILAGE_TYPES = DeferredRegister.create(Registries.FOLIAGE_PLACER_TYPE, CVMain.MODID);
-	public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_TYPES = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, CVMain.MODID);
-	public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Registries.STRUCTURE_TYPE, CVMain.MODID);
+	public static final ResourceKey<PlacedFeature> PATCH_CAMELLIA = PlacementUtils.createKey("convivium:patch_camellia");
 	
-	
-	
-
+	public static final ResourceKey<ConfiguredFeature<?, ?>> CAMELLIA = FeatureUtils.createKey("convivium:camellia");
 	public CVWorldGen() {
 	}
 

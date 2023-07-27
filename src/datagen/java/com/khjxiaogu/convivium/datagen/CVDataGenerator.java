@@ -52,7 +52,7 @@ public class CVDataGenerator {
 		gen.addProvider(event.includeServer(),new CVBookGenerator(gen.getPackOutput(), exHelper));
 		gen.addProvider(event.includeServer()||event.includeClient(),new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,new PackMetadataSection(Utils.string(CVMain.MODNAME+" Resources"),6)));
 		gen.addProvider(event.includeServer(),new CVRegistryGenerator(gen.getPackOutput(),completablefuture));
-		gen.addProvider(event.includeClient(),new FluidAnimationGenerator(gen.getPackOutput(),exHelper));
-		gen.addProvider(event.includeClient()||event.includeServer(), new RegistryJavaGenerator(gen.getPackOutput(),exHelper));
+		//gen.addProvider(event.includeClient(),new FluidAnimationGenerator(gen.getPackOutput(),exHelper));
+		//gen.addProvider(event.includeClient()||event.includeServer(), new RegistryJavaGenerator(gen.getPackOutput(),exHelper));
 	}
 }

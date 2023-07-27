@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#convivium:gen_camellia",
+  "features": "convivium:patch_camellia",
+  "step": "vegetal_decoration"
+}

@@ -69,11 +69,8 @@ public class CVMain {
 		CVItems.ITEMS.register(mod);
 		CVMain.TABS.register(mod);
 		CVRecipes.RECIPE_SERIALIZERS.register(mod);
-		CVEntityTypes.ENTITY_TYPES.register(mod);
 		CVRecipes.RECIPE_TYPES.register(mod);
-		CVWorldGen.STRUCTURE_TYPES.register(mod);
-		CVWorldGen.FOILAGE_TYPES.register(mod);
-		CVWorldGen.TRUNK_TYPES.register(mod);
+
 		CVConfig.register();
 		PacketHandler.register();
 

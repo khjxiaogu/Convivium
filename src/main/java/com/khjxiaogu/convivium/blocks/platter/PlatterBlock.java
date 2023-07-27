@@ -109,7 +109,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 					boolean ddz=dz>0.5;
 					if(blockEntity.config==GlobalConfig.PILED) {
 						ItemStack hand=player.getItemInHand(handIn);
-						if(!hand.isEmpty()) {
+						if(!hand.isEmpty()&&!blockEntity.isInfinite) {
 							for(int i=0;i<4;i++) {
 								if(blockEntity.storage.getStackInSlot(i).isEmpty()) {
 									blockEntity.storage.setStackInSlot(i,hand.split(1));
@@ -121,8 +121,9 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 							for(int i=3;i>=0;i--) {
 								ItemStack ret=blockEntity.storage.getStackInSlot(i);
 								if(!ret.isEmpty()) {
-									ItemHandlerHelper.giveItemToPlayer(player, ret);
-									blockEntity.storage.setStackInSlot(i,ItemStack.EMPTY);
+									ItemHandlerHelper.giveItemToPlayer(player, ret.copy());
+									if(!blockEntity.isInfinite)
+										blockEntity.storage.setStackInSlot(i,ItemStack.EMPTY);
 									break;
 								}
 							}
@@ -130,12 +131,13 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 						int slot=getSlot(blockEntity,ddx,ddz);
 						ItemStack orig=blockEntity.storage.getStackInSlot(slot);
 						if(!orig.isEmpty()) {
-							ItemHandlerHelper.giveItemToPlayer(player, orig);
+							ItemHandlerHelper.giveItemToPlayer(player, orig.copy());
 							orig=ItemStack.EMPTY;
-						}else {
+						}else if(!blockEntity.isInfinite){
 							orig=player.getItemInHand(handIn).split(1);
 						}
-						blockEntity.storage.setStackInSlot(slot,orig);
+						if(!blockEntity.isInfinite)
+							blockEntity.storage.setStackInSlot(slot,orig);
 					}
 				}else
 					NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockEntity.getBlockPos());

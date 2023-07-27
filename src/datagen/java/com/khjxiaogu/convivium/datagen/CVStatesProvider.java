@@ -33,6 +33,7 @@ import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
+import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlock;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
@@ -89,7 +90,8 @@ public class CVStatesProvider extends BlockStateProvider {
 		.partialState().with(CamelliaFlowerBlock.AGE,5).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false))
 		.partialState().with(CamelliaFlowerBlock.AGE,6).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false))
 		.partialState().with(CamelliaFlowerBlock.AGE,7).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"),0,false));
-		
+		blockItemModel("beverage_vending_machine");
+		this.horizontalBlock(CVBlocks.BEVERAGE_VENDING_MACHINE.get(),s->s.getValue(BeverageVendingBlock.ACTIVE)?bmf("beverage_vending_machine_active"):bmf("beverage_vending_machine"));
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {
 			
 			this.getVariantBuilder(cvblock(s+"_aqueduct"))

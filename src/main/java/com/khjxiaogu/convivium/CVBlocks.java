@@ -33,6 +33,7 @@ import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlock;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlock;
+import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlock;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlock;
 import com.teammoeg.caupona.item.CPBlockItem;
 
@@ -68,6 +69,8 @@ public class CVBlocks {
 			.pushReaction(PushReaction.DESTROY)));
 	public static final RegistryObject<CamelliaBlock> CAMELLIA=baseblock("camellia_plant",()->new CamelliaBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD)
 			.strength(2.0F).noOcclusion().sound(SoundType.WOOD)));
+	public static final RegistryObject<BeverageVendingBlock> BEVERAGE_VENDING_MACHINE=baseblock("beverage_vending_machine",()->new BeverageVendingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
+			.strength(2.0F).noOcclusion().sound(SoundType.STONE)));
 	public static final List<Block> beverage=new ArrayList<>();
 	static {
 		for(String s:new String[] {"felsic_tuff","stone","sandstone"}) {

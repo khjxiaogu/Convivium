@@ -89,4 +89,15 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 		
 		return p;
 	}
+	@Override
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!(newState.getBlock() instanceof WhiskBlock)) {
+			if (worldIn.getBlockEntity(pos) instanceof WhiskBlockEntity dish) {
+				for(int i=0;i<dish.inv.getSlots();i++) {
+					super.popResource(worldIn, pos, dish.inv.getStackInSlot(i));
+				}
+			}
+			worldIn.removeBlockEntity(pos);
+		}
+	}
 }

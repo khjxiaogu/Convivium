@@ -22,6 +22,7 @@ import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVGui;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.client.gui.BeverageVendingScreen;
 import com.khjxiaogu.convivium.client.gui.PamScreen;
 import com.khjxiaogu.convivium.client.gui.PlatterScreen;
 import com.khjxiaogu.convivium.client.gui.WhiskScreen;
@@ -33,6 +34,7 @@ import com.khjxiaogu.convivium.client.renderer.CogRenderer;
 import com.khjxiaogu.convivium.client.renderer.FruitModel;
 import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
+import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
@@ -58,6 +60,7 @@ public class CVClientRegistry {
 		MenuScreens.register(CVGui.PLATTER.get(), PlatterScreen::new);
 		MenuScreens.register(CVGui.PAM.get(), PamScreen::new);
 		MenuScreens.register(CVGui.WHISK.get(), WhiskScreen::new);
+		MenuScreens.register(CVGui.VENDING.get(), BeverageVendingScreen::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(),FruitPlatterRenderer::new);
@@ -66,6 +69,7 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT.get(), AqueductRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), AqueductMainRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE.get(), BeverageRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE_VENDING_MACHINE.get(), VendingRenderer::new);
 	}
 	
 	@SubscribeEvent

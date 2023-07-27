@@ -20,7 +20,7 @@ package com.khjxiaogu.convivium.blocks.pestle_and_mortar;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
+import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -64,7 +64,7 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 		BlockEntity be=worldIn.getBlockEntity(pos);
 		if (be instanceof PamBlockEntity pam) {
 			ItemStack held = player.getItemInHand(handIn);
-			FluidStack out=BowlContainingRecipe.extractFluid(held);
+			FluidStack out=ContainingRecipe.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.tankin.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
 					pam.tankin.fill(out, FluidAction.EXECUTE);
@@ -85,5 +85,15 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 		
 		return p;
 	}
-
+	@Override
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!(newState.getBlock() instanceof PamBlock)) {
+			if (worldIn.getBlockEntity(pos) instanceof PamBlockEntity dish) {
+				for(int i=0;i<dish.inv.getSlots();i++) {
+					super.popResource(worldIn, pos, dish.inv.getStackInSlot(i));
+				}
+			}
+			worldIn.removeBlockEntity(pos);
+		}
+	}
 }

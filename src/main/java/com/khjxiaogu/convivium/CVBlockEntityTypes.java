@@ -30,6 +30,7 @@ import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
+import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlockEntity;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
 
 import net.minecraft.world.level.block.Block;
@@ -59,7 +60,8 @@ public class CVBlockEntityTypes {
 			REGISTER.register("aqueduct_controller",makeTypes2(AqueductControllerBlockEntity::new,()->CVBlocks.aqueduct_mains));
 	public static final RegistryObject<BlockEntityType<BeverageBlockEntity>> BEVERAGE=
 			REGISTER.register("beverage",makeType(BeverageBlockEntity::new,()->CVBlocks.BEVERAGE));
-	
+	public static final RegistryObject<BlockEntityType<BeverageVendingBlockEntity>> BEVERAGE_VENDING_MACHINE=
+			REGISTER.register("beverage_vending_machine",makeType(BeverageVendingBlockEntity::new,()->CVBlocks.BEVERAGE_VENDING_MACHINE));
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 			Supplier<RegistryObject<? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);

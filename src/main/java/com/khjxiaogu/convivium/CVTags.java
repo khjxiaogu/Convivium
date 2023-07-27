@@ -42,13 +42,14 @@ public class CVTags {
 		public static TagKey<Item> FRUIT=create("fruits");
 		public static TagKey<Item> NUTS=create("nuts");
 		public static TagKey<Item> SWEET=create("sweeteners");
+		public static TagKey<Item> ASSES=create("asses");
 		private static TagKey<Item> create(String s){
 			return ItemTags.create(new ResourceLocation(CVMain.MODID, s));
 		}
 	}
 	
 	public static class Fluids{
-		
+		public static TagKey<Fluid> MENDABLE=create("mending_machine_fluid");
 		private static TagKey<Fluid> create(String s){
 			return FluidTags.create(new ResourceLocation(CVMain.MODID, s));
 		}

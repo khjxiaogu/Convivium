@@ -1,0 +1,6 @@
+{
+	"name": "机械",
+	"description": "用蒸汽驱动机器、传送饮食。",
+	"icon": "convivium:cog",
+	"sortnum": 20
+}

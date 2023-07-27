@@ -29,6 +29,8 @@
 	"block.convivium.sandstone_aqueduct_wavemaker": "Sandstone Aqueduct Wavemaker",
 	"block.convivium.camellia_plant": "Camellia",
 	"block.convivium.camellia_product": "Camellia Product",
+	"item.convivium.book": "On Banqueteering",
+	"book.convivium.landing_text": "The clouds ascend heavenward: it is time for rain to fall, and for people of virtue to satiate themselves by $(l)banqueteering$().$(br) — $(o)Book of Changes$()",
 	"item.convivium.camellia_flower": "Camellia Flower",
 	"item.convivium.camellia_seeds": "Camellia Seeds",
 	"item.convivium.fresh_camellia_shoots": "Fresh Camellia Shoots",

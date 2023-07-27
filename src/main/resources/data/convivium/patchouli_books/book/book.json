@@ -1,0 +1,12 @@
+{
+	"name": "item.convivium.book",
+	"landing_text": "book.convivium.landing_text",
+	"version": 0,
+	"subtitle": "Nunc est bibendum",
+	"book_texture": "convivium:textures/gui/book.png",
+	"model": "convivium:book",
+	"show_progress": false,
+	"filler_texture":"convivium:textures/gui/page_filler.png",
+	"creative_tab": "convivium:main",
+	"use_resource_pack": true
+}

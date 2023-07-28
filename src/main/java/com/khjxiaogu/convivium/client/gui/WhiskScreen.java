@@ -140,7 +140,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
 						for(String sway:Constants.TASTES) {
 							int sn=swh.getTasteDelta(sway);
-							tooltip.add(Utils.translate("gui.convivium.whisk.requires_taste"))
+							tooltip.add(Utils.translate("gui.convivium.whisk.requires_taste"));
 							tooltip.add(Utils.translate("sway.convivium."+sway,sn==0?"~":(sn>0?"+".repeat(sn):"-".repeat(-sn))));
 						}
 					}

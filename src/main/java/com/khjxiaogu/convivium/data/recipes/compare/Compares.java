@@ -40,6 +40,10 @@ public class Compares {
 		register("greater",v-> GT.C,v-> GT.C);
 		register("equals",v-> EQ.C,v-> EQ.C);
 		register("lesser",v-> LT.C,v-> LT.C);
+		register("greater_equals",v-> GE.C,v-> GE.C);
+		register("not_equals",v-> NE.C,v-> NE.C);
+		register("lesser_equals",v-> LE.C,v-> LE.C);
+		
 	}
 	public static void register(String name, Deserializer<JsonObject, Compare> des) {
 		compares.register(name, des);

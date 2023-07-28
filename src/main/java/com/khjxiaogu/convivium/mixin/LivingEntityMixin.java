@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.khjxiaogu.convivium.CVMobEffects;
-import com.teammoeg.caupona.CPMobEffects;
 
 import net.minecraft.world.entity.LivingEntity;
 
@@ -39,14 +38,14 @@ public class LivingEntityMixin {
 	}
 	@ModifyVariable(at = @At("HEAD"),method="hurt",index=2,argsOnly=true,require=1)
 	public float setAmount(float amount) {
-		if(getThis().hasEffect(CPMobEffects.HYPERACTIVE.get()))
-			return amount*2;
+		if(getThis().hasEffect(CVMobEffects.DELICACY.get()))
+			return amount*(0.2f*(1+getThis().getEffect(CVMobEffects.DELICACY.get()).getAmplifier()));
 		return amount;
 	}
 	@Inject(method = "getJumpPower", at = @At("RETURN"), cancellable = true)
 	protected void onGetJump(CallbackInfoReturnable<Float> cir) {
-		if(getThis().hasEffect(CVMobEffects.READICATION.get()))
-	    cir.setReturnValue(cir.getReturnValue()*Math.max(0,(4-getThis().getEffect(CVMobEffects.READICATION.get()).getAmplifier()))*0.2f);
+		if(getThis().hasEffect(CVMobEffects.RADICATION.get()))
+	    cir.setReturnValue(cir.getReturnValue()*Math.max(0,(4-getThis().getEffect(CVMobEffects.RADICATION.get()).getAmplifier()))*0.2f);
 	}
 	private LivingEntity getThis() {
 		return (LivingEntity)(Object)this;

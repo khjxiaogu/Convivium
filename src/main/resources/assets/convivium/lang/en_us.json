@@ -75,5 +75,10 @@
 	"item.convivium.chocolate_tea": "Chocolate Tea",
 	"item.convivium.cocoa_wine": "Cocoa Wine",
 	"item.convivium.chocolate_milk": "Chocolate Milk",
-	"item.convivium.beverage": "Mixed Beverage"
+	"item.convivium.beverage": "Mixed Beverage",
+	"taste.convivium.sweetness": "sweetness",
+	"taste.convivium.astringency": "astringency",
+	"taste.convivium.pungency": "pungency",
+	"taste.convivium.thickness": "thickness",
+	"taste.convivium.soothingness": "soothingness"
 }

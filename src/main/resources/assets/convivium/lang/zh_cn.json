@@ -75,5 +75,10 @@
 	"item.convivium.chocolate_tea": "可可茶",
 	"item.convivium.cocoa_wine": "可可酒",
 	"item.convivium.chocolate_milk": "巧克力牛奶",
-	"item.convivium.beverage": "混合饮品"
+	"item.convivium.beverage": "混合饮品",
+	"taste.convivium.sweetness": "sweetness",
+	"taste.convivium.astringency": "astringency",
+	"taste.convivium.pungency": "pungency",
+	"taste.convivium.thickness": "thickness",
+	"taste.convivium.soothingness": "soothingness"
 }

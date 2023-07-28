@@ -34,12 +34,14 @@ import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.util.Utils;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.material.Fluid;
@@ -142,7 +144,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 						for(String sway:Constants.TASTES) {
 							int sn=swh.getTasteDelta(sway);
 							
-							tooltip.add(Utils.translate("taste.convivium."+sway,sn==0?"~":(sn>0?"+".repeat(sn):"-".repeat(-sn))));
+							tooltip.add(Utils.translate("taste.convivium."+sway,sn==0?Utils.string("~").withStyle(ChatFormatting.AQUA):(sn>0?Utils.string("+".repeat(sn)).withStyle(ChatFormatting.GREEN):Utils.string("-".repeat(-sn)).withStyle(ChatFormatting.GOLD))));
 						}
 					}
 				}

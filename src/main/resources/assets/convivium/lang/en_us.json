@@ -18,6 +18,7 @@
 	"gui.convivium.fruit_platter.seperated": "Configure display styles slot-wise",
 	"gui.convivium.fruit_platter.piled": "Display as piled items",
 	"gui.convivium.fruit_platter.piled": "Display in quadrants",
+	"gui.convivium.whisk.requires_taste": "Adjust required:",
 	"container.convivium.pestle_and_mortar.title": "Pestle & Mortar",
 	"container.convivium.whisk.title": "Whisk",
 	"container.convivium.beverage_vending_machine.title": "Beverage Vending Machine",
@@ -76,9 +77,9 @@
 	"item.convivium.cocoa_wine": "Cocoa Wine",
 	"item.convivium.chocolate_milk": "Chocolate Milk",
 	"item.convivium.beverage": "Mixed Beverage",
-	"taste.convivium.sweetness": "sweetness",
-	"taste.convivium.astringency": "astringency",
-	"taste.convivium.pungency": "pungency",
-	"taste.convivium.thickness": "thickness",
-	"taste.convivium.soothingness": "soothingness"
+	"taste.convivium.sweetness": "sweetness %s",
+	"taste.convivium.astringency": "astringency %s",
+	"taste.convivium.pungency": "pungency %s",
+	"taste.convivium.thickness": "thickness %s",
+	"taste.convivium.soothingness": "soothingness %s"
 }

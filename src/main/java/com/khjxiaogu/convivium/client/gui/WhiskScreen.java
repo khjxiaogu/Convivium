@@ -26,6 +26,7 @@ import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskContainer;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
+import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.CurrentSwayInfo;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -127,7 +128,25 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 				}
 			}
 		}
-		
+		if(!blockEntity.swayhint.isEmpty()) {
+			int n1=0;
+			int n2=0;
+			for(CurrentSwayInfo swh:blockEntity.swayhint) {
+				if(swh.active>0) {
+					if(isMouseIn(mouseX,mouseY,18+20*(n2++),65,18,18))
+						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
+				}else {
+					if(isMouseIn(mouseX,mouseY,9+26*(n1++),90,24,42)) {
+						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
+						for(String sway:Constants.TASTES) {
+							int sn=swh.getTasteDelta(sway);
+							tooltip.add(Utils.translate("gui.convivium.whisk.requires_taste"))
+							tooltip.add(Utils.translate("sway.convivium."+sway,sn==0?"~":(sn>0?"+".repeat(sn):"-".repeat(-sn))));
+						}
+					}
+				}
+			}
+		}
 		if (!tooltip.isEmpty())
 			transform.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
 		else
@@ -196,10 +215,10 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		}
 	}
 	public void drawActiveSway(GuiGraphics transform,int x,int y,CurrentSwayInfo info) {
-		transform.blit(info.icon, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
+		transform.blit(info.image, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
 	}
 	public void drawSway(GuiGraphics transform,int x,int y,CurrentSwayInfo info) {
-		transform.blit(info.icon, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
+		transform.blit(info.image, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
 		
 		drawDistMarker(transform,leftPos+x-3,topPos+y+21,info.dsweet);
 		drawDistMarker(transform,leftPos+x+5,topPos+y+21,info.dpungent);

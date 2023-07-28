@@ -14,7 +14,7 @@
       "time": 100.0
     }
   ],
-  "icon": "minecraft:textures/mob_effect/night_vision.png",
+  "icon": "minecraft:mob_effect/night_vision",
   "locals": {
     "astringencyDelta": "3-astringency",
     "display": "astringency+0.1",

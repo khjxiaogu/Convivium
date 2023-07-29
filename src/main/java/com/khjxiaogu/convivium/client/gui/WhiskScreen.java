@@ -157,7 +157,9 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		if (blockEntity.processMax > 0) {
 			transform.blit(TEXTURE, leftPos + 111, topPos + 42, 176, 43,
 					(int) (17 * (blockEntity.processMax - blockEntity.process) * 1f / blockEntity.processMax), 13);
-			int idx=(RotationUtils.getTicks()/5)%4;
+			int idx=0;
+			if(blockEntity.getSpeed()>0)
+				idx=(RotationUtils.getTicks()/5)%4;
 			transform.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52);
 		}else {
 			if(blockEntity.info!=null) {

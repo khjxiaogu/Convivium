@@ -48,6 +48,7 @@ public class CVItemModelProvider extends ItemModelProvider {
 			simpleTexture(mt,"beverages/");
 		}
 		potTexture("beverage","alcohol_bottle","beverages/");
+		texture("jug");
 	}
 
 	public void itemModel(Item item, String name) {

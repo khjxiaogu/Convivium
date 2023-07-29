@@ -28,11 +28,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -68,6 +72,17 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 				pam.accessabletank.drain(1250, FluidAction.EXECUTE);
 				return InteractionResult.SUCCESS;
 			}
+			if(held.getItem()==Items.POTION&&PotionUtils.getPotion(held)==Potions.WATER) {
+				FluidStack water=new FluidStack(Fluids.WATER,250);
+				if(pam.accessabletank.fill(water,FluidAction.SIMULATE)==250) {
+					ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
+					held.shrink(1);
+					pam.accessabletank.fill(water, FluidAction.EXECUTE);
+					ItemHandlerHelper.giveItemToPlayer(player, remain);
+					return InteractionResult.SUCCESS;
+				}
+			}
+
 			FluidStack out=BowlContainingRecipe.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.accessabletank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {

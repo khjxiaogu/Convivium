@@ -58,6 +58,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -82,7 +83,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			if (slot < 4)
 				return isValidInput(stack);
 			if (slot == 4)
-				return stack.getItem() == Items.GLASS_BOTTLE || ContainingRecipe.getFluidType(stack) != Fluids.EMPTY;
+				return stack.getItem() == Items.GLASS_BOTTLE || ContainingRecipe.getFluidType(stack) != Fluids.EMPTY || (stack.getItem()==Items.POTION&&PotionUtils.getPotion(stack)==Potions.WATER);
 			return false;
 		}
 
@@ -119,7 +120,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		super(CVBlockEntityTypes.WHISK.get(), pWorldPosition, pBlockState);
 		contain = new LazyTickWorker(CPConfig.SERVER.containerTick.get(), () -> {
 			if (inf) {
-				FluidStack fs = new FluidStack(tank.getFluid(), tank.getFluidAmount());
+				FluidStack fs = tank.getFluid().copy();
 				if (processMax == 0)
 					tryContianFluid();
 				tank.setFluid(fs);
@@ -213,6 +214,16 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				if (recipe != null) {
 					is.shrink(1);
 					inv.setStackInSlot(5, recipe.handle(accessabletank.drain(250, FluidAction.EXECUTE)));
+					return true;
+				}
+			}
+			if(is.getItem()==Items.POTION&&PotionUtils.getPotion(is)==Potions.WATER) {
+				FluidStack water=new FluidStack(Fluids.WATER,250);
+				if(accessabletank.fill(water,FluidAction.SIMULATE)==250) {
+					ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
+					is.shrink(1);
+					this.accessabletank.fill(water, FluidAction.EXECUTE);
+					inv.setStackInSlot(5, remain);
 					return true;
 				}
 			}

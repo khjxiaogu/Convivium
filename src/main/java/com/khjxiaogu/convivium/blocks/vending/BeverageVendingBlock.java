@@ -49,7 +49,7 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 	@Override
 	public float getDestroyProgress(BlockState pState, Player player, BlockGetter worldIn, BlockPos pos) {
 		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
-			if(player.getUUID().equals(blockEntity.owner))
+			if(player.getAbilities().instabuild||player.getUUID().equals(blockEntity.owner))
 				return super.getDestroyProgress(pState, player, worldIn, pos);
 			return 0;
 		}

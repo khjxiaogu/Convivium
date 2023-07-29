@@ -93,7 +93,10 @@ public class BeverageItem extends EdibleBlock {
 		info.appendTooltip(tooltip);
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
-
+	public ItemStack finishUsingItem(ItemStack itemstack, Level worldIn, LivingEntity entityLiving) {
+		super.finishUsingItem(itemstack, worldIn, entityLiving);
+		return new ItemStack(Items.GLASS_BOTTLE);
+	}
 	@Override
 	public FoodProperties getFoodProperties(ItemStack stack, LivingEntity entity) {
 		return getInfo(stack).getFood();

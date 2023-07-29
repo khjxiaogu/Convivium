@@ -65,7 +65,7 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 			MultiBufferSource pBufferSource, int combinedLightIn, int combinedOverlayIn) {
 		FluidStack fs = ContainingRecipe.extractFluid(pBlockEntity.internal);
 		//FluidStack fs =FluidStack.EMPTY;
-		if(fs.isEmpty())fs=new FluidStack(Fluids.WATER,250);
+		if(fs.isEmpty())return;
 
 		matrixStack.pushPose();
 		matrixStack.translate(5/16f, 3/16f, 5/16f);

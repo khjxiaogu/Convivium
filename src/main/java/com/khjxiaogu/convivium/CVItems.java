@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
+import com.khjxiaogu.convivium.item.JugItem;
 import com.teammoeg.caupona.item.CPItem;
 import com.teammoeg.caupona.util.TabType;
 
@@ -30,6 +31,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class CVItems {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CVMain.MODID);
+	public static final RegistryObject<JugItem> JUG=ITEMS.register("jug",()->new JugItem(createProps().stacksTo(1)));
 	public static final String[] base_material = new String[] { "camellia_flower","camellia_seeds","clay_basin","dolium_lid","fresh_camellia_shoots","cocoa_powder","neroli","spice_blend","powdered_tea","steamed_camellia_shoots"};
 	public static final String[] base_drinks = new String[] {"berry_juice","berry_must","drupe_juice","drupe_must","pome_juice","pome_must","tea","hot_chocolate","milk","water"};
 	

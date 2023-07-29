@@ -72,11 +72,6 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 	public void setInternal(int num, ItemStack is) {
 		if(!isInfinite) {
 			internal=is;
-			if(internal.is(Items.BOWL)) {
-				this.getLevel().setBlockAndUpdate(this.getBlockPos(), CPBlocks.DISH.get().defaultBlockState());
-			}else if(internal.getItem() instanceof DishItem dish){
-				this.getLevel().setBlockAndUpdate(this.getBlockPos(), dish.getBlock().defaultBlockState());
-			}
 			this.syncData();
 		}
 	}
@@ -88,7 +83,7 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 
 	@Override
 	public boolean accepts(int num, ItemStack is) {
-		return is.getItem() instanceof DishItem||is.is(Items.BOWL);
+		return is.getItem() instanceof BeverageItem||is.is(Items.GLASS_BOTTLE);
 	}
 
 }

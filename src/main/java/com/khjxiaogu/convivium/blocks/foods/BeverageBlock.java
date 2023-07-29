@@ -94,20 +94,23 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 		InteractionResult p = super.use(state, worldIn, pos, player, handIn, hit);
 		if (p.consumesAction())
 			return p;
-		if (worldIn.getBlockEntity(pos) instanceof BeverageBlockEntity dish &&dish.internal != null && dish.internal.getItem() instanceof DishItem
+		if (worldIn.getBlockEntity(pos) instanceof BeverageBlockEntity dish &&
+				dish.internal != null &&
+				dish.internal.getItem() instanceof BeverageItem
 				&& dish.internal.isEdible()) {
 			FoodProperties fp = dish.internal.getFoodProperties(player);
 			if (dish.isInfinite) {
 				if (player.canEat(fp.canAlwaysEat())) {
 					player.eat(worldIn, dish.internal.copy());
-					dish.syncData();
 				}
 			} else {
-				if (player.canEat(fp.canAlwaysEat())) {
-					ItemStack iout = dish.internal.getCraftingRemainingItem();
-					player.eat(worldIn, dish.internal);
-					dish.internal = iout;
-					dish.syncData();
+				if(!worldIn.isClientSide) {
+					if (player.canEat(fp.canAlwaysEat())) {
+						ItemStack iout = dish.internal.getCraftingRemainingItem();
+						player.eat(worldIn, dish.internal);
+						dish.internal = iout;
+						dish.syncData();
+					}
 				}
 			}
 			return InteractionResult.SUCCESS;

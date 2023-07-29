@@ -30,9 +30,12 @@ import com.teammoeg.caupona.util.StewInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,6 +50,7 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -101,7 +105,15 @@ public class CVCommonEvents {
 
 		}
 	}
-
+	@SubscribeEvent
+	public static void onAttack(LivingAttackEvent ev) {
+		if(ev.getSource().is(DamageTypeTags.IS_FIRE)&&ev.getAmount()>0) {
+			MobEffectInstance inst=ev.getEntity().getEffect(CVMobEffects.IGNITABILITY.get());
+			if(inst!=null) {
+				ev.getEntity().setSecondsOnFire(2*(1+inst.getAmplifier()));
+			}
+		}
+	}
 	@SubscribeEvent
 	public static void onBowlUse(PlayerInteractEvent.RightClickItem event) {
 		if (event.getEntity() != null && !event.getEntity().level().isClientSide

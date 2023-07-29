@@ -14,7 +14,7 @@
       "time": 100.0
     }
   ],
-  "icon": "minecraft:textures/mob_effect/strength.png",
+  "icon": "minecraft:mob_effect/strength",
   "locals": {
     "astringencyDelta": "-(astringency+3)",
     "display": "-astringency+0.01",

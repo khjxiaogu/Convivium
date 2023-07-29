@@ -30,4 +30,5 @@ public class Constants {
 	public static final String PUNGENCY =			"pungency";
 	public static final String THICKNESS =			"thickness";
 	public static final String SOOTHINGNESS =		"soothingness";
+	public static final String[] TASTES=new String[] {SWEETNESS,PUNGENCY,SOOTHINGNESS,ASTRINGENCY,THICKNESS};
 }

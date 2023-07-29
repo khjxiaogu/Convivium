@@ -154,7 +154,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		return new SwayRecipeBuilder(rl("sway_effect/"+name),new ResourceLocation(icon));
 	}
 	private SwayRecipeBuilder createME(String name) {
-		return new SwayRecipeBuilder(rl("sway_effect/"+name),new ResourceLocation("textures/mob_effect/"+name+".png"));
+		return new SwayRecipeBuilder(rl("sway_effect/"+name),new ResourceLocation("mob_effect/"+name));
 	}
 	private Fluid cvfluid(String name) {
 		return ForgeRegistries.FLUIDS.getValue(new ResourceLocation(CVMain.MODID, name));

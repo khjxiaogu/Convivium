@@ -1,11 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.teammoeg.convivium.mixin",
+  "package": "com.khjxiaogu.convivium.mixin",
   "compatibilityLevel": "JAVA_16",
   "refmap": "convivium.refmap.json",
   "mixins": [
-
+	"LivingEntityMixin"
   ],
   "client": [],
   "injectors": {

@@ -70,7 +70,7 @@ public class CVMain {
 		CVMain.TABS.register(mod);
 		CVRecipes.RECIPE_SERIALIZERS.register(mod);
 		CVRecipes.RECIPE_TYPES.register(mod);
-
+		CVMobEffects.EFFECTS.register(mod);
 		CVConfig.register();
 		PacketHandler.register();
 

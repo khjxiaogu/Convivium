@@ -18,18 +18,27 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import static com.khjxiaogu.convivium.CVTags.Items.FRUIT;
+import static com.khjxiaogu.convivium.CVTags.Items.NUTS;
+import static com.khjxiaogu.convivium.CVTags.Items.SPICE;
+import static com.khjxiaogu.convivium.CVTags.Items.SWEET;
+import static com.khjxiaogu.convivium.util.Constants.COCOA;
+import static com.khjxiaogu.convivium.util.Constants.JUICE;
+import static com.khjxiaogu.convivium.util.Constants.MILK;
+import static com.khjxiaogu.convivium.util.Constants.TEA;
+import static com.khjxiaogu.convivium.util.Constants.WATER;
+import static com.khjxiaogu.convivium.util.Constants.WINE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
-
 
 import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
@@ -57,18 +66,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import static com.khjxiaogu.convivium.util.Constants.COCOA;
-import static com.khjxiaogu.convivium.util.Constants.TEA;
-import static com.khjxiaogu.convivium.util.Constants.WINE;
-import static com.khjxiaogu.convivium.util.Constants.WATER;
-import static com.khjxiaogu.convivium.util.Constants.MILK;
-import static com.khjxiaogu.convivium.util.Constants.JUICE;
-
-import static com.khjxiaogu.convivium.CVTags.Items.FRUIT;
-import static com.khjxiaogu.convivium.CVTags.Items.NUTS;
-import static com.khjxiaogu.convivium.CVTags.Items.SPICE;
-import static com.khjxiaogu.convivium.CVTags.Items.SWEET;
 
 public class CVRecipeProvider extends RecipeProvider {
 	private final HashMap<String, Integer> PATH_COUNT = new HashMap<>();

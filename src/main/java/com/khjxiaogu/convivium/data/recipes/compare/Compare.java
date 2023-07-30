@@ -31,9 +31,15 @@ public abstract class Compare implements ICompare {
 	public Compare() {
 		super();
 	}
+	/**
+	 * @param num  
+	 */
 	public Compare(JsonObject num) {
 		super();
 	}
+	/**
+	 * @param num  
+	 */
 	public Compare(FriendlyByteBuf num) {
 		super();
 	}

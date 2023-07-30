@@ -44,6 +44,7 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity> {
+	@SuppressWarnings("unchecked")
 	public static final Pair<Vec3,Quaternionf>[] rots=new Pair[] {
 		Pair.of(Vec3.ZERO.add(0,0,0), new Quaternionf()),//side
 		Pair.of(Vec3.ZERO.add(0,0,6/16f), new Quaternionf(new AxisAngle4f((float) (Math.PI/2),0,1,0))),//side

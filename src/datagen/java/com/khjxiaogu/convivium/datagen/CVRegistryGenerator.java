@@ -24,8 +24,6 @@ import java.util.concurrent.CompletableFuture;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.CVWorldGen;
-import com.teammoeg.caupona.CPBlocks;
-import com.teammoeg.caupona.CPWorldGen;
 
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup.Provider;

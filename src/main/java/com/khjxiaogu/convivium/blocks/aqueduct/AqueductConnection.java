@@ -43,9 +43,6 @@ public enum AqueductConnection implements StringRepresentable{
 		this.w = w;
 		this.e = e;
 	}
-	public static AqueductConnection get(Direction dir,Direction cand) {
-		 return A;
-	}
 	public static AqueductConnection get(Direction dir) {
 		switch(dir) {
 		case EAST:return E;

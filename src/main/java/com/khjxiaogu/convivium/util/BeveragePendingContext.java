@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishItemRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
@@ -48,28 +49,18 @@ import net.minecraft.world.level.material.Fluid;
 public class BeveragePendingContext extends IPendingContext {
 	private ResultCachingMap<RelishCondition, Boolean> relish = new ResultCachingMap<>(e -> e.test(this));
 	public Map<String,Integer> relishes=new HashMap<>();
+	public List<Fluid> relishFluids=new ArrayList<>(5);
 	public List<String> activerelish=new ArrayList<>();
 	public ConstantEnvironment taste;
 	public BeveragePendingContext(BeverageInfo info) {
 		items = new ArrayList<>(info.stacks.size());
 		Map<String,Double> variant=new HashMap<>();
-		for (FloatemStack fs : info.stacks) {
-			items.add(new FloatemTagStack(fs));
-			for(TasteRecipe recipe:TasteRecipe.recipes) {
-				if(recipe.item.test(fs.getStack())) {
-					recipe.variantData.forEach((e,f)->{
-						double actual=f.doubleValue()*fs.getCount();
-						variant.compute(e,(k,v)->v==null?actual:actual+v);
-					});
-					break;
-				}
-			}
-			totalItems += fs.getCount();
-		}
+		
 		int cnt=info.getRelishCount();
 		
 		for(Fluid s:info.relishes) {
 			if(s==null)continue;
+			relishFluids.add(s);
 			RelishFluidRecipe rfr=RelishFluidRecipe.recipes.get(s);
 			if(rfr!=null) {
 				relishes.compute(rfr.relish,(k,v)->v==null?1:v+1);
@@ -86,6 +77,29 @@ public class BeveragePendingContext extends IPendingContext {
 			if(activerelish.size()>1)
 				info.activeRelish2=activerelish.get(1);
 			info.activeRelish1=activerelish.get(0);
+		}
+		outer:for (FloatemStack fs : info.stacks) {
+			for(RelishItemRecipe isr:RelishItemRecipe.recipes) {
+				if(isr.item.test(fs.getStack())) {
+					relishes.compute(isr.relish,(k,v)->v==null?1:v+1);
+					isr.variantData.forEach((e,d)->{
+						double actual=d.doubleValue()/cnt;
+						variant.compute(e,(k,v)->v==null?actual:actual+v);
+					});
+					continue outer;
+				}
+			}
+			items.add(new FloatemTagStack(fs));
+			for(TasteRecipe recipe:TasteRecipe.recipes) {
+				if(recipe.item.test(fs.getStack())) {
+					recipe.variantData.forEach((e,f)->{
+						double actual=f.doubleValue()*fs.getCount();
+						variant.compute(e,(k,v)->v==null?actual:actual+v);
+					});
+					break;
+				}
+			}
+			totalItems += fs.getCount();
 		}
 		for(String rel:activerelish) {
 			

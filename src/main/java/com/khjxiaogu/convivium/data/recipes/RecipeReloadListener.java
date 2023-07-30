@@ -93,6 +93,7 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 		RelishRecipe.recipes=filterRecipes(recipes,RelishRecipe.class,RelishRecipe.TYPE).collect(Collectors.toMap(t->t.relishName, t->t));
 		SwayRecipe.recipes=filterRecipes(recipes,SwayRecipe.class,SwayRecipe.TYPE).collect(Collectors.toList());
 		TasteRecipe.recipes=filterRecipes(recipes,TasteRecipe.class,TasteRecipe.TYPE).collect(Collectors.toList());
+		RelishItemRecipe.recipes=filterRecipes(recipes,RelishItemRecipe.class,RelishItemRecipe.TYPE).collect(Collectors.toList());
 		sw.stop();
 		logger.info("Recipes built, cost {}", sw);
 	}

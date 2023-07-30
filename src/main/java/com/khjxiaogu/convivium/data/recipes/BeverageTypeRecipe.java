@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -60,18 +61,23 @@ public class BeverageTypeRecipe extends IDataRecipe {
 		return TYPE.get();
 	}
 
-	List<Ingredient> must;
-	List<Ingredient> optional;
-	List<RelishCondition> relish;
-	List<String> allowedRelish;
-	int priority = 0;
+	public List<Ingredient> must;
+	public List<Ingredient> optional;
+	public List<RelishCondition> relish;
+	public List<String> allowedRelish;
+	public int priority = 0;
 	public int time;
-	float density;
+	public float density;
 	
 	public Fluid output;
 	public boolean removeNBT=false;
 	public BeverageTypeRecipe(ResourceLocation id) {
 		super(id);
+		must=new ArrayList<>();
+		optional=new ArrayList<>();
+		relish=new ArrayList<>();
+		allowedRelish=new ArrayList<>();
+		output=Fluids.EMPTY;
 	}
 
 	public BeverageTypeRecipe(ResourceLocation id, JsonObject data) {
@@ -111,20 +117,6 @@ public class BeverageTypeRecipe extends IDataRecipe {
 
 
 
-	public BeverageTypeRecipe(ResourceLocation id, List<Ingredient> must, List<Ingredient> optional,
-			List<RelishCondition> relish, List<String> allowedRelish, int priority, int time, float density,
-			Fluid output, boolean removeNBT) {
-		super(id);
-		this.must = must;
-		this.optional = optional;
-		this.relish = relish;
-		this.allowedRelish = allowedRelish;
-		this.priority = priority;
-		this.time = time;
-		this.density = density;
-		this.output = output;
-		this.removeNBT = removeNBT;
-	}
 
 	public void write(FriendlyByteBuf data) {
 		SerializeUtil.writeList(data, must, Ingredient::toNetwork);

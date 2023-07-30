@@ -40,7 +40,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,7 +65,6 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 			return;
 		BlockState state = blockEntity.getBlockState();
 		Direction facing=state.getValue(AqueductControllerBlock.FACING);
-		BlockPos facingPos=blockEntity.getBlockPos().relative(facing);
 
 		boolean isBlack=RotationUtils.isBlackGrid(blockEntity.getBlockPos());
 		

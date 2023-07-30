@@ -1,0 +1,20 @@
+{
+  "type": "convivium:beverage",
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:berry_juice",
+  "relish": [
+    {
+      "type": "contains_fluid",
+      "relish": "convivium:berry_juice"
+    }
+  ],
+  "time": 200
+}

@@ -67,24 +67,23 @@ public class BeverageItem extends EdibleBlock {
 	public void fillItemCategory(CreativeTabItemHelper helper) {
 		if (helper.isType(CVMain.MAIN_TAB)) {
 			ItemStack is = new ItemStack(this);
-			
-			is.getOrCreateTag().putString("type", Utils.getRegistryName(ContainingRecipe.reverseFluidType(this)).toString());
+			Utils.writeItemFluid(is, ContainingRecipe.reverseFluidType(this));
 			addCreativeHints(is);
 			helper.accept(is);
 		}
 	}
 	public static BeverageInfo getInfo(ItemStack stack) {
-		if (stack.hasTag()) {
-			CompoundTag soupTag = stack.getTagElement("beverage");
-			if (soupTag != null)
-				return new BeverageInfo(soupTag);
-		}
+
+		CompoundTag soupTag = Utils.extractDataElement(stack,"beverage");
+		if (soupTag != null)
+			return new BeverageInfo(soupTag);
+		
 		return new BeverageInfo();
 	}
 
 	public static void setInfo(ItemStack stack, SauteedFoodInfo current) {
 		if (!current.isEmpty())
-			stack.getOrCreateTag().put("beverage", current.save());
+			Utils.setDataElement(stack,"beverage", current.save());
 	}
 
 	@Override

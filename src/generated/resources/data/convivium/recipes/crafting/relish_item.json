@@ -1,0 +1,8 @@
+{
+  "type": "convivium:relish_item",
+  "fluid": {
+    "item": "convivium:cocoa_powder"
+  },
+  "relish": "fire",
+  "variants": {}
+}

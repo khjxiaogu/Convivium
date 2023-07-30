@@ -31,6 +31,7 @@ import com.khjxiaogu.convivium.data.recipes.compare.Compare;
 import com.khjxiaogu.convivium.data.recipes.compare.CompareCondition;
 import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
+import com.khjxiaogu.convivium.data.recipes.relishcondition.HasRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.MajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
@@ -91,17 +92,19 @@ public class SwayRecipeBuilder {
 		locals.put(k, Expression.of((float)d));
 		return this;
 	}
-	public SwayRecipeBuilder major(String relish) {
-		this.relish.add(new MajorRelishCondition(relish));
-		return this;
-	}
-	public SwayRecipeBuilder only(String relish) {
-		this.relish.add(new OnlyMajorRelishCondition(relish));
-		return this;
-	}
 	public SwayRecipeBuilder cond(RelishCondition relish) {
 		this.relish.add(relish);
 		return this;
+	}
+	public SwayRecipeBuilder major(String relish) {
+		return cond(new MajorRelishCondition(relish));
+	}
+	public SwayRecipeBuilder only(String relish) {
+		return cond(new OnlyMajorRelishCondition(relish));
+	}
+
+	public SwayRecipeBuilder has(String relish) {
+		return cond(new HasRelishCondition(relish));
 	}
 	public SwayRecipeBuilder p(int p) {
 		this.priority=p;

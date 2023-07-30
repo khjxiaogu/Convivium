@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium.blocks.whisk;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +28,6 @@ import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
@@ -38,6 +38,7 @@ import com.khjxiaogu.convivium.util.CurrentSwayInfo;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.teammoeg.caupona.CPConfig;
+import com.teammoeg.caupona.api.CauponaApi;
 import com.teammoeg.caupona.blocks.stove.IStove;
 import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.IInfinitable;
@@ -83,7 +84,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			if (slot < 4)
 				return isValidInput(stack);
 			if (slot == 4)
-				return stack.getItem() == Items.GLASS_BOTTLE || ContainingRecipe.getFluidType(stack) != Fluids.EMPTY || (stack.getItem()==Items.POTION&&PotionUtils.getPotion(stack)==Potions.WATER);
+				return stack.getItem() == Items.GLASS_BOTTLE || Utils.getFluidType(stack) != Fluids.EMPTY || (stack.getItem()==Items.POTION&&PotionUtils.getPotion(stack)==Potions.WATER) ||stack.is(Items.WATER_BUCKET)||stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
 			return false;
 		}
 
@@ -209,14 +210,13 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	private boolean tryContianFluid() {
 		ItemStack is = inv.getStackInSlot(4);
 		if (!is.isEmpty() && inv.getStackInSlot(5).isEmpty()) {
-			if (is.getItem() == Items.GLASS_BOTTLE && tank.getFluidAmount() >= 250) {
-				ContainingRecipe recipe = ContainingRecipe.recipes.get(this.tank.getFluid().getFluid());
-				if (recipe != null) {
-					is.shrink(1);
-					inv.setStackInSlot(5, recipe.handle(accessabletank.drain(250, FluidAction.EXECUTE)));
-					return true;
-				}
+			Optional<ItemStack> recipe=CauponaApi.getFilledItemStack(accessabletank, is);
+			if (recipe.isPresent()) {
+				is.shrink(1);
+				inv.setStackInSlot(5, recipe.get());
+				return true;
 			}
+			
 			if(is.getItem()==Items.POTION&&PotionUtils.getPotion(is)==Potions.WATER) {
 				FluidStack water=new FluidStack(Fluids.WATER,250);
 				if(accessabletank.fill(water,FluidAction.SIMULATE)==250) {
@@ -228,7 +228,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				}
 			}
 
-			FluidStack out = ContainingRecipe.extractFluid(is);
+			FluidStack out = Utils.extractFluid(is);
 			if (!out.isEmpty()) {
 				if (this.tank.getFluidAmount() <= 1000 && this.accessabletank.fill(out, FluidAction.EXECUTE) != 0) {
 					ItemStack ret = is.getCraftingRemainingItem();

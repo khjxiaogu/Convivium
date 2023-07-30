@@ -20,7 +20,7 @@ package com.khjxiaogu.convivium.blocks.pestle_and_mortar;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -64,7 +64,7 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 		BlockEntity be=worldIn.getBlockEntity(pos);
 		if (be instanceof PamBlockEntity pam) {
 			ItemStack held = player.getItemInHand(handIn);
-			FluidStack out=ContainingRecipe.extractFluid(held);
+			FluidStack out=Utils.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.tankin.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
 					pam.tankin.fill(out, FluidAction.EXECUTE);

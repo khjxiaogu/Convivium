@@ -55,8 +55,10 @@ public abstract class RotationRenderer<T extends BlockEntity> implements BlockEn
 		ModelUtils.renderModel(model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
 		matrixStack.popPose();
 	}
+	@SuppressWarnings("unused")
 	public void customRender(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {};
+	@SuppressWarnings("unused")
 	public void customRenderRotated(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {};
 }

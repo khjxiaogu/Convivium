@@ -22,22 +22,16 @@ import java.util.List;
 import java.util.Optional;
 
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.foods.BeverageBlock;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.fluid.SoupFluid;
+import com.teammoeg.caupona.api.CauponaApi;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
-import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.ICreativeModeTabItem;
-import com.teammoeg.caupona.util.StewInfo;
-import com.teammoeg.caupona.util.TabType;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +54,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.ItemFluidContainer;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem{
     public JugItem(Properties props) {
@@ -116,11 +109,11 @@ public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem
 			}
 			if(worldIn.getBlockEntity(blockpos) instanceof BeverageBlockEntity be&&be.internal.is(Items.GLASS_BOTTLE)) {
 				IFluidHandlerItem handler=cur.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
-				if(handler!=null&handler.getFluidInTank(0).getAmount()>=250) {
-					ContainingRecipe cr=ContainingRecipe.recipes.get(handler.getFluidInTank(0).getFluid());
-					if(cr!=null) {
+				if(handler!=null) {
+					Optional<ItemStack> is=CauponaApi.getFilledItemStack(handler,be.internal);
+					if(is.isPresent()) {
 						if(!worldIn.isClientSide) {
-							be.internal=cr.handle(handler.drain(250, FluidAction.EXECUTE));
+							be.internal=is.get();
 							be.syncData();
 						}
 						return InteractionResultHolder.sidedSuccess(cur,worldIn.isClientSide);

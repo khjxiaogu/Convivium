@@ -20,7 +20,7 @@ package com.khjxiaogu.convivium.blocks.whisk;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -83,7 +83,7 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 				}
 			}
 
-			FluidStack out=BowlContainingRecipe.extractFluid(held);
+			FluidStack out=Utils.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.accessabletank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
 					pam.accessabletank.fill(out, FluidAction.EXECUTE);

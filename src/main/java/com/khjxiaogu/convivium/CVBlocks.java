@@ -43,8 +43,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -96,11 +96,6 @@ public class CVBlocks {
 		CVItems.ITEMS.register(name, () -> new CPBlockItem(blx.get(), CVItems.createProps(), CVMain.MAIN_TAB));
 		return blx;
 	}
-	//Property functions
-	private static Properties getStoneProps() {
-		return Block.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops().strength(2.0f,
-				6);
-	}
 	private static Properties getKineticProps() {
 		return Block.Properties.of().sound(SoundType.STONE)
 				.strength(3.5f, 10).noOcclusion();
@@ -109,10 +104,7 @@ public class CVBlocks {
 		return Block.Properties.of().sound(SoundType.GLASS)
 				.strength(3.5f, 10).noOcclusion().instabreak().isViewBlocking(CVBlocks::isntSolid);
 	}
-	private static Properties getTransparentProps() {
-		return Block.Properties.of().sound(SoundType.STONE).requiresCorrectToolForDrops()
-				.strength(3.5f, 10).noOcclusion().isViewBlocking(CVBlocks::isntSolid);
-	}
+
 
 	@SuppressWarnings("unused")
 	private static boolean isntSolid(BlockState state, BlockGetter reader, BlockPos pos) {

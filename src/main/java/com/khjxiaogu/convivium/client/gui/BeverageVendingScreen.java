@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
-import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
-import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlockEntity;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingContainer;
 import com.mojang.blaze3d.systems.RenderSystem;

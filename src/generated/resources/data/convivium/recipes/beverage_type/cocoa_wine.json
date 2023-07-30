@@ -1,0 +1,28 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:cocoa_wine",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "fire"
+    },
+    {
+      "type": "contains",
+      "relish": "wine"
+    }
+  ],
+  "time": 200
+}

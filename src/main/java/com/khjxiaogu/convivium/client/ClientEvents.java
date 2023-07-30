@@ -33,6 +33,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
+	/**
+	 * @param load  
+	 */
 	@SubscribeEvent
 	public static void JoinWorld(LevelEvent.Load load)
 	{

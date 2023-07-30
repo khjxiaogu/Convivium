@@ -1,0 +1,31 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    },
+    {
+      "tag": "convivium:nuts"
+    }
+  ],
+  "output": "convivium:chocolate_milk",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "fire"
+    },
+    {
+      "type": "contains",
+      "relish": "cereal"
+    }
+  ],
+  "time": 200
+}

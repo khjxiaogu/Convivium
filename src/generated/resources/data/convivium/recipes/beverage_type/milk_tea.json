@@ -1,0 +1,31 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:sweeteners"
+    },
+    {
+      "tag": "convivium:nuts"
+    },
+    {
+      "tag": "convivium:spice"
+    }
+  ],
+  "output": "convivium:milk_tea",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "cereal"
+    },
+    {
+      "type": "contains",
+      "relish": "bath"
+    }
+  ],
+  "time": 200
+}

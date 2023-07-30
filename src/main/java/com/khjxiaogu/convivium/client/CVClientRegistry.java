@@ -38,6 +38,7 @@ import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -97,15 +98,12 @@ public class CVClientRegistry {
 		event.registerSpriteSet(CVParticles.SPLASH.get(), SplashParticle.Provider::new);
 	}
 
-	@SubscribeEvent
-	public static void onTint(RegisterColorHandlersEvent.Block ev) {
-	}
 
 	@SubscribeEvent
 	public static void onTint(RegisterColorHandlersEvent.Item ev) {
 		ev.register((a, idx) -> {
 			//System.out.println(idx);
-			return idx==0?-1: BeverageInfo.getIColor(a.getOrCreateTag());
+			return idx==0?-1: BeverageInfo.getIColor(Utils.extractData(a));
 			
 	      },CVBlocks.BEVERAGE.get());
 	}

@@ -83,7 +83,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 
 	}
 
-	public int getSlot(PlatterBlockEntity be,boolean dx,boolean dz) {
+	public int getSlot(boolean dx,boolean dz) {
 		if(dx) {
 			if(dz) 
 				return 3;//
@@ -128,7 +128,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 								}
 							}
 					}else {
-						int slot=getSlot(blockEntity,ddx,ddz);
+						int slot=getSlot(ddx,ddz);
 						ItemStack orig=blockEntity.storage.getStackInSlot(slot);
 						if(!orig.isEmpty()) {
 							ItemHandlerHelper.giveItemToPlayer(player, orig.copy());

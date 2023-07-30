@@ -1,0 +1,25 @@
+{
+  "type": "convivium:beverage",
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:fruits"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:ade",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "seasons"
+    },
+    {
+      "type": "contains",
+      "relish": "hearth"
+    }
+  ],
+  "time": 200
+}

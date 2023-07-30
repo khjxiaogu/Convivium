@@ -70,8 +70,5 @@ public class CVBlockEntityTypes {
 			Supplier<List<RegistryObject<E>>> valid) {
 		return () -> new BlockEntityType<>(create, valid.get().stream().map(RegistryObject<E>::get).collect(Collectors.toSet()), null);
 	}
-	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeTypes(BlockEntitySupplier<T> create,
-			Supplier<List<Block>> valid) {
-		return () -> new BlockEntityType<>(create, ImmutableSet.copyOf(valid.get()), null);
-	}
+
 }

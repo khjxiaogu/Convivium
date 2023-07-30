@@ -92,9 +92,15 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 		if(l.isLoaded(crn)&&isCage(l.getBlockState(crn),dir.getOpposite()))
 			findNext(l,crn,crn,true,pos);
 	}
+	/**
+	 * @param dir  
+	 */
 	public boolean isCage(BlockState bs,Direction dir) {
 		return bs.is(CVBlocks.cage.get());
 	}
+	/**
+	 * @param dir  
+	 */
 	public boolean isCog(BlockState bs,Direction dir) {
 		return bs.is(CVBlocks.cog.get());
 	}

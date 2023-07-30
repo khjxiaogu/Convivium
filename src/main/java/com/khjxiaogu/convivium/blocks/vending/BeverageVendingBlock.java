@@ -2,8 +2,8 @@ package com.khjxiaogu.convivium.blocks.vending;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVTags;
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,6 +46,7 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return shape;
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public float getDestroyProgress(BlockState pState, Player player, BlockGetter worldIn, BlockPos pos) {
 		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
@@ -84,7 +85,7 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
 			if(player.getUUID().equals(blockEntity.owner)) {
 				ItemStack held = player.getItemInHand(handIn);
-				FluidStack out=ContainingRecipe.extractFluid(held);
+				FluidStack out=Utils.extractFluid(held);
 				if (!out.isEmpty()) {
 					if(blockEntity.tank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
 						blockEntity.tank.fill(out, FluidAction.EXECUTE);

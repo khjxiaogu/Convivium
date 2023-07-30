@@ -39,6 +39,9 @@ public class RelishConditions {
 		register("major", MajorRelishCondition::new, MajorRelishCondition::new);
 		register("only_major", OnlyMajorRelishCondition::new, OnlyMajorRelishCondition::new);
 		register("compare", RelishCompareCondition::new, RelishCompareCondition::new);
+		register("contains",HasRelishCondition::new, HasRelishCondition::new);
+		register("contains_fluid",HasFluidCondition::new, HasFluidCondition::new);
+		
 		
 		register("and", AndRelishCondition::new, AndRelishCondition::new);
 		register("or", OrRelishCondition::new, OrRelishCondition::new);

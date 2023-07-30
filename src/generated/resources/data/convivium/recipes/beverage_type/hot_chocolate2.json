@@ -1,0 +1,20 @@
+{
+  "type": "convivium:beverage",
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:hot_chocolate",
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "fire"
+    }
+  ],
+  "time": 200
+}

@@ -19,9 +19,7 @@
 package com.khjxiaogu.convivium.blocks.foods;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
-import com.teammoeg.caupona.CPBlocks;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
-import com.teammoeg.caupona.item.DishItem;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.IInfinitable;
 

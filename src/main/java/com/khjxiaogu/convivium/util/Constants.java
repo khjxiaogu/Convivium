@@ -31,4 +31,11 @@ public class Constants {
 	public static final String THICKNESS =			"thickness";
 	public static final String SOOTHINGNESS =		"soothingness";
 	public static final String[] TASTES=new String[] {SWEETNESS,PUNGENCY,SOOTHINGNESS,ASTRINGENCY,THICKNESS};
+	public static final String TEA="bath";
+	public static final String MILK="cereal";
+	public static final String COCOA="fire";
+	public static final String WATER="hearth";
+	public static final String JUICE="seasons";
+	public static final String WINE="wine";
+	public static final String NONE="none";
 }

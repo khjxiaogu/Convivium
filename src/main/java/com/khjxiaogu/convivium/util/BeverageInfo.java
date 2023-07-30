@@ -115,6 +115,8 @@ public class BeverageInfo implements IFoodInfo {
 	}
 	@OnlyIn(Dist.CLIENT)
 	public static Vector3f getColor(CompoundTag tag) {
+		if(tag==null)
+			return new Vector3f(1f,1f,1f);
 		Vector3f clr=new Vector3f();
 		int cnt=0;
 		ListTag list=tag.getCompound("beverage").getList("relish",8);

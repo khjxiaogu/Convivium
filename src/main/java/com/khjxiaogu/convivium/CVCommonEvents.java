@@ -18,23 +18,15 @@
 
 package com.khjxiaogu.convivium;
 
-import java.util.Optional;
-
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
-import com.teammoeg.caupona.api.CauponaApi;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
@@ -65,7 +57,7 @@ public class CVCommonEvents {
 	public static void onBlockClick(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack is = event.getItemStack();
 		Player playerIn = event.getEntity();
-		if (is.is(Items.POTION)&&playerIn.isShiftKeyDown()) {
+		if (CVConfig.COMMON.canPlacePotion.get()&&is.is(Items.POTION)&&playerIn.isShiftKeyDown()) {
 			ItemStack replace=new ItemStack(CVItems.POTION.get(),is.getCount());
 			is.save(replace.getOrCreateTagElement("potion"));
 			playerIn.setItemInHand(event.getHand(), replace);

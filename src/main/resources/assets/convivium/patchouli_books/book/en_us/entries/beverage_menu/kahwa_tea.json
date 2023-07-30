@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:kahwa_tea",
+	"name": "Kahwa Tea",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/kahwa_tea.png",
+			"result": "convivium:kahwa_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "tea",
+			"optionalbases": "water",
+			"mandatoryingredients": "nuts, spices",
+			"optionalingredients": "$(o)none$()"
+		}
+	]
+}

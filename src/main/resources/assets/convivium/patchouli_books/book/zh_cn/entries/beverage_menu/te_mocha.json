@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:te_mocha",
+	"name": "摩卡茶",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/te_mocha.png",
+			"result": "convivium:te_mocha"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "可可, 牛奶, 茶",
+			"optionalbases": "水",
+			"mandatoryingredients": "$(o)无$()",
+			"optionalingredients": "糖"
+		}
+	]
+}

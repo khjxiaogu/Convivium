@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:leicha",
+	"name": "擂茶",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/leicha.png",
+			"result": "convivium:leicha"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "茶",
+			"optionalbases": "水",
+			"mandatoryingredients": "坚果",
+			"optionalingredients": "$(o)无$()"
+		}
+	]
+}

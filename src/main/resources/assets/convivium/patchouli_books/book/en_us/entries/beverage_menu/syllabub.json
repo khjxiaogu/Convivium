@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:syllabub",
+	"name": "Syllabub",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/syllabub.png",
+			"result": "convivium:syllabub"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "juice, milk",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "spices, sweeteners"
+		}
+	]
+}

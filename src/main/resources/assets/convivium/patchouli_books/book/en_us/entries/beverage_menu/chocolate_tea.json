@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:chocolate_tea",
+	"name": "Chocolate Tea",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/chocolate_tea.png",
+			"result": "convivium:chocolate_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "cocoa, tea",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "spices, sweeteners"
+		}
+	]
+}

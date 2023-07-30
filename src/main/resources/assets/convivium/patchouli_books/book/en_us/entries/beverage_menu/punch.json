@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:punch",
+	"name": "Punch",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/punch.png",
+			"result": "convivium:punch"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "juice, water",
+			"optionalbases": "must",
+			"mandatoryingredients": "sweeteners",
+			"optionalingredients": "spices"
+		}
+	]
+}

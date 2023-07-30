@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:mulled_wine",
+	"name": "Mulled Wine",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/mulled_wine.png",
+			"result": "convivium:mulled_wine"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "must",
+			"optionalbases": "water",
+			"mandatoryingredients": "spices",
+			"optionalingredients": "fruits, sweeteners"
+		}
+	]
+}

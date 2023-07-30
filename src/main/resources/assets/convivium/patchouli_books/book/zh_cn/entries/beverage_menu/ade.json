@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:ade",
+	"name": "果水",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/ade.png",
+			"result": "convivium:ade"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "果汁, 水",
+			"optionalbases": "$(o)无$()",
+			"mandatoryingredients": "$(o)无$()",
+			"optionalingredients": "水果, 糖"
+		}
+	]
+}

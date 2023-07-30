@@ -8,5 +8,15 @@
 	"show_progress": false,
 	"filler_texture":"convivium:textures/gui/page_filler.png",
 	"creative_tab": "convivium:main",
-	"use_resource_pack": true
+	"use_resource_pack": true,
+	"macros": {
+		"}": "$()",
+		"{(": "$(l:",
+		"{b ": "$(l)",
+		"{i ": "$(o)",
+		"{u ": "$(n)",
+		"{em ": "$(#9C5049)",
+		"{cat ": "$(#4C6B25)",
+		";; ": "$(br)"
+	}
 }

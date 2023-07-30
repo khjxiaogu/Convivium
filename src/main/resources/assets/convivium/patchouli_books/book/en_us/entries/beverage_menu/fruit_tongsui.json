@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:fruit_tongsui",
+	"name": "Fruit Tongsui",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/fruit_tongsui.png",
+			"result": "convivium:fruit_tongsui"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "water",
+			"optionalbases": "$(o)none$()",
+			"mandatoryingredients": "fruits",
+			"optionalingredients": "sweeteners"
+		}
+	]
+}

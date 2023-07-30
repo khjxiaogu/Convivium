@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:chocolate_milk",
+	"name": "Chocolate Milk",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/chocolate_milk.png",
+			"result": "convivium:chocolate_milk"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "cocoa, milk",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "nuts, spices, sweeteners"
+		}
+	]
+}

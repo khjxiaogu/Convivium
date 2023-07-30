@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:te_mocha",
+	"name": "Tè Mocha",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/te_mocha.png",
+			"result": "convivium:te_mocha"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "cocoa, milk, tea",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "sweeteners"
+		}
+	]
+}

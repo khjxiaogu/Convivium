@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:milk_tea",
+	"name": "Milk Tea",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/milk_tea.png",
+			"result": "convivium:milk_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "milk, tea",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "nuts, spices, sweeteners"
+		}
+	]
+}

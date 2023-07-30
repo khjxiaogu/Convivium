@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:posset",
+	"name": "Posset",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/posset.png",
+			"result": "convivium:posset"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "milk, must",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "spices, sweeteners"
+		}
+	]
+}

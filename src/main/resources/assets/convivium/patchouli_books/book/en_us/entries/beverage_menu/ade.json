@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:ade",
+	"name": "Ade",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/ade.png",
+			"result": "convivium:ade"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "juice, water",
+			"optionalbases": "$(o)none$()",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "fruits, sweeteners"
+		}
+	]
+}

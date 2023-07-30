@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:punch",
+	"name": "宾治",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/punch.png",
+			"result": "convivium:punch"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "果汁, 水",
+			"optionalbases": "酒",
+			"mandatoryingredients": "糖",
+			"optionalingredients": "香料"
+		}
+	]
+}

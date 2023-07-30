@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:posca",
+	"name": "Posca",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/posca.png",
+			"result": "convivium:posca"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "juice, must",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "fruits"
+		}
+	]
+}

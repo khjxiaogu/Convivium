@@ -1,0 +1,28 @@
+{
+	"components": [
+		{
+			"type": "patchouli:text",
+			"text": "$(l)$(#A34)Required bases: $()#mandatorybases#",
+			"x": 0,
+			"y": 0
+		},
+		{
+			"type": "patchouli:text",
+			"text": "$(l)$(#59D)Optional bases: $()#optionalbases#",
+			"x": 0,
+			"y": 36
+		},
+		{
+			"type": "patchouli:text",
+			"text": "$(l)$(#A34)Required ingredients: $()#mandatoryingredients#",
+			"x": 0,
+			"y": 72
+		},
+		{
+			"type": "patchouli:text",
+			"text": "$(l)$(#59D)Optional ingredients: $()#optionalingredients#",
+			"x": 0,
+			"y": 108
+		}
+	]
+}

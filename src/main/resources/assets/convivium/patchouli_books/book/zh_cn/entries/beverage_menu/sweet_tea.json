@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:sweet_tea",
+	"name": "甜茶",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/sweet_tea.png",
+			"result": "convivium:sweet_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "茶",
+			"optionalbases": "水",
+			"mandatoryingredients": "糖",
+			"optionalingredients": "水果"
+		}
+	]
+}

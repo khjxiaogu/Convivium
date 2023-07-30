@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:cocoa_wine",
+	"name": "Cocoa Wine",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/cocoa_wine.png",
+			"result": "convivium:cocoa_wine"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "cocoa, must",
+			"optionalbases": "water",
+			"mandatoryingredients": "$(o)none$()",
+			"optionalingredients": "spices, sweeteners"
+		}
+	]
+}

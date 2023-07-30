@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:saidi_tea",
+	"name": "Ṣaʿidi Tea",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/saidi_tea.png",
+			"result": "convivium:saidi_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "tea",
+			"optionalbases": "$(o)none$()",
+			"mandatoryingredients": "sweeteners",
+			"optionalingredients": "$(o)none$()"
+		}
+	]
+}

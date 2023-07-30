@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:chocolate_tea",
+	"name": "可可茶",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/chocolate_tea.png",
+			"result": "convivium:chocolate_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "可可, 茶",
+			"optionalbases": "水",
+			"mandatoryingredients": "$(o)无$()",
+			"optionalingredients": "糖, 香料"
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:leicha",
+	"name": "Léichá",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/leicha.png",
+			"result": "convivium:leicha"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "tea",
+			"optionalbases": "water",
+			"mandatoryingredients": "nuts",
+			"optionalingredients": "$(o)none$()"
+		}
+	]
+}

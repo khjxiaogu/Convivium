@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:jaegertee",
+	"name": "猎人茶",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/jaegertee.png",
+			"result": "convivium:jaegertee"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "茶, 酒",
+			"optionalbases": "水",
+			"mandatoryingredients": "香料",
+			"optionalingredients": "水果, 糖"
+		}
+	]
+}

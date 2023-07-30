@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:saidi_tea",
+	"name": "上埃及茶",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/saidi_tea.png",
+			"result": "convivium:saidi_tea"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "茶",
+			"optionalbases": "$(o)无$()",
+			"mandatoryingredients": "糖",
+			"optionalingredients": "$(o)无$()"
+		}
+	]
+}

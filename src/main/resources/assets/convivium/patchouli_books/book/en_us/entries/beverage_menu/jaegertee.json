@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:jaegertee",
+	"name": "Jägertee",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/jaegertee.png",
+			"result": "convivium:jaegertee"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "must, tea",
+			"optionalbases": "water",
+			"mandatoryingredients": "spices",
+			"optionalingredients": "fruits, sweeteners"
+		}
+	]
+}

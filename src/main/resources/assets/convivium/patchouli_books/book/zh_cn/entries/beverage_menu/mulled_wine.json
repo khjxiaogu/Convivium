@@ -1,0 +1,19 @@
+{
+	"category": "convivium:beverage_menu",
+	"icon": "convivium:mulled_wine",
+	"name": "香料酒",
+	"pages": [
+		{
+			"type": "convivium:beverage_recipe",
+			"image": "convivium:textures/gui/recipes/beverage/mulled_wine.png",
+			"result": "convivium:mulled_wine"
+		},
+		{
+			"type": "convivium:beverage_recipe_desc",
+			"mandatorybases": "酒",
+			"optionalbases": "水",
+			"mandatoryingredients": "香料",
+			"optionalingredients": "水果, 糖"
+		}
+	]
+}

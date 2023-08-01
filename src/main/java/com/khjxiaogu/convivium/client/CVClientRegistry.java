@@ -22,6 +22,7 @@ import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVGui;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.client.gui.BasinScreen;
 import com.khjxiaogu.convivium.client.gui.BeverageVendingScreen;
 import com.khjxiaogu.convivium.client.gui.PamScreen;
 import com.khjxiaogu.convivium.client.gui.PlatterScreen;
@@ -63,6 +64,7 @@ public class CVClientRegistry {
 		MenuScreens.register(CVGui.PAM.get(), PamScreen::new);
 		MenuScreens.register(CVGui.WHISK.get(), WhiskScreen::new);
 		MenuScreens.register(CVGui.VENDING.get(), BeverageVendingScreen::new);
+		MenuScreens.register(CVGui.BASIN.get(), BasinScreen::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(),FruitPlatterRenderer::new);

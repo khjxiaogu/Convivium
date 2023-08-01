@@ -13,16 +13,22 @@
   "priority": 100,
   "relish": [
     {
-      "type": "contains",
-      "relish": "bath"
-    },
-    {
-      "type": "contains",
-      "relish": "cereal"
-    },
-    {
-      "type": "contains",
-      "relish": "fire"
+      "type": "and",
+      "cond1": {
+        "type": "and",
+        "cond1": {
+          "type": "contains",
+          "relish": "bath"
+        },
+        "cond2": {
+          "type": "contains",
+          "relish": "cereal"
+        }
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "fire"
+      }
     }
   ],
   "time": 200

@@ -1,0 +1,21 @@
+{
+  "type": "convivium:basin",
+  "count": 1,
+  "density": 0.0,
+  "fluidIn": {
+    "Amount": 250,
+    "FluidName": "convivium:berry_juice"
+  },
+  "item": {
+    "item": "minecraft:flower_pot"
+  },
+  "outputs": [
+    {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "caupona:sapa_spice_jar",
+      "nbt": "{Damage:0}"
+    }
+  ],
+  "time": 200
+}

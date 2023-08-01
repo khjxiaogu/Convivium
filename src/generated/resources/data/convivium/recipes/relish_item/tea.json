@@ -1,6 +1,6 @@
 {
   "type": "convivium:relish_item",
-  "fluid": {
+  "item": {
     "item": "convivium:powdered_tea"
   },
   "relish": "bath",

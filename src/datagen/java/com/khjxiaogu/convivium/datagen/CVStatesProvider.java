@@ -76,7 +76,7 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticDirectionalBlockModel("aeolipile","aeolipile_stator");
 		kineticMixedBlockModel("whisk","whisk_stator");
 		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
-		simpleBlock(CVBlocks.basin.get(),bmf("pestle_and_mortar_stator"));
+		horizontalBlock(CVBlocks.basin.get(),bmf("earthen_basin"));
 		blockItemModel("basin");
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("beverage"),bmf("beverage"));

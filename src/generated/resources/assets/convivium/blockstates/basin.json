@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
-      "model": "convivium:block/pestle_and_mortar_stator"
+    "facing=east": {
+      "model": "convivium:block/earthen_basin",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "convivium:block/earthen_basin"
+    },
+    "facing=south": {
+      "model": "convivium:block/earthen_basin",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "convivium:block/earthen_basin",
+      "y": 270
     }
   }
 }

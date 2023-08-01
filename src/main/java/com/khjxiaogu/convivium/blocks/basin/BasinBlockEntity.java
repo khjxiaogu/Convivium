@@ -18,14 +18,16 @@
 
 package com.khjxiaogu.convivium.blocks.basin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
-import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
+import com.teammoeg.caupona.blocks.stove.IStove;
+import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -33,6 +35,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -50,11 +53,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
-public class BasinBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
-	public ItemStackHandler inv = new ItemStackHandler(4) {
+public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider {
+	public ItemStackHandler inv = new ItemStackHandler(5) {
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
-			return slot < 3&&GrindingRecipe.testInput(stack);
+			return slot < 1&&BasinRecipe.testInput(stack);
 		}
 
 		@Override
@@ -68,38 +71,43 @@ public class BasinBlockEntity extends KineticTransferBlockEntity implements Menu
 	public int process;
 	public int processMax;
 	public List<ItemStack> items;
+	public boolean isLastHeating;
 	public BasinBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.BASIN.get(), pWorldPosition, pBlockState);
 	}
 
 	@Override
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
-		// TODO Auto-generated method stub
-		super.readCustomNBT(nbt, isClient);
 		process=nbt.getInt("process");
 		processMax=nbt.getInt("processMax");
 		tankin.readFromNBT(nbt.getCompound("in"));
 		inv.deserializeNBT(nbt.getCompound("inv"));
+		ListTag list=nbt.getList("outBuff",10);
+		items=new ArrayList<>();
+		for(int i=0;i<list.size();i++) {
+			items.add(ItemStack.of(list.getCompound(i)));
+		}
+		isLastHeating=nbt.getBoolean("heating");
 	}
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
-		// TODO Auto-generated method stub
-		super.writeCustomNBT(nbt, isClient);
+		if(isClient)
+			nbt.putBoolean("heating", isLastHeating);
 		nbt.putInt("process", process);
 		nbt.putInt("processMax", processMax);
 		nbt.put("in",tankin.writeToNBT(new CompoundTag()));
 		nbt.put("inv", inv.serializeNBT());
+		if(!isClient) {
+			ListTag tl=new ListTag();
+			items.forEach(t->tl.add(t.serializeNBT()));
+			nbt.put("outBuff", tl);
+		}
 	}
 
 	@Override
 	public void handleMessage(short type, int data) {
 
-	}
-	@Override
-	public boolean isReceiver() {
-		// TODO Auto-generated method stub
-		return true;
 	}
 	public void spawnParticleFor(ItemStack is) {
 		if(is.isEmpty())return;
@@ -112,34 +120,30 @@ public class BasinBlockEntity extends KineticTransferBlockEntity implements Menu
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
-		super.tick();
 		if(level.isClientSide) {
-			if(process!=0)
-				for(int i=0;i<3;i++) {
-					ItemStack stackInSlot = inv.getStackInSlot(i);
-					if (!stackInSlot.isEmpty()){
-						if(Math.random()<0.05)
-							spawnParticleFor(stackInSlot);
-					}
-				}
 			return;
 		}
 		if(processMax!=0) {
 			
 			if(process<=0) {
-				items.replaceAll(t->Utils.insertToOutput(inv,5,Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,t))));
+				isLastHeating = false;
+				items.replaceAll(t->Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,Utils.insertToOutput(inv,2,Utils.insertToOutput(inv,1,t)))));
 				items.removeIf(ItemStack::isEmpty);
 				if(items.isEmpty()) {
 					processMax=0;
 				}
 			}else {
-				process-=getSpeed();
+				if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
+					process-= stove.requestHeat();
+					isLastHeating = true;
+				}else isLastHeating = false;
 			}
 			this.syncData();
 		}else {
-			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid());
+			isLastHeating = false;
+			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0));
 			if(recipe!=null) {
-				items=recipe.handle(tankin.getFluidInTank(0));
+				items=recipe.handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
 				process=processMax=recipe.processTime;
 				this.syncData();
 			}

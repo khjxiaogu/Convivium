@@ -16,12 +16,15 @@
   "priority": 100,
   "relish": [
     {
-      "type": "contains",
-      "relish": "cereal"
-    },
-    {
-      "type": "contains",
-      "relish": "seasons"
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "cereal"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "seasons"
+      }
     }
   ],
   "time": 200

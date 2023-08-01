@@ -55,7 +55,7 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity> {
 		FluidStack fs=blockEntity.tankin.getFluid();
 		if(!fs.isEmpty()) {
 			matrixStack.pushPose();
-			matrixStack.translate(0, 7/16f, 0);
+			matrixStack.translate(0, 4/16f, 0);
 			matrixStack.mulPose(GuiUtils.rotate90);
 
 			VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
@@ -66,7 +66,7 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity> {
 			Vector3f clr;
 			float alp = 1f;
 			clr = clr(col);
-			GuiUtils.drawTexturedColoredRect(builder, matrixStack, .125f, .125f, .75f, .75f, clr.x(), clr.y(),
+			GuiUtils.drawTexturedColoredRect(builder, matrixStack, 3/16f,3/16f, 10/16f, 10/16f, clr.x(), clr.y(),
 					clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
 					combinedOverlayIn);
 			matrixStack.popPose();

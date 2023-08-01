@@ -100,9 +100,23 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 			Vector3f clr;
 			float alp = 1f;
 			clr = clr(col);
-			GuiUtils.drawTexturedColoredRect(builder, matrixStack, .125f, .125f, .75f, .75f, clr.x(), clr.y(),
-					clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
-					combinedOverlayIn);
+			if(blockEntity.target==null||blockEntity.processMax==0) {
+				GuiUtils.drawTexturedColoredRect(builder, matrixStack, .125f, .125f, .75f, .75f, clr.x(), clr.y(),
+						clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
+						combinedOverlayIn);
+			}else {
+				clr=blockEntity.info.getColor();
+				IClientFluidTypeExtensions tattr=IClientFluidTypeExtensions.of(blockEntity.target);
+				alp=blockEntity.process*1f/blockEntity.processMax;
+				GuiUtils.drawTexturedColoredRect(builder, matrixStack, .125f, .125f, .75f, .75f, clr.x(), clr.y(),
+						clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
+						combinedOverlayIn);
+				TextureAtlasSprite sprite2 = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
+						.getSprite(tattr.getStillTexture());
+				GuiUtils.drawTexturedColoredRect(builder, matrixStack, .125f, .125f, .75f, .75f, clr.x(), clr.y(),
+						clr.z(), 1-alp, sprite2.getU0(), sprite2.getU1(), sprite2.getV0(), sprite2.getV1(), combinedLightIn,
+						combinedOverlayIn);
+			}
 			matrixStack.popPose();
 			
 		}

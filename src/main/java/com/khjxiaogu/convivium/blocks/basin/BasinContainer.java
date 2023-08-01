@@ -34,14 +34,13 @@ public class BasinContainer extends CPBaseContainer<BasinBlockEntity> {
 	}
 
 	public BasinContainer(int id, Inventory inv, BasinBlockEntity blockEntity) {
-		super(CVGui.BASIN.get(),blockEntity , id,4);
-		this.addSlot(new SlotItemHandler(blockEntity.inv, 0, 13, 26));
-		this.addSlot(new SlotItemHandler(blockEntity.inv, 1, 5, 42));
-		this.addSlot(new SlotItemHandler(blockEntity.inv, 2, 21, 42));
-		this.addSlot(new OutputSlot(blockEntity.inv, 3, 155, 21));
-		this.addSlot(new OutputSlot(blockEntity.inv, 4, 155, 39));
-		this.addSlot(new OutputSlot(blockEntity.inv, 5, 155, 57));
-		super.addPlayerInventory(inv, 8, 82, 140);
+		super(CVGui.BASIN.get(),blockEntity , id,5);
+		this.addSlot(new SlotItemHandler(blockEntity.inv, 0,98, 13));
+		this.addSlot(new OutputSlot(blockEntity.inv, 1, 98, 39));
+		this.addSlot(new OutputSlot(blockEntity.inv, 2, 98, 57));
+		this.addSlot(new OutputSlot(blockEntity.inv, 3, 116, 39));
+		this.addSlot(new OutputSlot(blockEntity.inv, 4, 116, 57));
+		super.addPlayerInventory(inv, 8, 84, 142);
 	}
 	@Override
 	public boolean quickMoveIn(ItemStack slotStack) {

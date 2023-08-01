@@ -1,12 +1,16 @@
 package com.khjxiaogu.convivium.datagen;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
+import com.khjxiaogu.convivium.data.recipes.relishcondition.AndRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.HasFluidCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.HasRelishCondition;
+import com.khjxiaogu.convivium.data.recipes.relishcondition.LogicalRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.MajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
+import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.teammoeg.caupona.data.IDataRecipe;
 
@@ -49,8 +53,19 @@ public class TypeRecipeBuilder {
 	public TypeRecipeBuilder canContains(TagKey<Item> igd) {
 		return canContains(Ingredient.of(igd));
 	}
+	private RelishCondition temp;
+	private BiFunction<RelishCondition,RelishCondition,LogicalRelishCondition> condition;
 	public TypeRecipeBuilder cond(RelishCondition relish) {
-		recipe.relish.add(relish);
+		if(temp==null) {
+			temp=relish;
+		}else if(condition!=null) {
+			temp=condition.apply(temp, relish);
+			condition=null;
+		}else {
+			recipe.relish.add(temp);
+			temp=relish;
+		}
+		
 		return this;
 	}
 	public TypeRecipeBuilder major(String relish) {
@@ -65,6 +80,14 @@ public class TypeRecipeBuilder {
 	}
 	public TypeRecipeBuilder has(Fluid relish) {
 		return cond(new HasFluidCondition(relish));
+	}
+	public TypeRecipeBuilder and() {
+		condition=AndRelishCondition::new;
+		return this;
+	}
+	public TypeRecipeBuilder or() {
+		condition=OrRelishCondition::new;
+		return this;
 	}
 	public TypeRecipeBuilder allow(String relish) {
 		recipe.allowedRelish.add(relish);
@@ -87,6 +110,9 @@ public class TypeRecipeBuilder {
 		return this;
 	}
 	public void end(Consumer<IDataRecipe> out) {
+		if(temp!=null) {
+			recipe.relish.add(temp);
+		}
 		out.accept(recipe);
 	}
 }

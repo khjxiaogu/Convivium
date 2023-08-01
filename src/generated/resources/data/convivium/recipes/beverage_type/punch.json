@@ -13,12 +13,15 @@
   "priority": 100,
   "relish": [
     {
-      "type": "contains",
-      "relish": "hearth"
-    },
-    {
-      "type": "contains",
-      "relish": "seasons"
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "hearth"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "seasons"
+      }
     }
   ],
   "required": [

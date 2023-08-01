@@ -51,6 +51,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,6 +77,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInfinitable, MenuProvider {
 	public ItemStackHandler inv = new ItemStackHandler(6) {
@@ -153,6 +155,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		rs = nbt.getBoolean("rs");
 		inf = nbt.getBoolean("inf");
 		isLastHeating = nbt.getBoolean("last_heat");
+		if(nbt.contains("target"))
+			target=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(nbt.getString("target")));
 		if(nbt.contains("fluid")) {
 			tank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid")));
 		}
@@ -182,6 +186,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		nbt.putBoolean("rs", rs);
 		nbt.putBoolean("inf", inf);
 		nbt.putBoolean("last_heat", isLastHeating);
+		if(target!=null)
+			nbt.putString("target", Utils.getRegistryName(target).toString());
 		if(isClient) {
 			
 			FluidStack fs=tank.getFluid();
@@ -350,6 +356,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				if (target == null)
 					target = tank.getFluid().getFluid();
 				FluidStack fsn = new FluidStack(target, tank.getFluidAmount(), tank.getFluid().getTag());
+				target=null;
 				BeverageFluid.setInfo(fsn, info);
 				tank.setFluid(fsn);
 			}

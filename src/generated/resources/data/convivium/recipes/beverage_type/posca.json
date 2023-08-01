@@ -13,12 +13,15 @@
   "priority": 100,
   "relish": [
     {
-      "type": "contains",
-      "relish": "wine"
-    },
-    {
-      "type": "contains",
-      "relish": "seasons"
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "wine"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "seasons"
+      }
     }
   ],
   "time": 200

@@ -53,9 +53,20 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity> {
 			int combinedLightIn, int combinedOverlayIn) {
 		// TODO Auto-generated method stub
 		FluidStack fs=blockEntity.tankin.getFluid();
+		float tr=1;
+		if(fs.isEmpty()) {
+			fs=blockEntity.fs;
+			tr=0;
+		}
 		if(!fs.isEmpty()) {
 			matrixStack.pushPose();
-			matrixStack.translate(0, 4/16f, 0);
+			
+			tr=fs.getAmount()/250+1;
+			if(blockEntity.processMax!=0)
+				tr+=blockEntity.process*1f/blockEntity.processMax;
+			else
+				tr+=1;
+			matrixStack.translate(0, tr/16f, 0);
 			matrixStack.mulPose(GuiUtils.rotate90);
 
 			VertexConsumer builder = buffer.getBuffer(RenderType.translucent());

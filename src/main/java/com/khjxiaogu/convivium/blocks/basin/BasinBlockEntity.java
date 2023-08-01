@@ -47,6 +47,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
@@ -70,8 +71,9 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 	public final FluidTank tankin = new FluidTank(1000);
 	public int process;
 	public int processMax;
-	public List<ItemStack> items;
+	public List<ItemStack> items=new ArrayList<>();
 	public boolean isLastHeating;
+	public FluidStack fs=FluidStack.EMPTY;
 	public BasinBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.BASIN.get(), pWorldPosition, pBlockState);
 	}
@@ -88,16 +90,18 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 			items.add(ItemStack.of(list.getCompound(i)));
 		}
 		isLastHeating=nbt.getBoolean("heating");
+		fs=FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid"));
 	}
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
-		if(isClient)
+		if(isClient) 
 			nbt.putBoolean("heating", isLastHeating);
 		nbt.putInt("process", process);
 		nbt.putInt("processMax", processMax);
 		nbt.put("in",tankin.writeToNBT(new CompoundTag()));
 		nbt.put("inv", inv.serializeNBT());
+		nbt.put("fluid", fs.writeToNBT(new CompoundTag()));
 		if(!isClient) {
 			ListTag tl=new ListTag();
 			items.forEach(t->tl.add(t.serializeNBT()));
@@ -126,6 +130,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 		if(processMax!=0) {
 			
 			if(process<=0) {
+				fs=FluidStack.EMPTY;
 				isLastHeating = false;
 				items.replaceAll(t->Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,Utils.insertToOutput(inv,2,Utils.insertToOutput(inv,1,t)))));
 				items.removeIf(ItemStack::isEmpty);
@@ -143,6 +148,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 			isLastHeating = false;
 			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0));
 			if(recipe!=null) {
+				fs=tankin.getFluidInTank(0).copy();
 				items=recipe.handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
 				process=processMax=recipe.processTime;
 				this.syncData();

@@ -29,6 +29,7 @@ import com.khjxiaogu.convivium.client.gui.WhiskScreen;
 import com.khjxiaogu.convivium.client.renderer.AeolipileRenderer;
 import com.khjxiaogu.convivium.client.renderer.AqueductMainRenderer;
 import com.khjxiaogu.convivium.client.renderer.AqueductRenderer;
+import com.khjxiaogu.convivium.client.renderer.BasinRenderer;
 import com.khjxiaogu.convivium.client.renderer.BeverageRenderer;
 import com.khjxiaogu.convivium.client.renderer.CogRenderer;
 import com.khjxiaogu.convivium.client.renderer.FruitModel;
@@ -71,6 +72,7 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), AqueductMainRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE.get(), BeverageRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE_VENDING_MACHINE.get(), VendingRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.BASIN.get(), BasinRenderer::new);
 	}
 	
 	@SubscribeEvent

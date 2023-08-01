@@ -25,7 +25,6 @@ import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;

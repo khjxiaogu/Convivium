@@ -3,7 +3,6 @@ package com.khjxiaogu.convivium.item;
 import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.item.CPItem;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
-import com.teammoeg.caupona.util.TabType;
 
 public class CVMaterialItem extends CPItem {
 

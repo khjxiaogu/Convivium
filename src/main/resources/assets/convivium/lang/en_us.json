@@ -17,7 +17,7 @@
 	"gui.convivium.fruit_platter.item": "Display as an item",
 	"gui.convivium.fruit_platter.seperated": "Configure display styles slot-wise",
 	"gui.convivium.fruit_platter.piled": "Display as piled items",
-	"gui.convivium.fruit_platter.piled": "Display in quadrants",
+	"gui.convivium.fruit_platter.grided": "Display in quadrants",
 	"gui.convivium.whisk.requires_taste": "Adjust required:",
 	"container.convivium.pestle_and_mortar.title": "Pestle & Mortar",
 	"container.convivium.whisk.title": "Whisk",

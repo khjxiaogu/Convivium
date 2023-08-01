@@ -22,8 +22,6 @@ import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
 import com.khjxiaogu.convivium.item.BeveragePotionFluid;
 import com.khjxiaogu.convivium.item.CVMaterialItem;
 import com.khjxiaogu.convivium.item.JugItem;
-import com.teammoeg.caupona.item.CPItem;
-import com.teammoeg.caupona.util.TabType;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;

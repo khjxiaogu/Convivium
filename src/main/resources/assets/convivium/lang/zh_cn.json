@@ -17,7 +17,7 @@
 	"gui.convivium.fruit_platter.item": "显示为物品",
 	"gui.convivium.fruit_platter.seperated": "逐格设置显示方式",
 	"gui.convivium.fruit_platter.piled": "显示为堆叠的物品",
-	"gui.convivium.fruit_platter.piled": "显示在四个象限",
+	"gui.convivium.fruit_platter.grided": "显示在四个象限",
 	"gui.convivium.whisk.requires_taste": "需要调整：",
 	"container.convivium.pestle_and_mortar.title": "杵臼",
 	"container.convivium.whisk.title": "动力筅",

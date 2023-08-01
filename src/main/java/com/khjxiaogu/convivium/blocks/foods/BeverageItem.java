@@ -25,6 +25,7 @@ import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.item.EdibleBlock;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
+import com.teammoeg.caupona.util.ICreativeModeTabItem;
 import com.teammoeg.caupona.util.SauteedFoodInfo;
 import com.teammoeg.caupona.util.Utils;
 
@@ -69,7 +70,7 @@ public class BeverageItem extends EdibleBlock {
 			ItemStack is = new ItemStack(this);
 			Utils.writeItemFluid(is, ContainingRecipe.reverseFluidType(this));
 			addCreativeHints(is);
-			helper.accept(is);
+			helper.accept(is,3);
 		}
 	}
 	public static BeverageInfo getInfo(ItemStack stack) {
@@ -101,4 +102,5 @@ public class BeverageItem extends EdibleBlock {
 		return getInfo(stack).getFood();
 		
 	}
+
 }

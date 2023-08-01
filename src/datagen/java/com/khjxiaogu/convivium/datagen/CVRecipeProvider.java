@@ -146,8 +146,8 @@ public class CVRecipeProvider extends RecipeProvider {
 		out.accept(new ConvertionRecipe(rl("convertion/tea"),List.of(Pair.of(Ingredient.of(cvitem("powdered_tea")),1f)),Fluids.WATER, cvfluid("tea"), 60, 200, false));
 		out.accept(new ConvertionRecipe(rl("convertion/cocoa_from_water"),List.of(Pair.of(Ingredient.of(cvitem("cocoa_powder")),1f)),Fluids.WATER, cvfluid("hot_chocolate"), 40,200, false));
 		out.accept(new ConvertionRecipe(rl("convertion/cocoa_from_milk"),List.of(Pair.of(Ingredient.of(cvitem("cocoa_powder")),1f)),ForgeMod.MILK.get(), cvfluid("hot_chocolate"), 40,200, false));
-		out.accept(new RelishItemRecipe(rl("relish_item"),Ingredient.of(cvitem("cocoa_powder")),Constants.COCOA));
-		out.accept(new RelishItemRecipe(rl("relish_item"),Ingredient.of(cvitem("powdered_tea")),Constants.TEA));
+		out.accept(new RelishItemRecipe(rl("relish_item/cocoa"),Ingredient.of(cvitem("cocoa_powder")),Constants.COCOA));
+		out.accept(new RelishItemRecipe(rl("relish_item/tea"),Ingredient.of(cvitem("powdered_tea")),Constants.TEA));
 		for(String s:List.of("pome","drupe","berry"))
 			out.accept(new ConvertionRecipe(rl("convertion/"+s+"_juice_from_must"),List.of(),cvfluid(s+"_must"), cvfluid(s+"_juice"), 40,200, false));
 		for(String s:CVFluids.intern.keySet()) {

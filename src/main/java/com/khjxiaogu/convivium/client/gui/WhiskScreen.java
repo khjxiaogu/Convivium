@@ -41,6 +41,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.material.Fluid;
@@ -140,10 +141,10 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					if(isMouseIn(mouseX,mouseY,9+26*(n1++),90,24,42)) {
 						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
 						tooltip.add(Utils.translate("gui.convivium.whisk.requires_taste"));
-						for(String sway:Constants.TASTES) {
+						for(int i=0;i<Constants.TASTES.length;i++) {
+							String sway=Constants.TASTES[i];
 							int sn=swh.getTasteDelta(sway);
-							
-							tooltip.add(Utils.translate("taste.convivium."+sway,sn==0?Utils.string("~").withStyle(ChatFormatting.AQUA):(sn>0?Utils.string("+".repeat(sn)).withStyle(ChatFormatting.GREEN):Utils.string("-".repeat(-sn)).withStyle(ChatFormatting.GOLD))));
+							tooltip.add(Utils.translate("taste.convivium."+sway,sn==0?Utils.string("~").withStyle(ChatFormatting.AQUA):(sn>0?Utils.string("+".repeat(sn)).withStyle(ChatFormatting.GREEN):Utils.string("-".repeat(-sn)).withStyle(ChatFormatting.GOLD))).withStyle(Style.EMPTY.withColor(Constants.COLOR_OF_TASTES[i])));
 						}
 					}
 				}

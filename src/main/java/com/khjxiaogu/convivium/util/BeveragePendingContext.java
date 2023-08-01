@@ -83,7 +83,7 @@ public class BeveragePendingContext extends IPendingContext {
 				if(isr.item.test(fs.getStack())) {
 					relishes.compute(isr.relish,(k,v)->v==null?1:v+1);
 					isr.variantData.forEach((e,d)->{
-						double actual=d.doubleValue()/cnt;
+						double actual=d.doubleValue()*fs.getCount();
 						variant.compute(e,(k,v)->v==null?actual:actual+v);
 					});
 					continue outer;

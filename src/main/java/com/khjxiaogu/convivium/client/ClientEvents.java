@@ -20,12 +20,20 @@ package com.khjxiaogu.convivium.client;
 
 
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
+import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.RotationUtils;
+import com.teammoeg.caupona.util.Utils;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -46,5 +54,23 @@ public class ClientEvents {
 	{
 		if(tick.phase==Phase.START&&!Minecraft.getInstance().isPaused())
 			RotationUtils.tick();;
+	}
+	@SubscribeEvent
+	public static void addTooltip(ItemTooltipEvent ev)
+	{
+		for(TasteRecipe ti:TasteRecipe.recipes) {
+			if(ti.item.test(ev.getItemStack())) {
+				for(int i=0;i<Constants.TASTES.length;i++) {
+					String sway=Constants.TASTES[i];
+					float sn=ti.variantData.getOrDefault(sway, 0f);
+					if(sn==0)continue;
+					String key="taste.convivium."+sway;
+					if(sn<0)
+						key+=".negate";
+					sn=Mth.abs(sn);
+					ev.getToolTip().add(Utils.translate(key,Component.translatable("enchantment.level." + Mth.ceil(sn))).withStyle(Style.EMPTY.withColor(Constants.COLOR_OF_TASTES[i])));
+				}
+			}
+		}
 	}
 }

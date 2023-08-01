@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.blocks.basin.BasinContainer;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamContainer;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingContainer;
@@ -40,4 +41,6 @@ public class CVGui {
 			() -> IForgeMenuType.create(WhiskContainer::new));
 	public static final RegistryObject<MenuType<BeverageVendingContainer>> VENDING = CONTAINERS.register("beverage_vending_machine",
 			() -> IForgeMenuType.create(BeverageVendingContainer::new));
+	public static final RegistryObject<MenuType<BasinContainer>> BASIN = CONTAINERS.register("basin",
+			() -> IForgeMenuType.create(BasinContainer::new));
 }

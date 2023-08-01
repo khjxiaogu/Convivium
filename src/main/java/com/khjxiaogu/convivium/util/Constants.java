@@ -38,4 +38,11 @@ public class Constants {
 	public static final String JUICE="seasons";
 	public static final String WINE="wine";
 	public static final String NONE="none";
+	public static final int CLR_SWEET=0xf6c6db;
+	public static final int CLR_PUNGENT=0xfbcebb;
+	public static final int CLR_ROUSING=0xd3e1fa;
+	public static final int CLR_ASTRINGENCY=0xe6f79b;
+	public static final int CLR_THICKNESS=0xdeece9;
+	public static final int[] COLOR_OF_TASTES=new int[] {CLR_SWEET,CLR_PUNGENT,CLR_ROUSING,CLR_ASTRINGENCY,CLR_THICKNESS};
+
 }

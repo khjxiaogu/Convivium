@@ -16,9 +16,8 @@
  * along with Convivium. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.khjxiaogu.convivium.blocks.pestle_and_mortar;
+package com.khjxiaogu.convivium.blocks.basin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
+import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.util.SyncedFluidHandler;
@@ -36,8 +36,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.TagTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,8 +55,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
-public class PamBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
-	public ItemStackHandler inv = new ItemStackHandler(6) {
+public class BasinBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
+	public ItemStackHandler inv = new ItemStackHandler(4) {
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
 			return slot < 3&&GrindingRecipe.testInput(stack);
@@ -71,65 +69,12 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			syncData();
 		}
 	};
-	public final IFluidHandler tanks=new SyncedFluidHandler(this,new IFluidHandler() {
-
-		@Override
-		public int getTanks() {
-			return 2;
-		}
-
-		@Override
-		public @NotNull FluidStack getFluidInTank(int tank) {
-			// TODO Auto-generated method stub
-			return tank==0?tankout.getFluidInTank(0):tankin.getFluidInTank(1);
-		}
-
-		@Override
-		public int getTankCapacity(int tank) {
-			// TODO Auto-generated method stub
-			return 1000;
-		}
-
-		@Override
-		public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-			// TODO Auto-generated method stub
-			if(tank==0)return false;
-			return tankin.isFluidValid(0,stack);
-		}
-
-		@Override
-		public int fill(FluidStack resource, FluidAction action) {
-			// TODO Auto-generated method stub
-			return tankin.fill(resource, action);
-		}
-
-		@Override
-		public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-			// TODO Auto-generated method stub
-			FluidStack out=tankout.drain(resource, action);
-			if(!out.isEmpty())
-				return out;
-			return tankin.drain(resource, action);
-		}
-
-		@Override
-		public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-			// TODO Auto-generated method stub
-			FluidStack out=tankout.drain(maxDrain, action);
-			if(!out.isEmpty())
-				return out;
-			return tankin.drain(maxDrain, action);
-		}
-		
-	});
 	public final FluidTank tankin = new FluidTank(1000);
-	public final FluidTank tankout = new FluidTank(1000);
 	public int process;
 	public int processMax;
-	public List<ItemStack> items=new ArrayList<>();
-	public FluidStack fout;
-	public PamBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
-		super(CVBlockEntityTypes.PAM.get(), pWorldPosition, pBlockState);
+	public List<ItemStack> items;
+	public BasinBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
+		super(CVBlockEntityTypes.BASIN.get(), pWorldPosition, pBlockState);
 	}
 
 	@Override
@@ -139,15 +84,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		process=nbt.getInt("process");
 		processMax=nbt.getInt("processMax");
 		tankin.readFromNBT(nbt.getCompound("in"));
-		tankout.readFromNBT(nbt.getCompound("out"));
 		inv.deserializeNBT(nbt.getCompound("inv"));
-		fout=FluidStack.loadFluidStackFromNBT(nbt.getCompound("fout"));
-		ListTag list=nbt.getList("outBuff",10);
-		items=new ArrayList<>();
-		for(int i=0;i<list.size();i++) {
-			items.add(ItemStack.of(list.getCompound(i)));
-		}
-		
 	}
 
 	@Override
@@ -157,13 +94,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		nbt.putInt("process", process);
 		nbt.putInt("processMax", processMax);
 		nbt.put("in",tankin.writeToNBT(new CompoundTag()));
-		nbt.put("out",tankout.writeToNBT(new CompoundTag()));
 		nbt.put("inv", inv.serializeNBT());
-		if(fout!=null)
-			nbt.put("fout", fout.writeToNBT(new CompoundTag()));
-		ListTag tl=new ListTag();
-		items.forEach(t->tl.add(t.serializeNBT()));
-		nbt.put("outBuff", tl);
 	}
 
 	@Override
@@ -203,8 +134,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			if(process<=0) {
 				items.replaceAll(t->Utils.insertToOutput(inv,5,Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,t))));
 				items.removeIf(ItemStack::isEmpty);
-				fout.shrink(tankout.fill(fout, FluidAction.EXECUTE));
-				if(items.isEmpty()&&fout.isEmpty()) {
+				if(items.isEmpty()) {
 					processMax=0;
 				}
 			}else {
@@ -212,10 +142,9 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			}
 			this.syncData();
 		}else {
-			GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
+			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid());
 			if(recipe!=null) {
-				items=recipe.handle(tankin.getFluidInTank(0), inv);
-				fout=recipe.out.copy();
+				items=recipe.handle(tankin.getFluidInTank(0));
 				process=processMax=recipe.processTime;
 				this.syncData();
 			}
@@ -224,7 +153,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	}
 	LazyOptional<IItemHandler> down = LazyOptional.of(() -> new RangedWrapper(inv, 3, 6));
 	LazyOptional<IItemHandler> side = LazyOptional.of(() -> new RangedWrapper(inv, 0, 3));
-	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> tanks);
+	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> tankin);
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
@@ -239,7 +168,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	}
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-		return new PamContainer(pContainerId, pInventory, this);
+		return new BasinContainer(pContainerId, pInventory, this);
 	}
 
 	@Override

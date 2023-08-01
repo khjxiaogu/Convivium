@@ -51,6 +51,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
@@ -102,6 +103,9 @@ public class BeverageInfo implements IFoodInfo {
 	public void appendTooltip(List<Component> tt) {
 		RelishRecipe r1=RelishRecipe.recipes.get(activeRelish1);
 		RelishRecipe r2=RelishRecipe.recipes.get(activeRelish2);
+		if(!effects.isEmpty())
+		PotionUtils.addPotionTooltip(effects, tt,1);
+		
 		if(r1!=null) {
 			if(r2!=null) {
 				tt.add(Utils.translate("tooltip."+CVMain.MODID+".major_relish_2",r1.getText(),r2.getText()));

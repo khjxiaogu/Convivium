@@ -78,9 +78,14 @@
 	"item.convivium.cocoa_wine": "Cocoa Wine",
 	"item.convivium.chocolate_milk": "Chocolate Milk",
 	"item.convivium.beverage": "Mixed Beverage",
-	"taste.convivium.sweetness": "sweetness %s",
-	"taste.convivium.astringency": "astringency %s",
-	"taste.convivium.pungency": "pungency %s",
-	"taste.convivium.thickness": "thickness %s",
-	"taste.convivium.soothingness": "soothingness %s"
+	"taste.convivium.sweetness": "Sweetness %s",
+	"taste.convivium.astringency": "Astringency %s",
+	"taste.convivium.pungency": "Pungency %s",
+	"taste.convivium.thickness": "Thickness %s",
+	"taste.convivium.soothingness": "Soothingness %s",
+	"taste.convivium.sweetness.negate": "Savoriness %s",
+	"taste.convivium.astringency.negate": "Smoothness %s",
+	"taste.convivium.pungency.negate": "Blandness %s",
+	"taste.convivium.thickness.negate": "Thinness %s",
+	"taste.convivium.soothingness.negate": "Soothingness %s"
 }

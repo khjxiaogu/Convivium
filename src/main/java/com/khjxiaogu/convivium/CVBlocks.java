@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.basin.BasinBlock;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaBlock;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlock;
@@ -61,6 +62,7 @@ public class CVBlocks {
 	public static final RegistryObject<PlatterBlock> platter=baseblock("fruit_platter",()->new PlatterBlock(getKineticProps()));
 	public static final RegistryObject<WhiskBlock> whisk=baseblock("whisk",()->new WhiskBlock(getKineticProps()));
 	public static final RegistryObject<PamBlock> pam=baseblock("pestle_and_mortar",()->new PamBlock(getKineticProps()));
+	public static final RegistryObject<BasinBlock> basin=baseblock("basin",()->new BasinBlock(getKineticProps()));
 	
 	public static final List<RegistryObject<Block>> aqueducts=new ArrayList<>();
 	public static final List<RegistryObject<Block>> aqueduct_mains=new ArrayList<>();

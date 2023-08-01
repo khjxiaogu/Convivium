@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
@@ -52,6 +53,7 @@ public class CVRecipes {
 		BeverageTypeRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("beverage",()->new CPRecipeSerializer<>(BeverageTypeRecipe::new,BeverageTypeRecipe::new,BeverageTypeRecipe::write));
 		SwayRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("sway",()->new CPRecipeSerializer<>(SwayRecipe::new,SwayRecipe::new,SwayRecipe::write));
 		RelishItemRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("relish_item",()->new CPRecipeSerializer<>(RelishItemRecipe::new,RelishItemRecipe::new,RelishItemRecipe::write));
+		BasinRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("basin",()->new CPRecipeSerializer<>(BasinRecipe::new,BasinRecipe::new,BasinRecipe::write));
 	}
 
 	static {
@@ -64,6 +66,7 @@ public class CVRecipes {
 		BeverageTypeRecipe.TYPE=createType("beverage");
 		SwayRecipe.TYPE=createType("sway");
 		RelishItemRecipe.TYPE=createType("relish_item");
+		BasinRecipe.TYPE=createType("basin");
 	}
 	public static RegistryObject<RecipeType<Recipe<?>>> createType(String s){
 		return RECIPE_TYPES.register(s,()->RecipeType.simple(new ResourceLocation(CVMain.MODID ,s)));

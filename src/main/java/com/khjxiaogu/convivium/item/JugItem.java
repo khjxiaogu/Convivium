@@ -145,7 +145,7 @@ public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem
 	@Override
 	public void fillItemCategory(CreativeTabItemHelper helper) {
 		if(helper.isType(CVMain.MAIN_TAB))
-			helper.accept(this);
+			helper.accept(this,1);
 	}
 
 }

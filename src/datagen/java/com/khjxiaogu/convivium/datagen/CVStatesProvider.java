@@ -76,11 +76,14 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticDirectionalBlockModel("aeolipile","aeolipile_stator");
 		kineticMixedBlockModel("whisk","whisk_stator");
 		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
+		simpleBlock(CVBlocks.basin.get(),bmf("pestle_and_mortar_stator"));
+		blockItemModel("basin");
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("beverage"),bmf("beverage"));
 		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));
 		simpleBlockItem(cvblock("camellia_plant"),bmf("camellia_plant"));
 		itemModel(CVBlocks.CAMELLIA_FLOWER.get(),bmf("camellia_product_stage_c"));
+		
 		this.getVariantBuilder(CVBlocks.CAMELLIA_FLOWER.get())
 		.partialState().with(CamelliaFlowerBlock.AGE,0).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_1"),0,false))
 		.partialState().with(CamelliaFlowerBlock.AGE,1).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_2b"),0,false))

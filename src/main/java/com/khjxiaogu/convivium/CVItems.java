@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
 import com.khjxiaogu.convivium.item.BeveragePotionFluid;
+import com.khjxiaogu.convivium.item.CVMaterialItem;
 import com.khjxiaogu.convivium.item.JugItem;
 import com.teammoeg.caupona.item.CPItem;
 import com.teammoeg.caupona.util.TabType;
@@ -38,7 +39,7 @@ public class CVItems {
 	public static final RegistryObject<BeveragePotionFluid> POTION=ITEMS.register("potion_dummy", ()->new BeveragePotionFluid(createProps()));
 	static {
 		for (String s : base_material) {
-			item(s, createProps(),CVMain.MAIN_TAB);
+			item(s, createProps());
 		}
 		for(String s:base_drinks) {
 			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),true));
@@ -47,8 +48,8 @@ public class CVItems {
 			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),false));
 		}
 	}
-	public static RegistryObject<Item> item(String name,Properties props,TabType tab){
-		return ITEMS.register(name,()->new CPItem(props,tab));
+	public static RegistryObject<Item> item(String name,Properties props){
+		return ITEMS.register(name,()->new CVMaterialItem(props));
 	}
 	static Properties createProps() {
 		return new Item.Properties();

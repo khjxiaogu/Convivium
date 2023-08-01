@@ -53,6 +53,7 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
+		System.out.println("triggered reload");
 		buildRecipeLists(data.getRecipeManager());
 	}
 
@@ -68,14 +69,15 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRecipesUpdated(RecipesUpdatedEvent event) {
-		buildRecipeLists(event.getRecipeManager());
+		System.out.println("triggered recipeUpdated");
+		RecipeReloadListener.buildRecipeLists(event.getRecipeManager());
 	}
 
 	static int generated_fv = 0;
 
 
 	public static void buildRecipeLists(RecipeManager recipeManager) {
-
+		
 		Collection<Recipe<?>> recipes = recipeManager.getRecipes();
 		if (recipes.size() == 0)
 			return;

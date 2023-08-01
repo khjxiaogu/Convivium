@@ -48,6 +48,7 @@ public class ClientEvents {
 	{
 		RotationUtils.resetTimer();
 	}
+
 	@SubscribeEvent
 	public static void tick(TickEvent.ClientTickEvent tick)
 	{
@@ -57,6 +58,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void addTooltip(ItemTooltipEvent ev)
 	{
+		if(ev.getEntity()!=null)
 		for(TasteRecipe ti:TasteRecipe.recipes) {
 			if(ti.item.test(ev.getItemStack())) {
 				for(int i=0;i<Constants.TASTES.length;i++) {

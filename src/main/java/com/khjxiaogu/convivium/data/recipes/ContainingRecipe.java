@@ -104,8 +104,8 @@ public class ContainingRecipe extends IDataRecipe {
 		return is;
 	}
 	public static Fluid reverseFluidType(Item item) {
-		if(recipes==null)
-			return Fluids.EMPTY;
+		//if(recipes==null)
+		//	return Fluids.EMPTY;
 		return recipes.values().stream().filter(t->t.output==item).map(t->t.fluid).findFirst().orElse(Fluids.EMPTY);
 	}
 }

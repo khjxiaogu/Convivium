@@ -71,7 +71,7 @@ public class RelishItemRecipe extends IDataRecipe {
 
 	@Override
 	public void serializeRecipeData(JsonObject json) {
-		json.add("fluid",item.toJson());
+		json.add("item",item.toJson());
 		json.addProperty("relish",relish);
 		json.add("variants",SUtils.toJson(variantData));
 	}

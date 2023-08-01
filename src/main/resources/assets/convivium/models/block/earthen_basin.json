@@ -1,0 +1,7 @@
+{
+    "parent": "convivium:block/template_basin",
+    "textures": {
+        "basin": "convivium:block/earthen_basin",
+        "particle": "convivium:block/earthen_basin"
+    }
+}

@@ -78,6 +78,8 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
 		horizontalBlock(CVBlocks.basin.get(),bmf("earthen_basin"));
 		blockItemModel("basin");
+		blockItemModel("lead_basin");
+		horizontalBlock(CVBlocks.lead_basin.get(),bmf("lead_basin"));
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("beverage"),bmf("beverage"));
 		simpleBlock(cvblock("fruit_platter"),obmf(CPMain.MODID,"dish"));

@@ -61,17 +61,18 @@ public class BasinRecipe extends IDataRecipe {
 	public Ingredient item;
 	public int inputCount=1;
 	public int processTime=200;
-
-	public BasinRecipe(ResourceLocation id, FluidStack in,Ingredient item, List<ItemStack> output, int inputCount, int processTime) {
+	public boolean requireBasin;
+	public BasinRecipe(ResourceLocation id, FluidStack in,Ingredient item, List<ItemStack> output, int inputCount, int processTime,boolean requireBasin) {
 		super(id);
 		this.in = in;
 		this.output = output;
 		this.item = item;
 		this.inputCount = inputCount;
 		this.processTime = processTime;
+		this.requireBasin=requireBasin;
 	}
 	public BasinRecipe(ResourceLocation id, ResourceLocation base, float density, FluidStack in, 
-			Ingredient item,List<ItemStack> output,int inputCount, int processTime) {
+			Ingredient item,List<ItemStack> output,int inputCount, int processTime,boolean requireBasin) {
 		super(id);
 		this.base = base;
 		this.density = density;
@@ -80,6 +81,7 @@ public class BasinRecipe extends IDataRecipe {
 		this.item = item;
 		this.inputCount = inputCount;
 		this.processTime = processTime;
+		this.requireBasin=requireBasin;
 	}
 	public BasinRecipe(ResourceLocation id, JsonObject jo) {
 		super(id);
@@ -103,14 +105,15 @@ public class BasinRecipe extends IDataRecipe {
 			processTime=jo.get("time").getAsInt();
 		if(jo.has("count"))
 			inputCount=jo.get("count").getAsInt();
-
+		if(jo.has("leadBasin"))
+			requireBasin=jo.get("leadBasin").getAsBoolean();
 	}
 
 
 
 
-	public static BasinRecipe testAll(FluidStack f,ItemStack is) {
-		return recipes.stream().filter(t -> t.test(f)).filter(t->t.item==null||(t.item.test(is)&&is.getCount()>=t.inputCount)).findFirst().orElse(null);
+	public static BasinRecipe testAll(FluidStack f,ItemStack is,boolean isLead) {
+		return recipes.stream().filter(t->!t.requireBasin||isLead).filter(t -> t.test(f)).filter(t->t.item==null||(t.item.test(is)&&is.getCount()>=t.inputCount)).findFirst().orElse(null);
 	}
 
 	public boolean test(FluidStack f) {
@@ -149,6 +152,7 @@ public class BasinRecipe extends IDataRecipe {
 		this.inputCount=data.readVarInt();
 		output = SerializeUtil.readList(data, t->t.readItem());
 		processTime=data.readVarInt();
+		requireBasin=data.readBoolean();
 	}
 
 
@@ -161,6 +165,7 @@ public class BasinRecipe extends IDataRecipe {
 		data.writeVarInt(inputCount);
 		SerializeUtil.writeList(data, output, (t,d)->d.writeItem(t));
 		data.writeVarInt(processTime);
+		data.writeBoolean(requireBasin);
 	}
 
 	@Override
@@ -178,6 +183,7 @@ public class BasinRecipe extends IDataRecipe {
 		json.add("outputs",SerializeUtil.toJsonList(output, t->StrictNBTIngredient.of(t).toJson()));
 		json.addProperty("time", processTime);
 		json.addProperty("count", inputCount);
+		json.addProperty("leadBasin", requireBasin);
 	}
 
 	public static boolean testInput(ItemStack stack) {

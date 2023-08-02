@@ -42,6 +42,7 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishItemRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
@@ -112,7 +113,7 @@ public class CVRecipeProvider extends RecipeProvider {
 
 			});
 		};
-		//out.accept(new GrindingRecipe(rl("grinding/magma"),List.of(Pair.of(Ingredient.of(Items.MAGMA_CREAM),2),Pair.of(Ingredient.of(cvitem("dolium_lid")),1)), null, 0f, new FluidStack(Fluids.WATER,500),new FluidStack(Fluids.LAVA,500),List.of(new ItemStack(Items.SLIME_BALL,1),new ItemStack(cpitem("soot"),5)), 200, false));
+		out.accept(new GrindingRecipe(rl("grinding/pome"),List.of(Pair.of(Ingredient.of(Items.APPLE),2)), null, 0f, new FluidStack(Fluids.WATER,250),new FluidStack(CVFluids.pjuicef.get(),250),List.of(new ItemStack(cpitem("scraps"))), 200, false));
 		relish(out,Constants.TEA,"#7eb3c2",CVFluids.teaf.get());
 		relish(out,Constants.MILK,"#dac381",ForgeMod.MILK.get());
 		relish(out,Constants.COCOA,"#ea9359",CVFluids.cocoaf.get());
@@ -152,7 +153,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		out.accept(new RelishItemRecipe(rl("relish_item/cocoa"),Ingredient.of(cvitem("cocoa_powder")),Constants.COCOA));
 		out.accept(new RelishItemRecipe(rl("relish_item/tea"),Ingredient.of(cvitem("powdered_tea")),Constants.TEA));
 		for(String s:List.of("pome","drupe","berry"))
-			out.accept(new BasinRecipe(rl("basin/"+s+"juice_to_sapa"),new FluidStack(cvfluid(s+"_juice"),250),Ingredient.of(Items.FLOWER_POT),List.of(new ItemStack(cpitem("sapa_spice_jar"))), 1,200));
+			out.accept(new BasinRecipe(rl("basin/"+s+"_juice_to_sapa"),new FluidStack(cvfluid(s+"_juice"),250),Ingredient.of(Items.FLOWER_POT),List.of(new ItemStack(cpitem("sapa_spice_jar"))), 1,200,true));
 		for(String s:List.of("pome","drupe","berry"))
 			out.accept(new ConvertionRecipe(rl("convertion/"+s+"_juice_from_must"),List.of(),cvfluid(s+"_must"), cvfluid(s+"_juice"), 40,200, false));
 		for(String s:CVFluids.intern.keySet()) {

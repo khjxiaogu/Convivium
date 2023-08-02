@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
@@ -146,7 +147,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 			this.syncData();
 		}else {
 			isLastHeating = false;
-			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0));
+			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
 			if(recipe!=null) {
 				fs=tankin.getFluidInTank(0).copy();
 				items=recipe.handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
@@ -178,6 +179,6 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 
 	@Override
 	public Component getDisplayName() {
-		return Utils.translate("container." + CVMain.MODID + ".pestle_and_mortar.title");
+		return Utils.translate("container." + CVMain.MODID + ".basin.title");
 	}
 }

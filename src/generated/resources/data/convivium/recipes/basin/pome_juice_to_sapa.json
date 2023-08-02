@@ -9,6 +9,7 @@
   "item": {
     "item": "minecraft:flower_pot"
   },
+  "leadBasin": true,
   "outputs": [
     {
       "type": "forge:nbt",

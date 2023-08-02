@@ -63,6 +63,8 @@ public class CVBlocks {
 	public static final RegistryObject<WhiskBlock> whisk=baseblock("whisk",()->new WhiskBlock(getKineticProps()));
 	public static final RegistryObject<PamBlock> pam=baseblock("pestle_and_mortar",()->new PamBlock(getKineticProps()));
 	public static final RegistryObject<BasinBlock> basin=baseblock("basin",()->new BasinBlock(getKineticProps()));
+	public static final RegistryObject<BasinBlock> lead_basin=baseblock("lead_basin",()->new BasinBlock(Block.Properties.of().sound(SoundType.METAL)
+			.strength(3.5f, 10).noOcclusion()));
 	
 	public static final List<RegistryObject<Block>> aqueducts=new ArrayList<>();
 	public static final List<RegistryObject<Block>> aqueduct_mains=new ArrayList<>();

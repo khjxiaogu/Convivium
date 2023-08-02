@@ -122,15 +122,15 @@ public class CVFluids {
 	static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, CVMain.MODID);
 	static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(Keys.FLUID_TYPES, CVMain.MODID);
 	//private static final Map<String, TextureColorPair> soupfluids = new HashMap<>();
-	public static final RegistryObject<FluidType> cocoa=FLUID_TYPES.register("hot_chocolate",()->bvg(0x734e3d).create("hot_chocolate"));
-	public static final RegistryObject<FluidType> tea=FLUID_TYPES.register("tea",()->water(0x6c902e).create("tea"));
-	public static final RegistryObject<FluidType> b_juice=FLUID_TYPES.register("berry_juice",()->water(0xcc6d57).create("berry_juice"));
-	public static final RegistryObject<FluidType> d_juice=FLUID_TYPES.register("drupe_juice",()->water(0xd48e2d).create("drupe_juice"));
-	public static final RegistryObject<FluidType> p_juice=FLUID_TYPES.register("pome_juice",()->water(0xe3c25e).create("pome_juice"));
-	public static final RegistryObject<FluidType> b_wine=FLUID_TYPES.register("berry_must",()->bvg(0xcc6d57).create("berry_must"));
-	public static final RegistryObject<FluidType> d_wine=FLUID_TYPES.register("drupe_must",()->bvg(0xd48e2d).create("drupe_must"));
-	public static final RegistryObject<FluidType> p_wine=FLUID_TYPES.register("pome_must",()->bvg(0xe3c25e).create("pome_must"));
-	public static final RegistryObject<FluidType> mixed=FLUID_TYPES.register("mixed",()->bvg(0xee99999).createBVG("beverage"));
+	public static final RegistryObject<FluidType> cocoa=FLUID_TYPES.register("hot_chocolate",()->bvg(0xff734e3d).create("hot_chocolate"));
+	public static final RegistryObject<FluidType> tea=FLUID_TYPES.register("tea",()->water(0xff6c902e).create("tea"));
+	public static final RegistryObject<FluidType> b_juice=FLUID_TYPES.register("berry_juice",()->water(0xffcc6d57).create("berry_juice"));
+	public static final RegistryObject<FluidType> d_juice=FLUID_TYPES.register("drupe_juice",()->water(0xffd48e2d).create("drupe_juice"));
+	public static final RegistryObject<FluidType> p_juice=FLUID_TYPES.register("pome_juice",()->water(0xffe3c25e).create("pome_juice"));
+	public static final RegistryObject<FluidType> b_wine=FLUID_TYPES.register("berry_must",()->bvg(0xffcc6d57).create("berry_must"));
+	public static final RegistryObject<FluidType> d_wine=FLUID_TYPES.register("drupe_must",()->bvg(0xffd48e2d).create("drupe_must"));
+	public static final RegistryObject<FluidType> p_wine=FLUID_TYPES.register("pome_must",()->bvg(0xffe3c25e).create("pome_must"));
+	public static final RegistryObject<FluidType> mixed=FLUID_TYPES.register("mixed",()->bvg(0xffee9999).createBVG("beverage"));
 
 	public static final RegistryObject<Fluid> cocoaf=FLUIDS.register("hot_chocolate", () -> new BaseFluid(new ForgeFlowingFluid.Properties(cocoa,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));

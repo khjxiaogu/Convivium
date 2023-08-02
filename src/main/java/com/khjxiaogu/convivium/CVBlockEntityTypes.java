@@ -56,7 +56,7 @@ public class CVBlockEntityTypes {
 	public static final RegistryObject<BlockEntityType<PamBlockEntity>> PAM=
 			REGISTER.register("pestle_and_mortar",makeType(PamBlockEntity::new,()->CVBlocks.pam));
 	public static final RegistryObject<BlockEntityType<BasinBlockEntity>> BASIN=
-			REGISTER.register("basin",makeType(BasinBlockEntity::new,()->CVBlocks.basin));
+			REGISTER.register("basin",makeTypes2(BasinBlockEntity::new,()->List.of(CVBlocks.basin,CVBlocks.lead_basin)));
 	public static final RegistryObject<BlockEntityType<AqueductBlockEntity>> AQUEDUCT=
 			REGISTER.register("aqueduct",makeTypes2(AqueductBlockEntity::new,()->CVBlocks.aqueducts));
 	public static final RegistryObject<BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN=

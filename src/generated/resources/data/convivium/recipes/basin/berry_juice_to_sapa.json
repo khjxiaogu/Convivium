@@ -4,11 +4,12 @@
   "density": 0.0,
   "fluidIn": {
     "Amount": 250,
-    "FluidName": "convivium:drupe_juice"
+    "FluidName": "convivium:berry_juice"
   },
   "item": {
     "item": "minecraft:flower_pot"
   },
+  "leadBasin": true,
   "outputs": [
     {
       "type": "forge:nbt",

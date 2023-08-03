@@ -24,8 +24,6 @@ import java.util.Optional;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.basin.BasinBlockEntity;
 import com.khjxiaogu.convivium.blocks.basin.BasinContainer;
-import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
-import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamContainer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.teammoeg.caupona.client.util.GuiUtils;
 

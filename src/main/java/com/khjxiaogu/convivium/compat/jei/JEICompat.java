@@ -22,8 +22,11 @@ import java.util.ArrayList;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.client.gui.BasinScreen;
 import com.khjxiaogu.convivium.client.gui.PamScreen;
+import com.khjxiaogu.convivium.compat.jei.category.BasinCategory;
 import com.khjxiaogu.convivium.compat.jei.category.GrindingCategory;
+import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 
 import mezz.jei.api.IModPlugin;
@@ -49,11 +52,14 @@ public class JEICompat implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		registration.addRecipeCatalyst(new ItemStack(CVBlocks.pam.get()), GrindingCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(CVBlocks.basin.get()), BasinCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(CVBlocks.lead_basin.get()), BasinCategory.TYPE);
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		registration.addRecipes(GrindingCategory.TYPE,new ArrayList<>(GrindingRecipe.recipes));
+		registration.addRecipes(BasinCategory.TYPE,new ArrayList<>(BasinRecipe.recipes));
 	}
 
 	@Override
@@ -64,6 +70,7 @@ public class JEICompat implements IModPlugin {
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 		registration.addRecipeCategories(new GrindingCategory(guiHelper));
+		registration.addRecipeCategories(new BasinCategory(guiHelper));
 	}
 
 	@Override
@@ -74,6 +81,7 @@ public class JEICompat implements IModPlugin {
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 
 		registry.addRecipeClickArea(PamScreen.class, 108, 23,22, 15, GrindingCategory.TYPE);
+		registry.addRecipeClickArea(BasinScreen.class, 82, 19,16, 43, BasinCategory.TYPE);
 	}
 
 	@Override

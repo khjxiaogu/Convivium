@@ -81,7 +81,7 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 
 	@Override
 	public boolean accepts(int num, ItemStack is) {
-		return is.getItem() instanceof BeverageItem||is.is(Items.GLASS_BOTTLE);
+		return is.getItem() instanceof BeverageItem||is.is(Items.GLASS_BOTTLE)||is.is(Items.POTION);
 	}
 
 }

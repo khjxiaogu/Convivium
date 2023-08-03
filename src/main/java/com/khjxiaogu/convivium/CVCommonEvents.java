@@ -21,6 +21,7 @@ package com.khjxiaogu.convivium;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
+import com.teammoeg.caupona.api.events.FoodExchangeItemEvent;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +53,16 @@ public class CVCommonEvents {
 				}
 			}
 		}
+	}
+	@SubscribeEvent
+	public static void isExtractAllowed(FoodExchangeItemEvent.Pre event) {
+		if(!event.getOrigin().is(Items.GLASS_BOTTLE))
+			event.setResult(Result.ALLOW);
+	}
+	@SubscribeEvent
+	public static void isExchangeAllowed(FoodExchangeItemEvent.Post event) {
+		if((!event.getOrigin().is(Items.GLASS_BOTTLE))&&event.getTarget().is(Items.GLASS_BOTTLE))
+			event.setResult(Result.ALLOW);
 	}
 	@SuppressWarnings("resource")
 	@SubscribeEvent

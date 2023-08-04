@@ -43,7 +43,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductControllerBlockEntity> {
+public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductControllerBlockEntity> implements AqueductConnectable{
 	public static final EnumProperty<AqueductMainConnection> CONN=EnumProperty.create("connection", AqueductMainConnection.class);
 	
 	public AqueductControllerBlock(Properties blockProps) {
@@ -67,7 +67,13 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 		Direction dir=p.getValue(FACING);
 		for(Direction d:Utils.horizontals) {
 			BlockPos pos=pContext.getClickedPos().relative(d);
-			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.AQUEDUCT)) {
+			BlockState rel=pContext.getLevel().getBlockState(pos);
+			if(rel.is(CVTags.Blocks.AQUEDUCT)) {
+				boolean canConnect=true;
+				if(rel.getBlock() instanceof AqueductConnectable con) {
+					canConnect=con.canConnect(pos,rel,d.getOpposite());
+				}
+				if(canConnect)
 				conn=conn.connects(dir,d);
 			}
 		}
@@ -101,13 +107,17 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 		Direction dir=pState.getValue(FACING);
 		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
 			AqueductMainConnection c=pState.getValue(CONN).connects(dir,pFacing);
-			if(c!=null)
-				return pState.setValue(CONN, c);
-		}else {
-			AqueductMainConnection c=pState.getValue(CONN).disconnects(dir,pFacing);
-			if(c!=null)
+			boolean canConnect=true;
+			if(pFacingState.getBlock() instanceof AqueductConnectable con) {
+				canConnect=con.canConnect(pFacingPos, pFacingState,pFacing.getOpposite());
+			}
+			if(c!=null&&canConnect)
 				return pState.setValue(CONN, c);
 		}
+		AqueductMainConnection c=pState.getValue(CONN).disconnects(dir,pFacing);
+		if(c!=null)
+			return pState.setValue(CONN, c);
+		
 		return pState;
 	}
 	@Override
@@ -145,6 +155,11 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
 			CollisionContext pContext) {
 		return shapes[getShapeIndex(pState.getValue(FACING),pState.getValue(CONN))];
+	}
+	@Override
+	public boolean canConnect(BlockPos pos, BlockState state, Direction from) {
+		// TODO Auto-generated method stub
+		return from.getClockWise().getAxis()==state.getValue(FACING).getAxis();
 	}
 
 

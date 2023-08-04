@@ -59,9 +59,30 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity {
 	int i=0;
 	@Override
 	public void tick() {
-		if(this.level.isClientSide)
-			return;
 		BlockState state=this.getBlockState();
+		if(this.level.isClientSide) {
+			if(state.getValue(KineticBasedBlock.ACTIVE)&&!state.getValue(KineticBasedBlock.LOCKED)) {
+				Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
+				Direction moving;
+				if(RotationUtils.isBlackGrid(getBlockPos())) {
+					moving=dir.getClockWise();
+				}else
+					moving=dir.getCounterClockWise();
+				Vec3 center=this.getBlockPos().getCenter();
+				if(Math.random()<0.5d) {
+					
+					int dx=-moving.getStepX();
+					int dz=-moving.getStepZ();
+					double rx=moving.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
+					double rz=moving.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
+					this.level.addParticle(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,-dx*0.05, 0,-dz*0.05);
+					//System.out.println("tic"+dx+","+dz);
+				}
+				
+			}
+			return;
+		}
+		
 		Direction facing=state.getValue(AqueductControllerBlock.FACING);
 		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
 		BlockPos facingPos=getBlockPos().relative(facing);
@@ -92,31 +113,22 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity {
 			this.level.setBlockAndUpdate(this.getBlockPos(), state.setValue(KineticBasedBlock.ACTIVE, active));
 		}
 		if(active) {
+			/*if(this.level.getBlockState(src).is(Blocks.AIR)) {
+			nxt=20;
+			return;
+			}*/
 			Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
 			Direction moving;
 			if(RotationUtils.isBlackGrid(getBlockPos())) {
 				moving=dir.getClockWise();
 			}else
 				moving=dir.getCounterClockWise();
-			Vec3 center=this.getBlockPos().getCenter();
-			if(Math.random()<0.5d) {
-				
-				int dx=-moving.getStepX();
-				int dz=-moving.getStepZ();
-				double rx=moving.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
-				double rz=moving.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
-				((ServerLevel)this.level).sendParticles(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,0,-dx, 0,-dz,0.05);
-				//System.out.println("tic"+dx+","+dz);
-			}
-			/*if(this.level.getBlockState(src).is(Blocks.AIR)) {
-				nxt=20;
-				return;
-			}*/
 			if(nxt--==0) {
 				tonxt=nxt=40/Math.max(1, spd);
 				move(moving);
 			}
 		}
+		
 
 	}
 

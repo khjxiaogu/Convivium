@@ -106,7 +106,15 @@ public enum AqueductConnection implements StringRepresentable{
 	private static final Direction[] NRE=new Direction[] {Direction.NORTH,Direction.EAST};
 	private static final Direction[] WE=new Direction[] {Direction.EAST,Direction.WEST};
 	private static final Direction[] NS=new Direction[] {Direction.NORTH,Direction.SOUTH};
-	
+	public boolean canConnectTo(Direction d) {
+		switch(d) {
+		case NORTH:return !n;
+		case SOUTH:return !s;
+		case WEST:return !w;
+		case EAST:return !e;
+		}
+		return false;
+	}
 	public Direction[] getNext(Direction from) {
 		if(this==NW) {
 			switch(from) {

@@ -92,37 +92,40 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 	@Override
 	public void tick() {
-		if(this.level.isClientSide)
-			return;
-		// TODO Auto-generated method stub
-		if(snxt>0) {
-			snxt--;
-			if(from!=null) {
-				Vec3 center=this.getBlockPos().getCenter();
-	
-				if(Math.random()<0.25d) {
-					int dx=from.getStepX();
-					int dz=from.getStepZ();
-					double rx=from.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
-					double rz=from.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
-					((ServerLevel)this.level).sendParticles(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,0,-dx, 0,-dz,0.048);
-					//System.out.println("tic"+dx+","+dz);
-				}
-				Direction[] dirs=this.getBlockState().getValue(AqueductBlock.CONN).getNext(from);
-				for(Direction d:dirs) {
-					if(Math.random()<0.25d/dirs.length) {
-						Direction di=d.getOpposite();
-						int dx=di.getStepX();
-						int dz=di.getStepZ();
-						double rx=di.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
-						double rz=di.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
-						((ServerLevel)this.level).sendParticles(CVParticles.SPLASH.get(),center.x()+0.46*dx+rx,center.y()+0.45,center.z()+0.46*dz+rz,0,-dx, 0,-dz,0.048);
+		if(this.level.isClientSide) {
+			if(snxt>0) {
+				snxt--;
+				if(from!=null) {
+					Vec3 center=this.getBlockPos().getCenter();
+		
+					if(Math.random()<0.25d) {
+						int dx=from.getStepX();
+						int dz=from.getStepZ();
+						double rx=from.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
+						double rz=from.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
+						this.level.addParticle(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,-dx*0.048, 0,-dz*0.048);
 						//System.out.println("tic"+dx+","+dz);
 					}
+					Direction[] dirs=this.getBlockState().getValue(AqueductBlock.CONN).getNext(from);
+					for(Direction d:dirs) {
+						if(Math.random()<0.25d/dirs.length) {
+							Direction di=d.getOpposite();
+							int dx=di.getStepX();
+							int dz=di.getStepZ();
+							double rx=di.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
+							double rz=di.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
+							
+							this.level.addParticle(CVParticles.SPLASH.get(),center.x()+0.46*dx+rx,center.y()+0.45,center.z()+0.46*dz+rz,-dx*0.048, 0,-dz*0.048);
+							//System.out.println("tic"+dx+","+dz);
+						}
+					}
 				}
+				//System.out.println("tic"+center);
 			}
-			//System.out.println("tic"+center);
+			return;
 		}
+		// TODO Auto-generated method stub
+		
 		if(tonxt>0) {
 			
 			nxt--;

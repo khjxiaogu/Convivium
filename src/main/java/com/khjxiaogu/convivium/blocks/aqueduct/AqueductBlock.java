@@ -42,7 +42,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> {
+public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> implements AqueductConnectable{
 	public static final EnumProperty<AqueductConnection> CONN=EnumProperty.create("connection", AqueductConnection.class);
 	public AqueductBlock(Properties blockProps) {
 		super(blockProps, CVBlockEntityTypes.AQUEDUCT);
@@ -86,8 +86,14 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		AqueductConnection conn=AqueductConnection.A;
 		for(Direction d:Utils.horizontals) {
 			BlockPos pos=pContext.getClickedPos().relative(d);
-			if(pContext.getLevel().getBlockState(pos).is(CVTags.Blocks.AQUEDUCT)) {
-				conn=conn.connects(d);
+			BlockState rel=pContext.getLevel().getBlockState(pos);
+			if(rel.is(CVTags.Blocks.AQUEDUCT)) {
+				boolean canConnect=true;
+				if(rel.getBlock() instanceof AqueductConnectable con) {
+					canConnect=con.canConnect(pos, rel, d.getOpposite());
+				}
+				if(canConnect)
+					conn=conn.connects(d);
 			}
 		}
 		
@@ -107,13 +113,18 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 			BlockPos pCurrentPos, BlockPos pFacingPos) {
 		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
 			AqueductConnection c=pState.getValue(CONN).connects(pFacing);
-			if(c!=null)
+			boolean canConnect=true;
+			if(pFacingState.getBlock() instanceof AqueductConnectable con) {
+				canConnect=con.canConnect(pFacingPos, pFacingState,pFacing.getOpposite());
+			}
+			if(c!=null&&canConnect) {
 				return pState.setValue(CONN, c);
-		}else {
-			AqueductConnection c=pState.getValue(CONN).disconnects(pFacing);
-			if(c!=null)
-				return pState.setValue(CONN, c);
+			}
 		}
+		AqueductConnection c=pState.getValue(CONN).disconnects(pFacing);
+		if(c!=null)
+			return pState.setValue(CONN, c);
+		
 		return pState;
 	}
 
@@ -146,6 +157,14 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 				}
 			}
 		
+	}
+
+	@Override
+	public boolean canConnect(BlockPos pos, BlockState state, Direction from) {
+		if(state.getValue(CONN).connects(from).canConnectTo(from)) {
+			return true;
+		}
+		return false;
 	}
 
 

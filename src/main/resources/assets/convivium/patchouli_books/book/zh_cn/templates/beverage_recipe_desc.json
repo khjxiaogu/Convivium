@@ -2,25 +2,25 @@
 	"components": [
 		{
 			"type": "patchouli:text",
-			"text": "$(l)Required bases: $()#mandatorybases#",
+			"text": "$(l)必需基础饮品: $()#mandatorybases#",
 			"x": 0,
 			"y": 0
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$(l)Optional bases: $()#optionalbases#",
+			"text": "$(l)可选基础饮品: $()#optionalbases#",
 			"x": 0,
 			"y": 36
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$(l)Required ingredients: $()#mandatoryingredients#",
+			"text": "$(l)必需原料: $()#mandatoryingredients#",
 			"x": 0,
 			"y": 72
 		},
 		{
 			"type": "patchouli:text",
-			"text": "$(l)Optional ingredients: $()#optionalingredients#",
+			"text": "$(l)可选原料: $()#optionalingredients#",
 			"x": 0,
 			"y": 108
 		}

@@ -38,7 +38,6 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	Direction from;
 	int nxt;
 	int tonxt;
-	int snxt;
 	public AqueductBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.AQUEDUCT.get(), pWorldPosition, pBlockState);
 		// TODO Auto-generated constructor stub
@@ -59,7 +58,6 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
 		if(nbt.contains("from"))
 			from=Direction.values()[nbt.getInt("from")];
-		snxt=nbt.getInt("processA");
 		tonxt=nbt.getInt("processMax");
 		if(!isClient) {
 			
@@ -71,7 +69,6 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
 		if(from!=null)
 			nbt.putInt("from", from.ordinal());
-		nbt.putInt("processA", snxt);
 		nbt.putInt("processMax", tonxt);
 		if(!isClient) {
 			
@@ -86,15 +83,12 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			this.nxt=nxt;
 		}
 		tonxt=nxt;
-		if(tonxt>0) 
-			snxt=Mth.ceil(tonxt/8f)*8;
 		this.syncData();
 	}
 	@Override
 	public void tick() {
 		if(this.level.isClientSide) {
-			if(snxt>0) {
-				snxt--;
+			if(tonxt>0) {
 				if(from!=null) {
 					Vec3 center=this.getBlockPos().getCenter();
 		

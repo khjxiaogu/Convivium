@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nasppublend",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:wither",
+			"level": 1.0,
+			"time": 150.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nasppublend",
+					"right": 1.2
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 1.2
+				}
+			],
+			"effect": "minecraft:wither",
+			"level": 1.0,
+			"time": 300.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nasppublend",
+					"right": 1.8
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 1.8
+				}
+			],
+			"effect": "minecraft:wither",
+			"level": 2.0,
+			"time": 300.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nasppublend",
+					"right": 3.6
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 3.6
+				}
+			],
+			"effect": "minecraft:wither",
+			"level": 3.0,
+			"time": 300.0
+		}
+	],
+	"icon": "minecraft:mob_effect/wither",
+	"locals": {
+		"nas": "max(0,2-astringency)",
+		"ppu": "max(0,pungency-2)",
+		"pso": "max(0,soothingness)",
+		"pth": "max(0,thickness)",
+		"nasppublend": "nas*ppu/50",
+		"psopthblend": "pso*pth/50",
+		"display": "nasppublend+psopthblend",
+		"astringencyDelta": "if(2-astringency,-max(0,75/max(0.01,ppu)-nas)/2,-50)",
+		"pungencyDelta": "if(pungency-2,max(0,75/max(0.01,nas)-ppu)/2,50)",
+		"soothingnessDelta": "if(soothingness,max(0,75/max(0.01,pth)-pso)/2,50)",
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "if(thickness,max(0,75/max(0.01,pso)-pth)/2,50)"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "cereal"
+		}
+	]
+}

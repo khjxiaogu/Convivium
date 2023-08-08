@@ -1,0 +1,11 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:enchanted_golden_apple"
+	},
+	"priority": 0,
+	"variants": {
+		"astringency": 6,
+		"thickness": 2
+	}
+}

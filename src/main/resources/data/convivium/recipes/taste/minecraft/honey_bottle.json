@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:honey_bottle"
+	},
+	"priority": 0,
+	"variants": {
+		"soothingness": 3
+	}
+}

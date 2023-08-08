@@ -1,0 +1,11 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:glow_berries"
+	},
+	"priority": 0,
+	"variants": {
+		"pungency": 1,
+		"astringency": -1
+	}
+}

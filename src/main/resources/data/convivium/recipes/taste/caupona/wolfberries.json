@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "caupona:wolfberries"
+	},
+	"priority": 0,
+	"variants": {
+		"soothingness": 2
+	}
+}

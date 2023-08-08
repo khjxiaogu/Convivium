@@ -1,0 +1,11 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:glistering_melon_slice"
+	},
+	"priority": 0,
+	"variants": {
+		"sweetness": 3,
+		"pungency": -2
+	}
+}

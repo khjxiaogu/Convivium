@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:allium"
+	},
+	"priority": 0,
+	"variants": {
+		"pungency": 3
+	}
+}

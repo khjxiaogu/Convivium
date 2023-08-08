@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:apple"
+	},
+	"priority": 0,
+	"variants": {
+		"astringency": 2
+	}
+}

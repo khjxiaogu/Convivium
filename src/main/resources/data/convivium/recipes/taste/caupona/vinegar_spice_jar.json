@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "caupona:vinegar_spice_jar"
+	},
+	"priority": 0,
+	"variants": {
+		"pungency": -1
+	}
+}

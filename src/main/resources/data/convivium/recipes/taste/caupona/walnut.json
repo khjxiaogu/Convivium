@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "caupona:walnut"
+	},
+	"priority": 0,
+	"variants": {
+		"pungency": -2
+	}
+}

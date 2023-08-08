@@ -1,0 +1,93 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nthnsowanewax",
+					"right": 0.8
+				},
+				{
+					"compare": "greater",
+					"left": "xswxpumulti",
+					"right": 1
+				}
+			],
+			"effect": "minecraft:hunger",
+			"level": 1.0,
+			"time": 300.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nthnsowanewax",
+					"right": 1.5
+				},
+				{
+					"compare": "greater",
+					"left": "xswxpumulti",
+					"right": 1.5
+				}
+			],
+			"effect": "minecraft:hunger",
+			"level": 1.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nthnsowanewax",
+					"right": 2.5
+				},
+				{
+					"compare": "greater",
+					"left": "xswxpumulti",
+					"right": 1.8
+				}
+			],
+			"effect": "minecraft:hunger",
+			"level": 2.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nthnsowanewax",
+					"right": 5
+				},
+				{
+					"compare": "greater",
+					"left": "xswxpumulti",
+					"right": 1.9
+				}
+			],
+			"effect": "minecraft:hunger",
+			"level": 3.0,
+			"time": 600.0
+		},
+	],
+	"icon": "minecraft:mob_effect/hunger",
+	"locals": {
+		"nth": "max(0,2-thickness)",
+		"nso": "max(0,2-soothingness)",
+		"nthnsowanewax": "sqrt(abs(nth^2-nso^2))/5",
+		"xswxpumulti": "abs(sin(2*sweetness/PI)-sin(2*pungency/PI))",
+		"display": "nthnsowanewax+xswxpumulti",
+		"astringencyDelta": 0.0,
+		"pungencyDelta": "2-xswxpumulti",
+		"soothingnessDelta": "if(2-soothingness,-if(nso-nth,max(0,10-nso),-nso)/2,-50)",
+		"sweetnessDelta": "2-xswxpumulti",
+		"thicknessDelta": "if(2-thickness,-if(nth-nso,max(0,10-nth),-nth)/2,-50)"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "cereal"
+		}
+	]
+}

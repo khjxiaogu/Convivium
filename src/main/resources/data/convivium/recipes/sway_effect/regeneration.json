@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pasnswblend",
+					"right": 0.5
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 0.5
+				}
+			],
+			"effect": "minecraft:regeneration",
+			"level": 1.0,
+			"time": 100.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pasnswblend",
+					"right": 1.0
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 1.0
+				}
+			],
+			"effect": "minecraft:regeneration",
+			"level": 1.0,
+			"time": 200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pasnswblend",
+					"right": 1.5
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 1.5
+				}
+			],
+			"effect": "minecraft:regeneration",
+			"level": 2.0,
+			"time": 200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pasnswblend",
+					"right": 3.0
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 3.0
+				}
+			],
+			"effect": "minecraft:regeneration",
+			"level": 3.0,
+			"time": 200.0
+		}
+	],
+	"icon": "minecraft:mob_effect/regeneration",
+	"locals": {
+		"pas": "max(0,astringency-2)",
+		"nsw": "max(0,2-sweetness)",
+		"pso": "max(0,soothingness)",
+		"pth": "max(0,thickness)",
+		"pasnswblend": "pas*nsw/50",
+		"psopthblend": "pso*pth/50",
+		"display": "pasnswblend+psopthblend",
+		"astringencyDelta": "if(astringency-2,max(0,75/max(0.01,nsw)-pas)/2,50)",
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "if(soothingness,max(0,75/max(0.01,pth)-pso)/2,50)",
+		"sweetnessDelta": "if(2-sweetness,-max(0,75/max(0.01,pas)-nsw)/2,-50)",
+		"thicknessDelta": "if(thickness,max(0,75/max(0.01,pso)-pth)/2,50)"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "cereal"
+		}
+	]
+}

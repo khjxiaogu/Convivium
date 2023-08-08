@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "caupona:sugar_spice_jar"
+	},
+	"priority": 0,
+	"variants": {
+		"thickness": 1
+	}
+}

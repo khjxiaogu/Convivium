@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:melon_slice"
+	},
+	"priority": 0,
+	"variants": {
+		"sweetness": 2
+	}
+}

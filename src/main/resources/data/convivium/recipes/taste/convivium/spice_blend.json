@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "convivium:spice_blend"
+	},
+	"priority": 0,
+	"variants": {
+		"astringency": -4
+	}
+}

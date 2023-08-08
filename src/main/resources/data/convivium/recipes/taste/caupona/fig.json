@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "caupona:fig"
+	},
+	"priority": 0,
+	"variants": {
+		"sweetness": -2
+	}
+}

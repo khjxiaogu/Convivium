@@ -1,0 +1,10 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "minecraft:sweet_berries"
+	},
+	"priority": 0,
+	"variants": {
+		"thickness": -2
+	}
+}

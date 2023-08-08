@@ -1,0 +1,11 @@
+{
+	"type": "convivium:taste",
+	"item": {
+		"item": "caupona:leaden_walnut"
+	},
+	"priority": 0,
+	"variants": {
+		"soothingness": -3,
+		"pungency": 1
+	}
+}

@@ -18,16 +18,29 @@
 
 package com.khjxiaogu.convivium.util.evaluator;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.DoubleBinaryOperator;
 
 class BiCalcNode extends BiNode{
 	DoubleBinaryOperator calc;
+	public static Map<DoubleBinaryOperator,String> toStr=new HashMap<>();
 	public static DoubleBinaryOperator add=(v1,v2)->v1+v2;
 	public static DoubleBinaryOperator min=(v1,v2)->v1-v2;
 	public static DoubleBinaryOperator mul=(v1,v2)->v1*v2;
 	public static DoubleBinaryOperator div=(v1,v2)->v1/v2;
+	public static DoubleBinaryOperator sdiv=(v1,v2)->v2==0?0:v1/v2;
 	public static DoubleBinaryOperator pow=(v1,v2)->Math.pow(v1,v2);
 	public static DoubleBinaryOperator mod=(v1,v2)->v1%v2;
+	static {
+		toStr.put(add, "+");
+		toStr.put(min, "-");
+		toStr.put(mul, "*");
+		toStr.put(div, "/");
+		toStr.put(sdiv,"\\");
+		toStr.put(pow, "^");
+		toStr.put(mod, "%");
+	}
 	public BiCalcNode(Node left, Node right,DoubleBinaryOperator calc) {
 		super(left, right);
 		this.calc=calc;
@@ -45,7 +58,7 @@ class BiCalcNode extends BiNode{
 
 	@Override
 	public String toString() {
-		String cn=calc==add?"+":(calc==min?"-":(calc==mul?"*":(calc==div?"/":(calc==pow?"^":(calc==mod?"%":calc+"")))));
+		String cn=toStr.getOrDefault(calc, ""+calc);
 		return left+cn+right;
 	}
 

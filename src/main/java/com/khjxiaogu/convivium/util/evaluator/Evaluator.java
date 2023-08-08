@@ -101,6 +101,8 @@ public class Evaluator {
 				x = new BiCalcNode(x, parseFactor(), BiCalcNode.div); // division
 			else if (eat('%'))
 				x = new BiCalcNode(x, parseFactor(), BiCalcNode.mod); // modular
+			else if (eat('\\'))
+				x = new BiCalcNode(x, parseFactor(), BiCalcNode.sdiv); // secure division
 			else
 				return x;
 		}
@@ -182,6 +184,7 @@ public class Evaluator {
 		functions.put("max", x -> new FuncCallNode(x, "max",2, v -> Math.max(v[0], v[1]), true));
 		functions.put("min", x -> new FuncCallNode(x, "min",2, v -> Math.min(v[0], v[1]), true));
 		functions.put("if", x -> new FuncCallNode(x, "if",3, v -> v[0]>0?v[1]:v[2], true));
+		functions.put("evl", x -> new FuncCallNode(x, "evl",2, v -> Double.isFinite(v[0])?v[0]:v[1], true));
 		constants.put("PI", Math.PI);
 		constants.put("E", Math.E);
 	}

@@ -102,7 +102,7 @@ public class Expression implements INumber{
 	private Expression(FriendlyByteBuf expr) {
 		super();
 		this.expr = expr.readUtf();
-		
+		this.node = Evaluator.eval(this.expr);
 	}
 	public static INumber of(FriendlyByteBuf expr) {
 		switch(expr.readVarInt()) {

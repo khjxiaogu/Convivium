@@ -21,6 +21,7 @@ package com.khjxiaogu.convivium.datagen;
 import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVMain;
+import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.Util;
@@ -28,6 +29,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.metadata.PackMetadataGenerator;
 import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -50,7 +53,7 @@ public class CVDataGenerator {
 		gen.addProvider(event.includeServer(),new CVLootGenerator(gen));
 		gen.addProvider(event.includeClient()||event.includeServer(),new CVStatesProvider(gen, CVMain.MODID, exHelper));
 		gen.addProvider(event.includeServer(),new CVBookGenerator(gen.getPackOutput(), exHelper));
-		gen.addProvider(event.includeServer()||event.includeClient(),new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,new PackMetadataSection(Utils.string(CVMain.MODNAME+" Resources"),6)));
+		gen.addProvider(event.includeServer()||event.includeClient(),new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,new PackMetadataSection(MutableComponent.create(new TranslatableContents("pack.convivium.title",CVMain.MODNAME+" Data",new Object[0])),15)));
 		gen.addProvider(event.includeServer(),new CVRegistryGenerator(gen.getPackOutput(),completablefuture));
 		//gen.addProvider(event.includeClient(),new FluidAnimationGenerator(gen.getPackOutput(),exHelper));
 		//gen.addProvider(event.includeClient()||event.includeServer(), new RegistryJavaGenerator(gen.getPackOutput(),exHelper));

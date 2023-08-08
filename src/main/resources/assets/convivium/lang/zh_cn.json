@@ -1,5 +1,6 @@
 {
 	"itemGroup.convivium":"会饮",
+	"pack.convivium.title":"会饮数据包",
 	"tooltip.convivium.major_relish_2":"生效旨：[%s,%s]",
 	"tooltip.convivium.major_relish_1":"生效旨：[%s]",
 	"gui.convivium.relish.wine.name":"酒",

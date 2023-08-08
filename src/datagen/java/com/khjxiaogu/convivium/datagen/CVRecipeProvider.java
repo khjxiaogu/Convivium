@@ -113,7 +113,7 @@ public class CVRecipeProvider extends RecipeProvider {
 
 			});
 		};
-		out.accept(new GrindingRecipe(rl("grinding/pome"),List.of(Pair.of(Ingredient.of(Items.APPLE),2)), null, 0f, new FluidStack(Fluids.WATER,250),new FluidStack(CVFluids.pjuicef.get(),250),List.of(new ItemStack(cpitem("scraps"))), 200, false));
+		//out.accept(new GrindingRecipe(rl("grinding/pome"),List.of(Pair.of(Ingredient.of(Items.APPLE),2)), null, 0f, new FluidStack(Fluids.WATER,250),new FluidStack(CVFluids.pjuicef.get(),250),List.of(new ItemStack(cpitem("scraps"))), 200, false));
 		relish(out,Constants.TEA,"#7eb3c2",CVFluids.teaf.get());
 		relish(out,Constants.MILK,"#dac381",ForgeMod.MILK.get());
 		relish(out,Constants.COCOA,"#ea9359",CVFluids.cocoaf.get());
@@ -121,7 +121,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		relish(out,Constants.JUICE,"#aac35d",CVFluids.bjuicef.get(),CVFluids.djuicef.get(),CVFluids.pjuicef.get());
 		relish(out,Constants.WINE,"#ce6c71",CVFluids.bwinef.get(),CVFluids.dwinef.get(),CVFluids.pwinef.get());
 		relish(out,Constants.NONE,"#ffffff");
-		createME("night_vision").major(Constants.TEA)
+		/*createME("night_vision").major(Constants.TEA)
 		.local(Constants.SWEETNESS_DELTA,0).local(Constants.ASTRINGENCY_DELTA,"3-"+Constants.ASTRINGENCY).local(Constants.DISPLAY,Constants.ASTRINGENCY+"+0.1").local(Constants.THICKNESS_DELTA, 0).local(Constants.PUNGENCY_DELTA,0).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.NIGHT_VISION).amp("1").time("100").compare(Constants.ASTRINGENCY,GT.C,"1.99").next()
 		.end(out);
@@ -132,7 +132,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		createME("saturation").major(Constants.WATER)
 		.local(Constants.SWEETNESS_DELTA,3).local(Constants.ASTRINGENCY_DELTA, 3).local(Constants.DISPLAY, 5).local(Constants.THICKNESS_DELTA, 0).local(Constants.PUNGENCY_DELTA,0).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.SATURATION).amp("1").time("100").compare("1",GT.C,"3").next()
-		.end(out);
+		.end(out);*/
 		/*createME("saturation").major(Constants.MILK)
 		.local(Constants.SWEETNESS_DELTA,1).local(Constants.ASTRINGENCY_DELTA, 3).local(Constants.DISPLAY, 5).local(Constants.THICKNESS_DELTA, 2).local(Constants.PUNGENCY_DELTA,-2).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.SATURATION).amp("1").time("100").compare("3",GT.C,"1").next()
@@ -146,7 +146,7 @@ public class CVRecipeProvider extends RecipeProvider {
 			}else
 				out.accept(new ContainingRecipe(rl("bottle/"+s),cvitem(s),cvfluid(s)));
 		}
-		taste(Items.APPLE).vars().astringency(2).end().end(out);
+		//taste(Items.APPLE).vars().astringency(2).end().end(out);
 		out.accept(new ConvertionRecipe(rl("convertion/tea"),List.of(Pair.of(Ingredient.of(cvitem("powdered_tea")),1f)),Fluids.WATER, cvfluid("tea"), 60, 200, false));
 		out.accept(new ConvertionRecipe(rl("convertion/cocoa_from_water"),List.of(Pair.of(Ingredient.of(cvitem("cocoa_powder")),1f)),Fluids.WATER, cvfluid("hot_chocolate"), 40,200, false));
 		out.accept(new ConvertionRecipe(rl("convertion/cocoa_from_milk"),List.of(Pair.of(Ingredient.of(cvitem("cocoa_powder")),1f)),ForgeMod.MILK.get(), cvfluid("hot_chocolate"), 40,200, false));

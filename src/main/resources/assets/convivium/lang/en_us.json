@@ -1,5 +1,6 @@
 {
 	"itemGroup.convivium":"Convivium",
+	"pack.convivium.title":"Convivium Datapack",
 	"tooltip.convivium.major_relish_2":"Active Relishes: [%s, %s]",
 	"tooltip.convivium.major_relish_1":"Active Relish: [%s]",
 	"gui.convivium.relish.wine.name":"Liber",

@@ -1,8 +1,8 @@
 {
   "pack": {
     "description": {
-      "text": "Convivium Resources"
+      "translate": "pack.convivium.title"
     },
-    "pack_format": 6
+    "pack_format": 15
   }
 }

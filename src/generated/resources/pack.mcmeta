@@ -1,6 +1,7 @@
 {
   "pack": {
     "description": {
+      "fallback": "Convivium Data",
       "translate": "pack.convivium.title"
     },
     "pack_format": 15

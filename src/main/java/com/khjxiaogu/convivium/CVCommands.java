@@ -42,7 +42,6 @@ public class CVCommands {
 				);
 	}
 	private static ArgumentBuilder<CommandSourceStack, ?> createSub(int last,CommandBuildContext ctx,ArgumentBuilder<CommandSourceStack, ?> par){
-		System.out.println(last);
 		if(last>=16)
 			return par;
 		RequiredArgumentBuilder<CommandSourceStack, ?> child=Commands.argument("block"+last,BlockStateArgument.block(ctx))

@@ -76,9 +76,9 @@ public class CVCommands {
 					for(int y=ly;y<=hy;y++)
 						for(int z=lz;z<hz;z++) {
 							posx.set(x, y, z);
-							env.put("x", (double) x);
-							env.put("y", (double) y);
-							env.put("z", (double) z);
+							env.put("x", (double) x-lx);
+							env.put("y", (double) y-ly);
+							env.put("z", (double) z-lz);
 							double res=expr.applyAsDouble(venv);
 							if(res>0) {
 								for(int i=nval-1;i>=0;i--) {

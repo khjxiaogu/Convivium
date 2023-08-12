@@ -34,7 +34,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid=CVMain.MODID)
 public class CVCommands {
 	private static LazyOptional<BlockInput[]> def_palette=LazyOptional.of(()->
 		new BlockInput[] {

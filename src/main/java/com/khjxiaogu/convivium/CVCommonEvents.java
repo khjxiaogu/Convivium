@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid=CVMain.MODID)
 public class CVCommonEvents {
 
 	@SubscribeEvent

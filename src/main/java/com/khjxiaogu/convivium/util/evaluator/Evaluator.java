@@ -75,7 +75,7 @@ public class Evaluator {
 	}
 	// Grammar:
 	// expression = term | expression `+` term | expression `-` term
-	// term = factor | term `*` factor | term `/` factor | term `%` factor
+	// term = factor | term `*` factor | term `/` factor | term `%` factor | term '\' factor
 	// factor = `+` factor | `-` factor | `(` expression `)` | number |
 	// variantName | constant | functionName `(` param `)` | factor `^` factor
 	// param = expression | expression `,` param

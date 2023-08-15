@@ -34,7 +34,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid=CVMain.MODID)
 public class CVCommands {
 	private static LazyOptional<BlockInput[]> def_palette=LazyOptional.of(()->
 		new BlockInput[] {
@@ -64,7 +64,7 @@ public class CVCommands {
 				Commands.argument("expression", StringArgumentType.string()).then(
 					Commands.argument("pos1", BlockPosArgument.blockPos()).then(
 							createSub(0,false,ctx,Commands.argument("pos2", BlockPosArgument.blockPos())
-									.requires(e->e.hasPermission(3))
+									.requires(e->e.hasPermission(2))
 									.executes(e->{
 										INumber expr=Expression.of(StringArgumentType.getString(e, "expression"));
 										BoundingBox bb=BoundingBox.fromCorners(BlockPosArgument.getBlockPos(e, "pos1"), BlockPosArgument.getBlockPos(e, "pos2"));
@@ -82,7 +82,7 @@ public class CVCommands {
 						Commands.argument("expression", StringArgumentType.string()).then(
 								Commands.argument("pos1", BlockPosArgument.blockPos()).then(
 										createSub(0,true,ctx,Commands.argument("pos2", BlockPosArgument.blockPos())
-												.requires(e->e.hasPermission(3))
+												.requires(e->e.hasPermission(2))
 												.executes(e->{
 													INumber expr=Expression.of(StringArgumentType.getString(e, "expression"));
 													BoundingBox bb=BoundingBox.fromCorners(BlockPosArgument.getBlockPos(e, "pos1"), BlockPosArgument.getBlockPos(e, "pos2"));
@@ -102,7 +102,7 @@ public class CVCommands {
 		if(last>=16)
 			return par;
 		RequiredArgumentBuilder<CommandSourceStack, ?> child=Commands.argument("block"+last,BlockStateArgument.block(ctx))
-				.requires(e->e.hasPermission(3))
+				.requires(e->e.hasPermission(2))
 				.executes(createPlotter(last+1,rep));
 		par.then(createSub(last+1,rep,ctx,child)); 
 		return par;

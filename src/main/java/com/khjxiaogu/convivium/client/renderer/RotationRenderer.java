@@ -52,7 +52,7 @@ public abstract class RotationRenderer<T extends BlockEntity> implements BlockEn
 		if(state.getValue(KineticBasedBlock.ACTIVE)) 
 			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
 		this.customRenderRotated(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
-		ModelUtils.renderModel(model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
+		ModelUtils.tesellateModel(blockEntity,model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn);
 		matrixStack.popPose();
 	}
 	@SuppressWarnings("unused")

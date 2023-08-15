@@ -38,12 +38,18 @@ import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
+import com.khjxiaogu.convivium.client.util.CVRenderType;
 import com.khjxiaogu.convivium.util.BeverageInfo;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -57,6 +63,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CVClientRegistry {
+	 
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
@@ -83,7 +90,7 @@ public class CVClientRegistry {
 		registerFruitModel(get(CPMain.MODID,"fig"),"fig",FruitModel.ModelType.ROUND);
 		registerFruitModel(Items.GLISTERING_MELON_SLICE,"glistering_melon",FruitModel.ModelType.SLICE);
 		registerFruitModel(Items.GLOW_BERRIES,"glow_berries",FruitModel.ModelType.MISC);
-		registerFruitModel(Items.ENCHANTED_GOLDEN_APPLE,"golden_apple",FruitModel.ModelType.ROUND);
+		registerFruitModel(Items.ENCHANTED_GOLDEN_APPLE,"golden_apple",FruitModel.ModelType.ROUND,RenderType.glint(),RenderType.cutout());
 		registerFruitModel(Items.GOLDEN_APPLE,"golden_apple",FruitModel.ModelType.ROUND);
 		registerFruitModel(Items.MELON_SLICE,"melon",FruitModel.ModelType.SLICE);
 		registerFruitModel(Items.SWEET_BERRIES,"sweet_berries",FruitModel.ModelType.MISC);
@@ -91,7 +98,10 @@ public class CVClientRegistry {
 		registerFruitModel(get(CPMain.MODID,"wolfberries"),"wolfberries",FruitModel.ModelType.MISC);
 		
 	}
-	private static void registerFruitModel(Item item,String name,FruitModel.ModelType type) {
+	public static void registerFruitModel(Item item,String name,FruitModel.ModelType type,RenderType rt1,RenderType rt2) {
+		FruitPlatterRenderer.models.put(item,new FruitModel(name,type,rt1,rt2));
+	}
+	public static void registerFruitModel(Item item,String name,FruitModel.ModelType type) {
 		FruitPlatterRenderer.models.put(item,new FruitModel(name,type));
 	}
 	private static Item get(String modid,String id) {

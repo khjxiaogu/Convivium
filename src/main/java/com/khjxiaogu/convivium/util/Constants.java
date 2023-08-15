@@ -30,7 +30,6 @@ public class Constants {
 	public static final String PUNGENCY =			"pungency";
 	public static final String THICKNESS =			"thickness";
 	public static final String SOOTHINGNESS =		"soothingness";
-	public static final String[] TASTES=new String[] {SWEETNESS,PUNGENCY,SOOTHINGNESS,ASTRINGENCY,THICKNESS};
 	public static final String TEA="bath";
 	public static final String MILK="cereal";
 	public static final String COCOA="fire";
@@ -43,6 +42,7 @@ public class Constants {
 	public static final int CLR_ROUSING=0xd3e1fa;
 	public static final int CLR_ASTRINGENCY=0xe6f79b;
 	public static final int CLR_THICKNESS=0xdeece9;
+	public static final String[] TASTES=new String[] {SWEETNESS,PUNGENCY,SOOTHINGNESS,ASTRINGENCY,THICKNESS};
 	public static final int[] COLOR_OF_TASTES=new int[] {CLR_SWEET,CLR_PUNGENT,CLR_ROUSING,CLR_ASTRINGENCY,CLR_THICKNESS};
 
 }

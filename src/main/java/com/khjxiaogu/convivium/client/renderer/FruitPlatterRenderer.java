@@ -35,7 +35,6 @@ import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.client.util.ModelUtils;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -91,7 +90,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 				Item is=items.keySet().stream().findFirst().orElse(null);
 				FruitModel rss=models.get(is);
 				if(rss!=null) {
-					ModelUtils.renderModel(rss.getPiled(items.get(is)-1), buffer.getBuffer(RenderType.cutout()),matrixStack, combinedLightIn, combinedOverlayIn);
+					ModelUtils.tesellateModel(blockEntity,rss.getPiled(items.get(is)-1), rss.getBuffer(buffer),matrixStack, combinedOverlayIn);
 					return;
 				}
 			}else {
@@ -116,8 +115,8 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 					for(int i=0;i<4;i++) {
 						if(model[i]==null)continue;
 						j++;
-						ModelUtils.renderModelGroups(model[i].getPiled(total-1), buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("FruitUnit"+j),
-								matrixStack, combinedLightIn, combinedOverlayIn);
+						ModelUtils.tesellateModelGroups(blockEntity,model[i].getPiled(total-1), model[i].getBuffer(buffer),ImmutableSet.of("FruitUnit"+j),
+								matrixStack,  combinedOverlayIn);
 					}
 					return;
 				}
@@ -156,7 +155,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			ItemStack is=blockEntity.storage.getStackInSlot(i-1);
 			if(!is.isEmpty()) {
 				if(model[i-1]!=null) {
-				ModelUtils.renderModelGroups(model[i-1].getGrid(), buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("FruitUnit"+i),
+				ModelUtils.renderModelGroups(model[i-1].getGrid(), model[i-1].getBuffer(buffer),ImmutableSet.of("FruitUnit"+i),
 						matrixStack, combinedLightIn, combinedOverlayIn);
 				}else {
 					float rx=0;

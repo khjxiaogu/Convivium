@@ -84,7 +84,7 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 					
 				}
 			}
-		ModelUtils.renderModel(model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
+		ModelUtils.tesellateModel(blockEntity,model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn);
 		matrixStack.popPose();
 		FluidStack fs = blockEntity.tank.getFluid();
 		if(!fs.isEmpty()) {

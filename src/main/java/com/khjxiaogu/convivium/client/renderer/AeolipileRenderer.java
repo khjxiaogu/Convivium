@@ -67,7 +67,7 @@ public class AeolipileRenderer implements BlockEntityRenderer<AeolipileBlockEnti
 		if(state.getValue(KineticBasedBlock.ACTIVE))
 			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,1f,0f,0f,isBlack),0.5f,0.5f,0.5f);
 		//System.out.println("render");
-		ModelUtils.renderModel(isBlack?aeolipile_cw:aeolipile,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
+		ModelUtils.renderModel(isBlack?aeolipile_cw:aeolipile,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn,combinedOverlayIn);
 		matrixStack.popPose();
 		
 

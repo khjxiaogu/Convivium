@@ -131,6 +131,10 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 					tonxt=0;
 					nxt=0;
 					this.syncData();
+				}else {
+					tonxt=0;
+					nxt=0;
+					this.syncData();
 				}
 			}
 		}

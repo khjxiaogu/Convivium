@@ -1,0 +1,33 @@
+{
+  "type": "convivium:sway",
+  "effects": [
+    {
+      "condition": [
+        {
+          "compare": "greater",
+          "left": "astringency",
+          "right": 1.99
+        }
+      ],
+      "effect": "minecraft:night_vision",
+      "level": 1.0,
+      "time": 100.0
+    }
+  ],
+  "icon": "minecraft:mob_effect/night_vision",
+  "locals": {
+    "astringencyDelta": "3-astringency",
+    "display": "astringency+0.1",
+    "pungencyDelta": 0.0,
+    "soothingnessDelta": 0.0,
+    "sweetnessDelta": 0.0,
+    "thicknessDelta": 0.0
+  },
+  "priority": 0,
+  "relish": [
+    {
+      "type": "major",
+      "relish": "bath"
+    }
+  ]
+}

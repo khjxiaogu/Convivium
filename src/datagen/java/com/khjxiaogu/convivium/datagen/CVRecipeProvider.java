@@ -131,14 +131,14 @@ public class CVRecipeProvider extends RecipeProvider {
 		.local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.NIGHT_VISION).amp("1").time("100").compare(Constants.ASTRINGENCY,GT.C,"1.99").next()
 		.end(out);
-		createME("strength").major(Constants.TEA)
+		/*createME("strength").major(Constants.TEA)
 		.local(Constants.SWEETNESS_DELTA,0).local(Constants.ASTRINGENCY_DELTA,"-("+Constants.ASTRINGENCY+"+3)" ).local(Constants.DISPLAY, "-"+Constants.ASTRINGENCY+"+0.01").local(Constants.THICKNESS_DELTA, 0).local(Constants.PUNGENCY_DELTA,0).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.DAMAGE_BOOST).amp("1").time("100").compare(Constants.ASTRINGENCY,LT.C,"-1.99").next()
 		.end(out);
 		createME("saturation").major(Constants.WATER)
 		.local(Constants.SWEETNESS_DELTA,3).local(Constants.ASTRINGENCY_DELTA, 3).local(Constants.DISPLAY, 5).local(Constants.THICKNESS_DELTA, 0).local(Constants.PUNGENCY_DELTA,0).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.SATURATION).amp("1").time("100").compare("1",GT.C,"3").next()
-		.end(out);
+		.end(out);*/
 		/*createME("saturation").major(Constants.MILK)
 		.local(Constants.SWEETNESS_DELTA,1).local(Constants.ASTRINGENCY_DELTA, 3).local(Constants.DISPLAY, 5).local(Constants.THICKNESS_DELTA, 2).local(Constants.PUNGENCY_DELTA,-2).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.SATURATION).amp("1").time("100").compare("3",GT.C,"1").next()

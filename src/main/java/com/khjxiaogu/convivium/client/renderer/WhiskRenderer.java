@@ -67,7 +67,8 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 		DynamicBlockModelReference model=cog;
 		if(model==null)return;
 		matrixStack.pushPose();
-		if(state.getValue(KineticBasedBlock.ACTIVE)) 
+		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
+		if(active) 
 			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
 		if(!blockEntity.tank.isEmpty())
 			for(int i=0;i<4;i++) {
@@ -84,7 +85,8 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 					
 				}
 			}
-		ModelUtils.tesellateModel(blockEntity,model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn);
+		if(active) 
+			ModelUtils.tesellateModel(blockEntity,model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn);
 		matrixStack.popPose();
 		FluidStack fs = blockEntity.tank.getFluid();
 		if(!fs.isEmpty()) {

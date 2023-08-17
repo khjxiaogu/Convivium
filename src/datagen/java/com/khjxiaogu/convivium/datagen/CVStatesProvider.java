@@ -32,6 +32,7 @@ import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
+import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlock;
 import com.teammoeg.caupona.CPMain;
@@ -74,8 +75,8 @@ public class CVStatesProvider extends BlockStateProvider {
 		kineticBlockModel("cog");
 		kineticBlockModel("cage_wheel");
 		kineticDirectionalBlockModel("aeolipile","aeolipile_stator");
-		kineticMixedBlockModel("whisk","whisk_stator");
-		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator");
+		kineticMixedBlockModel("whisk","whisk_stator","whisk_rotor");
+		kineticMixedBlockModel("pestle_and_mortar","pestle_and_mortar_stator","pestle_and_mortar_rotor");
 		horizontalBlock(CVBlocks.basin.get(),bmf("earthen_basin"));
 		blockItemModel("basin");
 		blockItemModel("lead_basin");
@@ -143,14 +144,20 @@ public class CVStatesProvider extends BlockStateProvider {
 		blockItemModel(name);
 		
 	} 
-	protected void kineticMixedBlockModel(String name,String stator) {
-		this.getVariantBuilder(cvblock(name)).partialState().modelForState().modelFile(bmf(stator)).addModel();
+	protected void kineticMixedBlockModel(String name,String stator,String rotor) {
+		/*this.getVariantBuilder(cvblock(name)).partialState().modelForState().modelFile(bmf(stator)).addModel();
+		blockItemModel(name);*/
+		this.getMultipartBuilder(cvblock(name))
+		.part().modelFile(bmf("dynamic/"+rotor)).addModel().condition(CogCageBlock.ACTIVE, false).end()
+		.part().modelFile(bmf(stator)).addModel().end();
 		blockItemModel(name);
+		
 		
 	} 
 	protected void kineticBlockModel(String name) {
 		
-		this.getMultipartBuilder(cvblock(name)).part().modelFile(bmf("dynamic/"+name)).addModel().end();
+		this.getMultipartBuilder(cvblock(name)).part().modelFile(bmf("dynamic/"+name)).addModel().condition(CogCageBlock.ACTIVE, false).end();
+		
 		blockItemModel(name);
 	} 
 	protected void blockItemModel(String n) {

@@ -1,0 +1,34 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:felsic_tuff_aqueduct",
+	"name": "Aqueduct",
+	"sortnum": 140,
+	"pages": [
+		{
+			"type": "patchouli:image",
+			"title": "Aqueduct",
+			"images": "convivium:textures/gui/entries/aqueduct.png",
+			"text": "Aqueduct conveying food and drink."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "An {b aqueduct} is an artificial water canal, and in Convivium, used to convey certain blocks (by default stews, dishes and beverages from Caupona and Convivium)."
+		},
+		{
+			"type": "patchouli:crafting",
+			"title": "Aqueduct",
+			"recipe": "convivium:crafting/felsic_tuff_aqueduct",
+			"text": "{b Other materials available:} stone bricks, sandstone."
+		},
+		{
+			"type": "patchouli:crafting",
+			"title": "Aqueduct Wavemaker",
+			"recipe": "convivium:crafting/felsic_tuff_aqueduct_wavemaker",
+			"text": "{b Other materials available:} stone bricks, sandstone."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Aqueduct multiblock structures are made up by {b aqueduct blocks} and one {b wavemaker block}. The wavemaker block requires {(mechanisms/aeolipile)rotary force} to power the whole structure.;; When powered, moving spray can be seen on the water; and blocks mentioned above, if put above the aqueduct, will be conveyed downstream."
+		}
+	]
+}

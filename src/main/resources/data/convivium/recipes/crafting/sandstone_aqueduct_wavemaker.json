@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"SLS",
+		"BCB",
+		"B B"
+	],
+	"key": {
+		"S": {
+			"item": "minecraft:cut_sandstone_slab"
+		},
+		"B": {
+			"item": "minecraft:cut_sandstone"
+		},
+		"C": {
+			"item": "convivium:cog"
+		},
+		"L": {
+			"item": "caupona:lateres"
+		}
+	},
+	"result": {
+		"item": "convivium:sandstone_aqueduct_wavemaker"
+	}
+}

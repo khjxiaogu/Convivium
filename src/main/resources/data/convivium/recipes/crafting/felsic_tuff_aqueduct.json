@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"S S",
+		"BSB",
+		"B B"
+	],
+	"key": {
+		"S": {
+			"item": "minecraft:felsic_tuff_bricks_slab"
+		},
+		"B": {
+			"item": "minecraft:felsic_tuff_bricks"
+		}
+	},
+	"result": {
+		"item": "convivium:felsic_tuff_aqueduct",
+		"count": 3
+	}
+}

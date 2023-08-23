@@ -1,0 +1,30 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:aeolipile",
+	"name": "Æolipile",
+	"sortnum": 110,
+	"pages": [
+		{
+			"type": "patchouli:image",
+			"title": "Æolipile",
+			"images": "convivium:textures/gui/entries/aeolipile.png",
+			"text": "A rotating aeolipile."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "An {b æolipile} is a primitive steam engine that converts the propelling force of steam into rotary force. Æolipiles are the only devices in Convivium to power mechanisms."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/aeolipile"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "When placed on a stew pot with water inside and heated by a heat source, an æolipile will start rotating. The force it generates depends on the intensity of heat."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "You must use {(mechanisms/kinetic_transmission)gears} to transmit the generated rotary force."
+		}
+	]
+}

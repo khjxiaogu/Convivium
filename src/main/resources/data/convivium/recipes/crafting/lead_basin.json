@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"S S",
+		"I I",
+		"III"
+	],
+	"key": {
+		"I": {
+			"item": "caupona:lead_ingot"
+		},
+		"S": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "convivium:lead_basin"
+	}
+}

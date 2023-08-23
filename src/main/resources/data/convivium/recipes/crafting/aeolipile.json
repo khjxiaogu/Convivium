@@ -1,0 +1,24 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"%XL",
+		" CC"
+	],
+	"key": {
+		"C": {
+			"item": "minecraft:copper_ingot"
+		},
+		"L": {
+			"item": "caupona:lead_ingot"
+		},
+		"X": {
+			"item": "minecraft:cut_copper"
+		},
+		"%": {
+			"item": "convivium:cog"
+		}
+	},
+	"result": {
+		"item": "convivium:aeolipile"
+	}
+}

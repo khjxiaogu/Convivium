@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"S S",
+		"C C",
+		"CCC"
+	],
+	"key": {
+		"C": {
+			"item": "minecraft:clay_ball"
+		},
+		"S": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "convivium:clay_basin"
+	}
+}

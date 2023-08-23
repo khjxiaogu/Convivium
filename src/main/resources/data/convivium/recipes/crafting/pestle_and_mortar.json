@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"IWP",
+		"G G",
+		"GGG"
+	],
+	"key": {
+		"I": {
+			"item": "minecraft:iron_ingot"
+		},
+		"G": {
+			"item": "minecraft:granite"
+		},
+		"W": {
+			"item": "minecraft:granite_wall"
+		},
+		"P": {
+			"tag": "minecraft:planks"
+		}
+	},
+	"result": {
+		"item": "convivium:pestle_and_mortar"
+	}
+}

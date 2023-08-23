@@ -1,0 +1,8 @@
+{
+	"type": "smelting",
+	"ingredient": {
+		"item": "caupona:clay_basin"
+	},
+	"result": "caupona:basin",
+	"experience": 0.35
+}

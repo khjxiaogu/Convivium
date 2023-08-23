@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{"item": "minecraft:bowl"},
+		{"item": "convivium:fruit_platter"}
+	],
+	"result": {
+		"item": "convivium:fruit_platter",
+		"count": 2
+	}
+}

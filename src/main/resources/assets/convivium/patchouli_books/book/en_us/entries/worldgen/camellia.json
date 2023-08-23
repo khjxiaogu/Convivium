@@ -1,0 +1,41 @@
+{
+	"category": "convivium:worldgen",
+	"icon": "convivium:camellia_flower",
+	"name": "Camellia",
+	"sortnum": 10,
+	"pages": [
+		{
+			"type": "patchouli:image",
+			"title": "Camellia Plant",
+			"images": "convivium:textures/gui/entries/camellia.png",
+			"text": "A camellia shrub generated in a jungle."
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Generation",
+			"text": "{b Camellia}, actually a blend of real-life tea plants and ornamental {i Camellia} species, is a multipurpose shrub generated naturally in jungles."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "As time goes by, camellia shrubs will have a product block grown on its top and show different growth stages, each stage has a specific product."
+		},
+		{
+			"type": "patchouli:spotlight",
+			"title": "Shoots",
+			"item": "convivium:fresh_camellia_shoots",
+			"text": "{b Fresh camellia shoots} are the products of the earliest growth stage. They are the raw materials of {em tea}."
+		},
+		{
+			"type": "patchouli:spotlight",
+			"title": "Flowers",
+			"item": "convivium:camellia_flower",
+			"text": "{b Camellia flowers} are the products during the second growth stage, and are ingredients to make a {em white dye}."
+		},
+		{
+			"type": "patchouli:spotlight",
+			"title": "Seeds",
+			"item": "convivium:camellia_seeds",
+			"text": "{b Camellia seeds}, products of the third growth stage, are used to produce {em oil}, similar to walnuts in Caupona. You can also use the seeds with dirt and water in a dolium to grow a new camellia shrub."
+		}
+	]
+}

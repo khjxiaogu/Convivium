@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"TTT",
+		"CPC",
+		"IQI"
+	],
+	"key": {
+		"I": {
+			"item": "minecraft:iron_ingot"
+		},
+		"Q": {
+			"item": "minecraft:writable_book"
+		},
+		"C": {
+			"item": "convivium:cog"
+		},
+		"P": {
+			"item": "caupona:stew_pot"
+		},
+		"T": {
+			"item": "minecraft:terracotta"
+		}
+	},
+	"result": {
+		"item": "convivium:beverage_vending_machine"
+	}
+}

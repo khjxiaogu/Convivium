@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" I ",
+		"L L",
+		" I "
+	],
+	"key": {
+		"I": {
+			"item": "minecraft:iron_ingot"
+		},
+		"S": {
+			"item": "caupona:lead_nugget"
+		}
+	},
+	"result": {
+		"item": "convivium:jug"
+	}
+}

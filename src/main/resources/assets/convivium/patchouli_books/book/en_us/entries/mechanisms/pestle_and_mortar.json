@@ -1,0 +1,21 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:pestle_and_mortar",
+	"name": "Pestle & Mortar",
+	"sortnum": 130,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"title": "Pestle & Mortar",
+			"text": "{b Pestle & Mortar} are tools used for grinding, smashing and squeezing. They require to be powered by {(mechanisms/aeolipile)rotary force}."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/pestle_and_mortar"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "The common usages of pestle & mortar include powdering tea and cocoa beans and juicing. They are also competent to automate certain Caupona recipes that involve squeezing ingredients with anvils in dolia."
+		}
+	]
+}

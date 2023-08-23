@@ -130,12 +130,12 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 		}else if(blockEntity.config==GlobalConfig.PILED) {
 			int j=0;
 			matrixStack.pushPose();
-			matrixStack.translate(0.375, 4/16f, 0.5f);
+			matrixStack.translate(0.375, 3/16f, 0.5f);
 			matrixStack.scale(1.5f,1, 1.5f);
 			
 			
 			for(int i=1;i<=4;i++) {
-				ItemStack is=blockEntity.storage.getStackInSlot(4-i);
+				ItemStack is=blockEntity.storage.getStackInSlot(i-1);
 				if(is.isEmpty())continue;
 				matrixStack.pushPose();
 				matrixStack.mulPose(rotations[i-1]);

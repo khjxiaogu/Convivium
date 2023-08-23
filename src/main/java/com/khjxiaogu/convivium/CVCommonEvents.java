@@ -77,6 +77,10 @@ public class CVCommonEvents {
 			is.setCount(replace.getCount());
 			playerIn.setItemInHand(event.getHand(), is);
 		}
-
+		if(playerIn.isShiftKeyDown()&&event.getLevel().getBlockState(event.getPos()).is(CVBlocks.platter.get())) {
+			event.setUseItem(Result.DENY);
+			event.setUseBlock(Result.ALLOW);
+		}
 	}
+
 }

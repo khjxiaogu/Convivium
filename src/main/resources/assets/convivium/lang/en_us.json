@@ -88,5 +88,6 @@
 	"taste.convivium.astringency.negate": "Smoothness %s",
 	"taste.convivium.pungency.negate": "Blandness %s",
 	"taste.convivium.thickness.negate": "Thinness %s",
-	"taste.convivium.soothingness.negate": "Soothingness %s"
+	"taste.convivium.soothingness.negate": "Soothingness %s",
+	"sway.minecraft.mob_effect/regeneration.name": "Regeneration"
 }

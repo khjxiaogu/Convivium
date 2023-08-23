@@ -68,7 +68,7 @@
 			"effect": "minecraft:saturation",
 			"level": 2.0,
 			"time": 10.0
-		},
+		}
 	],
 	"icon": "minecraft:mob_effect/saturation",
 	"locals": {

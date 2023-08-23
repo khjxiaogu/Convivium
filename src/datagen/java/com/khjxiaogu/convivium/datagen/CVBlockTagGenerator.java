@@ -63,6 +63,14 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 		for(String s:CPItems.dishes) {
 			this.tag(CVTags.Blocks.AQUEDUCT_MOVE).add(cpn(s));
 		}
+		adds(tag(BlockTags.MINEABLE_WITH_AXE),CVBlocks.cage.getKey(),CVBlocks.cog.getKey(),CVBlocks.platter.getKey(),CVBlocks.CAMELLIA.getKey());
+		adds(tag(BlockTags.MINEABLE_WITH_PICKAXE),CVBlocks.whisk.getKey(),CVBlocks.aeolipile.getKey(),CVBlocks.pam.getKey(),CVBlocks.basin.getKey(),CVBlocks.lead_basin.getKey(),CVBlocks.BEVERAGE_VENDING_MACHINE.getKey());
+		for(RegistryObject<Block> i:CVBlocks.aqueducts) {
+			tag(BlockTags.MINEABLE_WITH_PICKAXE).add(i.getKey());
+		}
+		for(RegistryObject<Block> i:CVBlocks.aqueduct_mains) {
+			tag(BlockTags.MINEABLE_WITH_PICKAXE).add(i.getKey());
+		}
 
 	}
 	@SafeVarargs

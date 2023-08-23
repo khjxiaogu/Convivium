@@ -56,8 +56,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class CVBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CVMain.MODID);
 	public static final RegistryObject<BeverageBlock> BEVERAGE=baseblock("beverage", ()->new BeverageBlock(getBProps()),r->new BeverageItem(r,CVItems.createProps(),false));
-	public static final RegistryObject<CogCageBlock> cage=baseblock("cage_wheel",()->new CogCageBlock(getKineticProps()));
-	public static final RegistryObject<CogCageBlock> cog=baseblock("cog",()->new CogCageBlock(getKineticProps()));
+	public static final RegistryObject<Block> cage=baseblock("cage_wheel",()->new CogCageBlock(getKineticProps()));
+	public static final RegistryObject<Block> cog=baseblock("cog",()->new CogCageBlock(getKineticProps()));
 	public static final RegistryObject<AeolipileBlock> aeolipile=baseblock("aeolipile",()->new AeolipileBlock(getKineticProps()));
 	public static final RegistryObject<PlatterBlock> platter=baseblock("fruit_platter",()->new PlatterBlock(getKineticProps()));
 	public static final RegistryObject<WhiskBlock> whisk=baseblock("whisk",()->new WhiskBlock(getKineticProps()));

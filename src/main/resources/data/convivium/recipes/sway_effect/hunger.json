@@ -68,7 +68,7 @@
 			"effect": "minecraft:hunger",
 			"level": 3.0,
 			"time": 600.0
-		},
+		} 
 	],
 	"icon": "minecraft:mob_effect/hunger",
 	"locals": {

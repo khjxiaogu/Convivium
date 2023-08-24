@@ -1,0 +1,34 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:felsic_tuff_aqueduct",
+	"name": "水道",
+	"sortnum": 150,
+	"pages": [
+		{
+			"type": "patchouli:image",
+			"title": "水道",
+			"images": "convivium:textures/gui/entries/aqueduct.png",
+			"text": "水道可以传递食物和饮品。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "{b 水道}类似运河，可以用于传递分茶和会饮中的食物、饮品等方块。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"title": "水道",
+			"recipe": "convivium:crafting/felsic_tuff_aqueduct",
+			"text": "{b 也可使用：} 石砖，沙石。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"title": "水道造浪机",
+			"recipe": "convivium:crafting/felsic_tuff_aqueduct_wavemaker",
+			"text": "{b 也可使用：} 石砖，沙石。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "水道是一个由{b 水道方块}和至少一个{b 水道造浪机方块}构成的结构. 水道造浪机需要{(mechanisms/aeolipile)旋转动力}来驱动整个水道。;;运转中的水道可以看到有水花移动，并且移动上方的可传递方块。"
+		}
+	]
+}

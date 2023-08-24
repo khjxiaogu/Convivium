@@ -1,0 +1,30 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:whisk",
+	"name": "动力筅",
+	"sortnum": 140,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"title": "动力筅",
+			"text": "{b 动力筅}是用于{(beverage_basics)制作饮品}的搅拌器。."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/whisk"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "界面简介",
+			"text": "动力筅的界面比较复杂，但是会饮中饮品的合成是高度可自定义的。;; 右侧有4个{em 原料输入槽}，一个{em 容器输入槽}，一个{em 输出槽}和一个{em 流体槽}可以进行交互。;; 流体槽上方有{em 旋转动力指示}和{em 加热指示}，表示动力筅是否被动力驱动或是加热。动力筅必须动力驱动方能工作，但是只有部分配方需要加热。;; 下方的按钮是用于开关{em 加热}，或是选择红石控制是否加热。关闭加热的动力筅会立即停止加热，比撤走热源更方便有效。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "界面左侧被横向分为三块，{(beverage_basics/tastes)味图标}，生效中的{(beverage_basics/sways)趣}和需要进一步操作才能生效的{(beverage_basics/sways)趣}"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "如果您想知道制作饮品的更多信息，请阅读{(beverage_basics)饮品制作}。"
+		}
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:aeolipile",
+	"name": "汽转球",
+	"sortnum": 110,
+	"pages": [
+		{
+			"type": "patchouli:image",
+			"title": "汽转球",
+			"images": "convivium:textures/gui/entries/aeolipile.png",
+			"text": "汽转球。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "{b 汽转球} 是一种原始的蒸汽引擎，可以把蒸汽能量转换为旋转动能. 汽转球是会饮中唯一的动力发生装置"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/aeolipile"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "如果放置在加热中的含水汤锅上，就会产生旋转动能，产生的力量大小取决于热源的热度"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "您需要使用{(mechanisms/kinetic_transmission)齿轮}来传导产生的旋转动力。"
+		}
+	]
+}

@@ -1,0 +1,21 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:pestle_and_mortar",
+	"name": "杵臼",
+	"sortnum": 130,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"title": "杵臼",
+			"text": "{b 杵臼}可以用于研磨、粉碎和挤压，他们需要使用{(mechanisms/aeolipile)旋转动力}来驱动。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/pestle_and_mortar"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "杵臼可以用于研磨茶粉和可可粉，它也可以用于替代分茶中利用铁砧进行的静置合成，而且一般速度更快。"
+		}
+	]
+}

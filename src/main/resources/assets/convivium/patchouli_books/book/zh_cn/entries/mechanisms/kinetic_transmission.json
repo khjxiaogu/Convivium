@@ -1,0 +1,35 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:cog",
+	"name": "动力传导",
+	"sortnum": 120,
+	"pages": [
+		{
+			"type": "patchouli:image",
+			"title": "动力传导",
+			"images": "convivium:textures/gui/entries/gear_set.png",
+			"text": "一个可以工作的齿轮组"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "齿轮",
+			"text": "为了利用{(mechanisms/aeolipile)汽转球}产生的动力，可以用一系列相互啮合的{b 齿轮}连接引擎和机械。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/cog"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/cage_wheel"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "齿轮分为两类，{b 销齿轮}和{b 笼齿轮}。您需要{em 交替放置}两种齿轮来使之啮合。must be set alternativel.y}"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "齿轮可以传递旋转动力。;; 但把多个汽转球连接在一起{em 并不会导致动力叠加}。"
+		}
+	]
+}

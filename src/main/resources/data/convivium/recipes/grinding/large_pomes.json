@@ -12,11 +12,7 @@
 	"items": [
 		{
 			"count": 2,
-			"item": [
-				{"item": "minecraft:apple"},
-				{"tag": "forge:fruits/pear"},
-				{"tag": "convivium:fruits/pome"}
-			]
+			"item": {"tag": "convivium:fruits/pomes/large"}
 		}
 	],
 	"keepInfo": false,

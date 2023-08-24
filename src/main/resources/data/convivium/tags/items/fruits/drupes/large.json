@@ -1,0 +1,10 @@
+{
+	"values": [
+		"caupona:fig"
+	],
+	"optional": [
+		"#forge:fruits/peach",
+		"#forge:fruits/plum",
+		"#forge:fruits/apricot"
+	]
+}

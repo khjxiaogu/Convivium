@@ -1,0 +1,8 @@
+{
+	"type": "minecraft:smoking",
+	"ingredient": {
+		"item": "convivium:fresh_camellia_shoots"
+	},
+	"result": "convivium:steamed_camellia_shoots",
+	"experience": 0.35
+}

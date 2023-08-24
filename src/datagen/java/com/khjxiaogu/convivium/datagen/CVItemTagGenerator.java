@@ -53,7 +53,7 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
-		tag(CVTags.Items.FRUIT).add(rk(Items.GLOW_BERRIES,Items.SWEET_BERRIES,Items.APPLE,Items.MELON_SLICE,Items.GOLDEN_APPLE,Items.GLISTERING_MELON_SLICE)).add(cp("fig","wolfberries"));
+		/*tag(CVTags.Items.FRUIT).add(rk(Items.GLOW_BERRIES,Items.SWEET_BERRIES,Items.APPLE,Items.MELON_SLICE,Items.GOLDEN_APPLE,Items.GLISTERING_MELON_SLICE)).add(cp("fig","wolfberries"));*/
 		tag(CVTags.Items.SPICE).add(cv("neroli","spice_blend")).add(cp("asafoetida"));
 		tag(CVTags.Items.NUTS).add(cp("walnut"));
 		tag(CVTags.Items.SWEET).add(rk(Items.SUGAR,Items.HONEYCOMB,Items.HONEY_BOTTLE));

@@ -1,0 +1,17 @@
+{
+	"values": [
+		"minecraft:melon_slice",
+		"minecraft:glistering_melon_slice",
+		"minecraft:glow_berries",
+		"minecraft:sweet_berries"
+	],
+	"optional": [
+		"#forge:fruits/melon",
+		"#forge:fruits/orange",
+		"#forge:fruits/lemon",
+		"#forge:fruits/lime",
+		"#forge:fruits/pomelo",
+		"#forge:fruits/kiwi",
+		"#forge:fruits/banana"
+	]
+}

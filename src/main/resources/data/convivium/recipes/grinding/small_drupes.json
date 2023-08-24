@@ -7,16 +7,12 @@
 	},
 	"fluidOut": {
 		"Amount": 250,
-		"FluidName": "convivium:pome_juice"
+		"FluidName": "convivium:drupe_juice"
 	},
 	"items": [
 		{
 			"count": 4,
-			"item": [
-				{"tag": "forge:fruits/cherry"},
-				{"tag": "forge:fruits/blackberry"},
-				{"tag": "forge:fruits/raspberry"}
-			]
+			"item": {"tag": "convivium:fruits/drupes/small"}
 		}
 	],
 	"keepInfo": false,

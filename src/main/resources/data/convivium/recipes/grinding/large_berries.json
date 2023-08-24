@@ -12,17 +12,7 @@
 	"items": [
 		{
 			"count": 2,
-			"item": [
-				{"item": "minecraft:melon_slice"},
-				{"tag": "forge:fruits/orange"},
-				{"tag": "forge:fruits/lemon"},
-				{"tag": "forge:fruits/lime"},
-				{"tag": "forge:fruits/orange"},
-				{"tag": "forge:fruits/pomelo"},
-				{"tag": "forge:fruits/kiwi"},
-				{"tag": "forge:fruits/banana"},
-				{"tag": "convivium:fruits/berry"}
-			]
+			"item": {"tag": "convivium:fruits/berries/large"}
 		}
 	],
 	"keepInfo": false,

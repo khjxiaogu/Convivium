@@ -12,10 +12,7 @@
 	"items": [
 		{
 			"count": 3,
-			"item": [
-				{"tag": "forge:fruits/loquat"},
-				{"tag": "forge:fruits/quince"}
-			]
+			"item": {"tag": "convivium:fruits/pomes/small"}
 		}
 	],
 	"keepInfo": false,

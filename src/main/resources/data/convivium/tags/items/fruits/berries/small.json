@@ -1,0 +1,11 @@
+{
+	"values": [
+		"minecraft:sweet_berries",
+		"caupona:wolfberries"
+
+	],
+	"optional": [
+		"#forge:fruits/blueberry",
+		"#forge:fruits/grape"
+	]
+}

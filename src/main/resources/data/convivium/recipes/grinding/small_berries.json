@@ -12,11 +12,7 @@
 	"items": [
 		{
 			"count": 4,
-			"item": [
-				{"item": "minecraft:sweet_berries"},
-				{"item": "caupona:wolfberries"},
-				{"tag": "forge:fruits/blueberry"}
-			]
+			"item": {"tag": "convivium:fruits/berries/small"}
 		}
 	],
 	"keepInfo": false,

@@ -1,0 +1,19 @@
+{
+	"type": "convivium:grinding",
+	"density": 0.0,
+	"items": [
+		{
+			"count": 1,
+			"item": {"item": "minecraft:cocoa_beans"}
+		}
+	],
+	"keepInfo": false,
+	"outputs": [
+		{
+			"type": "forge:nbt",
+			"count": 1,
+			"item": "caupona:cocoa_powder"
+		}
+	],
+	"time": 300
+}

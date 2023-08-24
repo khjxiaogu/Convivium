@@ -1,0 +1,30 @@
+{
+	"category": "convivium:mechanisms",
+	"icon": "convivium:whisk",
+	"name": "Whisk",
+	"sortnum": 140,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"title": "Whisk",
+			"text": "A {b whisk} is a powered blender used for {(beverage_basics)beverage making}."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/whisk"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "GUI Components",
+			"text": "The GUI of whisks is complicated, but in turn demonstrates the high customizability of beverages in Convivium.;; In the right column of the GUI, four {em input slots}, a {em container slot}, an {em output slot}, and a {em fluid tank} can be operated as they are supposed to react.;; Above and below the fluid tank, a {em rotary force indicator} and a {em heat indicator} show whether the whisk is powered (required for working) or heated (required only by certain recipes.).;; Buttons at the bottom toggle redstone control and manual switch of {em heat insulation}. Heat-insulated whisk will not heat the fluid inside even if being heated itself, which is usually more convenient than toggling the heat sources."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "The left column of the GUI are split into three horizontal sectors, respectively showing a reference of {(beverage_basics/tastes)Tastes}, the {(beverage_basics/sways)Sway(s)} that is/are taking effect in the current beverage, and the Sway(s) that can be reached by further adjustments to the beverage."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "For further information about how to brew a beverage, see entries under the category {(beverage_basics)Beverage Basics} for details."
+		}
+	]
+}

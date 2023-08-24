@@ -2,7 +2,7 @@
 	"category": "convivium:mechanisms",
 	"icon": "convivium:felsic_tuff_aqueduct",
 	"name": "Aqueduct",
-	"sortnum": 140,
+	"sortnum": 150,
 	"pages": [
 		{
 			"type": "patchouli:image",

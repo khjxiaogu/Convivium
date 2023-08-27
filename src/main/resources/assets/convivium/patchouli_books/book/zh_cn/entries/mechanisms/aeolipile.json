@@ -7,7 +7,7 @@
 		{
 			"type": "patchouli:image",
 			"title": "汽转球",
-			"images": "convivium:textures/gui/entries/aeolipile.png",
+			"images": ["convivium:textures/gui/entries/aeolipile.png"],
 			"text": "汽转球。"
 		},
 		{

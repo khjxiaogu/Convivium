@@ -7,13 +7,13 @@
 		{
 			"type": "patchouli:image",
 			"title": "Camellia Plant",
-			"images": "convivium:textures/gui/entries/camellia.png",
-			"text": "A camellia shrub generated in a jungle."
+			"images": ["convivium:textures/gui/entries/camellia.png"],
+			"text": "A camellia shrub generated in a bamboo jungle."
 		},
 		{
 			"type": "patchouli:text",
 			"title": "Generation",
-			"text": "{b Camellia}, actually a blend of real-life tea plants and ornamental {i Camellia} species, is a multipurpose shrub generated naturally in jungles."
+			"text": "{b Camellia}, actually a blend of real-life tea plants and ornamental {i Camellia} species, is a multipurpose shrub generated naturally in bamboo jungles."
 		},
 		{
 			"type": "patchouli:text",

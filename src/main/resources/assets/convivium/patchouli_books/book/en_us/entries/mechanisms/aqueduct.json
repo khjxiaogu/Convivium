@@ -7,7 +7,7 @@
 		{
 			"type": "patchouli:image",
 			"title": "Aqueduct",
-			"images": "convivium:textures/gui/entries/aqueduct.png",
+			"images": ["convivium:textures/gui/entries/aqueduct.png"],
 			"text": "Aqueduct conveying food and drink."
 		},
 		{

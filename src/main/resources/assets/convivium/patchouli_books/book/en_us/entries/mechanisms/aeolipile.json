@@ -7,7 +7,7 @@
 		{
 			"type": "patchouli:image",
 			"title": "Æolipile",
-			"images": "convivium:textures/gui/entries/aeolipile.png",
+			"images": ["convivium:textures/gui/entries/aeolipile.png"],
 			"text": "A rotating aeolipile."
 		},
 		{

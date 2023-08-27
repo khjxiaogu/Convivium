@@ -7,7 +7,7 @@
 		{
 			"type": "patchouli:image",
 			"title": "Kinetic Transmission",
-			"images": "convivium:textures/gui/entries/gear_set.png",
+			"images": ["convivium:textures/gui/entries/gear_set.png"],
 			"text": "A working gear set."
 		},
 		{
@@ -29,7 +29,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Gears can transmit rotary force to at most nine blocks away.;; However, if more than one æolipiles are connected to the same gear set, the force transmitted {em will not be added together} as one may expect."
+			"text": "Gears can transmit rotary force to an area at most nine by nine in size.;; However, if more than one æolipiles are connected to the same gear set, the force transmitted {em will not be added together} as one may expect."
 		}
 	]
 }

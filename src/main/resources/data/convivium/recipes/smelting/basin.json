@@ -1,8 +1,8 @@
 {
 	"type": "minecraft:smelting",
 	"ingredient": {
-		"item": "caupona:clay_basin"
+		"item": "convivium:clay_basin"
 	},
-	"result": "caupona:basin",
+	"result": "convivium:basin",
 	"experience": 0.35
 }

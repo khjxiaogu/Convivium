@@ -158,17 +158,16 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 					float ry=0;
 					float rz=0;
 					switch(i) {
-					case 1:rx=+(float) (90/180f*Math.PI);rz=+(float) (90/180f*Math.PI);ry=+(float) (90/180f*Math.PI);break;
-					case 2:rx=+(float) (90/180f*Math.PI);rz=+(float) (90/180f*Math.PI);ry=-(float) (90/180f*Math.PI);break;
-					case 3:rx=-(float) (90/180f*Math.PI);rz=-(float) (90/180f*Math.PI);ry=-(float) (90/180f*Math.PI);break;
-					case 4:rx=-(float) (90/180f*Math.PI);rz=-(float) (90/180f*Math.PI);ry=+(float) (90/180f*Math.PI);break;
+					case 1:rx=(float) ((90+10)/180f*Math.PI);rz=-(float) (15/180f*Math.PI);ry=-(float) (10/180f*Math.PI);break;
+					case 2:rx=(float) ((90+10)/180f*Math.PI);rz=-(float) (15/180f*Math.PI);ry=+(float) (15/180f*Math.PI);break;
+					case 3:rx=(float) ((90-15)/180f*Math.PI);rz=+(float) (15/180f*Math.PI);ry=-(float) (15/180f*Math.PI);break;
+					case 4:rx=(float) ((90-15)/180f*Math.PI);rz=+(float) (15/180f*Math.PI);ry=+(float) (15/180f*Math.PI);break;
 					}
 					matrixStack.pushPose();
-					//matrixStack.translate(, combinedLightIn, combinedOverlayIn);
-					matrixStack.translate((((i&1)==0)?11:5)/16f,3/16f,(i<=2?5:11)/16f);
-					matrixStack.scale(.5f, .5f, .5f);
-					matrixStack.mulPose(new Quaternionf().rotateXYZ(rx,ry,rz));
+					matrixStack.translate((((i&1)==0)?11:5)/16f,3/16f,(i<=2?4:11)/16f);
 					
+					matrixStack.mulPose(new Quaternionf().rotateXYZ(rx,ry,rz));
+					//matrixStack.scale(.85f, .85f, .85f);
 					render.render(is, ItemDisplayContext.GROUND, false,
 							matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
 					matrixStack.popPose();

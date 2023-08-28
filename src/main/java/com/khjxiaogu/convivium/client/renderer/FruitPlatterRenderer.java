@@ -122,12 +122,8 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 				}
 				
 			}
-			
-			
-			/*else if(!hasModel&&blockEntity.config==GlobalConfig.PILED) {
-				
-			}*/
-		}else if(blockEntity.config==GlobalConfig.PILED) {
+		}
+		if(blockEntity.config==GlobalConfig.PILED) {
 			int j=0;
 			matrixStack.pushPose();
 			matrixStack.translate(0.375, 3/16f, 0.5f);
@@ -162,14 +158,15 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 					float ry=0;
 					float rz=0;
 					switch(i) {
-					case 1:rx=+(float) (30/180f*Math.PI);rz=+(float) (15/180f*Math.PI);ry=+(float) (30/180f*Math.PI);break;
-					case 2:rx=+(float) (30/180f*Math.PI);rz=+(float) (15/180f*Math.PI);ry=-(float) (30/180f*Math.PI);break;
-					case 3:rx=-(float) (30/180f*Math.PI);rz=-(float) (15/180f*Math.PI);ry=-(float) (30/180f*Math.PI);break;
-					case 4:rx=-(float) (30/180f*Math.PI);rz=-(float) (15/180f*Math.PI);ry=+(float) (30/180f*Math.PI);break;
+					case 1:rx=+(float) (90/180f*Math.PI);rz=+(float) (90/180f*Math.PI);ry=+(float) (90/180f*Math.PI);break;
+					case 2:rx=+(float) (90/180f*Math.PI);rz=+(float) (90/180f*Math.PI);ry=-(float) (90/180f*Math.PI);break;
+					case 3:rx=-(float) (90/180f*Math.PI);rz=-(float) (90/180f*Math.PI);ry=-(float) (90/180f*Math.PI);break;
+					case 4:rx=-(float) (90/180f*Math.PI);rz=-(float) (90/180f*Math.PI);ry=+(float) (90/180f*Math.PI);break;
 					}
 					matrixStack.pushPose();
 					//matrixStack.translate(, combinedLightIn, combinedOverlayIn);
 					matrixStack.translate((((i&1)==0)?11:5)/16f,3/16f,(i<=2?5:11)/16f);
+					matrixStack.scale(.5f, .5f, .5f);
 					matrixStack.mulPose(new Quaternionf().rotateXYZ(rx,ry,rz));
 					
 					render.render(is, ItemDisplayContext.GROUND, false,

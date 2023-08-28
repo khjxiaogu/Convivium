@@ -39,23 +39,19 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitable,MenuProvider {
 	public ItemStackHandler storage=new ItemStackHandler(4) {
-
 		@Override
 		public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 			return super.isItemValid(slot, stack);
 		}
-
 		@Override
 		public int getSlotLimit(int slot) {
 			return 1;
 		}
-
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
 			syncData();
 		}
-		
 	};
 	boolean isInfinite = false;
 	public GlobalConfig config=GlobalConfig.PILED;
@@ -63,7 +59,6 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 	public PlatterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.PLATTER.get(), pWorldPosition, pBlockState);
 	}
-
 	@Override
 	public void handleMessage(short type, int data) {
 		switch(type) {
@@ -75,7 +70,6 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		}
 		this.syncData();
 	}
-
 	@Override
 	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
 		storage.deserializeNBT(nbt.getCompound("storage"));
@@ -86,7 +80,6 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		}
 		isInfinite = nbt.getBoolean("inf");
 	}
-
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
 		nbt.put("storage",storage.serializeNBT());
@@ -98,12 +91,10 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		nbt.putIntArray("slot_config", its);
 		nbt.putBoolean("inf", isInfinite);
 	}
-
 	@Override
 	public void tick() {
 		
 	}
-
 	@Override
 	public boolean setInfinity() {
 		return isInfinite = !isInfinite;

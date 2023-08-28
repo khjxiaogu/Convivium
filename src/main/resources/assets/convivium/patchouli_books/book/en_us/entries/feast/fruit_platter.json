@@ -1,0 +1,24 @@
+{
+	"category": "convivium:feast",
+	"icon": "convivium:fruit_platter",
+	"name": "Fruit Platter",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Fruit platter can held and display item especially fruit. Shift click to take or put item you point at."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/fruit_platter"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Fruit Platter have special appearence for fruits, items without model would display as item model, but you may force a fruit to display as item model."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Fruit Platter can be configured to display as piled or seperated mode, it would also change shift-click behaviour."
+		}
+		
+	]
+}

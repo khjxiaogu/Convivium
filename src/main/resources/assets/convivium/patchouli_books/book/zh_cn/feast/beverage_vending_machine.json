@@ -1,0 +1,24 @@
+{
+	"category": "convivium:feast",
+	"icon": "convivium:beverage_vending_machine",
+	"name": "饮品贩卖机",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "饮品贩卖机可以用于分发或者售卖流体，一份（250mb）流体需要提供预设数量的投币以交换。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/beverage_vending_machine"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "只有所有者可以查看饮品贩卖机的界面。其他人需要先手持足够的硬币投币使之激活，然后用一个流体容器来盛装。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "所有者可以设置流体的价格，回收硬币和补充流体。"
+		}
+		
+	]
+}

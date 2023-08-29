@@ -1,0 +1,21 @@
+{
+	"category": "convivium:misc",
+	"icon": "convivium:basin",
+	"name": "盆",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "盆可以用于蒸发液体中的水分，产生物品。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/clay_basin",
+			"recipe2": "convivium:crafting/lead_basin"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "盆需要加热来工作，它{b 不能}浓缩汤或者饮品。;;特别的，一些配方需要铅盆才能进行。"
+		}
+		
+	]
+}

@@ -1,18 +1,18 @@
 {
 	"category": "convivium:worldgen",
 	"icon": "convivium:camellia_flower",
-	"name": "Camellia",
+	"name": "山茶",
 	"sortnum": 10,
 	"pages": [
 		{
 			"type": "patchouli:image",
-			"title": "Camellia Plant",
+			"title": "山茶灌木",
 			"images": ["convivium:textures/gui/entries/camellia.png"],
 			"text": "生成在竹林中的山茶灌木。"
 		},
 		{
 			"type": "patchouli:text",
-			"title": "Generation",
+			"title": "生成",
 			"text": "{b 山茶}，实际上结合了现实中的茶树及观赏用的山茶属植物，是一种生成在竹林中的多用途植物。"
 		},
 		{
@@ -21,19 +21,19 @@
 		},
 		{
 			"type": "patchouli:spotlight",
-			"title": "Shoots",
+			"title": "嫩叶",
 			"item": "convivium:fresh_camellia_shoots",
 			"text": "{b 新鲜山茶嫩叶}是第一个阶段的产物，可以用它来制作{em 茶}。"
 		},
 		{
 			"type": "patchouli:spotlight",
-			"title": "Flowers",
+			"title": "花",
 			"item": "convivium:camellia_flower",
 			"text": "{b 山茶花}是第二个阶段的产物，也是制造{em 白色染料}的原料。"
 		},
 		{
 			"type": "patchouli:spotlight",
-			"title": "Seeds",
+			"title": "籽",
 			"item": "convivium:camellia_seeds",
 			"text": "{b 山茶籽}是第三个阶段的产物，可用于{em 榨油}，与《分茶》中核桃的用途类似。将山茶籽与泥土、水放在陶缸中静置，可培育出新的山茶灌木。"
 		}

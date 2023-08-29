@@ -19,18 +19,19 @@
 package com.khjxiaogu.convivium.blocks.kinetics;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVBlocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CogCageBlock extends KineticBasedBlock<CogeCageBlockEntity> {
-	VoxelShape shape=Block.box(0, 0, 0, 16, 7, 16);
+	VoxelShape shapeCog=Shapes.or(Block.box(-3, 3, -3, 19, 5, 19),Block.box(6, 0, 6, 10, 9, 10));
+	VoxelShape shapeCage=Shapes.or(Block.box(2, 1, 2, 14, 7, 14),Block.box(6, 0, 6, 10, 9, 10));
 	public CogCageBlock(Properties blockProps) {
 		super(CVBlockEntityTypes.COG_CAGE, blockProps);
 	}
@@ -49,7 +50,9 @@ public class CogCageBlock extends KineticBasedBlock<CogeCageBlockEntity> {
 
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-		return shape;
+		if(pState.is(CVBlocks.cage.get()))
+			return shapeCage;
+		return shapeCog;
 	}
 
 

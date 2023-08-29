@@ -1,0 +1,21 @@
+{
+	"category": "convivium:misc",
+	"icon": "convivium:basin",
+	"name": "Basin",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Basins can evaporate water in fluid and produce items."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/basin",
+			"recipe2": "convivium:crafting/lead_basin"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Basins require heat to work. It can NOT concerntrate stew or beverage.;;Specially, some recipe require lead basin to work."
+		}
+		
+	]
+}

@@ -142,6 +142,7 @@ repositories {
     	content {
             includeGroup "com.teammoeg"
             includeGroup "com.khjxiaogu"
+            includeGroup "vazkii.patchouli"
         }
     }
     maven {
@@ -178,8 +179,7 @@ dependencies {
 	implementation "com.teammoeg:Caupona:1.20.1-${caupona_version}:deobf"
 	//runtimeOnly fg.deobf("com.teammoeg:Caupona:1.20.1-0.4.5-build1")
 	
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78:api")
-    //runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.3-78")
+    implementation fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE-20230717")
 
     // FG5 requires 0.8.3
     annotationProcessor "org.spongepowered:mixin:0.8.3:processor"

@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CamelliaBlock extends BushBlock {
@@ -37,9 +38,16 @@ public class CamelliaBlock extends BushBlock {
 		// TODO Auto-generated constructor stub
 	}
 	static final VoxelShape shape = Block.box(4, 0, 4, 12, 16, 12);
-
+	static final VoxelShape shapesel=Shapes.or(Block.box(0, 3, 0, 16, 16, 16), shape);
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return shapesel;
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+			CollisionContext pContext) {
+		// TODO Auto-generated method stub
 		return shape;
 	}
 

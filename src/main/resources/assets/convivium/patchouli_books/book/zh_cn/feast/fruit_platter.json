@@ -1,0 +1,24 @@
+{
+	"category": "convivium:feast",
+	"icon": "convivium:fruit_platter",
+	"name": "果盘",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "果盘可以放置和展示物品，shift+右键可以取出指向的物品和放入物品。"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "convivium:crafting/fruit_platter"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "果盘有为水果提供的特殊外观，如果没有特殊外观则显示为物品模型，当然您可以强制设置为展示物品模型。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "果盘可以设置为堆叠或者分格模式，这也会改变shift右键的操作模式。"
+		}
+		
+	]
+}

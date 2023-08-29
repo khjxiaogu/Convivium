@@ -1,4 +1,4 @@
-buildscript {
+、buildscript {
     repositories {
         maven { url = 'https://plugins.gradle.org/m2/' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
@@ -297,6 +297,5 @@ modrinth {
     dependencies { // A special DSL for creating dependencies
         optional.project "jei"
         optional.project "patchouli"
-        required.version "caupona","0.4.6"
     }
 }

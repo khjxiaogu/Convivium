@@ -53,6 +53,8 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
+		for(String s:new String[] {"berries","pomes","drupes"})
+			tag(CVTags.Items.FRUIT).addTag(ItemTags.create(mrl("fruits/"+s+"/small"))).addTag(ItemTags.create(mrl("fruits/"+s+"/large")));
 		/*tag(CVTags.Items.FRUIT).add(rk(Items.GLOW_BERRIES,Items.SWEET_BERRIES,Items.APPLE,Items.MELON_SLICE,Items.GOLDEN_APPLE,Items.GLISTERING_MELON_SLICE)).add(cp("fig","wolfberries"));*/
 		tag(CVTags.Items.SPICE).add(cv("neroli","spice_blend")).add(cp("asafoetida"));
 		tag(CVTags.Items.NUTS).add(cp("walnut"));

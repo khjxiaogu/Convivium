@@ -1,12 +1,10 @@
 {
   "values": [
-    "minecraft:glow_berries",
-    "minecraft:sweet_berries",
-    "minecraft:apple",
-    "minecraft:melon_slice",
-    "minecraft:golden_apple",
-    "minecraft:glistering_melon_slice",
-    "caupona:fig",
-    "caupona:wolfberries"
+    "#convivium:fruits/berries/small",
+    "#convivium:fruits/berries/large",
+    "#convivium:fruits/pomes/small",
+    "#convivium:fruits/pomes/large",
+    "#convivium:fruits/drupes/small",
+    "#convivium:fruits/drupes/large"
   ]
 }

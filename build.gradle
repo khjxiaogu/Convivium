@@ -287,7 +287,8 @@ curseforge {
     }
 }
 modrinth {
-    token = System.getenv("MODRINTH_TOKEN") // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
+    def envApiKey = System.getenv('MODRINTH_TOKEN')
+    token = envApiKey == null ? 'nope' : envApiKey
     projectId = project.modrinthId // This can be the project ID or the slug. Either will work!
     versionNumber = project.version // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType = project.curse_type // This is the default -- can also be `beta` or `alpha`

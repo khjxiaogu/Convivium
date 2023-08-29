@@ -95,5 +95,10 @@
 	"taste.convivium.pungency.negate": "Blandness %s",
 	"taste.convivium.thickness.negate": "Thinness %s",
 	"taste.convivium.soothingness.negate": "Soothingness %s",
-	"sway.minecraft.mob_effect/regeneration.name": "Regeneration"
+	"sway.minecraft.mob_effect/regeneration.name": "Regeneration",
+	"sway.minecraft.mob_effect/hunger.name": "Hunger",
+	"sway.minecraft.mob_effect/saturation.name": "Saturation",
+	"sway.minecraft.mob_effect/whither.name": "Whither",
+	"sway.minecraft.mob_effect/instant_damage.name": "Instant Damage",
+	"sway.minecraft.mob_effect/instant_health.name": "Instant Health"
 }

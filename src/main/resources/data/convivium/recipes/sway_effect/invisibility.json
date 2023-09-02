@@ -55,7 +55,7 @@
 	],
 	"icon": "minecraft:mob_effect/invisibility",
 	"locals": {
-		"display": 0.0,
+		"display": "nthpsoblend+nasnpuwanewax",
 		"astringencyDelta": "if(-astringency+0,-if(nas-npu,max(0,10/1-nas),-nas)/4,-10)",
 		"pungencyDelta": "if(-pungency+0,-if(npu-nas,max(0,10/1-npu),-npu)/4,-10)",
 		"soothingnessDelta": "if(soothingness+0,max(0,3-0*sqrt(pso*nth)/2),10)",

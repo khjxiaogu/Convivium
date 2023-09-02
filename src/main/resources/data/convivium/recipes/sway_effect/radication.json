@@ -72,7 +72,7 @@
 	],
 	"icon": "convivium:mob_effect/radication",
 	"locals": {
-		"display": 0.0,
+		"display": "psoppucontra+nswnthbalance",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": "if(pungency+0,if(ppu-pso,max(0,10/1-ppu),-ppu)/4,10)",
 		"soothingnessDelta": "if(soothingness+0,if(pso-ppu,max(0,10/1-pso),-pso)/4,10)",

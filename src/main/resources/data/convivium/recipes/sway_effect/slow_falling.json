@@ -55,7 +55,7 @@
 	],
 	"icon": "minecraft:mob_effect/slow_falling",
 	"locals": {
-		"display": 0.0,
+		"display": "psonswcontra+nthnpuwanewax",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1-npu),-npu)/4,-10)",
 		"soothingnessDelta": "if(soothingness+2,if(pso-nsw,max(0,10/1-pso),-pso)/4,10)",

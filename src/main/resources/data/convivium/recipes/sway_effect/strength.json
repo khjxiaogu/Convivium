@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppunsoblend",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "pthnswbalance",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:strength",
+			"level": 1.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppunsoblend",
+					"right": 1.2
+				},
+				{
+					"compare": "greater",
+					"left": "pthnswbalance",
+					"right": 1.2
+				}
+			],
+			"effect": "minecraft:strength",
+			"level": 1.0,
+			"time": 1500.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppunsoblend",
+					"right": 1.8
+				},
+				{
+					"compare": "greater",
+					"left": "pthnswbalance",
+					"right": 1.8
+				}
+			],
+			"effect": "minecraft:strength",
+			"level": 2.0,
+			"time": 1500.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppunsoblend",
+					"right": 3.0
+				},
+				{
+					"compare": "greater",
+					"left": "pthnswbalance",
+					"right": 3.0
+				}
+			],
+			"effect": "minecraft:strength",
+			"level": 2.0,
+			"time": 3000.0
+		}
+	],
+	"icon": "minecraft:mob_effect/strength",
+	"locals": {
+		"display": "ppunsoblend+pthnswbalance",
+		"astringencyDelta": 0.0,
+		"pungencyDelta": "if(pungency-2,max(0,3-1*sqrt(ppu*nso)/2),10)",
+		"soothingnessDelta": "if(-soothingness-2,-max(0,3-1*sqrt(nso*ppu)/2),-10)",
+		"sweetnessDelta": "if(-sweetness+0,-if(10/1-max(nsw,pth),10,(x-y)/(4*1)),-10)",
+		"thicknessDelta": "if(thickness+0,if(10/1-max(pth,nsw),10,(x-y)/(4*1)),10)",
+		"ppu": "max(0,pungency-2)",
+		"nso": "max(0,-soothingness-2)",
+		"ppunsoblend": "1*sqrt(ppu*nso)/2",
+		"pth": "max(0,thickness+0)",
+		"nsw": "max(0,-sweetness+0)",
+		"pthnswbalance": "1*max(0,log((pth^2+nsw^2)/(abs(pth-nsw)+1))/1.5)"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "fire"
+		}
+	]
+}

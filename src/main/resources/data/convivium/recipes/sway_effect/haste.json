@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nswnasbalance",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "nthppucontra",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:haste",
+			"level": 1.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nswnasbalance",
+					"right": 1.4
+				},
+				{
+					"compare": "greater",
+					"left": "nthppucontra",
+					"right": 1.4
+				}
+			],
+			"effect": "minecraft:haste",
+			"level": 1.0,
+			"time": 1800.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nswnasbalance",
+					"right": 2.0
+				},
+				{
+					"compare": "greater",
+					"left": "nthppucontra",
+					"right": 2.0
+				}
+			],
+			"effect": "minecraft:haste",
+			"level": 2.0,
+			"time": 1800.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nswnasbalance",
+					"right": 3.0
+				},
+				{
+					"compare": "greater",
+					"left": "nthppucontra",
+					"right": 3.0
+				}
+			],
+			"effect": "minecraft:haste",
+			"level": 3.0,
+			"time": 1800.0
+		}
+	],
+	"icon": "minecraft:mob_effect/haste",
+	"locals": {
+		"display": "nswnasbalance+nthppucontra",
+		"astringencyDelta": "if(-astringency-2,-if(10/0-max(nas,nsw),10,(x-y)/(4*0)),-10)",
+		"pungencyDelta": "if(pungency+0,if(ppu-nth,max(0,10/1-ppu),-ppu)/4,10)",
+		"soothingnessDelta": 0.0,
+		"sweetnessDelta": "if(-sweetness+2,-if(10/0-max(nsw,nas),10,(x-y)/(4*0)),-10)",
+		"thicknessDelta": "if(-thickness+0,-if(nth-ppu,max(0,10/1-nth),-nth)/4,-10)",
+		"nsw": "max(0,-sweetness+2)",
+		"nas": "max(0,-astringency-2)",
+		"nswnasbalance": "0*max(0,log((nsw^2+nas^2)/(abs(nsw-nas)+1))/1.5)",
+		"nth": "max(0,-thickness+0)",
+		"ppu": "max(0,pungency+0)",
+		"nthppucontra": "1*sqrt(max(0,(nth^2-ppu)*(nth-ppu^2)))/10"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "fire"
+		}
+	]
+}

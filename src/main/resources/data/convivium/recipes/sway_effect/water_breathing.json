@@ -1,0 +1,70 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "xthxsomulti",
+					"right": 1.2
+				}
+			],
+			"effect": "minecraft:water_breathing",
+			"level": 1.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "xthxsomulti",
+					"right": 1.6
+				}
+			],
+			"effect": "minecraft:water_breathing",
+			"level": 1.0,
+			"time": 1500.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "xthxsomulti",
+					"right": 1.85
+				}
+			],
+			"effect": "minecraft:water_breathing",
+			"level": 1.0,
+			"time": 2400.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "xthxsomulti",
+					"right": 1.925
+				}
+			],
+			"effect": "minecraft:water_breathing",
+			"level": 1.0,
+			"time": 3600.0
+		}
+	],
+	"icon": "minecraft:mob_effect/water_breathing",
+	"locals": {
+		"xthxsomulti": "abs(sin(2*thickness/PI)-sin(2*soothingness/PI))",
+		"display": "xthxsomulti",
+		"astringencyDelta": 0.0,
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "2-xthxsomulti",
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "2-xthxsomulti"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "hearth"
+		}
+	]
+}

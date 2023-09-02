@@ -55,7 +55,7 @@
 	],
 	"icon": "minecraft:mob_effect/blindness",
 	"locals": {
-		"display": 0.0,
+		"display": "nthpasbalance+pswppubalance",
 		"astringencyDelta": "if(astringency+1,if(10/1-max(pas,nth),10,(x-y)/(4*1)),10)",
 		"pungencyDelta": "if(pungency+0,if(10/1-max(ppu,psw),10,(x-y)/(4*1)),10)",
 		"soothingnessDelta": 0.0,

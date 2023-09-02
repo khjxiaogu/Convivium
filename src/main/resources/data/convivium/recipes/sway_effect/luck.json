@@ -55,7 +55,7 @@
 	],
 	"icon": "minecraft:mob_effect/luck",
 	"locals": {
-		"display": 0.0,
+		"display": "pswnsoblend+pthpascontra",
 		"astringencyDelta": "if(astringency-2,if(pas-pth,max(0,10/1-pas),-pas)/4,10)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1*sqrt(nso*psw)/2),-10)",

@@ -55,7 +55,7 @@
 	],
 	"icon": "minecraft:mob_effect/unluck",
 	"locals": {
-		"display": 0.0,
+		"display": "nswpsoblend+pthpascontra",
 		"astringencyDelta": "if(astringency-2,if(pas-pth,max(0,10/1-pas),-pas)/4,10)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "if(soothingness-1,max(0,3-1*sqrt(pso*nsw)/2),10)",

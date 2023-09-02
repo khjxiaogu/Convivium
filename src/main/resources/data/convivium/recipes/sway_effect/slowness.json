@@ -72,7 +72,7 @@
 	],
 	"icon": "minecraft:mob_effect/slowness",
 	"locals": {
-		"display": 0.0,
+		"display": "paspthwanewax+npupswcontra",
 		"astringencyDelta": "if(astringency+0,if(pas-pth,max(0,10/1-pas),-pas)/4,10)",
 		"pungencyDelta": "if(-pungency+0,-if(npu-psw,max(0,10/1-npu),-npu)/4,-10)",
 		"soothingnessDelta": 0.0,

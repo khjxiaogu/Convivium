@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasblend",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "nswpsowanewax",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:resistance",
+			"level": 1.0,
+			"time": 400.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasblend",
+					"right": 1.2
+				},
+				{
+					"compare": "greater",
+					"left": "nswpsowanewax",
+					"right": 1.2
+				}
+			],
+			"effect": "minecraft:resistance",
+			"level": 1.0,
+			"time": 1200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasblend",
+					"right": 1.8
+				},
+				{
+					"compare": "greater",
+					"left": "nswpsowanewax",
+					"right": 1.8
+				}
+			],
+			"effect": "minecraft:resistance",
+			"level": 2.0,
+			"time": 1200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasblend",
+					"right": 3.0
+				},
+				{
+					"compare": "greater",
+					"left": "nswpsowanewax",
+					"right": 3.0
+				}
+			],
+			"effect": "minecraft:resistance",
+			"level": 3.0,
+			"time": 1200.0
+		}
+	],
+	"icon": "minecraft:mob_effect/resistance",
+	"locals": {
+		"display": "pthnasblend+nswpsowanewax",
+		"astringencyDelta": "if(-astringency+0,-max(0,3-1*sqrt(nas*pth)/2),-10)",
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "if(soothingness+0,if(pso-nsw,max(0,10/1-pso),-pso)/4,10)",
+		"sweetnessDelta": "if(-sweetness+0,-if(nsw-pso,max(0,10/1-nsw),-nsw)/4,-10)",
+		"thicknessDelta": "if(thickness+0,max(0,3-1*sqrt(pth*nas)/2),10)",
+		"pth": "max(0,thickness+0)",
+		"nas": "max(0,-astringency+0)",
+		"pthnasblend": "1*sqrt(pth*nas)/2",
+		"nsw": "max(0,-sweetness+0)",
+		"pso": "max(0,soothingness+0)",
+		"nswpsowanewax": "1*sqrt(abs(nsw^2-pso^2))/5"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "hearth"
+		}
+	]
+}

@@ -55,7 +55,7 @@
 	],
 	"icon": "convivium:mob_effect/plummet",
 	"locals": {
-		"display": 0.0,
+		"display": "nsopswcontra+nthnpuwanewax",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1-npu),-npu)/4,-10)",
 		"soothingnessDelta": "if(-soothingness+2,-if(nso-psw,max(0,10/0-nso),-nso)/4,-10)",

@@ -1,0 +1,78 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnsoblend",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "nasnpuwanewax",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:glowing",
+			"level": 1.0,
+			"time": 300.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnsoblend",
+					"right": 1.4
+				},
+				{
+					"compare": "greater",
+					"left": "nasnpuwanewax",
+					"right": 1.4
+				}
+			],
+			"effect": "minecraft:glowing",
+			"level": 1.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnsoblend",
+					"right": 2.0
+				},
+				{
+					"compare": "greater",
+					"left": "nasnpuwanewax",
+					"right": 2.0
+				}
+			],
+			"effect": "minecraft:glowing",
+			"level": 1.0,
+			"time": 900.0
+		}
+	],
+	"icon": "minecraft:mob_effect/glowing",
+	"locals": {
+		"display": 0.0,
+		"astringencyDelta": "if(-astringency+0,-if(nas-npu,max(0,10/1-nas),-nas)/4,-10)",
+		"pungencyDelta": "if(-pungency+0,-if(npu-nas,max(0,10/1-npu),-npu)/4,-10)",
+		"soothingnessDelta": "if(-soothingness+0,-max(0,3-1*sqrt(nso*pth)/2),-10)",
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "if(thickness+0,max(0,3-1*sqrt(pth*nso)/2),10)",
+		"pth": "max(0,thickness+0)",
+		"nso": "max(0,-soothingness+0)",
+		"pthnsoblend": "1*sqrt(pth*nso)/2",
+		"nas": "max(0,-astringency+0)",
+		"npu": "max(0,-pungency+0)",
+		"nasnpuwanewax": "1*sqrt(abs(nas^2-npu^2))/5"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "seasons"
+		}
+	]
+}

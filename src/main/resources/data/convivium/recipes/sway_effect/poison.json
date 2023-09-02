@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppupasbalance",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:poison",
+			"level": 1.0,
+			"time": 140.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppupasbalance",
+					"right": 1.3
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 1.3
+				}
+			],
+			"effect": "minecraft:poison",
+			"level": 1.0,
+			"time": 300.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppupasbalance",
+					"right": 2.0
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 2.0
+				}
+			],
+			"effect": "minecraft:poison",
+			"level": 2.0,
+			"time": 300.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "ppupasbalance",
+					"right": 3.5
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 3.5
+				}
+			],
+			"effect": "minecraft:poison",
+			"level": 3.0,
+			"time": 300.0
+		}
+	],
+	"icon": "minecraft:mob_effect/poison",
+	"locals": {
+		"display": 0.0,
+		"astringencyDelta": "if(astringency+0,if(10/1-max(pas,ppu),10,(x-y)/(4*1)),10)",
+		"pungencyDelta": "if(pungency+0,if(10/1-max(ppu,pas),10,(x-y)/(4*1)),10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1-psw),-psw)/4,10)",
+		"thicknessDelta": 0.0,
+		"ppu": "max(0,pungency+0)",
+		"pas": "max(0,astringency+0)",
+		"ppupasbalance": "1*max(0,log((ppu^2+pas^2)/(abs(ppu-pas)+1))/1.5)",
+		"psw": "max(0,sweetness+0)",
+		"nso": "max(0,-soothingness+0)",
+		"pswnsocontra": "1*sqrt(max(0,(psw^2-nso)*(psw-nso^2)))/10"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "wine"
+		}
+	]
+}

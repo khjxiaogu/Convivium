@@ -1,0 +1,95 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "npunasbalance",
+					"right": 1.0
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 1.0
+				}
+			],
+			"effect": "minecraft:health_boost",
+			"level": 1.0,
+			"time": 600.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "npunasbalance",
+					"right": 1.6
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 1.6
+				}
+			],
+			"effect": "minecraft:health_boost",
+			"level": 1.0,
+			"time": 1200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "npunasbalance",
+					"right": 2.4
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 2.4
+				}
+			],
+			"effect": "minecraft:health_boost",
+			"level": 2.0,
+			"time": 1200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "npunasbalance",
+					"right": 3.2
+				},
+				{
+					"compare": "greater",
+					"left": "pswnsocontra",
+					"right": 3.2
+				}
+			],
+			"effect": "minecraft:health_boost",
+			"level": 3.0,
+			"time": 1200.0
+		}
+	],
+	"icon": "minecraft:mob_effect/health_boost",
+	"locals": {
+		"display": 0.0,
+		"astringencyDelta": "if(-astringency+0,-if(10/0-max(nas,npu),10,(x-y)/(4*0)),-10)",
+		"pungencyDelta": "if(-pungency+0,-if(10/0-max(npu,nas),10,(x-y)/(4*0)),-10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1-psw),-psw)/4,10)",
+		"thicknessDelta": 0.0,
+		"npu": "max(0,-pungency+0)",
+		"nas": "max(0,-astringency+0)",
+		"npunasbalance": "0*max(0,log((npu^2+nas^2)/(abs(npu-nas)+1))/1.5)",
+		"psw": "max(0,sweetness+0)",
+		"nso": "max(0,-soothingness+0)",
+		"pswnsocontra": "1*sqrt(max(0,(psw^2-nso)*(psw-nso^2)))/10"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "wine"
+		}
+	]
+}

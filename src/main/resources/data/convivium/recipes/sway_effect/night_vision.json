@@ -1,0 +1,78 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasbalance",
+					"right": 0.6
+				},
+				{
+					"compare": "greater",
+					"left": "pswppubalance",
+					"right": 0.6
+				}
+			],
+			"effect": "minecraft:night_vision",
+			"level": 1.0,
+			"time": 1200.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasbalance",
+					"right": 1.4
+				},
+				{
+					"compare": "greater",
+					"left": "pswppubalance",
+					"right": 1.4
+				}
+			],
+			"effect": "minecraft:night_vision",
+			"level": 1.0,
+			"time": 2400.0
+		},
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "pthnasbalance",
+					"right": 2.4
+				},
+				{
+					"compare": "greater",
+					"left": "pswppubalance",
+					"right": 2.4
+				}
+			],
+			"effect": "minecraft:night_vision",
+			"level": 1.0,
+			"time": 4800.0
+		}
+	],
+	"icon": "minecraft:mob_effect/night_vision",
+	"locals": {
+		"display": 0.0,
+		"astringencyDelta": "if(-astringency-2,-if(10/1-max(nas,pth),10,(x-y)/(4*1)),-10)",
+		"pungencyDelta": "if(pungency+0,if(10/1-max(ppu,psw),10,(x-y)/(4*1)),10)",
+		"soothingnessDelta": 0.0,
+		"sweetnessDelta": "if(sweetness+0,if(10/1-max(psw,ppu),10,(x-y)/(4*1)),10)",
+		"thicknessDelta": "if(thickness-2,if(10/1-max(pth,nas),10,(x-y)/(4*1)),10)",
+		"pth": "max(0,thickness-2)",
+		"nas": "max(0,-astringency-2)",
+		"pthnasbalance": "1*max(0,log((pth^2+nas^2)/(abs(pth-nas)+1))/1.5)",
+		"psw": "max(0,sweetness+0)",
+		"ppu": "max(0,pungency+0)",
+		"pswppubalance": "1*max(0,log((psw^2+ppu^2)/(abs(psw-ppu)+1))/1.5)"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "seasons"
+		}
+	]
+}

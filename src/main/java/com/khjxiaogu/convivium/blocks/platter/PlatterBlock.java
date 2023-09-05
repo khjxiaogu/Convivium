@@ -102,7 +102,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 			return p;
 		if (worldIn.getBlockEntity(pos) instanceof PlatterBlockEntity blockEntity) {
 			if (!worldIn.isClientSide) {
-				if(player.isShiftKeyDown()) {
+				if(blockEntity.isInfinite||player.isShiftKeyDown()) {
 					double dx=hit.getLocation().x-pos.getX();
 					double dz=hit.getLocation().z-pos.getZ();
 					boolean ddx=dx>0.5;

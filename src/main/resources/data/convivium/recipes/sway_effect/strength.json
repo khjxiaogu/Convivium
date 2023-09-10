@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "ppunsoblend",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "pthnswbalance",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:strength",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "ppunsoblend",
-					"right": 1.2
+					"right": 0.36
 				},
 				{
 					"compare": "greater",
 					"left": "pthnswbalance",
-					"right": 1.2
+					"right": 0.36
 				}
 			],
 			"effect": "minecraft:strength",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "ppunsoblend",
-					"right": 1.8
+					"right": 0.54
 				},
 				{
 					"compare": "greater",
 					"left": "pthnswbalance",
-					"right": 1.8
+					"right": 0.54
 				}
 			],
 			"effect": "minecraft:strength",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "ppunsoblend",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "pthnswbalance",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "minecraft:strength",
@@ -74,16 +74,16 @@
 	"locals": {
 		"display": "ppunsoblend+pthnswbalance",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(pungency-2,max(0,3-1*sqrt(ppu*nso)/2),10)",
-		"soothingnessDelta": "if(-soothingness-2,-max(0,3-1*sqrt(nso*ppu)/2),-10)",
-		"sweetnessDelta": "if(-sweetness+0,-if(10/1-max(nsw,pth),10,(x-y)/(4*1)),-10)",
-		"thicknessDelta": "if(thickness+0,if(10/1-max(pth,nsw),10,(x-y)/(4*1)),10)",
+		"pungencyDelta": "if(pungency-2,max(0,3-1.0*sqrt(ppu*nso)/2),10)",
+		"soothingnessDelta": "if(-soothingness-2,-max(0,3-1.0*sqrt(nso*ppu)/2),-10)",
+		"sweetnessDelta": "if(-sweetness+0,-if(10/1.0-max(nsw,pth),10,(x-y)/(4*1.0)),-10)",
+		"thicknessDelta": "if(thickness+0,if(10/1.0-max(pth,nsw),10,(x-y)/(4*1.0)),10)",
 		"ppu": "max(0,pungency-2)",
 		"nso": "max(0,-soothingness-2)",
-		"ppunsoblend": "1*sqrt(ppu*nso)/2",
+		"ppunsoblend": "1.0*sqrt(ppu*nso)/2",
 		"pth": "max(0,thickness+0)",
 		"nsw": "max(0,-sweetness+0)",
-		"pthnswbalance": "1*max(0,log((pth^2+nsw^2)/(abs(pth-nsw)+1))/1.5)"
+		"pthnswbalance": "1.0*max(0,log((pth^2+nsw^2)/(abs(pth-nsw)+1))/1.5)"
 	},
 	"priority": 0,
 	"relish": [

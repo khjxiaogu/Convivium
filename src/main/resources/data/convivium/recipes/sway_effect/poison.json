@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "ppupasbalance",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:poison",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "ppupasbalance",
-					"right": 1.3
+					"right": 0.39
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 1.3
+					"right": 0.39
 				}
 			],
 			"effect": "minecraft:poison",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "ppupasbalance",
-					"right": 2.0
+					"right": 0.6
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 2.0
+					"right": 0.6
 				}
 			],
 			"effect": "minecraft:poison",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "ppupasbalance",
-					"right": 3.5
+					"right": 1.05
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 3.5
+					"right": 1.05
 				}
 			],
 			"effect": "minecraft:poison",
@@ -73,17 +73,17 @@
 	"icon": "minecraft:mob_effect/poison",
 	"locals": {
 		"display": "ppupasbalance+pswnsocontra",
-		"astringencyDelta": "if(astringency+0,if(10/1-max(pas,ppu),10,(x-y)/(4*1)),10)",
-		"pungencyDelta": "if(pungency+0,if(10/1-max(ppu,pas),10,(x-y)/(4*1)),10)",
-		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1-nso),-nso)/4,-10)",
-		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1-psw),-psw)/4,10)",
+		"astringencyDelta": "if(astringency+0,if(10/1.0-max(pas,ppu),10,(x-y)/(4*1.0)),10)",
+		"pungencyDelta": "if(pungency+0,if(10/1.0-max(ppu,pas),10,(x-y)/(4*1.0)),10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1.0-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1.0-psw),-psw)/4,10)",
 		"thicknessDelta": 0.0,
 		"ppu": "max(0,pungency+0)",
 		"pas": "max(0,astringency+0)",
-		"ppupasbalance": "1*max(0,log((ppu^2+pas^2)/(abs(ppu-pas)+1))/1.5)",
+		"ppupasbalance": "1.0*max(0,log((ppu^2+pas^2)/(abs(ppu-pas)+1))/1.5)",
 		"psw": "max(0,sweetness+0)",
 		"nso": "max(0,-soothingness+0)",
-		"pswnsocontra": "1*sqrt(max(0,(psw^2-nso)*(psw-nso^2)))/10"
+		"pswnsocontra": "1.0*sqrt(max(0,(psw^2-nso)*(psw-nso^2)))/10"
 	},
 	"priority": 0,
 	"relish": [

@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 0.8
+					"right": 0.24
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 0.8
+					"right": 0.24
 				}
 			],
 			"effect": "minecraft:levitation",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 1.4
+					"right": 0.42
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 1.4
+					"right": 0.42
 				}
 			],
 			"effect": "minecraft:levitation",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 2.0
+					"right": 0.6
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 2.0
+					"right": 0.6
 				}
 			],
 			"effect": "minecraft:levitation",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "minecraft:levitation",
@@ -74,16 +74,16 @@
 	"locals": {
 		"display": "psopswcontra+nthnpuwanewax",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1-npu),-npu)/4,-10)",
-		"soothingnessDelta": "if(soothingness+0,if(pso-psw,max(0,10/1-pso),-pso)/4,10)",
-		"sweetnessDelta": "if(sweetness+0,if(psw-pso,max(0,10/1-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-npu,max(0,10/1-nth),-nth)/4,-10)",
+		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1.0-npu),-npu)/4,-10)",
+		"soothingnessDelta": "if(soothingness+0,if(pso-psw,max(0,10/1.0-pso),-pso)/4,10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-pso,max(0,10/1.0-psw),-psw)/4,10)",
+		"thicknessDelta": "if(-thickness+0,-if(nth-npu,max(0,10/1.0-nth),-nth)/4,-10)",
 		"pso": "max(0,soothingness+0)",
 		"psw": "max(0,sweetness+0)",
-		"psopswcontra": "1*sqrt(max(0,(pso^2-psw)*(pso-psw^2)))/10",
+		"psopswcontra": "1.0*sqrt(max(0,(pso^2-psw)*(pso-psw^2)))/10",
 		"nth": "max(0,-thickness+0)",
 		"npu": "max(0,-pungency+0)",
-		"nthnpuwanewax": "1*sqrt(abs(nth^2-npu^2))/5"
+		"nthnpuwanewax": "1.0*sqrt(abs(nth^2-npu^2))/5"
 	},
 	"priority": 0,
 	"relish": [

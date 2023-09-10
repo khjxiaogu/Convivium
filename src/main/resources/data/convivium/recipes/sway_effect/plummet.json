@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nsopswcontra",
-					"right": 0.8
+					"right": 0.24
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 0.8
+					"right": 0.24
 				}
 			],
 			"effect": "convivium:plummet",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nsopswcontra",
-					"right": 1.6
+					"right": 0.48
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 1.6
+					"right": 0.48
 				}
 			],
 			"effect": "convivium:plummet",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nsopswcontra",
-					"right": 2.4
+					"right": 0.72
 				},
 				{
 					"compare": "greater",
 					"left": "nthnpuwanewax",
-					"right": 2.4
+					"right": 0.72
 				}
 			],
 			"effect": "convivium:plummet",
@@ -57,16 +57,16 @@
 	"locals": {
 		"display": "nsopswcontra+nthnpuwanewax",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1-npu),-npu)/4,-10)",
-		"soothingnessDelta": "if(-soothingness+2,-if(nso-psw,max(0,10/0-nso),-nso)/4,-10)",
-		"sweetnessDelta": "if(sweetness-3,if(psw-nso,max(0,10/0-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-npu,max(0,10/1-nth),-nth)/4,-10)",
+		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1.0-npu),-npu)/4,-10)",
+		"soothingnessDelta": "if(-soothingness+2,-if(nso-psw,max(0,10/0.9-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(sweetness-3,if(psw-nso,max(0,10/0.9-psw),-psw)/4,10)",
+		"thicknessDelta": "if(-thickness+0,-if(nth-npu,max(0,10/1.0-nth),-nth)/4,-10)",
 		"nso": "max(0,-soothingness+2)",
 		"psw": "max(0,sweetness-3)",
-		"nsopswcontra": "0*sqrt(max(0,(nso^2-psw)*(nso-psw^2)))/10",
+		"nsopswcontra": "0.9*sqrt(max(0,(nso^2-psw)*(nso-psw^2)))/10",
 		"nth": "max(0,-thickness+0)",
 		"npu": "max(0,-pungency+0)",
-		"nthnpuwanewax": "1*sqrt(abs(nth^2-npu^2))/5"
+		"nthnpuwanewax": "1.0*sqrt(abs(nth^2-npu^2))/5"
 	},
 	"priority": 0,
 	"relish": [

@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nswpthwanewax",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "nsoppubalance",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "convivium:ignitability",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nswpthwanewax",
-					"right": 1.5
+					"right": 0.44999999999999996
 				},
 				{
 					"compare": "greater",
 					"left": "nsoppubalance",
-					"right": 1.5
+					"right": 0.44999999999999996
 				}
 			],
 			"effect": "convivium:ignitability",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nswpthwanewax",
-					"right": 2.4
+					"right": 0.72
 				},
 				{
 					"compare": "greater",
 					"left": "nsoppubalance",
-					"right": 2.4
+					"right": 0.72
 				}
 			],
 			"effect": "convivium:ignitability",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "nswpthwanewax",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "nsoppubalance",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "convivium:ignitability",
@@ -74,16 +74,16 @@
 	"locals": {
 		"display": "nswpthwanewax+nsoppubalance",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(pungency+0,if(10/1-max(ppu,nso),10,(x-y)/(4*1)),10)",
-		"soothingnessDelta": "if(-soothingness+0,-if(10/1-max(nso,ppu),10,(x-y)/(4*1)),-10)",
-		"sweetnessDelta": "if(-sweetness+1,-if(nsw-pth,max(0,10/1-nsw),-nsw)/4,-10)",
-		"thicknessDelta": "if(thickness-1,if(pth-nsw,max(0,10/1-pth),-pth)/4,10)",
+		"pungencyDelta": "if(pungency+0,if(10/1.1-max(ppu,nso),10,(x-y)/(4*1.1)),10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(10/1.1-max(nso,ppu),10,(x-y)/(4*1.1)),-10)",
+		"sweetnessDelta": "if(-sweetness+1,-if(nsw-pth,max(0,10/1.0-nsw),-nsw)/4,-10)",
+		"thicknessDelta": "if(thickness-1,if(pth-nsw,max(0,10/1.0-pth),-pth)/4,10)",
 		"nsw": "max(0,-sweetness+1)",
 		"pth": "max(0,thickness-1)",
-		"nswpthwanewax": "1*sqrt(abs(nsw^2-pth^2))/5",
+		"nswpthwanewax": "1.0*sqrt(abs(nsw^2-pth^2))/5",
 		"nso": "max(0,-soothingness+0)",
 		"ppu": "max(0,pungency+0)",
-		"nsoppubalance": "1*max(0,log((nso^2+ppu^2)/(abs(nso-ppu)+1))/1.5)"
+		"nsoppubalance": "1.1*max(0,log((nso^2+ppu^2)/(abs(nso-ppu)+1))/1.5)"
 	},
 	"priority": 0,
 	"relish": [

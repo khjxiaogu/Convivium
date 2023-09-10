@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "npunasbalance",
-					"right": 1.0
+					"right": 0.3
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 1.0
+					"right": 0.3
 				}
 			],
 			"effect": "minecraft:health_boost",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "npunasbalance",
-					"right": 1.6
+					"right": 0.48
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 1.6
+					"right": 0.48
 				}
 			],
 			"effect": "minecraft:health_boost",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "npunasbalance",
-					"right": 2.4
+					"right": 0.72
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 2.4
+					"right": 0.72
 				}
 			],
 			"effect": "minecraft:health_boost",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "npunasbalance",
-					"right": 3.2
+					"right": 0.96
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 3.2
+					"right": 0.96
 				}
 			],
 			"effect": "minecraft:health_boost",
@@ -73,17 +73,17 @@
 	"icon": "minecraft:mob_effect/health_boost",
 	"locals": {
 		"display": "npunasbalance+pswnsocontra",
-		"astringencyDelta": "if(-astringency+0,-if(10/0-max(nas,npu),10,(x-y)/(4*0)),-10)",
-		"pungencyDelta": "if(-pungency+0,-if(10/0-max(npu,nas),10,(x-y)/(4*0)),-10)",
-		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1-nso),-nso)/4,-10)",
-		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1-psw),-psw)/4,10)",
+		"astringencyDelta": "if(-astringency+0,-if(10/0.9-max(nas,npu),10,(x-y)/(4*0.9)),-10)",
+		"pungencyDelta": "if(-pungency+0,-if(10/0.9-max(npu,nas),10,(x-y)/(4*0.9)),-10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1.0-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1.0-psw),-psw)/4,10)",
 		"thicknessDelta": 0.0,
 		"npu": "max(0,-pungency+0)",
 		"nas": "max(0,-astringency+0)",
-		"npunasbalance": "0*max(0,log((npu^2+nas^2)/(abs(npu-nas)+1))/1.5)",
+		"npunasbalance": "0.9*max(0,log((npu^2+nas^2)/(abs(npu-nas)+1))/1.5)",
 		"psw": "max(0,sweetness+0)",
 		"nso": "max(0,-soothingness+0)",
-		"pswnsocontra": "1*sqrt(max(0,(psw^2-nso)*(psw-nso^2)))/10"
+		"pswnsocontra": "1.0*sqrt(max(0,(psw^2-nso)*(psw-nso^2)))/10"
 	},
 	"priority": 0,
 	"relish": [

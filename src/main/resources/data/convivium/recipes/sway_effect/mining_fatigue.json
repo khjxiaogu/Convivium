@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "pswpasbalance",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "nthppucontra",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:mining_fatigue",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "pswpasbalance",
-					"right": 1.4
+					"right": 0.42
 				},
 				{
 					"compare": "greater",
 					"left": "nthppucontra",
-					"right": 1.4
+					"right": 0.42
 				}
 			],
 			"effect": "minecraft:mining_fatigue",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "pswpasbalance",
-					"right": 2.0
+					"right": 0.6
 				},
 				{
 					"compare": "greater",
 					"left": "nthppucontra",
-					"right": 2.0
+					"right": 0.6
 				}
 			],
 			"effect": "minecraft:mining_fatigue",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "pswpasbalance",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "nthppucontra",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "minecraft:mining_fatigue",
@@ -73,17 +73,17 @@
 	"icon": "minecraft:mob_effect/mining_fatigue",
 	"locals": {
 		"display": "pswpasbalance+nthppucontra",
-		"astringencyDelta": "if(astringency+2,if(10/0-max(pas,psw),10,(x-y)/(4*0)),10)",
-		"pungencyDelta": "if(pungency+0,if(ppu-nth,max(0,10/1-ppu),-ppu)/4,10)",
+		"astringencyDelta": "if(astringency+2,if(10/0.95-max(pas,psw),10,(x-y)/(4*0.95)),10)",
+		"pungencyDelta": "if(pungency+0,if(ppu-nth,max(0,10/1.0-ppu),-ppu)/4,10)",
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness-2,if(10/0-max(psw,pas),10,(x-y)/(4*0)),10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-ppu,max(0,10/1-nth),-nth)/4,-10)",
+		"sweetnessDelta": "if(sweetness-2,if(10/0.95-max(psw,pas),10,(x-y)/(4*0.95)),10)",
+		"thicknessDelta": "if(-thickness+0,-if(nth-ppu,max(0,10/1.0-nth),-nth)/4,-10)",
 		"psw": "max(0,sweetness-2)",
 		"pas": "max(0,astringency+2)",
-		"pswpasbalance": "0*max(0,log((psw^2+pas^2)/(abs(psw-pas)+1))/1.5)",
+		"pswpasbalance": "0.95*max(0,log((psw^2+pas^2)/(abs(psw-pas)+1))/1.5)",
 		"nth": "max(0,-thickness+0)",
 		"ppu": "max(0,pungency+0)",
-		"nthppucontra": "1*sqrt(max(0,(nth^2-ppu)*(nth-ppu^2)))/10"
+		"nthppucontra": "1.0*sqrt(max(0,(nth^2-ppu)*(nth-ppu^2)))/10"
 	},
 	"priority": 0,
 	"relish": [

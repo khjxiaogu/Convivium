@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonpucontra",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "nswnthbalance",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:jump_boost",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonpucontra",
-					"right": 1.2
+					"right": 0.36
 				},
 				{
 					"compare": "greater",
 					"left": "nswnthbalance",
-					"right": 1.2
+					"right": 0.36
 				}
 			],
 			"effect": "minecraft:jump_boost",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonpucontra",
-					"right": 1.8
+					"right": 0.54
 				},
 				{
 					"compare": "greater",
 					"left": "nswnthbalance",
-					"right": 1.8
+					"right": 0.54
 				}
 			],
 			"effect": "minecraft:jump_boost",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonpucontra",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "nswnthbalance",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "minecraft:jump_boost",
@@ -74,16 +74,16 @@
 	"locals": {
 		"display": "nsonpucontra+nswnthbalance",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency+0,-if(npu-nso,max(0,10/1-npu),-npu)/4,-10)",
-		"soothingnessDelta": "if(-soothingness+0,-if(nso-npu,max(0,10/1-nso),-nso)/4,-10)",
-		"sweetnessDelta": "if(-sweetness-5,-if(10/1-max(nsw,nth),10,(x-y)/(4*1)),-10)",
-		"thicknessDelta": "if(-thickness+0,-if(10/1-max(nth,nsw),10,(x-y)/(4*1)),-10)",
+		"pungencyDelta": "if(-pungency+0,-if(npu-nso,max(0,10/1.0-npu),-npu)/4,-10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(nso-npu,max(0,10/1.0-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(-sweetness-5,-if(10/1.0-max(nsw,nth),10,(x-y)/(4*1.0)),-10)",
+		"thicknessDelta": "if(-thickness+0,-if(10/1.0-max(nth,nsw),10,(x-y)/(4*1.0)),-10)",
 		"nso": "max(0,-soothingness+0)",
 		"npu": "max(0,-pungency+0)",
-		"nsonpucontra": "1*sqrt(max(0,(nso^2-npu)*(nso-npu^2)))/10",
+		"nsonpucontra": "1.0*sqrt(max(0,(nso^2-npu)*(nso-npu^2)))/10",
 		"nsw": "max(0,-sweetness-5)",
 		"nth": "max(0,-thickness+0)",
-		"nswnthbalance": "1*max(0,log((nsw^2+nth^2)/(abs(nsw-nth)+1))/1.5)"
+		"nswnthbalance": "1.0*max(0,log((nsw^2+nth^2)/(abs(nsw-nth)+1))/1.5)"
 	},
 	"priority": 0,
 	"relish": [

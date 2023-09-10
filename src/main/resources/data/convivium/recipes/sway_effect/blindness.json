@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nthpasbalance",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "pswppubalance",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:blindness",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nthpasbalance",
-					"right": 1.4
+					"right": 0.42
 				},
 				{
 					"compare": "greater",
 					"left": "pswppubalance",
-					"right": 1.4
+					"right": 0.42
 				}
 			],
 			"effect": "minecraft:blindness",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nthpasbalance",
-					"right": 2.4
+					"right": 0.72
 				},
 				{
 					"compare": "greater",
 					"left": "pswppubalance",
-					"right": 2.4
+					"right": 0.72
 				}
 			],
 			"effect": "minecraft:blindness",
@@ -56,17 +56,17 @@
 	"icon": "minecraft:mob_effect/blindness",
 	"locals": {
 		"display": "nthpasbalance+pswppubalance",
-		"astringencyDelta": "if(astringency+1,if(10/1-max(pas,nth),10,(x-y)/(4*1)),10)",
-		"pungencyDelta": "if(pungency+0,if(10/1-max(ppu,psw),10,(x-y)/(4*1)),10)",
+		"astringencyDelta": "if(astringency+1,if(10/1.0-max(pas,nth),10,(x-y)/(4*1.0)),10)",
+		"pungencyDelta": "if(pungency+0,if(10/1.0-max(ppu,psw),10,(x-y)/(4*1.0)),10)",
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness+0,if(10/1-max(psw,ppu),10,(x-y)/(4*1)),10)",
-		"thicknessDelta": "if(-thickness+1,-if(10/1-max(nth,pas),10,(x-y)/(4*1)),-10)",
+		"sweetnessDelta": "if(sweetness+0,if(10/1.0-max(psw,ppu),10,(x-y)/(4*1.0)),10)",
+		"thicknessDelta": "if(-thickness+1,-if(10/1.0-max(nth,pas),10,(x-y)/(4*1.0)),-10)",
 		"nth": "max(0,-thickness+1)",
 		"pas": "max(0,astringency+1)",
-		"nthpasbalance": "1*max(0,log((nth^2+pas^2)/(abs(nth-pas)+1))/1.5)",
+		"nthpasbalance": "1.0*max(0,log((nth^2+pas^2)/(abs(nth-pas)+1))/1.5)",
 		"psw": "max(0,sweetness+0)",
 		"ppu": "max(0,pungency+0)",
-		"pswppubalance": "1*max(0,log((psw^2+ppu^2)/(abs(psw-ppu)+1))/1.5)"
+		"pswppubalance": "1.0*max(0,log((psw^2+ppu^2)/(abs(psw-ppu)+1))/1.5)"
 	},
 	"priority": 0,
 	"relish": [

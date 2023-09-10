@@ -1,0 +1,44 @@
+{
+	"category": "convivium:beverage_basics",
+	"icon": "convivium:milk",
+	"name": "Relishes",
+	"sortnum": 50,
+	"pages": [
+		{
+			"type": "convivium:relish_desc",
+			"name": "Ceres",
+			"desc": "{b The relish of} {cereal Ceres}, or {b Cereal}, is associated with the natural powers that preserve and nourish.",
+			"bases": "milk."
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "Liber",
+			"desc": "{b The relish of} {wine Liber}, or {b Wine}, is associated with peril, changes, and possibilities.",
+			"bases": "musts."
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "Minerva",
+			"desc": "{b The relish of} {bath Minerva}, or {b Bath}, is associated with the enthusiasm towards adventures and knowledge.",
+			"bases": "tea."
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "Vertumnus",
+			"desc": "{b The relish of} {seasons Vertumnus}, or {b Seasons}, is associated the rules that circulate time, and stimulate sensations.",
+			"bases": "juices."
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "Vesta",
+			"desc": "{b The relish of} {hearth Vesta}, or {b Hearth}, is associated with the persistence and fortitude that defuse crises.",
+			"bases": "water."
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "Vulcanus",
+			"desc": "{b The relish of} {fire Vulcanus}, or {b Fire}, is associated with the fierce power and all the favors from volcanoes.",
+			"bases": "cocoa."
+		}
+	]
+}

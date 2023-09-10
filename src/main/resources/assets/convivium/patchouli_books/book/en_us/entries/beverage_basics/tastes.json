@@ -1,0 +1,43 @@
+{
+	"category": "convivium:beverage_basics",
+	"icon": "convivium:cocoa_powder",
+	"name": "Tastes",
+	"sortnum": 60,
+	"pages": [
+		{
+			"type": "convivium:taste_desc",
+			"name": "Sweet & Savor",
+			"icon": "convivium:textures/gui/taste_icons/sweetness.png",
+			"pos": "{sw Sweetness}. The precipitated sunlight; from time to time, mead and lead.",
+			"neg": "{sw Savoriness}. The consolidated sea breeze; from time to time, blood and curd."
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "Astringent & Smooth",
+			"icon": "convivium:textures/gui/taste_icons/astringency.png",
+			"pos": "{as Astringency}. That is tongue-wrinkling; as if licking a fuzzy vine.",
+			"neg": "{as Smoothness}. Absence of, or neutralizing astringency."
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "Pungent & Bland",
+			"icon": "convivium:textures/gui/taste_icons/pungency.png",
+			"pos": "{pu Pungency}. The lightless and flameless fire contained by herbs and spices.",
+			"neg": "{pu Blandness}. Absence of, or neutralizing pungency."
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "Thick & Thin",
+			"icon": "convivium:textures/gui/taste_icons/thickness.png",
+			"pos": "{th Thickness}. That not only bewaters, but also sates.",
+			"neg": "{th Thinness}. That is only effective to satiate thirst."
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "Soothing & Rousing",
+			"icon": "convivium:textures/gui/taste_icons/soothingness.png",
+			"pos": "{so Soothingness}. That ceases the tumult of souls.",
+			"neg": "{so Rousingness}. That make the affections surge and the winter nights less harsh."
+		}
+	]
+}

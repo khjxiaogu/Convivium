@@ -2,6 +2,7 @@
 	"category": "convivium:feast",
 	"icon": "convivium:fruit_platter",
 	"name": "果盘",
+	"sortnum": 200,
 	"pages": [
 		{
 			"type": "patchouli:text",

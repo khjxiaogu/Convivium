@@ -4,7 +4,7 @@
 	"items": [
 		{
 			"count": 1,
-			"item": {"item": "caupona:steamed_camellia_shoots"}
+			"item": {"item": "convivium:steamed_camellia_shoots"}
 		}
 	],
 	"keepInfo": false,
@@ -12,7 +12,7 @@
 		{
 			"type": "forge:nbt",
 			"count": 1,
-			"item": "caupona:powdered_tea"
+			"item": "convivium:powdered_tea"
 		}
 	],
 	"time": 300

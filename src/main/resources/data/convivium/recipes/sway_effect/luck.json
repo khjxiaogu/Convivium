@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "pswnsoblend",
-					"right": 0.8
+					"right": 0.24
 				},
 				{
 					"compare": "greater",
 					"left": "pthpascontra",
-					"right": 0.8
+					"right": 0.24
 				}
 			],
 			"effect": "minecraft:luck",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "pswnsoblend",
-					"right": 1.6
+					"right": 0.48
 				},
 				{
 					"compare": "greater",
 					"left": "pthpascontra",
-					"right": 1.6
+					"right": 0.48
 				}
 			],
 			"effect": "minecraft:luck",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "pswnsoblend",
-					"right": 2.4
+					"right": 0.72
 				},
 				{
 					"compare": "greater",
 					"left": "pthpascontra",
-					"right": 2.4
+					"right": 0.72
 				}
 			],
 			"effect": "minecraft:luck",
@@ -56,17 +56,17 @@
 	"icon": "minecraft:mob_effect/luck",
 	"locals": {
 		"display": "pswnsoblend+pthpascontra",
-		"astringencyDelta": "if(astringency-2,if(pas-pth,max(0,10/1-pas),-pas)/4,10)",
+		"astringencyDelta": "if(astringency-2,if(pas-pth,max(0,10/1.0-pas),-pas)/4,10)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1*sqrt(nso*psw)/2),-10)",
-		"sweetnessDelta": "if(sweetness-1,max(0,3-1*sqrt(psw*nso)/2),10)",
-		"thicknessDelta": "if(thickness+0,if(pth-pas,max(0,10/1-pth),-pth)/4,10)",
+		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1.2*sqrt(nso*psw)/2),-10)",
+		"sweetnessDelta": "if(sweetness-1,max(0,3-1.2*sqrt(psw*nso)/2),10)",
+		"thicknessDelta": "if(thickness+0,if(pth-pas,max(0,10/1.0-pth),-pth)/4,10)",
 		"psw": "max(0,sweetness-1)",
 		"nso": "max(0,-soothingness-1)",
-		"pswnsoblend": "1*sqrt(psw*nso)/2",
+		"pswnsoblend": "1.2*sqrt(psw*nso)/2",
 		"pth": "max(0,thickness+0)",
 		"pas": "max(0,astringency-2)",
-		"pthpascontra": "1*sqrt(max(0,(pth^2-pas)*(pth-pas^2)))/10"
+		"pthpascontra": "1.0*sqrt(max(0,(pth^2-pas)*(pth-pas^2)))/10"
 	},
 	"priority": 0,
 	"relish": [

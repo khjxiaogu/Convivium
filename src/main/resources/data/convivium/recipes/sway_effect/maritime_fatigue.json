@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "naspsobalance",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "ppupthwanewax",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "convivium:maritime_fatigue",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "naspsobalance",
-					"right": 1.2
+					"right": 0.36
 				},
 				{
 					"compare": "greater",
 					"left": "ppupthwanewax",
-					"right": 1.2
+					"right": 0.36
 				}
 			],
 			"effect": "convivium:maritime_fatigue",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "naspsobalance",
-					"right": 1.8
+					"right": 0.54
 				},
 				{
 					"compare": "greater",
 					"left": "ppupthwanewax",
-					"right": 1.8
+					"right": 0.54
 				}
 			],
 			"effect": "convivium:maritime_fatigue",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "naspsobalance",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "ppupthwanewax",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "convivium:maritime_fatigue",
@@ -73,17 +73,17 @@
 	"icon": "convivium:mob_effect/maritime_fatigue",
 	"locals": {
 		"display": "naspsobalance+ppupthwanewax",
-		"astringencyDelta": "if(-astringency+0,-if(10/1-max(nas,pso),10,(x-y)/(4*1)),-10)",
-		"pungencyDelta": "if(pungency+3,if(ppu-pth,max(0,10/1-ppu),-ppu)/4,10)",
-		"soothingnessDelta": "if(soothingness+0,if(10/1-max(pso,nas),10,(x-y)/(4*1)),10)",
+		"astringencyDelta": "if(-astringency+0,-if(10/1.0-max(nas,pso),10,(x-y)/(4*1.0)),-10)",
+		"pungencyDelta": "if(pungency+3,if(ppu-pth,max(0,10/1.0-ppu),-ppu)/4,10)",
+		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,nas),10,(x-y)/(4*1.0)),10)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "if(thickness+3,if(pth-ppu,max(0,10/1-pth),-pth)/4,10)",
+		"thicknessDelta": "if(thickness+3,if(pth-ppu,max(0,10/1.0-pth),-pth)/4,10)",
 		"nas": "max(0,-astringency+0)",
 		"pso": "max(0,soothingness+0)",
-		"naspsobalance": "1*max(0,log((nas^2+pso^2)/(abs(nas-pso)+1))/1.5)",
+		"naspsobalance": "1.0*max(0,log((nas^2+pso^2)/(abs(nas-pso)+1))/1.5)",
 		"ppu": "max(0,pungency+3)",
 		"pth": "max(0,thickness+3)",
-		"ppupthwanewax": "1*sqrt(abs(ppu^2-pth^2))/5"
+		"ppupthwanewax": "1.0*sqrt(abs(ppu^2-pth^2))/5"
 	},
 	"priority": 0,
 	"relish": [

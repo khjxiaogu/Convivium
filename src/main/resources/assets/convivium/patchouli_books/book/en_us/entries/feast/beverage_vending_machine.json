@@ -2,10 +2,11 @@
 	"category": "convivium:feast",
 	"icon": "convivium:beverage_vending_machine",
 	"name": "Beverage Vending Machine",
+	"sortnum": 210,
 	"pages": [
 		{
 			"type": "patchouli:text",
-			"text": "Beverage Vending Machine is for selling or distributing drinks as well as other fluids. It accepts a preset number of asses to dispense a portion(250mb) of fluid."
+			"text": "A {b beverage vending machine} is used for selling or distributing drinks as well as other fluids. It accepts a preset number of {i asses} to dispense a portion (250mB) of fluid."
 		},
 		{
 			"type": "patchouli:crafting",
@@ -13,11 +14,11 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Only owner can check out the gui of Beverage Vending Machine, others should held enough asses and right click to make it active, and then click with a fluid container to fill it with fluid provided by the machine."
+			"text": "Only the owner can check out the GUIs of his beverage vending machines. To use a machine, other players should firstly right-click it with enough {i asses} to have the machine activated, then again right-click the machine with a container, which will fill the container with the fluid served."
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Owner can set price of fluid, retrive asses as well as restock fluids."
+			"text": "The owner can set the price of fluid portions (in {i asses}), retrieve the coins, as well as restock the fluid."
 		}
 		
 	]

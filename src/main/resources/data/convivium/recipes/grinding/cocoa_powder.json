@@ -12,7 +12,7 @@
 		{
 			"type": "forge:nbt",
 			"count": 1,
-			"item": "caupona:cocoa_powder"
+			"item": "convivium:cocoa_powder"
 		}
 	],
 	"time": 300

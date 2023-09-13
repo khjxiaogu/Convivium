@@ -2,6 +2,7 @@
 	"category": "convivium:feast",
 	"icon": "convivium:beverage_vending_machine",
 	"name": "饮品贩卖机",
+	"sortnum": 210,
 	"pages": [
 		{
 			"type": "patchouli:text",

@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nthnasbalance",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "convivium:toss_power",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nthnasbalance",
-					"right": 1.4
+					"right": 0.42
 				},
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 1.4
+					"right": 0.42
 				}
 			],
 			"effect": "convivium:toss_power",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nthnasbalance",
-					"right": 2.0
+					"right": 0.6
 				},
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 2.0
+					"right": 0.6
 				}
 			],
 			"effect": "convivium:toss_power",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "nthnasbalance",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "psopswcontra",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "convivium:toss_power",
@@ -73,17 +73,17 @@
 	"icon": "convivium:mob_effect/toss_power",
 	"locals": {
 		"display": "nthnasbalance+psopswcontra",
-		"astringencyDelta": "if(-astringency-3,-if(10/1-max(nas,nth),10,(x-y)/(4*1)),-10)",
+		"astringencyDelta": "if(-astringency-3,-if(10/1.2-max(nas,nth),10,(x-y)/(4*1.2)),-10)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "if(soothingness+0,if(pso-psw,max(0,10/1-pso),-pso)/4,10)",
-		"sweetnessDelta": "if(sweetness+0,if(psw-pso,max(0,10/1-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+2,-if(10/1-max(nth,nas),10,(x-y)/(4*1)),-10)",
+		"soothingnessDelta": "if(soothingness+0,if(pso-psw,max(0,10/1.0-pso),-pso)/4,10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-pso,max(0,10/1.0-psw),-psw)/4,10)",
+		"thicknessDelta": "if(-thickness+2,-if(10/1.2-max(nth,nas),10,(x-y)/(4*1.2)),-10)",
 		"nth": "max(0,-thickness+2)",
 		"nas": "max(0,-astringency-3)",
-		"nthnasbalance": "1*max(0,log((nth^2+nas^2)/(abs(nth-nas)+1))/1.5)",
+		"nthnasbalance": "1.2*max(0,log((nth^2+nas^2)/(abs(nth-nas)+1))/1.5)",
 		"pso": "max(0,soothingness+0)",
 		"psw": "max(0,sweetness+0)",
-		"psopswcontra": "1*sqrt(max(0,(pso^2-psw)*(pso-psw^2)))/10"
+		"psopswcontra": "1.0*sqrt(max(0,(pso^2-psw)*(pso-psw^2)))/10"
 	},
 	"priority": 0,
 	"relish": [

@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nasnthwanewax",
-					"right": 0.6
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "npupswcontra",
-					"right": 0.6
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:speed",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nasnthwanewax",
-					"right": 1.2
+					"right": 0.36
 				},
 				{
 					"compare": "greater",
 					"left": "npupswcontra",
-					"right": 1.2
+					"right": 0.36
 				}
 			],
 			"effect": "minecraft:speed",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nasnthwanewax",
-					"right": 1.8
+					"right": 0.54
 				},
 				{
 					"compare": "greater",
 					"left": "npupswcontra",
-					"right": 1.8
+					"right": 0.54
 				}
 			],
 			"effect": "minecraft:speed",
@@ -57,12 +57,12 @@
 				{
 					"compare": "greater",
 					"left": "nasnthwanewax",
-					"right": 3.0
+					"right": 0.8999999999999999
 				},
 				{
 					"compare": "greater",
 					"left": "npupswcontra",
-					"right": 3.0
+					"right": 0.8999999999999999
 				}
 			],
 			"effect": "minecraft:speed",
@@ -73,17 +73,17 @@
 	"icon": "minecraft:mob_effect/speed",
 	"locals": {
 		"display": "nasnthwanewax+npupswcontra",
-		"astringencyDelta": "if(-astringency+0,-if(nas-nth,max(0,10/1-nas),-nas)/4,-10)",
-		"pungencyDelta": "if(-pungency+0,-if(npu-psw,max(0,10/1-npu),-npu)/4,-10)",
+		"astringencyDelta": "if(-astringency+0,-if(nas-nth,max(0,10/1.1-nas),-nas)/4,-10)",
+		"pungencyDelta": "if(-pungency+0,-if(npu-psw,max(0,10/1.0-npu),-npu)/4,-10)",
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness+0,if(psw-npu,max(0,10/1-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-nas,max(0,10/1-nth),-nth)/4,-10)",
+		"sweetnessDelta": "if(sweetness+0,if(psw-npu,max(0,10/1.0-psw),-psw)/4,10)",
+		"thicknessDelta": "if(-thickness+0,-if(nth-nas,max(0,10/1.1-nth),-nth)/4,-10)",
 		"nas": "max(0,-astringency+0)",
 		"nth": "max(0,-thickness+0)",
-		"nasnthwanewax": "1*sqrt(abs(nas^2-nth^2))/5",
+		"nasnthwanewax": "1.1*sqrt(abs(nas^2-nth^2))/5",
 		"npu": "max(0,-pungency+0)",
 		"psw": "max(0,sweetness+0)",
-		"npupswcontra": "1*sqrt(max(0,(npu^2-psw)*(npu-psw^2)))/10"
+		"npupswcontra": "1.0*sqrt(max(0,(npu^2-psw)*(npu-psw^2)))/10"
 	},
 	"priority": 0,
 	"relish": [

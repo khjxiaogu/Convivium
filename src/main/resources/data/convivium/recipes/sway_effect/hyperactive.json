@@ -6,12 +6,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonthblend",
-					"right": 0.8
+					"right": 0.24
 				},
 				{
 					"compare": "greater",
 					"left": "nswnasbalance",
-					"right": 0.8
+					"right": 0.24
 				}
 			],
 			"effect": "caupona:hyperactive",
@@ -23,12 +23,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonthblend",
-					"right": 1.4
+					"right": 0.42
 				},
 				{
 					"compare": "greater",
 					"left": "nswnasbalance",
-					"right": 1.4
+					"right": 0.42
 				}
 			],
 			"effect": "caupona:hyperactive",
@@ -40,12 +40,12 @@
 				{
 					"compare": "greater",
 					"left": "nsonthblend",
-					"right": 2.0
+					"right": 0.6
 				},
 				{
 					"compare": "greater",
 					"left": "nswnasbalance",
-					"right": 2.0
+					"right": 0.6
 				}
 			],
 			"effect": "caupona:hyperactive",
@@ -56,17 +56,17 @@
 	"icon": "caupona:mob_effect/hyperactive",
 	"locals": {
 		"display": "nsonthblend+nswnasbalance",
-		"astringencyDelta": "if(-astringency+0,-if(10/0-max(nas,nsw),10,(x-y)/(4*0)),-10)",
+		"astringencyDelta": "if(-astringency+0,-if(10/0.9-max(nas,nsw),10,(x-y)/(4*0.9)),-10)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1*sqrt(nso*nth)/2),-10)",
-		"sweetnessDelta": "if(-sweetness+0,-if(10/0-max(nsw,nas),10,(x-y)/(4*0)),-10)",
-		"thicknessDelta": "if(-thickness+1,-max(0,3-1*sqrt(nth*nso)/2),-10)",
+		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1.0*sqrt(nso*nth)/2),-10)",
+		"sweetnessDelta": "if(-sweetness+0,-if(10/0.9-max(nsw,nas),10,(x-y)/(4*0.9)),-10)",
+		"thicknessDelta": "if(-thickness+1,-max(0,3-1.0*sqrt(nth*nso)/2),-10)",
 		"nso": "max(0,-soothingness-1)",
 		"nth": "max(0,-thickness+1)",
-		"nsonthblend": "1*sqrt(nso*nth)/2",
+		"nsonthblend": "1.0*sqrt(nso*nth)/2",
 		"nsw": "max(0,-sweetness+0)",
 		"nas": "max(0,-astringency+0)",
-		"nswnasbalance": "0*max(0,log((nsw^2+nas^2)/(abs(nsw-nas)+1))/1.5)"
+		"nswnasbalance": "0.9*max(0,log((nsw^2+nas^2)/(abs(nsw-nas)+1))/1.5)"
 	},
 	"priority": 0,
 	"relish": [

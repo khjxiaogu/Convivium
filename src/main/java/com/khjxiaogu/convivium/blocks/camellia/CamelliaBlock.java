@@ -24,14 +24,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CamelliaBlock extends BushBlock {
+public class CamelliaBlock extends BushBlock implements BonemealableBlock {
 
 	public CamelliaBlock(Properties pProperties) {
 		super(pProperties);
@@ -66,6 +69,31 @@ public class CamelliaBlock extends BushBlock {
 	public boolean isRandomlyTicking(BlockState pState) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pStatex, boolean pIsClient) {
+		BlockPos above = pPos.above();
+		BlockState abovebs = pLevel.getBlockState(above);
+		return abovebs.isAir() || (abovebs.is(CVBlocks.CAMELLIA_FLOWER.get())
+				&& ((BonemealableBlock) abovebs.getBlock()).isValidBonemealTarget(pLevel, above, abovebs, pIsClient));
+	}
+
+	public boolean isBonemealSuccess(Level pLevel, RandomSource pRandom, BlockPos pPos, BlockState pStatex) {
+		BlockPos above = pPos.above();
+		BlockState abovebs = pLevel.getBlockState(above);
+		return (abovebs.isAir() && pRandom.nextInt(3) == 0) || (abovebs.is(CVBlocks.CAMELLIA_FLOWER.get())
+				&& ((BonemealableBlock) abovebs.getBlock()).isBonemealSuccess(pLevel, pRandom, above, abovebs));
+	}
+
+	public void performBonemeal(ServerLevel pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
+		BlockPos above = pPos.above();
+		BlockState abovebs = pLevel.getBlockState(above);
+		if (abovebs.isAir()) {
+			pLevel.setBlockAndUpdate(above, CVBlocks.CAMELLIA_FLOWER.get().defaultBlockState());
+		}else if(abovebs.is(CVBlocks.CAMELLIA_FLOWER.get())){
+			((BonemealableBlock) abovebs.getBlock()).performBonemeal(pLevel, pRandom, above, abovebs);
+		}
 	}
 
 }

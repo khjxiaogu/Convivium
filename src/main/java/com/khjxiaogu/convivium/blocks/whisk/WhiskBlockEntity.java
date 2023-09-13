@@ -107,6 +107,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			e -> RelishFluidRecipe.recipes.containsKey(e.getFluid()) || e.getFluid() instanceof BeverageFluid);
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
 	public static Codec<List<CurrentSwayInfo>> CSI_CODEC = Codec.list(CurrentSwayInfo.CODEC);
+	public static final int MAX_DENSE=3;
 	public BeverageInfo info;
 	public int process;
 	public int processMax;
@@ -286,7 +287,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				boolean flag = false;
 				for (int i = 0; i < 4; i++) {
 					ItemStack is = inv.getStackInSlot(i);
-					if (!is.isEmpty()) {
+					if (!is.isEmpty()&&isValidInput(is)) {
 						if (is.getItem() != Items.POTION) {
 							flag |= true;
 						}
@@ -305,21 +306,21 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					cnt = info.getDensity() * amt;
 					for (int i = 0; i < 4; i++) {
 						ItemStack is = inv.getStackInSlot(i);
-						if (!is.isEmpty()) {
+						if (!is.isEmpty()&&isValidInput(is)) {
 							if (is.getItem() != Items.POTION) {
 								cnt++;
 							}
 							hasItem = true;
 						}
 					}
-					if (!hasItem || cnt / amt > 2) {
+					if (!hasItem || cnt / amt > MAX_DENSE) {
 						process = processMax = 0;
 					} else {
 						int camt = tank.getFluidAmount() / 250;
 						NonNullList<ItemStack> interninv = NonNullList.withSize(4, ItemStack.EMPTY);
 						for (int i = 0; i < 4; i++) {
 							ItemStack is = inv.getStackInSlot(i);
-							if (!is.isEmpty()) {
+							if (!is.isEmpty()&&isValidInput(is)) {
 								if (is.getItem() == Items.POTION) {
 									for (MobEffectInstance eff : PotionUtils.getMobEffects(is))
 										info.addEffect(eff, camt);
@@ -370,7 +371,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					cnt = info.getDensity() * amt;
 					for (int i = 0; i < 4; i++) {
 						ItemStack is = inv.getStackInSlot(i);
-						if (!is.isEmpty()) {
+						if (!is.isEmpty()&&isValidInput(is)) {
 							if (is.getItem() != Items.POTION) {
 								cnt++;
 							}
@@ -380,7 +381,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				} else {
 					for (int i = 0; i < 4; i++) {
 						ItemStack is = inv.getStackInSlot(i);
-						if (!is.isEmpty()) {
+						if (!is.isEmpty()&&isValidInput(is)) {
 							if (is.getItem() != Items.POTION) {
 								cnt++;
 							}
@@ -388,7 +389,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 						}
 					}
 				}
-				if (hasItem && cnt / amt <= 2) {
+				if (hasItem && cnt / amt <= MAX_DENSE) {
 					isStiring = true;
 					process = processMax = 400;
 				} else if (info != null) {
@@ -441,7 +442,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 									tccn += i.getSecond() / cnt;
 								}
 							}
-							if (tccn * cnt / newpart > 2)
+							if (tccn * cnt / newpart > MAX_DENSE)
 								break;
 							rc = r;
 							worked = true;

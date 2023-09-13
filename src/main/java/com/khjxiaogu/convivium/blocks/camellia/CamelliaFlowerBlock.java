@@ -23,9 +23,11 @@ import com.khjxiaogu.convivium.CVBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
@@ -79,6 +81,9 @@ public class CamelliaFlowerBlock extends CropBlock {
 
 	}
 
+	protected int getBonemealAgeIncrease(Level pLevel) {
+		return Mth.nextInt(pLevel.random, 1, 2);
+	}
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		return pLevel.getBlockState(pPos.below()).is(CVBlocks.CAMELLIA.get());

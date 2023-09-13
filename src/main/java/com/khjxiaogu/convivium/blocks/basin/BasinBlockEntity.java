@@ -145,7 +145,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 				}else isLastHeating = false;
 			}
 			this.syncData();
-		}else {
+		}else if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
 			isLastHeating = false;
 			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
 			if(recipe!=null) {

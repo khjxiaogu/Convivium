@@ -1,1 +1,1 @@
-Fix zh_cn lang and manual issues
+Add more recipes

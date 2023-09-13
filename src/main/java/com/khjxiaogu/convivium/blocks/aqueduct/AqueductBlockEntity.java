@@ -155,11 +155,12 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 				CompoundTag nbt=be.serializeNBT();
 				this.level.removeBlockEntity(src);
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
-				this.level.setBlock(dest, bs, 2);
-				this.level.getBlockEntity(dest).load(nbt);;
+				this.level.removeBlockEntity(src);
+				this.level.setBlock(dest, bs, 1|2);
+				this.level.getBlockEntity(dest).load(nbt);
 			}else {
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
-				this.level.setBlock(dest, bs, 2);
+				this.level.setBlock(dest, bs, 1|2);
 			}
 			return true;
 		}

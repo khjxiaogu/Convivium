@@ -70,7 +70,7 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            args "-mixin.config=" + "convivium.mixins.json","--username=Dev"
+            args "-mixin.config=" + "convivium.mixins.json","--username=Dev2"
             mods {
                 convivium {
                     source sourceSets.main

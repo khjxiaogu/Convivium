@@ -1,0 +1,44 @@
+{
+	"category": "convivium:beverage_basics",
+	"icon": "convivium:milk",
+	"name": "旨",
+	"sortnum": 50,
+	"pages": [
+		{
+			"type": "convivium:relish_desc",
+			"name": "谷",
+			"desc": "{cereal 谷}之{b 旨}代表存续与滋养的自然力量。",
+			"bases": "牛奶。"
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "酒",
+			"desc": "{wine 酒}之{b 旨}与风险、变易、机会有关。",
+			"bases": "发酵果汁。"
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "荡",
+			"desc": "{bath 荡}之{b 旨}，亦即{b 沐浴}之旨，代表探索的热忱及求知的憧憬。",
+			"bases": "茶。"
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "四时",
+			"desc": "{seasons 四时}，之{b 旨}代表推动时间流转、感官刺激的法则。",
+			"bases": "果汁。"
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "灶",
+			"desc": "{hearth 灶}之{b 旨}代表消弭危机的坚韧。",
+			"bases": "水。"
+		},
+		{
+			"type": "convivium:relish_desc",
+			"name": "火",
+			"desc": "{fire 火}之{b 旨}与火山带来的野性力量与一切恩惠有关。",
+			"bases": "可可。"
+		}
+	]
+}

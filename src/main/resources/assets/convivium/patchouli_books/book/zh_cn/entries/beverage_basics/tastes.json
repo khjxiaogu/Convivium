@@ -1,0 +1,43 @@
+{
+	"category": "convivium:beverage_basics",
+	"icon": "convivium:cocoa_powder",
+	"name": "味",
+	"sortnum": 60,
+	"pages": [
+		{
+			"type": "convivium:taste_desc",
+			"name": "甘与非甘",
+			"icon": "convivium:textures/gui/taste_icons/sweetness.png",
+			"pos": "{sw 甘}。淀积的日光；时而为蜜，时而为铅。",
+			"neg": "{sw 非甘}。凝固的海风；时而为血，时而为醍醐。"
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "涩与非涩",
+			"icon": "convivium:textures/gui/taste_icons/astringency.png",
+			"pos": "{as 涩}。舌有挛缩之感，犹如舔䑛多毛的藤蔓。",
+			"neg": "{as 非涩}。无涩味；抑或中和涩味。"
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "辛与非辛",
+			"icon": "convivium:textures/gui/taste_icons/pungency.png",
+			"pos": "{pu 辛}。香辛料中的无光无焰之火。",
+			"neg": "{pu 非辛}。无辛味；抑或中和辛味。"
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "浓酽与淡薄",
+			"icon": "convivium:textures/gui/taste_icons/thickness.png",
+			"pos": "{th 浓酽}。润于口，沉于腹。",
+			"neg": "{th 淡薄}。仅供止渴之用。"
+		},
+		{
+			"type": "convivium:taste_desc",
+			"name": "舒缓与激化",
+			"icon": "convivium:textures/gui/taste_icons/soothingness.png",
+			"pos": "{so 舒缓}。能止灵魂的悸动。",
+			"neg": "{so 激化}。使心绪如潮涨，使冬夜肃杀弥笃。"
+		}
+	]
+}

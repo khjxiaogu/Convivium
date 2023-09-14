@@ -1,0 +1,27 @@
+{
+	"components": [
+		{
+			"type": "patchouli:header",
+			"text": "#name",
+			"x": -1,
+			"y": -1
+		},
+		{
+			"type": "patchouli:separator",
+			"x":-1,
+			"y":-1
+		},
+		{
+			"type": "patchouli:text",
+			"text": "#desc",
+			"x": 0,
+			"y": 25
+		},
+		{
+			"type": "patchouli:text",
+			"text": "$(l)相关饮品基底：$()#bases#",
+			"x": 0,
+			"y": 89
+		}
+	]
+}

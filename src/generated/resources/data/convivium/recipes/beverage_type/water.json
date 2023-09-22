@@ -9,7 +9,7 @@
       "tag": "convivium:sweeteners"
     }
   ],
-  "output": "minecraft:empty",
+  "output": "minecraft:water",
   "relish": [
     {
       "type": "contains_fluid",

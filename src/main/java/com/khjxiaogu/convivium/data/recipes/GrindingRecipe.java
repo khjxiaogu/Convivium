@@ -116,7 +116,7 @@ public class GrindingRecipe extends IDataRecipe {
 			output = List.of(Ingredient.fromJson(jo.get("output")).getItems()[0]);
 		else if(jo.has("outputs")) 
 			output = SerializeUtil.parseJsonElmList(jo.get("outputs"),t->Ingredient.fromJson(t).getItems()[0]);
-		if(output==null||out.isEmpty())
+		if(output==null&&out.isEmpty())
 			throw new InvalidRecipeException("cannot load" + id + ": no output found!");
 		if(jo.has("time"))
 			processTime=jo.get("time").getAsInt();

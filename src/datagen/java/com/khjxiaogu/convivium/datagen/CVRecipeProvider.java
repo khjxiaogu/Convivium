@@ -121,7 +121,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		relish(out,Constants.JUICE,"#aac35d",CVFluids.bjuicef.get(),CVFluids.djuicef.get(),CVFluids.pjuicef.get());
 		relish(out,Constants.WINE,"#ce6c71",CVFluids.bwinef.get(),CVFluids.dwinef.get(),CVFluids.pwinef.get());
 		relish(out,Constants.NONE,"#ffffff");
-		createME("night_vision")
+		/*createME("night_vision")
 		.major(Constants.TEA)
 		.local(Constants.SWEETNESS_DELTA,0)
 		.local(Constants.ASTRINGENCY_DELTA,"3-"+Constants.ASTRINGENCY)
@@ -130,12 +130,12 @@ public class CVRecipeProvider extends RecipeProvider {
 		.local(Constants.PUNGENCY_DELTA,0)
 		.local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.NIGHT_VISION).amp("1").time("100").compare(Constants.ASTRINGENCY,GT.C,"1.99").next()
-		.end(out);
+		.end(out);*/
 		/*createME("strength").major(Constants.TEA)
 		.local(Constants.SWEETNESS_DELTA,0).local(Constants.ASTRINGENCY_DELTA,"-("+Constants.ASTRINGENCY+"+3)" ).local(Constants.DISPLAY, "-"+Constants.ASTRINGENCY+"+0.01").local(Constants.THICKNESS_DELTA, 0).local(Constants.PUNGENCY_DELTA,0).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.DAMAGE_BOOST).amp("1").time("100").compare(Constants.ASTRINGENCY,LT.C,"-1.99").next()
 		.end(out);*/
-		createME("saturation").major(Constants.WATER)
+		/*createME("saturation").major(Constants.WATER)
 		.local(Constants.SWEETNESS_DELTA,3)
 		.local(Constants.ASTRINGENCY_DELTA, 3)
 		.local(Constants.DISPLAY, 5)
@@ -143,7 +143,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		.local(Constants.PUNGENCY_DELTA,0)
 		.local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.SATURATION).amp("1").time("100").compare("1",GT.C,"3").next()
-		.end(out);
+		.end(out);*/
 		/*createME("saturation").major(Constants.MILK)
 		.local(Constants.SWEETNESS_DELTA,1).local(Constants.ASTRINGENCY_DELTA, 3).local(Constants.DISPLAY, 5).local(Constants.THICKNESS_DELTA, 2).local(Constants.PUNGENCY_DELTA,-2).local(Constants.SOOTHINGNESS_DELTA, 0)
 			.effect(MobEffects.SATURATION).amp("1").time("100").compare("3",GT.C,"1").next()
@@ -202,6 +202,9 @@ public class CVRecipeProvider extends RecipeProvider {
 	private TypeRecipeBuilder type(String name) {
 		return new TypeRecipeBuilder(rl("beverage_type/"+name),cvfluid(name));
 	}
+	private TypeRecipeBuilder type(ResourceLocation rl) {
+		return new TypeRecipeBuilder(rl("beverage_type/"+rl.getPath()),fluid(rl));
+	}
 	private SwayRecipeBuilder createME(String name) {
 		return new SwayRecipeBuilder(rl("sway_effect/"+name),new ResourceLocation("mob_effect/"+name));
 	}
@@ -212,7 +215,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		out.accept(new RelishRecipe(rl("relish/"+name), name,new ResourceLocation(CVMain.MODID,"relish/"+name),clr));
 		for(Fluid f:fs) {
 			out.accept(new RelishFluidRecipe(rl("relish_fluid/"+Utils.getRegistryName(f).getPath()), f, name));
-			type(Utils.getRegistryName(f).getPath()).has(f).canContains(SPICE).canContains(SWEET).time(200).end(out);
+			type(Utils.getRegistryName(f)).has(f).canContains(SPICE).canContains(SWEET).time(200).end(out);
 			
 		}
 	}

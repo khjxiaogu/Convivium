@@ -15,42 +15,8 @@
 				}
 			],
 			"effect": "minecraft:slow_falling",
-			"level": 1.0,
-			"time": 300.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "psonswcontra",
-					"right": 0.48
-				},
-				{
-					"compare": "greater",
-					"left": "nthnpuwanewax",
-					"right": 0.48
-				}
-			],
-			"effect": "minecraft:slow_falling",
-			"level": 1.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "psonswcontra",
-					"right": 0.72
-				},
-				{
-					"compare": "greater",
-					"left": "nthnpuwanewax",
-					"right": 0.72
-				}
-			],
-			"effect": "minecraft:slow_falling",
-			"level": 1.0,
-			"time": 1200.0
+			"level": "1",
+			"time": "300.0*2^max(0,min(3,(psonswcontra+nthnpuwanewax)/2/0.24-1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/slow_falling",

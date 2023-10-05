@@ -15,59 +15,8 @@
 				}
 			],
 			"effect": "convivium:radication",
-			"level": 1.0,
-			"time": 200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "psoppucontra",
-					"right": 0.36
-				},
-				{
-					"compare": "greater",
-					"left": "nswnthbalance",
-					"right": 0.36
-				}
-			],
-			"effect": "convivium:radication",
-			"level": 1.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "psoppucontra",
-					"right": 0.54
-				},
-				{
-					"compare": "greater",
-					"left": "nswnthbalance",
-					"right": 0.54
-				}
-			],
-			"effect": "convivium:radication",
-			"level": 2.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "psoppucontra",
-					"right": 0.78
-				},
-				{
-					"compare": "greater",
-					"left": "nswnthbalance",
-					"right": 0.78
-				}
-			],
-			"effect": "convivium:radication",
-			"level": 2.0,
-			"time": 1200.0
+			"level": "max(1,min(2,floor((psoppucontra+nswnthbalance)/4/0.18+0.5)))",
+			"time": "300.0*min(6,((psoppucontra+nswnthbalance)/2/0.18-max(0,1-abs((psoppucontra+nswnthbalance)/2/0.18-3))))"
 		}
 	],
 	"icon": "convivium:mob_effect/radication",

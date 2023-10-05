@@ -6,68 +6,17 @@
 				{
 					"compare": "greater",
 					"left": "npupsoblend",
-					"right": 0.24
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "pthnswbalance",
-					"right": 0.24
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:weakness",
-			"level": 1.0,
-			"time": 400.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "npupsoblend",
-					"right": 0.44999999999999996
-				},
-				{
-					"compare": "greater",
-					"left": "pthnswbalance",
-					"right": 0.44999999999999996
-				}
-			],
-			"effect": "minecraft:weakness",
-			"level": 1.0,
-			"time": 900.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "npupsoblend",
-					"right": 0.72
-				},
-				{
-					"compare": "greater",
-					"left": "pthnswbalance",
-					"right": 0.72
-				}
-			],
-			"effect": "minecraft:weakness",
-			"level": 2.0,
-			"time": 900.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "npupsoblend",
-					"right": 0.96
-				},
-				{
-					"compare": "greater",
-					"left": "pthnswbalance",
-					"right": 0.96
-				}
-			],
-			"effect": "minecraft:weakness",
-			"level": 2.0,
-			"time": 1800.0
+			"level": "max(1,min(2,floor((npupsoblend+pthnswbalance)/4/0.18+0.5)))",
+			"time": "500.0*min(6,((npupsoblend+pthnswbalance)/2/0.18-max(0,1-abs((npupsoblend+pthnswbalance)/2/0.18-3))))"
 		}
 	],
 	"icon": "minecraft:mob_effect/weakness",

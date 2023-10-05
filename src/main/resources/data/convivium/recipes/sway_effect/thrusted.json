@@ -15,59 +15,8 @@
 				}
 			],
 			"effect": "convivium:thrusted",
-			"level": 1.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pasnsobalance",
-					"right": 0.36
-				},
-				{
-					"compare": "greater",
-					"left": "ppupthwanewax",
-					"right": 0.36
-				}
-			],
-			"effect": "convivium:thrusted",
-			"level": 1.0,
-			"time": 1500.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pasnsobalance",
-					"right": 0.54
-				},
-				{
-					"compare": "greater",
-					"left": "ppupthwanewax",
-					"right": 0.54
-				}
-			],
-			"effect": "convivium:thrusted",
-			"level": 2.0,
-			"time": 1500.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pasnsobalance",
-					"right": 0.8999999999999999
-				},
-				{
-					"compare": "greater",
-					"left": "ppupthwanewax",
-					"right": 0.8999999999999999
-				}
-			],
-			"effect": "convivium:thrusted",
-			"level": 2.0,
-			"time": 3000.0
+			"level": "max(1,min(2,floor((pasnsobalance+ppupthwanewax)/4/0.18+0.5)))",
+			"time": "600.0*min(6,((pasnsobalance+ppupthwanewax)/2/0.18-max(0,1-abs((pasnsobalance+ppupthwanewax)/2/0.18-3))))"
 		}
 	],
 	"icon": "convivium:mob_effect/thrusted",

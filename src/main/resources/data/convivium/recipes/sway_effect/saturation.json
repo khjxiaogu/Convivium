@@ -5,83 +5,34 @@
 			"condition": [
 				{
 					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 0.8
+					"left": "pthpsowanewax",
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1
+					"left": "nswnpublend",
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:saturation",
-			"level": 1.0,
-			"time": 2.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 1.5
-				},
-				{
-					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1.6
-				}
-			],
-			"effect": "minecraft:saturation",
-			"level": 1.0,
-			"time": 4.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 2.5
-				},
-				{
-					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1.8
-				}
-			],
-			"effect": "minecraft:saturation",
-			"level": 2.0,
-			"time": 4.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 5
-				},
-				{
-					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1.9
-				}
-			],
-			"effect": "minecraft:saturation",
-			"level": 2.0,
-			"time": 10.0
+			"level": "max(1,min(3,floor((pthpsowanewax+nswnpublend)/2/0.18)-1))",
+			"time": "2.0*max(1,min(2,(pthpsowanewax+nswnpublend)/2/0.18))"
 		}
 	],
 	"icon": "minecraft:mob_effect/saturation",
 	"locals": {
+		"display": "pthpsowanewax+nswnpublend",
+		"astringencyDelta": 0.0,
+		"pungencyDelta": "if(-pungency-2,-max(0,3-1.0*sqrt(npu*nsw)/2),-10)",
+		"soothingnessDelta": "if(soothingness-2,if(pso-pth,max(0,10/1.0-pso),-pso)/4,10)",
+		"sweetnessDelta": "if(-sweetness-2,-max(0,3-1.0*sqrt(nsw*npu)/2),-10)",
+		"thicknessDelta": "if(thickness-2,if(pth-pso,max(0,10/1.0-pth),-pth)/4,10)",
 		"pth": "max(0,thickness-2)",
 		"pso": "max(0,soothingness-2)",
-		"pthpsowanewax": "sqrt(abs(pth^2-pso^2))/5",
-		"xswxpumulti": "abs(cos(2*sweetness/PI)-cos(2*pungency/PI))",
-		"display": "pthpsowanewax+xswxpumulti",
-		"astringencyDelta": 0.0,
-		"pungencyDelta": "xswxpumulti-2",
-		"soothingnessDelta": "if(soothingness-2,if(pso-pth,max(0,10-pso),-pso)/2,50)",
-		"sweetnessDelta": "xswxpumulti-2",
-		"thicknessDelta": "if(thickness-2,if(pth-pso,max(0,10-pth),-pth)/2,50)"
+		"pthpsowanewax": "1.0*sqrt(abs(pth^2-pso^2))/5",
+		"nsw": "max(0,-sweetness-2)",
+		"npu": "max(0,-pungency-2)",
+		"nswnpublend": "1.0*sqrt(nsw*npu)/2"
 	},
 	"priority": 0,
 	"relish": [

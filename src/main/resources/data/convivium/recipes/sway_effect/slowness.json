@@ -15,59 +15,8 @@
 				}
 			],
 			"effect": "minecraft:slowness",
-			"level": 1.0,
-			"time": 300.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "paspthwanewax",
-					"right": 0.36
-				},
-				{
-					"compare": "greater",
-					"left": "npupswcontra",
-					"right": 0.36
-				}
-			],
-			"effect": "minecraft:slowness",
-			"level": 1.0,
-			"time": 900.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "paspthwanewax",
-					"right": 0.54
-				},
-				{
-					"compare": "greater",
-					"left": "npupswcontra",
-					"right": 0.54
-				}
-			],
-			"effect": "minecraft:slowness",
-			"level": 2.0,
-			"time": 900.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "paspthwanewax",
-					"right": 0.8999999999999999
-				},
-				{
-					"compare": "greater",
-					"left": "npupswcontra",
-					"right": 0.8999999999999999
-				}
-			],
-			"effect": "minecraft:slowness",
-			"level": 2.0,
-			"time": 1800.0
+			"level": "max(1,min(2,floor((paspthwanewax+npupswcontra)/4/0.18+0.5)))",
+			"time": "500.0*min(6,((paspthwanewax+npupswcontra)/2/0.18-max(0,1-abs((paspthwanewax+npupswcontra)/2/0.18-3))))"
 		}
 	],
 	"icon": "minecraft:mob_effect/slowness",

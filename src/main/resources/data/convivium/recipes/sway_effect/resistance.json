@@ -15,59 +15,8 @@
 				}
 			],
 			"effect": "minecraft:resistance",
-			"level": 1.0,
-			"time": 400.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pthnasblend",
-					"right": 0.36
-				},
-				{
-					"compare": "greater",
-					"left": "nswpsowanewax",
-					"right": 0.36
-				}
-			],
-			"effect": "minecraft:resistance",
-			"level": 1.0,
-			"time": 1200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pthnasblend",
-					"right": 0.54
-				},
-				{
-					"compare": "greater",
-					"left": "nswpsowanewax",
-					"right": 0.54
-				}
-			],
-			"effect": "minecraft:resistance",
-			"level": 2.0,
-			"time": 1200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pthnasblend",
-					"right": 0.8999999999999999
-				},
-				{
-					"compare": "greater",
-					"left": "nswpsowanewax",
-					"right": 0.8999999999999999
-				}
-			],
-			"effect": "minecraft:resistance",
-			"level": 3.0,
-			"time": 1200.0
+			"level": "max(1,min(3,floor((pthnasblend+nswpsowanewax)/2/0.18)-1))",
+			"time": "600.0*max(1,min(2,(pthnasblend+nswpsowanewax)/2/0.18))"
 		}
 	],
 	"icon": "minecraft:mob_effect/resistance",

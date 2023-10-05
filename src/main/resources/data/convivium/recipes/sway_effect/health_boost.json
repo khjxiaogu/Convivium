@@ -6,68 +6,17 @@
 				{
 					"compare": "greater",
 					"left": "npunasbalance",
-					"right": 0.3
+					"right": 0.24
 				},
 				{
 					"compare": "greater",
 					"left": "pswnsocontra",
-					"right": 0.3
+					"right": 0.24
 				}
 			],
 			"effect": "minecraft:health_boost",
-			"level": 1.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "npunasbalance",
-					"right": 0.48
-				},
-				{
-					"compare": "greater",
-					"left": "pswnsocontra",
-					"right": 0.48
-				}
-			],
-			"effect": "minecraft:health_boost",
-			"level": 1.0,
-			"time": 1200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "npunasbalance",
-					"right": 0.72
-				},
-				{
-					"compare": "greater",
-					"left": "pswnsocontra",
-					"right": 0.72
-				}
-			],
-			"effect": "minecraft:health_boost",
-			"level": 2.0,
-			"time": 1200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "npunasbalance",
-					"right": 0.96
-				},
-				{
-					"compare": "greater",
-					"left": "pswnsocontra",
-					"right": 0.96
-				}
-			],
-			"effect": "minecraft:health_boost",
-			"level": 3.0,
-			"time": 1200.0
+			"level": "max(1,min(3,floor((npunasbalance+pswnsocontra)/2/0.24)-1))",
+			"time": "600.0*max(1,min(2,(npunasbalance+pswnsocontra)/2/0.24))"
 		}
 	],
 	"icon": "minecraft:mob_effect/health_boost",

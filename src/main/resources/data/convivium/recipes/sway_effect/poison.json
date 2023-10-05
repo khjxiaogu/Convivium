@@ -15,59 +15,8 @@
 				}
 			],
 			"effect": "minecraft:poison",
-			"level": 1.0,
-			"time": 140.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "ppupasbalance",
-					"right": 0.39
-				},
-				{
-					"compare": "greater",
-					"left": "pswnsocontra",
-					"right": 0.39
-				}
-			],
-			"effect": "minecraft:poison",
-			"level": 1.0,
-			"time": 300.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "ppupasbalance",
-					"right": 0.6
-				},
-				{
-					"compare": "greater",
-					"left": "pswnsocontra",
-					"right": 0.6
-				}
-			],
-			"effect": "minecraft:poison",
-			"level": 2.0,
-			"time": 300.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "ppupasbalance",
-					"right": 1.05
-				},
-				{
-					"compare": "greater",
-					"left": "pswnsocontra",
-					"right": 1.05
-				}
-			],
-			"effect": "minecraft:poison",
-			"level": 3.0,
-			"time": 300.0
+			"level": "max(1,min(3,floor((ppupasbalance+pswnsocontra)/2/0.18)-1))",
+			"time": "160.0*max(1,min(2,(ppupasbalance+pswnsocontra)/2/0.18))"
 		}
 	],
 	"icon": "minecraft:mob_effect/poison",

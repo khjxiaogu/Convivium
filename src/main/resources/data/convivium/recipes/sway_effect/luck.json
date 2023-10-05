@@ -15,42 +15,8 @@
 				}
 			],
 			"effect": "minecraft:luck",
-			"level": 1.0,
-			"time": 1200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pswnsoblend",
-					"right": 0.48
-				},
-				{
-					"compare": "greater",
-					"left": "pthpascontra",
-					"right": 0.48
-				}
-			],
-			"effect": "minecraft:luck",
-			"level": 1.0,
-			"time": 2400.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pswnsoblend",
-					"right": 0.72
-				},
-				{
-					"compare": "greater",
-					"left": "pthpascontra",
-					"right": 0.72
-				}
-			],
-			"effect": "minecraft:luck",
-			"level": 2.0,
-			"time": 3600.0
+			"level": "max(1,min(3,floor((pswnsoblend+pthpascontra)/2/0.24)-1))",
+			"time": "1200.0*max(1,min(2,(pswnsoblend+pthpascontra)/2/0.24))"
 		}
 	],
 	"icon": "minecraft:mob_effect/luck",

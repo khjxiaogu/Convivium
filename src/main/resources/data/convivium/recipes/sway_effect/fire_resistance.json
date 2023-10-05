@@ -15,59 +15,8 @@
 				}
 			],
 			"effect": "minecraft:fire_resistance",
-			"level": 1.0,
-			"time": 400.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pswnthwanewax",
-					"right": 0.48
-				},
-				{
-					"compare": "greater",
-					"left": "psonpubalance",
-					"right": 0.48
-				}
-			],
-			"effect": "minecraft:fire_resistance",
-			"level": 1.0,
-			"time": 900.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pswnthwanewax",
-					"right": 0.72
-				},
-				{
-					"compare": "greater",
-					"left": "psonpubalance",
-					"right": 0.72
-				}
-			],
-			"effect": "minecraft:fire_resistance",
-			"level": 1.0,
-			"time": 1800.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pswnthwanewax",
-					"right": 0.96
-				},
-				{
-					"compare": "greater",
-					"left": "psonpubalance",
-					"right": 0.96
-				}
-			],
-			"effect": "minecraft:fire_resistance",
-			"level": 1.0,
-			"time": 3600.0
+			"level": "1",
+			"time": "600.0*2^max(0,min(3,(pswnthwanewax+psonpubalance)/2/0.24-1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/fire_resistance",

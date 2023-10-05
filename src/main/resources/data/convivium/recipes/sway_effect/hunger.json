@@ -6,82 +6,33 @@
 				{
 					"compare": "greater",
 					"left": "nthnsowanewax",
-					"right": 0.8
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1
+					"left": "nswnpublend",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:hunger",
-			"level": 1.0,
-			"time": 300.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 1.5
-				},
-				{
-					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1.5
-				}
-			],
-			"effect": "minecraft:hunger",
-			"level": 1.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 2.5
-				},
-				{
-					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1.8
-				}
-			],
-			"effect": "minecraft:hunger",
-			"level": 2.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nthnsowanewax",
-					"right": 5
-				},
-				{
-					"compare": "greater",
-					"left": "xswxpumulti",
-					"right": 1.9
-				}
-			],
-			"effect": "minecraft:hunger",
-			"level": 3.0,
-			"time": 600.0
-		} 
+			"level": "max(1,min(3,floor(nthnsowanewax/0.18)-1))",
+			"time": "300.0*max(1,min(2,nthnsowanewax/0.18))"
+		}
 	],
 	"icon": "minecraft:mob_effect/hunger",
 	"locals": {
-		"nth": "max(0,2-thickness)",
-		"nso": "max(0,2-soothingness)",
-		"nthnsowanewax": "sqrt(abs(nth^2-nso^2))/5",
-		"xswxpumulti": "abs(sin(2*sweetness/PI)-sin(2*pungency/PI))",
-		"display": "nthnsowanewax+xswxpumulti",
+		"display": "nthnsowanewax+nswnpublend",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "2-xswxpumulti",
-		"soothingnessDelta": "if(2-soothingness,-if(nso-nth,max(0,10-nso),-nso)/2,-50)",
-		"sweetnessDelta": "2-xswxpumulti",
-		"thicknessDelta": "if(2-thickness,-if(nth-nso,max(0,10-nth),-nth)/2,-50)"
+		"pungencyDelta": "if(-pungency-2,-max(0,3-1.0*sqrt(npu*nsw)/2),-10)",
+		"soothingnessDelta": "if(-soothingness-2,-if(nso-nth,max(0,10/1.0-nso),-nso)/4,-10)",
+		"sweetnessDelta": "if(-sweetness-2,-max(0,3-1.0*sqrt(nsw*npu)/2),-10)",
+		"thicknessDelta": "if(-thickness-2,-if(nth-nso,max(0,10/1.0-nth),-nth)/4,-10)",
+		"nth": "max(0,-thickness-2)",
+		"nso": "max(0,-soothingness-2)",
+		"nthnsowanewax": "1.0*sqrt(abs(nth^2-nso^2))/5",
+		"nsw": "max(0,-sweetness-2)",
+		"npu": "max(0,-pungency-2)",
+		"nswnpublend": "1.0*sqrt(nsw*npu)/2"
 	},
 	"priority": 0,
 	"relish": [

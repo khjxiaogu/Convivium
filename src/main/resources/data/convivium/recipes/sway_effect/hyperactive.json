@@ -15,42 +15,8 @@
 				}
 			],
 			"effect": "caupona:hyperactive",
-			"level": 1.0,
-			"time": 200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nsonthblend",
-					"right": 0.42
-				},
-				{
-					"compare": "greater",
-					"left": "nswnasbalance",
-					"right": 0.42
-				}
-			],
-			"effect": "caupona:hyperactive",
-			"level": 1.0,
-			"time": 400.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "nsonthblend",
-					"right": 0.6
-				},
-				{
-					"compare": "greater",
-					"left": "nswnasbalance",
-					"right": 0.6
-				}
-			],
-			"effect": "caupona:hyperactive",
-			"level": 2.0,
-			"time": 400.0
+			"level": "max(1,min(3,floor((nsonthblend+nswnasbalance)/2/0.24)-1))",
+			"time": "200.0*max(1,min(2,(nsonthblend+nswnasbalance)/2/0.24))"
 		}
 	],
 	"icon": "caupona:mob_effect/hyperactive",

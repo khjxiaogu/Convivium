@@ -11,43 +11,7 @@
 			],
 			"effect": "minecraft:water_breathing",
 			"level": 1.0,
-			"time": 600.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "xthxsomulti",
-					"right": 1.6
-				}
-			],
-			"effect": "minecraft:water_breathing",
-			"level": 1.0,
-			"time": 1500.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "xthxsomulti",
-					"right": 1.85
-				}
-			],
-			"effect": "minecraft:water_breathing",
-			"level": 1.0,
-			"time": 2400.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "xthxsomulti",
-					"right": 1.925
-				}
-			],
-			"effect": "minecraft:water_breathing",
-			"level": 1.0,
-			"time": 3600.0
+			"time": "500/min(0.1,2.05-xthxsomulti)"
 		}
 	],
 	"icon": "minecraft:mob_effect/water_breathing",

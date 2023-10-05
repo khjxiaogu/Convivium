@@ -6,84 +6,33 @@
 				{
 					"compare": "greater",
 					"left": "pasnswblend",
-					"right": 0.5
+					"right": 0.18
 				},
 				{
 					"compare": "greater",
 					"left": "psopthblend",
-					"right": 0.5
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:regeneration",
-			"level": 1.0,
-			"time": 100.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pasnswblend",
-					"right": 1.0
-				},
-				{
-					"compare": "greater",
-					"left": "psopthblend",
-					"right": 1.0
-				}
-			],
-			"effect": "minecraft:regeneration",
-			"level": 1.0,
-			"time": 200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pasnswblend",
-					"right": 1.5
-				},
-				{
-					"compare": "greater",
-					"left": "psopthblend",
-					"right": 1.5
-				}
-			],
-			"effect": "minecraft:regeneration",
-			"level": 2.0,
-			"time": 200.0
-		},
-		{
-			"condition": [
-				{
-					"compare": "greater",
-					"left": "pasnswblend",
-					"right": 3.0
-				},
-				{
-					"compare": "greater",
-					"left": "psopthblend",
-					"right": 3.0
-				}
-			],
-			"effect": "minecraft:regeneration",
-			"level": 3.0,
-			"time": 200.0
+			"level": "max(1,min(3,floor((pasnswblend+psopthblend)/2/0.18)-1))",
+			"time": "100.0*max(1,min(2,(pasnswblend+psopthblend)/2/0.18))"
 		}
 	],
 	"icon": "minecraft:mob_effect/regeneration",
 	"locals": {
-		"pas": "max(0,astringency-2)",
-		"nsw": "max(0,2-sweetness)",
-		"pso": "max(0,soothingness)",
-		"pth": "max(0,thickness)",
-		"pasnswblend": "pas*nsw/50",
-		"psopthblend": "pso*pth/50",
 		"display": "pasnswblend+psopthblend",
-		"astringencyDelta": "if(astringency-2,max(0,75/max(0.01,nsw)-pas)/2,50)",
+		"astringencyDelta": "if(astringency-2,max(0,3-1.0*sqrt(pas*nsw)/2),10)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "if(soothingness,max(0,75/max(0.01,pth)-pso)/2,50)",
-		"sweetnessDelta": "if(2-sweetness,-max(0,75/max(0.01,pas)-nsw)/2,-50)",
-		"thicknessDelta": "if(thickness,max(0,75/max(0.01,pso)-pth)/2,50)"
+		"soothingnessDelta": "if(soothingness+0,max(0,3-1.0*sqrt(pso*pth)/2),10)",
+		"sweetnessDelta": "if(-sweetness+2,-max(0,3-1.0*sqrt(nsw*pas)/2),-10)",
+		"thicknessDelta": "if(thickness+0,max(0,3-1.0*sqrt(pth*pso)/2),10)",
+		"pas": "max(0,astringency-2)",
+		"nsw": "max(0,-sweetness+2)",
+		"pasnswblend": "1.0*sqrt(pas*nsw)/2",
+		"pso": "max(0,soothingness+0)",
+		"pth": "max(0,thickness+0)",
+		"psopthblend": "1.0*sqrt(pso*pth)/2"
 	},
 	"priority": 0,
 	"relish": [

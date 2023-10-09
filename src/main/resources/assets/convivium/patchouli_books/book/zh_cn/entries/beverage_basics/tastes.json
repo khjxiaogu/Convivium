@@ -5,6 +5,33 @@
 	"sortnum": 60,
 	"pages": [
 		{
+			"type": "patchouli:text",
+			"title": "味",
+			"text": "{b 味}是描述饮品属性的一系列数值维度。饮品的味与其所包含的{(beverages_basics/sways)趣}直接相关。"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "半味",
+			"text": "一种味的取值可正可负，而正值和负值常有不同的名字（称为{b 半味}）。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "例如，{sw 甘与非甘}是一种味。若饮品的{sw 甘与非甘}为负值，则该饮品是{sw 非甘}的；若为正值，则是{sw 甘}的。"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "调整味的值",
+			"text": "未加入任何（固态）原料的饮品，任何味的数值均为零。向{(mechanisms/whisk)动力筅}中加入原料一般会改变一种或几种味，具体如何改变取决于该原料本身。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "例如，西瓜片的描述中（默认）会注明{sw 甘度 II}，意思是如果向饮品中加入一个西瓜片，饮品的{sw 甘}数值会增加两点。换言之，饮品的{sw 非甘}数值会减少两点。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "目前有五种味，列举如下。"
+		},
+		{
 			"type": "convivium:taste_desc",
 			"name": "甘与非甘",
 			"icon": "convivium:textures/gui/taste_icons/sweetness.png",

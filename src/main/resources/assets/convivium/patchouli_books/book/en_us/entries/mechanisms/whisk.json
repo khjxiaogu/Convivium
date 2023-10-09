@@ -16,7 +16,11 @@
 		{
 			"type": "patchouli:text",
 			"title": "GUI Components",
-			"text": "The GUI of whisks is complicated, but in turn demonstrates the high customizability of beverages in Convivium.;; In the right column of the GUI, four {em input slots}, a {em container slot}, an {em output slot}, and a {em fluid tank} can be operated as they are supposed to react.;; Above and below the fluid tank, a {em rotary force indicator} and a {em heat indicator} show whether the whisk is powered (required for working) or heated (required only by certain recipes.).;; Buttons at the bottom toggle redstone control and manual switch of {em heat insulation}. Heat-insulated whisk will not heat the fluid inside even if being heated itself, which is usually more convenient than toggling the heat sources."
+			"text": "The GUI of whisks is complicated, but in turn demonstrates the high customizability of beverages in Convivium.;; In the right column of the GUI, four {em input slots}, a {em container slot}, an {em output slot}, and a {em fluid tank} can be operated as they are supposed to react."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Above and below the fluid tank, a {em rotary force indicator} and a {em heat indicator} show whether the whisk is powered (required for working) or heated (required only by certain recipes.).;; Buttons at the bottom toggle redstone control and manual switch of {em heat insulation}. Heat-insulated whisk will not heat the fluid inside even if being heated itself, which is usually more convenient than toggling the heat sources."
 		},
 		{
 			"type": "patchouli:text",

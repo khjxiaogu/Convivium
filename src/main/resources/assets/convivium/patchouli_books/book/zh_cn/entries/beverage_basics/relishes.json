@@ -5,6 +5,28 @@
 	"sortnum": 50,
 	"pages": [
 		{
+			"type": "patchouli:text",
+			"title": "旨",
+			"text": "{b 旨}是饮品最基本的属性，决定了饮品能够包含哪些{(beverages_basics/sways)趣}。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "饮品的液态原料，即加入{(mechanisms/whisk)动力筅}的“基底”，每一种都有特定的旨。饮品最多包含五份基底，而饮品的旨就是出现得最多的基底的旨（若有并列，则饮品最多可有两种旨）。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "例如，作为饮品基底的牛奶，旨为{cereal 谷}；茶基底的旨为{bath 荡}。如果调配饮品时往筅中加入两份牛奶和三份茶，则最终得到的饮品的旨是{bath 荡}。",
+		},
+		{
+			"type": "patchouli:text",
+			"title": "旨与趣的关系",
+			"text": "要在一份饮品中加入{(beverages_basics/sways)趣}的效果，一般都会要求饮品有特定的旨。例如，效果为{b 跳跃提升}的趣只在饮品的旨为{bath 荡}时才能附加在饮品上。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "目前，《会饮》提供如下所述的六种旨。"
+		},
+		{
 			"type": "convivium:relish_desc",
 			"name": "谷",
 			"desc": "{cereal 谷}之{b 旨}代表存续与滋养的自然力量。",

@@ -5,6 +5,33 @@
 	"sortnum": 60,
 	"pages": [
 		{
+			"type": "patchouli:text",
+			"title": "Tastes",
+			"text": "{b Tastes} are a set of numeric dimensions describing the properties of a beverage. The Tastes of a beverage are closely associated with the {(beverages_basics/sways)Sways} it would have."
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Semi-Tastes",
+			"text": "The value of a Taste can range from negative to positive, and the (+) values and (-) values are given different names ({b Semi-Tastes})."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "For example, {sw Sweetness} is a Taste. When the value of {sw Sweetness} of a beverage is (-), the beverage is {sw savory}; when (+), the beverage is {sw sweet}."
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Changing Tastes",
+			"text": "A beverage with no (solid) ingredients has all its Taste values be at zero. Adding an ingredient into the {(mechanisms/whisk)whisk} typically changes one or some of the Tastes, with the changed Tastes and the intensity depending on the ingredient itself."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "For example, the description of a melon slice item (by default) reads {sw Sweetness II}, meaning that if you add a melon slice into a beverage, the beverage becomes two points {sw sweeter}; or you can also say that it is two points less {sw savory}."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Currently, there are five Taste dimensions, as listed below."
+		},
+		{
 			"type": "convivium:taste_desc",
 			"name": "Sweet & Savor",
 			"icon": "convivium:textures/gui/taste_icons/sweetness.png",

@@ -5,6 +5,28 @@
 	"sortnum": 50,
 	"pages": [
 		{
+			"type": "patchouli:text",
+			"title": "Relishes",
+			"text": "{b Relishes} are the foremost properties of beverages. They determine what {(beverages_basics/sways)Sways} could a beverage bear."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "The liquid ingredients of a beverage, that is, the “bases” added to the {(mechanisms/whisk)whisk}, are bound to specific Relishes respectively. A beverage typically accept at most five portions of bases, and {u up to two} Relishe(s) that are most-presented in the bases become the Relishe(s) of the beverage."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "For example, milk is bound to the Relish {cereal Ceres}, and tea, {bath Minerva}. If two portions of milk and three portions of tea are added to a whisk, the resulting beverage will have the sole Relish {bath Minerva}.",
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Relishes and Sways",
+			"text": "To add a {(beverages_basics/sways)Sway} to a beverage, it is usually required that the beverage has a certain relish. For example, the {i Jump Boost} Sway only takes effect if the beverage has {bath Minerva} as a relish."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "There are currently six relished provided by Convivium, as listed below."
+		},
+		{
 			"type": "convivium:relish_desc",
 			"name": "Ceres",
 			"desc": "{b The relish of} {cereal Ceres}, or {b Cereal}, is associated with the natural powers that preserve and nourish.",

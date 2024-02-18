@@ -137,10 +137,10 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 			for(CurrentSwayInfo swh:blockEntity.swayhint) {
 				if(swh.active>0) {
 					if(isMouseIn(mouseX,mouseY,18+20*(n2++),65,18,18))
-						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
+						tooltip.add(getSwayName(swh));
 				}else {
 					if(isMouseIn(mouseX,mouseY,9+26*(n1++),90,24,42)) {
-						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
+						tooltip.add(getSwayName(swh));
 						tooltip.add(Utils.translate("gui.convivium.whisk.requires_taste"));
 						for(int i=0;i<Constants.TASTES.length;i++) {
 							String sway=Constants.TASTES[i];

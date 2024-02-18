@@ -95,10 +95,11 @@
 	"taste.convivium.pungency.negate": "非辛度 %s",
 	"taste.convivium.thickness.negate": "淡薄度 %s",
 	"taste.convivium.soothingness.negate": "激化度 %s",
-	"sway.minecraft.mob_effect/regeneration.name": "生命恢复",
-	"sway.minecraft.mob_effect/hunger.name": "饥饿",
-	"sway.minecraft.mob_effect/saturation.name": "饱和",
-	"sway.minecraft.mob_effect/whither.name": "凋零",
-	"sway.minecraft.mob_effect/instant_damage.name": "瞬间伤害",
-	"sway.minecraft.mob_effect/instant_health.name": "瞬间治疗"
+	"effect.convivium.delicacy":"脆弱",
+	"effect.convivium.ignitability":"易燃",
+	"effect.convivium.maritime_fatigue":"水下疲劳",
+	"effect.convivium.plummet":"骤降",
+	"effect.convivium.radication":"扎根",
+	"effect.convivium.thrusted":"水下推进",
+	"effect.convivium.toss_power":"掷力"
 }

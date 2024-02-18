@@ -46,6 +46,7 @@ public class CurrentSwayInfo {
 	public int active;
 	public ResourceLocation icon;
 	public ResourceLocation image;
+	public String translation;
 	public CurrentSwayInfo(ResourceLocation ic,VariantEnvironment env) {
 		display=env.get(Constants.DISPLAY);
 		icon=ic;
@@ -56,7 +57,7 @@ public class CurrentSwayInfo {
 			dthick=fromVal(env.get(Constants.THICKNESS_DELTA));
 			drousing=fromVal(env.get(Constants.SOOTHINGNESS_DELTA));
 		}
-		
+		this.image=new ResourceLocation(icon.getNamespace(),"textures/"+icon.getPath()+".png");
 	}
 	public CurrentSwayInfo(int dsweet, int dastringent, int dpungent, int dthick, int drousing, double display,int active,
 			ResourceLocation icon) {

@@ -83,7 +83,7 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 				}
 			}
 
-			FluidStack out=Utils.extractFluid(held);
+			/*FluidStack out=Utils.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.accessabletank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
 					pam.accessabletank.fill(out, FluidAction.EXECUTE);
@@ -92,7 +92,7 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 					ItemHandlerHelper.giveItemToPlayer(player, ret);
 					return InteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
-			}
+			}*/
 			if (FluidUtil.interactWithFluidHandler(player, handIn, pam.accessabletank))
 				return InteractionResult.SUCCESS;
 			if (handIn == InteractionHand.MAIN_HAND) {

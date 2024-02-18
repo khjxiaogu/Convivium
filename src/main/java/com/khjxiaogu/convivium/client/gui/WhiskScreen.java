@@ -39,6 +39,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -156,7 +157,19 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 			super.renderTooltip(transform, mouseX, mouseY);
 
 	}
-
+	private MutableComponent getSwayName(CurrentSwayInfo icon) {
+		if(icon.translation!=null)
+			return Utils.translate(icon.translation);
+		String customlang=icon.icon.toLanguageKey("sway","name");
+		if(I18n.exists(customlang)) {
+			icon.translation=customlang;
+			
+		}else if(icon.icon.getPath().startsWith("mob_effect")) {
+			String ico=icon.icon.getPath().split("/")[1];
+			icon.translation="effect."+icon.icon.getNamespace()+"."+ico;
+		}
+		return Utils.translate(icon.translation);
+	}
 	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
 		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 

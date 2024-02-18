@@ -18,9 +18,16 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.CachedDataDeserializer;
 import com.teammoeg.caupona.data.Deserializer;
 
@@ -35,6 +42,24 @@ public class RelishConditions {
 		}
 		
 	};
+	/*
+	public static final Codec<MajorRelishCondition> MAJOR_CODEC=RecordCodecBuilder.create(t->
+	t.group(Codec.STRING.fieldOf("relish").forGetter(o->o.relish)).apply(t, MajorRelishCondition::new));
+	public static final Codec<OnlyMajorRelishCondition> ONLY_MAJOR_CODEC=RecordCodecBuilder.create(t->
+	t.group(Codec.STRING.fieldOf("relish").forGetter(o->o.relish)).apply(t, OnlyMajorRelishCondition::new));
+	private static final Map<String,Codec<RelishCondition>> codecs=new HashMap<>();
+	public static String findType(Codec<RelishCondition> c) {
+		for(Entry<String, Codec<RelishCondition>> cd:codecs.entrySet()) {
+			if(cd.getValue().equals(c))
+				return cd.getKey();
+		}
+		return null;
+	}
+	public static final Codec<RelishCondition> CODEC=
+			Codec.STRING.flatXmap(
+				s->Optional.ofNullable(codecs.get(s)).map(DataResult::success).orElseGet(()->DataResult.error(()->"Unknown type")),
+				c->Optional.ofNullable(findType(c)).map(DataResult::success).orElseGet(()->DataResult.error(()->"Unknown type")))
+			.dispatch(o->codecs.get(o.getType()),o->o);*/
 	static {
 		register("major", MajorRelishCondition::new, MajorRelishCondition::new);
 		register("only_major", OnlyMajorRelishCondition::new, OnlyMajorRelishCondition::new);

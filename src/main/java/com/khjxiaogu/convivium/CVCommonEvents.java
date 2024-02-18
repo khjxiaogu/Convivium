@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
+import com.khjxiaogu.convivium.fluid.BeverageFluid;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.api.events.FoodExchangeItemEvent;
 
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -46,6 +48,11 @@ public class CVCommonEvents {
 	public static void bowlContainerFood(ContanerContainFoodEvent ev) {
 		if(ev.origin.getItem()==Items.GLASS_BOTTLE) {
 			if(!ev.isBlockAccess) {
+				if(ev.fs.getFluid().isSame(Fluids.WATER)&&!BeverageFluid.getInfo(ev.fs).isPresent()) {
+					ev.out=Items.POTION.getDefaultInstance();
+					ev.setResult(Result.ALLOW);
+					return;
+				}
 				ContainingRecipe recipe=ContainingRecipe.recipes.get(ev.fs.getFluid());
 				if(recipe!=null) {
 					ev.out=recipe.handle(ev.fs);

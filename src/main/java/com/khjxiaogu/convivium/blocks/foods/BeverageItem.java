@@ -20,11 +20,14 @@ package com.khjxiaogu.convivium.blocks.foods;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.item.EdibleBlock;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
+import com.teammoeg.caupona.util.FluidItemWrapper;
 import com.teammoeg.caupona.util.SauteedFoodInfo;
 import com.teammoeg.caupona.util.Utils;
 
@@ -37,6 +40,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class BeverageItem extends EdibleBlock {
 	public static final FoodProperties fakefood = new FoodProperties.Builder().nutrition(0).saturationMod(0f)
@@ -101,5 +105,8 @@ public class BeverageItem extends EdibleBlock {
 		return getInfo(stack).getFood();
 		
 	}
-
+	@Override
+	public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+		return new FluidItemWrapper(stack);
+	}
 }

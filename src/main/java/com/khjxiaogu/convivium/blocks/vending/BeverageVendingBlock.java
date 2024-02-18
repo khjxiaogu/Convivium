@@ -84,7 +84,7 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 			return p;
 		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
 			if(player.getUUID().equals(blockEntity.owner)) {
-				ItemStack held = player.getItemInHand(handIn);
+				/*ItemStack held = player.getItemInHand(handIn);
 				FluidStack out=Utils.extractFluid(held);
 				if (!out.isEmpty()) {
 					if(blockEntity.tank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
@@ -94,7 +94,7 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 						ItemHandlerHelper.giveItemToPlayer(player, ret);
 						return InteractionResult.sidedSuccess(worldIn.isClientSide);
 					}
-				}
+				}*/
 				if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.tank))
 					return InteractionResult.SUCCESS;
 				if(handIn == InteractionHand.MAIN_HAND) {

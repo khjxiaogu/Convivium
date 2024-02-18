@@ -143,7 +143,7 @@ repositories {
     	content {
             includeGroup "com.teammoeg"
             includeGroup "com.khjxiaogu"
-            includeGroup "vazkii.patchouli"
+           // includeGroup "vazkii.patchouli"
         }
     }
     maven {
@@ -176,11 +176,11 @@ dependencies {
 	//implementation fg.deobf("curse.maven:pams-harvestcraft-2-crops-361385:3276350")
 	
 	//implementation fg.deobf("curse.maven:crock-pot-404523:3782459")
-	
+	compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE:api")
 	implementation "com.teammoeg:Caupona:1.20.1-${caupona_version}:deobf"
 	//runtimeOnly fg.deobf("com.teammoeg:Caupona:1.20.1-0.4.5-build1")
 	
-    implementation fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE-20230717")
+    //implementation fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE-20230717")
 
     // FG5 requires 0.8.3
     annotationProcessor "org.spongepowered:mixin:0.8.3:processor"

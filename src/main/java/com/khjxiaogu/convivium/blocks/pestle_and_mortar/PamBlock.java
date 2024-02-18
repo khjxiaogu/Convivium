@@ -63,7 +63,7 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 			return p;
 		BlockEntity be=worldIn.getBlockEntity(pos);
 		if (be instanceof PamBlockEntity pam) {
-			ItemStack held = player.getItemInHand(handIn);
+			/*ItemStack held = player.getItemInHand(handIn);
 			FluidStack out=Utils.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.tankin.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
@@ -73,7 +73,7 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 					ItemHandlerHelper.giveItemToPlayer(player, ret);
 					return InteractionResult.sidedSuccess(worldIn.isClientSide);
 				}
-			}
+			}*/
 			if (FluidUtil.interactWithFluidHandler(player, handIn, pam.tanks))
 				return InteractionResult.SUCCESS;
 			if (handIn == InteractionHand.MAIN_HAND) {

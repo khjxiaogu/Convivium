@@ -89,7 +89,7 @@ public class CVFluids {
 
 								@Override
 								public int getTintColor(FluidStack stack) {
-									return BeverageInfo.getIColor(stack.getOrCreateTag());
+									return BeverageInfo.getIColor(stack.getOrCreateTag())|0xFF<<24;
 								}
 
 								@Override

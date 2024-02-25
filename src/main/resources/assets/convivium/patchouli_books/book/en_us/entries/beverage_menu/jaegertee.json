@@ -1,7 +1,7 @@
 {
 	"category": "convivium:beverage_menu",
 	"icon": "convivium:jaegertee",
-	"name": "Jägertee",
+	"name": "Jaegertee (Jägertee)",
 	"pages": [
 		{
 			"type": "convivium:beverage_recipe",

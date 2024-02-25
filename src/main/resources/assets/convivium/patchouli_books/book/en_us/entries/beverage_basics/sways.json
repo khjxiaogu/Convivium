@@ -4,5 +4,55 @@
 	"name": "Sways",
 	"sortnum": 70,
 	"pages": [
+		{
+			"type": "patchouli:text",
+			"title": "Sways",
+			"text": "Simply speaking, {b Sways} are potion effects that wait to be activated. By adjusting the properties of a beverage, one or more Sways can be activated as effects that the beverage provides."
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Relish Requirements",
+			"text": "A Sway is usually bound to a specific {(beverages_basics/relishes)Relish}, meaning that a beverage is qualified to active certain Sways only if it has the required Relish(es)."
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Taste Requirements",
+			"text": "Also, a Sway is typically anchored to a fixed range of {(beverages_basics/tastes)Taste} values. In most cases, the level or duration of the effect that a Sway offers will {b increase} if the Tastes that meet the requirements {b go more intense}."
+		},
+		{
+			"type": "patchouli:text",
+			"title": "Semi-Taste Patterns",
+			"text": "The Taste requirements of a Sway can often be broken down into two pairs of {b Semi-Taste} requirements, describing what pattern of two Semi-Taste values should be in to activate the Sway."
+		},
+		{
+			"type": "patchouli:image",
+			"title": "Pattern “Blend”",
+			"images": ["convivium:textures/gui/entries/pattern_blend.png"],
+			"text": "A {b blend} of two Semi-Tastes requires at least one of them to be intense enough. Furthermore, the resulting effect can be much stronger if both of the Semi-Tastes are intense."
+		},
+		{
+			"type": "patchouli:image",
+			"title": "Pattern “Balance”",
+			"images": ["convivium:textures/gui/entries/pattern_balance.png"],
+			"text": "A {b balancing} pattern of two Semi-Tastes requires the intensity of them be at roughly the same level and intense enough."
+		},
+		{
+			"type": "patchouli:image",
+			"title": "Pattern “Contradiction”",
+			"images": ["convivium:textures/gui/entries/pattern_contra.png"],
+			"text": "A {b contradicting} pattern of two Semi-Tastes requires only one of them to be intense enough, while the other to be as negligible as possible."
+		},
+		{
+			"type": "patchouli:image",
+			"title": "Pattern “Wane–Wax”",
+			"images": ["convivium:textures/gui/entries/pattern_wanewax.png"],
+			"text": "A {b waning–waxing} pattern of two Semi-Tastes requires the intensity of them to be different enough. The more different be the intensity, the stronger be the effect."
+		},
+		{
+			"type": "patchouli:image",
+			"title": "Pattern “Mixture”",
+			"images": ["convivium:textures/gui/entries/pattern_mixture.png"],
+			"text": "A {b mixture} of two Tastes (not Semi-Tastes) has the effect areas scattered throughout the combinations of the tastes. There lies much possibility."
+		}
 	]
 }

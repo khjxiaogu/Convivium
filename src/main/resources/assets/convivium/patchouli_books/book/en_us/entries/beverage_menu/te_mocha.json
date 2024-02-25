@@ -1,7 +1,7 @@
 {
 	"category": "convivium:beverage_menu",
 	"icon": "convivium:te_mocha",
-	"name": "Tè Mocha",
+	"name": "Te Mocha (Tè Mocha)",
 	"pages": [
 		{
 			"type": "convivium:beverage_recipe",

@@ -2,7 +2,8 @@ name: Bug Report
 description: Meet some crash or glitch? Submit a bug report.
 title: "[Bug] "
 labels: bug
-assignee: ["khjxiaogu"],
+assignees:
+  - khjxiaogu
 body:
   - type: markdown
     attributes:

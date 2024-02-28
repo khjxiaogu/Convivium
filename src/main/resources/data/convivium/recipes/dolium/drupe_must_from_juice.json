@@ -1,29 +1,23 @@
 {
 	"type": "caupona:dolium",
-	"amount": 0,
+	"amount": 250,
 	"container": {
 		"item": "minecraft:glass_bottle"
 	},
 	"density": 0.0,
 	"items": [
 		{
-			"count": 16,
-			"item": {
-				"tag": "convivium:camellia_seeds"
-			}
-		},
-		{
 			"count": 0,
 			"item": {
-				"tag": "minecraft:anvil"
+				"item": "convivium:dolium_lid"
 			}
 		}
 	],
+	"fluid": "convivium:drupe_juice",
 	"keepInfo": false,
 	"output": {
 		"type": "forge:nbt",
 		"count": 1,
-		"item": "caupona:gravy_boat",
-		"nbt": "{Damage:0}"
+		"item": "convivium:drupe_must"
 	}
 }

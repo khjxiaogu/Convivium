@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube",
-	"ambientocclusion": false,
+	"ambientocclusion": true,
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "convivium:block/aeolipile",

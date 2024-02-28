@@ -1,0 +1,23 @@
+{
+	"type": "caupona:dolium",
+	"amount": 250,
+	"container": {
+		"item": "minecraft:glass_bottle"
+	},
+	"density": 0.0,
+	"items": [
+		{
+			"count": 0,
+			"item": {
+				"item": "convivium:dolium_lid"
+			}
+		}
+	],
+	"fluid": "convivium:berry_juice",
+	"keepInfo": false,
+	"output": {
+		"type": "forge:nbt",
+		"count": 1,
+		"item": "convivium:berry_must"
+	}
+}

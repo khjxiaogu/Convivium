@@ -28,30 +28,50 @@
 			"type": "patchouli:image",
 			"title": "调和之味",
 			"images": ["convivium:textures/gui/entries/pattern_blend.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
 			"text": "若一对半味组成{b 调和之味}，则要求至少一者足够强烈，才能激活趣。此外，若两者都强烈，则激活得到的药水效果会明显更强。"
 		},
 		{
 			"type": "patchouli:image",
 			"title": "制衡之味",
 			"images": ["convivium:textures/gui/entries/pattern_balance.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
 			"text": "若一对半味组成{b 制衡之味}，则要求两者的强度相近、且都足够强，才可激活趣。"
 		},
 		{
 			"type": "patchouli:image",
 			"title": "抵牾之味",
 			"images": ["convivium:textures/gui/entries/pattern_contra.png"],
-			"text": "若一对半味组成{b 抵牾之味}，则要求其中任一者尽量强烈、同时另一者尽量微弱，才可激活趣。"
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "若一对半味组成{b 抵牾之味}，则要求其中任一者尽量强烈、同时另一者尽量微弱（但并非完全不存在），才可激活趣。"
 		},
 		{
 			"type": "patchouli:image",
 			"title": "消长之味",
 			"images": ["convivium:textures/gui/entries/pattern_wanewax.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
 			"text": "若一对半味组成{b 消长之味}，则要求二者强弱分明，才可激活趣。强度差异越大，则激活得到的药水效果越强。"
 		},
 		{
 			"type": "patchouli:image",
 			"title": "杂陈之味",
 			"images": ["convivium:textures/gui/entries/pattern_mixture.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
 			"text": "若一对味（并非半味）组成{b 杂陈之味}，则这两种味的各种组合都有可能激活此趣，其中有众多可能。"
 		}
 	]

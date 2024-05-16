@@ -28,30 +28,50 @@
 			"type": "patchouli:image",
 			"title": "Pattern “Blend”",
 			"images": ["convivium:textures/gui/entries/pattern_blend.png"],
+			"text": "Deep color indicates strong effect."
+		},
+		{
+			"type": "patchouli:text",
 			"text": "A {b blend} of two Semi-Tastes requires at least one of them to be intense enough. Furthermore, the resulting effect can be much stronger if both of the Semi-Tastes are intense."
 		},
 		{
 			"type": "patchouli:image",
 			"title": "Pattern “Balance”",
 			"images": ["convivium:textures/gui/entries/pattern_balance.png"],
+			"text": "Deep color indicates strong effect."
+		},
+		{
+			"type": "patchouli:text",
 			"text": "A {b balancing} pattern of two Semi-Tastes requires the intensity of them be at roughly the same level and intense enough."
 		},
 		{
 			"type": "patchouli:image",
 			"title": "Pattern “Contradiction”",
 			"images": ["convivium:textures/gui/entries/pattern_contra.png"],
-			"text": "A {b contradicting} pattern of two Semi-Tastes requires only one of them to be intense enough, while the other to be as negligible as possible."
+			"text": "Deep color indicates strong effect."
+		},
+		{
+			"type": "patchouli:text",
+			"text": "A {b contradicting} pattern of two Semi-Tastes requires only one of them to be intense enough, while the other to be as negligible as possible (but not absent)."
 		},
 		{
 			"type": "patchouli:image",
 			"title": "Pattern “Wane–Wax”",
 			"images": ["convivium:textures/gui/entries/pattern_wanewax.png"],
+			"text": "Deep color indicates strong effect."
+		},
+		{
+			"type": "patchouli:text",
 			"text": "A {b waning–waxing} pattern of two Semi-Tastes requires the intensity of them to be different enough. The more different be the intensity, the stronger be the effect."
 		},
 		{
 			"type": "patchouli:image",
 			"title": "Pattern “Mixture”",
 			"images": ["convivium:textures/gui/entries/pattern_mixture.png"],
+			"text": "Deep color indicates strong effect."
+		},
+		{
+			"type": "patchouli:text",
 			"text": "A {b mixture} of two Tastes (not Semi-Tastes) has the effect areas scattered throughout the combinations of the tastes. There lies much possibility."
 		}
 	]

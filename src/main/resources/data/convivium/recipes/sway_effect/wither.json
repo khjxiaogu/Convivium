@@ -14,12 +14,12 @@
 					"right": 0.18
 				}
 			],
-			"effect": "minecraft:whither",
+			"effect": "minecraft:wither",
 			"level": "max(1,min(3,floor((nasppublend+psopthblend)/2/0.18)-1))",
 			"time": "100.0*max(1,min(2,(nasppublend+psopthblend)/2/0.18))"
 		}
 	],
-	"icon": "minecraft:mob_effect/whither",
+	"icon": "minecraft:mob_effect/wither",
 	"locals": {
 		"display": "nasppublend+psopthblend",
 		"astringencyDelta": "if(-astringency-2,-max(0,3-1.0*sqrt(nas*ppu)/2),-10)",

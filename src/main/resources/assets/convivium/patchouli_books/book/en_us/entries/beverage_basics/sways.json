@@ -7,7 +7,7 @@
 		{
 			"type": "patchouli:text",
 			"title": "Sways",
-			"text": "Simply speaking, {b Sways} are potion effects that wait to be activated. By adjusting the properties of a beverage, one or more Sways can be activated as effects that the beverage provides."
+			"text": "Simply speaking, {b Sways} are potion effects that wait to be activated. By adjusting the properties of a beverage, one or more Sways can be activated as effects that the beverage provides. Please refer to {(beverages_basics/sway_list)this page} for a comprehensive list of sways."
 		},
 		{
 			"type": "patchouli:text",

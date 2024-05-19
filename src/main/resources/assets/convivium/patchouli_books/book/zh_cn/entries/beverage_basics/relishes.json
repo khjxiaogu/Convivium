@@ -47,7 +47,7 @@
 		{
 			"type": "convivium:relish_desc",
 			"name": "四时",
-			"desc": "{seasons 四时}，之{b 旨}代表推动时间流转、感官刺激的法则。",
+			"desc": "{seasons 四时}之{b 旨}代表推动时间流转、感官刺激的法则。",
 			"bases": "果汁。"
 		},
 		{

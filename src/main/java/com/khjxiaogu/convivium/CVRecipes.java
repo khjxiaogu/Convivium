@@ -30,19 +30,19 @@ import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.teammoeg.caupona.data.CPRecipeSerializer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVRecipes {
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
-			.create(ForgeRegistries.RECIPE_SERIALIZERS, CVMain.MODID);
+			.create(BuiltInRegistries.RECIPE_SERIALIZER, CVMain.MODID);
 	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister
-			.create(ForgeRegistries.RECIPE_TYPES, CVMain.MODID);
+			.create(BuiltInRegistries.RECIPE_TYPE, CVMain.MODID);
 	static {
 		TasteRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("taste",()->new CPRecipeSerializer<>(TasteRecipe::new,TasteRecipe::new,TasteRecipe::write));
 		GrindingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("grinding",()->new CPRecipeSerializer<>(GrindingRecipe::new,GrindingRecipe::new,GrindingRecipe::write));
@@ -68,7 +68,7 @@ public class CVRecipes {
 		RelishItemRecipe.TYPE=createType("relish_item");
 		BasinRecipe.TYPE=createType("basin");
 	}
-	public static RegistryObject<RecipeType<Recipe<?>>> createType(String s){
-		return RECIPE_TYPES.register(s,()->RecipeType.simple(new ResourceLocation(CVMain.MODID ,s)));
+	public static DeferredHolder<RecipeType<?>, RecipeType<Recipe<?>>> createType(String s){
+		return RECIPE_TYPES.register(s,()->RecipeType.simple(ResourceLocation.fromNamespaceAndPath(CVMain.MODID ,s)));
 	}
 }

@@ -69,7 +69,7 @@ public class CurrentSwayInfo {
 		this.display = display;
 		this.active=active;
 		this.icon = icon;
-		this.image=new ResourceLocation(icon.getNamespace(),"textures/"+icon.getPath()+".png");
+		this.image=ResourceLocation.fromNamespaceAndPath(icon.getNamespace(),"textures/"+icon.getPath()+".png");
 	}
 	public int getTasteDelta(String sw) {
 		switch(sw) {

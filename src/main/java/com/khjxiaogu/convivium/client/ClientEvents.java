@@ -29,16 +29,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
-@EventBusSubscriber(modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
 	/**
 	 * @param load  
@@ -50,10 +48,10 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void tick(TickEvent.ClientTickEvent tick)
+	public static void tick(LevelTickEvent.Pre tick)
 	{
-		if(tick.phase==Phase.START&&!Minecraft.getInstance().isPaused())
-			RotationUtils.tick();;
+		if(!Minecraft.getInstance().isPaused())
+			RotationUtils.tick();
 	}
 	@SubscribeEvent
 	public static void addTooltip(ItemTooltipEvent ev)

@@ -24,9 +24,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
-public class BaseFluid extends ForgeFlowingFluid {
+public class BaseFluid extends BaseFlowingFluid {
 
 	@Override
 	public Fluid getSource() {

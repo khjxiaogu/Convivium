@@ -32,14 +32,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(CVMain.MODID)
 public class CVMain {
@@ -49,17 +46,15 @@ public class CVMain {
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 	public static final String BOOK_NBT_TAG=CVMain.MODID+":book_given";
 	public static DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
-	public static RegistryObject<CreativeModeTab> main=TABS.register("aaa_caupona_9v8_main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
+	public static DeferredHolder<CreativeModeTab, CreativeModeTab> main=TABS.register("aaa_caupona_9v8_main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
 	public static final TabType MAIN_TAB=new TabType(v->main.getKey().equals(v));
 	public static ResourceLocation rl(String path) {
-		return new ResourceLocation(MODID, path);
+		return ResourceLocation.fromNamespaceAndPath(MODID, path);
 	}
 
-	public CVMain() {
-		IEventBus mod = FMLJavaModLoadingContext.get().getModEventBus();
-		ForgeMod.enableMilkFluid();
-		MinecraftForge.EVENT_BUS.register(RecipeReloadListener.class);
-		mod.addListener(this::enqueueIMC);
+	public CVMain(IEventBus mod) {
+		NeoForgeMod.enableMilkFluid();
+		//mod.addListener(this::enqueueIMC);
 		CVBlockEntityTypes.REGISTER.register(mod);
 		CVGui.CONTAINERS.register(mod);
 		CVParticles.REGISTER.register(mod);
@@ -76,8 +71,8 @@ public class CVMain {
 
 	}
 
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	public void enqueueIMC(InterModEnqueueEvent event) {
 	   // InterModComms.sendTo("treechop", "getTreeChopAPI", () -> (Consumer)TreechopCompat::new);
-	}
+	}*/
 }

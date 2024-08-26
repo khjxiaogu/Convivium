@@ -34,7 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
-	private ResourceLocation TEXTURE = new ResourceLocation(CVMain.MODID, "textures/gui/basin.png");
+	private ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/basin.png");
 
 	BasinBlockEntity blockEntity;
 
@@ -82,7 +82,7 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform);
+		this.renderBackground(transform, x, y, partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);

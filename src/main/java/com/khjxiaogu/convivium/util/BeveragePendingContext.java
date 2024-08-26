@@ -135,7 +135,7 @@ public class BeveragePendingContext extends IPendingContext {
 		.flatMap(Optional::stream)
 		.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
 		.collect(Collectors.toList());
-		info.swayeffects.sort(Comparator.<MobEffectInstance>comparingInt(e -> MobEffect.getId(e.getEffect()))
+		info.swayeffects.sort(Comparator.<MobEffectInstance,String>comparing(e -> e.getEffect().getRegisteredName())
 				.thenComparingInt(e->e.getAmplifier()).thenComparingInt(e->e.getDuration()));
 		info.recalculateHAS();
 		return swi;

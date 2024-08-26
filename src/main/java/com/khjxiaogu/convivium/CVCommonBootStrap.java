@@ -28,13 +28,13 @@ import com.teammoeg.caupona.util.ICreativeModeTabItem;
 
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
-@Mod.EventBusSubscriber(modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CVCommonBootStrap {
 	public static final List<Pair<Supplier<? extends ItemLike>,Float>> compositables = new ArrayList<>();
 	@SubscribeEvent
@@ -48,10 +48,10 @@ public class CVCommonBootStrap {
 		helper.register(event);
 		
 	}
-	public static <T extends ItemLike> RegistryObject<T> asCompositable(RegistryObject<T> obj,float val){
+	public static <R extends ItemLike,T extends R> DeferredHolder<R,T> asCompositable(DeferredHolder<R,T> obj, float val) {
 		compositables.add(Pair.of(obj, val));
 		return obj;
-	} 
+	}
 	@SubscribeEvent
 	public static void onCommonSetup(@SuppressWarnings("unused") FMLCommonSetupEvent event) {
 		registerDispensers();

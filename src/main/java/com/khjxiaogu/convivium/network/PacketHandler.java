@@ -18,33 +18,13 @@
 
 package com.khjxiaogu.convivium.network;
 
-import com.khjxiaogu.convivium.CVMain;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class PacketHandler {
-	private static final String VERSION = Integer.toString(1);
-	private static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-			new ResourceLocation(CVMain.MODID, "network"), () -> VERSION, VERSION::equals, VERSION::equals);
 
-	public static void send(PacketDistributor.PacketTarget target, Object message) {
-		CHANNEL.send(target, message);
+	public static void sendToServer(CustomPacketPayload message) {
+		PacketDistributor.sendToServer(message);
 	}
 
-	public static void sendToServer(Object message) {
-		CHANNEL.sendToServer(message);
-	}
-
-	public static SimpleChannel get() {
-		return CHANNEL;
-	}
-
-	public static void register() {
-		//int id = 0;
-		//CHANNEL.registerMessage(id++, ClientDataMessage.class, ClientDataMessage::encode, ClientDataMessage::new,
-		//		ClientDataMessage::handle);
-	}
 }

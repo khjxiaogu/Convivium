@@ -34,12 +34,17 @@ import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.mojang.datafixers.util.Pair;
-import com.teammoeg.caupona.data.SerializeUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.teammoeg.caupona.components.IFoodInfo;
+import com.teammoeg.caupona.components.StewInfo;
 import com.teammoeg.caupona.data.recipes.FoodValueRecipe;
+import com.teammoeg.caupona.util.ChancedEffect;
 import com.teammoeg.caupona.util.FloatemStack;
-import com.teammoeg.caupona.util.IFoodInfo;
+import com.teammoeg.caupona.util.SerializeUtil;
 import com.teammoeg.caupona.util.Utils;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -49,21 +54,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
 public class BeverageInfo implements IFoodInfo {
 	public List<FloatemStack> stacks;
 	public List<MobEffectInstance> effects;
 	public List<MobEffectInstance> swayeffects;
-	public List<Pair<MobEffectInstance, Float>> foodeffect;
+	public List<ChancedEffect> foodeffect;
 	public Fluid[] relishes=new Fluid[5];
 	public String activeRelish1="";
 	public String activeRelish2="";
@@ -76,35 +79,38 @@ public class BeverageInfo implements IFoodInfo {
 		stacks = new ArrayList<>();
 		foodeffect = new ArrayList<>();
 	}
+	public static Codec<BeverageInfo> CODEC=RecordCodecBuilder.create(t->t.group(
+		Codec.list(FloatemStack.CODEC).fieldOf("items").forGetter(o->o.stacks),
+		Codec.list(SerializeUtil.fromRFBBStreamCodec(MobEffectInstance.STREAM_CODEC,MobEffectInstance.CODEC)).fieldOf("effects").forGetter(o->o.effects),
+		Codec.list(SerializeUtil.fromRFBBStreamCodec(MobEffectInstance.STREAM_CODEC,MobEffectInstance.CODEC)).fieldOf("sway").forGetter(o->o.swayeffects),
+		Codec.list(ChancedEffect.CODEC).fieldOf("feffects").forGetter(o->o.foodeffect),
+		Codec.list(SerializeUtil.idOrKey(BuiltInRegistries.FLUID)).fieldOf("relish").forGetter(o->Arrays.asList(o.relishes)),
+		Codec.STRING.fieldOf("activeRelish1").forGetter(o->o.activeRelish1),
+		Codec.STRING.fieldOf("activeRelish2").forGetter(o->o.activeRelish2),
+		Codec.INT.fieldOf("heal").forGetter(o->o.healing),
+		Codec.FLOAT.fieldOf("sat").forGetter(o->o.saturation),
+		Codec.INT.fieldOf("heat").forGetter(o->o.heat)
+		).apply(t, BeverageInfo::new));
 
-	public BeverageInfo(CompoundTag nbt) {
-		stacks = nbt.getList("items", 10).stream().map(e -> (CompoundTag) e).map(FloatemStack::new)
-				.collect(Collectors.toList());
-		healing = nbt.getInt("heal");
-		saturation = nbt.getFloat("sat");
-		foodeffect = nbt.getList("feffects", 10).stream().map(e -> (CompoundTag) e)
-				.map(e -> new Pair<>(MobEffectInstance.load(e.getCompound("effect")), e.getFloat("chance")))
-				.collect(Collectors.toList());
-		effects = nbt.getList("effects", 10).stream().map(e->MobEffectInstance.load((CompoundTag)e))
-				.collect(Collectors.toList());
-		swayeffects=nbt.getList("sway", 10).stream().map(e->MobEffectInstance.load((CompoundTag)e))
-				.collect(Collectors.toList());
-		heat=nbt.getInt("heat");
-		activeRelish1=nbt.getString("activeRelish1");
-		activeRelish2=nbt.getString("activeRelish2");
-		ListTag list=nbt.getList("relish",8);
-		for(int i=0;i<list.size();i++) {
-			if(i>=5)break;
-			relishes[i]=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(list.getString(i)));
-			if(relishes[i]==Fluids.EMPTY)
-				relishes[i]=null;
-		}
+	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, List<Fluid> relishes, String activeRelish1,
+		String activeRelish2, int healing, float saturation, int heat) {
+		super();
+		this.stacks = stacks;
+		this.effects = effects;
+		this.swayeffects = swayeffects;
+		this.foodeffect = foodeffect;
+		this.relishes = relishes.toArray(Fluid[]::new);
+		this.activeRelish1 = activeRelish1;
+		this.activeRelish2 = activeRelish2;
+		this.healing = healing;
+		this.saturation = saturation;
+		this.heat = heat;
 	}
 	public void appendTooltip(List<Component> tt) {
 		RelishRecipe r1=RelishRecipe.recipes.get(activeRelish1);
 		RelishRecipe r2=RelishRecipe.recipes.get(activeRelish2);
 		if(!effects.isEmpty())
-		PotionUtils.addPotionTooltip(effects, tt,1);
+		PotionContents.addPotionTooltip(effects, tt::add,1,20);
 		
 		if(r1!=null) {
 			if(r2!=null) {
@@ -113,29 +119,9 @@ public class BeverageInfo implements IFoodInfo {
 				tt.add(Utils.translate("tooltip."+CVMain.MODID+".major_relish_1",r1.getText()));	
 		}
 	}
-	@OnlyIn(Dist.CLIENT)
 	public Vector3f getColor() {
 		return getColor(relishes);
 	}
-	@OnlyIn(Dist.CLIENT)
-	public static Vector3f getColor(CompoundTag tag) {
-		if(tag==null)
-			return new Vector3f(1f,1f,1f);
-		Vector3f clr=new Vector3f();
-		int cnt=0;
-		ListTag list=tag.getCompound("beverage").getList("relish",8);
-		for(int i=0;i<list.size();i++) {
-			Fluid f=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(list.getString(i)));
-			if(f!=Fluids.EMPTY) {
-				clr.add(tclr(IClientFluidTypeExtensions.of(f).getTintColor()));
-				cnt++;
-			}
-		}
-		if(cnt==0)cnt=1;
-		clr=clr.div(cnt);
-		return clr;
-	}
-	@OnlyIn(Dist.CLIENT)
 	public static Vector3f getColor(Fluid[] relishes) {
 		Vector3f clr=new Vector3f();
 		int cnt=0;
@@ -153,12 +139,6 @@ public class BeverageInfo implements IFoodInfo {
 	private static Vector3f tclr(int col) {
 		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
 	}
-	@OnlyIn(Dist.CLIENT)
-	public static int getIColor(CompoundTag tag) {
-		Vector3f clr=getColor(tag);
-		return ((int)(clr.x*0xff))<<16|((int)(clr.y*0xff))<<8|((int)(clr.z*0xff));
-	}
-	@OnlyIn(Dist.CLIENT)
 	public static int getIColor(Fluid[] relishes) {
 		Vector3f clr=getColor(relishes);
 		
@@ -174,16 +154,6 @@ public class BeverageInfo implements IFoodInfo {
 		}
 		return 5;
 	}
-	public CompoundTag save() {
-		CompoundTag tag=new CompoundTag();
-		write(tag);
-		return tag;
-	}
-	public CompoundTag saveClient() {
-		CompoundTag tag=new CompoundTag();
-		writeClient(tag);
-		return tag;
-	}
 	public Pair<List<CurrentSwayInfo>, Fluid> adjustParts(float oparts, float parts) {
 		for (FloatemStack fs : stacks) {
 			fs.setCount(fs.getCount() * oparts / parts);
@@ -192,8 +162,8 @@ public class BeverageInfo implements IFoodInfo {
 		for (MobEffectInstance es : effects) {
 			es.duration = (int) (es.duration * oparts / parts);
 		}
-		for (Pair<MobEffectInstance, Float> es : foodeffect) {
-			es.getFirst().duration = (int) (es.getFirst().duration * oparts / parts);
+		for (ChancedEffect es : foodeffect) {
+			es.effect.duration = (int) (es.effect.duration * oparts / parts);
 		}
 		heat=(int) (heat*oparts/parts);
 		
@@ -230,7 +200,7 @@ public class BeverageInfo implements IFoodInfo {
 		.flatMap(Optional::stream)
 		.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
 		.collect(Collectors.toList());
-		swayeffects.sort(Comparator.<MobEffectInstance>comparingInt(e -> MobEffect.getId(e.getEffect()))
+		swayeffects.sort(Comparator.<MobEffectInstance,String>comparing(e -> e.getEffect().getRegisteredName())
 				.thenComparingInt(e->e.getAmplifier()).thenComparingInt(e->e.getDuration()));
 		recalculateHAS();
 		return Pair.of(swi,
@@ -267,48 +237,6 @@ public class BeverageInfo implements IFoodInfo {
 		heat+=f.heat*oparts/cparts;
 
 	}
-	public void write(CompoundTag nbt) {
-		nbt.put("items", SerializeUtil.toNBTList(stacks, FloatemStack::serializeNBT));
-		nbt.put("feffects", SerializeUtil.toNBTList(foodeffect, e -> {
-			CompoundTag cnbt = new CompoundTag();
-			cnbt.put("effect", e.getFirst().save(new CompoundTag()));
-			cnbt.putFloat("chance", e.getSecond());
-			return cnbt;
-		}));
-		nbt.put("effects", SerializeUtil.toNBTList(effects, e -> e.save(new CompoundTag())));
-		nbt.put("sway", SerializeUtil.toNBTList(swayeffects, e -> e.save(new CompoundTag())));
-		ListTag relishes=new ListTag();
-		for(Fluid s:this.relishes) {
-			relishes.add(StringTag.valueOf(Utils.getRegistryName(s).toString()));
-		}
-		nbt.putString("activeRelish1", activeRelish1);
-		nbt.putString("activeRelish2", activeRelish2);
-		nbt.put("relish", relishes);
-		nbt.putInt("heal", healing);
-		nbt.putFloat("sat", saturation);
-		nbt.putInt("heat", heat);
-	}
-	public void writeClient(CompoundTag nbt) {
-		//nbt.put("items", SerializeUtil.toNBTList(stacks, FloatemStack::serializeNBT));
-		/*nbt.put("feffects", SerializeUtil.toNBTList(foodeffect, e -> {
-			CompoundTag cnbt = new CompoundTag();
-			cnbt.put("effect", e.getFirst().save(new CompoundTag()));
-			cnbt.putFloat("chance", e.getSecond());
-			return cnbt;
-		}));
-		nbt.put("effects", SerializeUtil.toNBTList(effects, e -> e.save(new CompoundTag())));*/
-		//nbt.put("sway", SerializeUtil.toNBTList(swayeffects, e -> e.save(new CompoundTag())));
-		ListTag relishes=new ListTag();
-		for(Fluid s:this.relishes) {
-			relishes.add(StringTag.valueOf(Utils.getRegistryName(s).toString()));
-		}
-		nbt.putString("activeRelish1", activeRelish1);
-		nbt.putString("activeRelish2", activeRelish2);
-		nbt.put("relish", relishes);
-		//nbt.putInt("heal", healing);
-		//nbt.putFloat("sat", saturation);
-		nbt.putInt("heat", heat);
-	}
 	@Override
 	public List<FloatemStack> getStacks() {
 		return stacks;
@@ -333,8 +261,8 @@ public class BeverageInfo implements IFoodInfo {
 				b.effect(eff, 1);
 			}
 		}
-		for (Pair<MobEffectInstance, Float> ef : foodeffect) {
-			b.effect(()->new MobEffectInstance(ef.getFirst()), ef.getSecond());
+		for (ChancedEffect ef : foodeffect) {
+			b.effect(ef.effectSupplier(), ef.chance);
 		}
 		for (MobEffectInstance ef : effects) {
 			b.effect(()->new MobEffectInstance(ef), 1);
@@ -344,38 +272,38 @@ public class BeverageInfo implements IFoodInfo {
 		}
 		b.nutrition(healing);
 		if(Float.isNaN(saturation))
-			b.saturationMod(0);
+			b.saturationModifier(0);
 		else
-			b.saturationMod(saturation);
-		b.alwaysEat();
+			b.saturationModifier(saturation);
+		b.alwaysEdible();
 		return b.build();
 	}
 
 	@Override
-	public List<Pair<Supplier<MobEffectInstance>, Float>> getEffects() {
-		List<Pair<Supplier<MobEffectInstance>, Float>> li=new ArrayList<>();
+	public List<PossibleEffect> getEffects() {
+		List<PossibleEffect> li=new ArrayList<>();
 		for (MobEffectInstance eff : effects) {
 			if (eff != null) {
-				li.add(Pair.of(()->new MobEffectInstance(eff), 1f));
+				li.add(new PossibleEffect(()->new MobEffectInstance(eff), 1f));
 			}
 		}
-		for (Pair<MobEffectInstance, Float> ef : foodeffect) {
-			li.add(Pair.of(()->new MobEffectInstance(ef.getFirst()), ef.getSecond()));
+		for (ChancedEffect ef : foodeffect) {
+			li.add(new PossibleEffect(ef.effectSupplier(),ef.chance));
 		}
 		for (MobEffectInstance eff : swayeffects) {
 			if (eff != null) {
-				li.add(Pair.of(()->new MobEffectInstance(eff), 1f));
+				li.add(new PossibleEffect(()->new MobEffectInstance(eff), 1f));
 			}
 		}
-		return null;
+		return li;
 	}
 	public void completeData() {
 		stacks.sort(Comparator.<FloatemStack>comparingDouble(e -> e.getCount()).thenComparingInt(t->Item.getId(t.getItem())));
 		foodeffect.sort(
-				Comparator.<Pair<MobEffectInstance, Float>>comparingInt(e -> MobEffect.getId(e.getFirst().getEffect()))
-						.thenComparing(Pair::getSecond));
+				Comparator.<ChancedEffect,String>comparing(e -> e.effect.getEffect().getRegisteredName())
+						.thenComparing(e->e.chance));
 		effects.sort(
-				Comparator.<MobEffectInstance>comparingInt(e -> MobEffect.getId(e.getEffect()))
+				Comparator.<MobEffectInstance,String>comparing(e -> e.getEffect().getRegisteredName())
 				.thenComparingInt(e->e.getAmplifier()).thenComparingInt(e->e.getDuration()));
 		
 	}
@@ -389,14 +317,14 @@ public class BeverageInfo implements IFoodInfo {
 				nh += fvr.heal * fs.getCount();
 				ns += fvr.sat * fs.getCount() * fvr.heal;
 				if(fvr.effects!=null)
-					foodeffect.addAll(fvr.effects);
+					fvr.effects.stream().map(ChancedEffect::new).forEach(foodeffect::add);
 				continue;
 			}
 			FoodProperties f = fs.getStack().getFoodProperties(null);
 			if (f != null) {
-				nh += fs.getCount() * f.getNutrition();
-				ns += fs.getCount() * f.getSaturationModifier()* f.getNutrition();
-				foodeffect.addAll(f.getEffects());
+				nh += fs.getCount() * f.nutrition();
+				ns += fs.getCount() * f.saturation();
+				f.effects().stream().map(ChancedEffect::new).forEach(foodeffect::add);
 			}
 		}
 		int conv = (int) (0.075 * nh);

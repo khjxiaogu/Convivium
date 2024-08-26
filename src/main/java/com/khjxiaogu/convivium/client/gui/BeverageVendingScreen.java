@@ -39,7 +39,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendingContainer> {
-	static final ResourceLocation TEXTURE = new ResourceLocation(CVMain.MODID, "textures/gui/beverage_vending_machine.png");
+	static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/beverage_vending_machine.png");
 
 	BeverageVendingBlockEntity blockEntity;
 
@@ -109,7 +109,7 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform);
+		this.renderBackground(transform,x,y,partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);

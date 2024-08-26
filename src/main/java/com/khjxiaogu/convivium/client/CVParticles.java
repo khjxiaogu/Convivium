@@ -22,14 +22,14 @@ import com.khjxiaogu.convivium.CVMain;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVParticles {
 	public static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister
-			.create(ForgeRegistries.PARTICLE_TYPES, CVMain.MODID);
+			.create(BuiltInRegistries.PARTICLE_TYPE, CVMain.MODID);
 
-	public static final RegistryObject<SimpleParticleType> SPLASH = REGISTER.register("splash",
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SPLASH = REGISTER.register("splash",
 			() -> new SimpleParticleType(false));
 }

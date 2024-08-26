@@ -20,11 +20,11 @@ package com.khjxiaogu.convivium;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 
 public class CVConfig {
 
@@ -39,7 +39,7 @@ public class CVConfig {
 		/**
 		 * @param builder
 		 */
-		Client(ForgeConfigSpec.Builder builder) {
+		Client(ModConfigSpec.Builder builder) {
 		}
 	}
 
@@ -49,7 +49,7 @@ public class CVConfig {
 		 * @param builder
 		 */
 		public BooleanValue canPlacePotion;
-		Common(ForgeConfigSpec.Builder builder) {
+		Common(ModConfigSpec.Builder builder) {
 			canPlacePotion=builder.comment("Set vanilla potion placable as beverage block").define("canPlacePotion", true);
 		}
 	}
@@ -57,7 +57,7 @@ public class CVConfig {
 	public static class Server {
 		public IntValue kineticRange;
 		public IntValue kineticValidation;
-		Server(ForgeConfigSpec.Builder builder) {
+		Server(ModConfigSpec.Builder builder) {
 			builder.push("kinetics");
 			kineticRange=builder.comment("Kinetic Transfer radius for aeolipile").defineInRange("kineticTransferRange",4, 1, Integer.MAX_VALUE);
 			kineticValidation=builder.comment("Kinetic validation ticks").defineInRange("kineticValidationTicks",20, 1, Integer.MAX_VALUE);
@@ -66,8 +66,8 @@ public class CVConfig {
 	}
 
 	// public static final ForgeConfigSpec CLIENT_CONFIG;
-	public static final ForgeConfigSpec COMMON_CONFIG;
-	public static final ForgeConfigSpec SERVER_CONFIG;
+	public static final ModConfigSpec COMMON_CONFIG;
+	public static final ModConfigSpec SERVER_CONFIG;
 	// public static final Client CLIENT;
 	public static final Common COMMON;
 	public static final Server SERVER;
@@ -78,10 +78,10 @@ public class CVConfig {
 		// ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 		// CLIENT = new Client(CLIENT_BUILDER);
 		// CLIENT_CONFIG = CLIENT_BUILDER.build();
-		ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+		ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
 		COMMON = new Common(COMMON_BUILDER);
 		COMMON_CONFIG = COMMON_BUILDER.build();
-		ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
+		ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
 		SERVER = new Server(SERVER_BUILDER);
 		SERVER_CONFIG = SERVER_BUILDER.build();
 	}

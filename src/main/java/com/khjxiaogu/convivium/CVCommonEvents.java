@@ -21,20 +21,22 @@ package com.khjxiaogu.convivium;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
+import com.teammoeg.caupona.api.events.EventResult;
 import com.teammoeg.caupona.api.events.FoodExchangeItemEvent;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@Mod.EventBusSubscriber(modid=CVMain.MODID)
+@EventBusSubscriber
 public class CVCommonEvents {
 
 	@SubscribeEvent
@@ -48,8 +50,8 @@ public class CVCommonEvents {
 			if(!ev.isBlockAccess) {
 				ContainingRecipe recipe=ContainingRecipe.recipes.get(ev.fs.getFluid());
 				if(recipe!=null) {
-					ev.out=recipe.handle(ev.fs);
-					ev.setResult(Result.ALLOW);
+					ev.out=recipe.handle(ev.fs.getFluid());
+					ev.setResult(EventResult.ALLOW);
 				}
 			}
 		}
@@ -57,12 +59,12 @@ public class CVCommonEvents {
 	@SubscribeEvent
 	public static void isExtractAllowed(FoodExchangeItemEvent.Pre event) {
 		if(!event.getOrigin().is(Items.GLASS_BOTTLE))
-			event.setResult(Result.ALLOW);
+			event.setResult(EventResult.ALLOW);
 	}
 	@SubscribeEvent
 	public static void isExchangeAllowed(FoodExchangeItemEvent.Post event) {
 		if((!event.getOrigin().is(Items.GLASS_BOTTLE))&&event.getTarget().is(Items.GLASS_BOTTLE))
-			event.setResult(Result.ALLOW);
+			event.setResult(EventResult.ALLOW);
 	}
 	@SuppressWarnings("resource")
 	@SubscribeEvent
@@ -73,13 +75,13 @@ public class CVCommonEvents {
 			ItemStack replace=new ItemStack(CVItems.POTION.get(),is.getCount());
 			is.save(replace.getOrCreateTagElement("potion"));
 			playerIn.setItemInHand(event.getHand(), replace);
-			ForgeHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn,event.getHand(), event.getHitVec()));
+			CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn,event.getHand(), event.getHitVec()));
 			is.setCount(replace.getCount());
 			playerIn.setItemInHand(event.getHand(), is);
 		}
 		if(playerIn.isShiftKeyDown()&&event.getLevel().getBlockState(event.getPos()).is(CVBlocks.platter.get())) {
-			event.setUseItem(Result.DENY);
-			event.setUseBlock(Result.ALLOW);
+			event.setUseItem(TriState.FALSE);
+			event.setUseBlock(TriState.TRUE);
 		}
 	}
 

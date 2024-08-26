@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import com.teammoeg.caupona.data.SerializeUtil;
+import com.teammoeg.caupona.util.SerializeUtil;
 
 import net.minecraft.network.FriendlyByteBuf;
 

@@ -35,13 +35,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity> {
 	@SuppressWarnings("unchecked")
@@ -69,7 +70,7 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 			IClientFluidTypeExtensions attr=IClientFluidTypeExtensions.of(Fluids.WATER);
 			sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
 					.getSprite(attr.getStillTexture());
-			clr=clr(PotionUtils.getColor(pBlockEntity.internal));
+			clr=clr(PotionContents.getColor(pBlockEntity.internal.get(DataComponents.POTION_CONTENTS).getAllEffects()));
 		}else {
 			FluidStack fs = Utils.extractFluid(pBlockEntity.internal);
 

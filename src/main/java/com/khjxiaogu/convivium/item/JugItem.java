@@ -21,6 +21,8 @@ package com.khjxiaogu.convivium.item;
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
@@ -39,6 +41,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
@@ -46,18 +49,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.ItemFluidContainer;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidActionResult;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
-public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem{
+public class JugItem extends Item  implements ICreativeModeTabItem{
     public JugItem(Properties props) {
-        super(props, 1250);
+        super(props);
     }
 
     @Override
@@ -67,20 +69,22 @@ public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem
 
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(e->{
+	public void appendHoverText(ItemStack stack, TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+		@Nullable IFluidHandlerItem e=stack.getCapability(Capabilities.FluidHandler.ITEM);
+		if(e!=null){
 			FluidStack f=e.getFluidInTank(0);
 			if(!f.isEmpty()) {
-				tooltip.add(f.getDisplayName());
+				tooltip.add(f.getHoverName());
 				Optional<BeverageInfo> oinfo = BeverageFluid.getInfo(f);
 				oinfo.ifPresent(info->{
-				Utils.addPotionTooltip(info.effects, tooltip, 1);
+				PotionContents.addPotionTooltip(info.effects, tooltip::add, 1,20);
 				info.appendTooltip(tooltip);
 				});
 				tooltip.add(Utils.string(f.getAmount()+"/1250 mB"));
 				
 			}
-		});
+		}
+		
 		
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
@@ -95,20 +99,20 @@ public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem
 			BlockState blk=worldIn.getBlockState(blockpos);
 			
 			if(blk.getBlock() instanceof BucketPickup bucket) {
-				IFluidHandlerItem handler=cur.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
+				IFluidHandlerItem handler=cur.getCapability(Capabilities.FluidHandler.ITEM);
 				if(handler!=null) {
 					FluidStack fluid=handler.getFluidInTank(0);
 					if(!fluid.isEmpty()&&fluid.getAmount()<handler.getTankCapacity(0)&&fluid.getFluid().isSame(state.getType())) {
 						int amt=handler.fill(new FluidStack(state.getType(),FluidType.BUCKET_VOLUME),FluidAction.EXECUTE);
 						if(amt>0) {
-							bucket.pickupBlock(worldIn, blockpos, blk);
+							bucket.pickupBlock(playerIn, worldIn, blockpos, blk);
 							return InteractionResultHolder.sidedSuccess(cur,worldIn.isClientSide);
 						}
 					}
 				}
 			}
 			if(worldIn.getBlockEntity(blockpos) instanceof BeverageBlockEntity be&&be.internal.is(Items.GLASS_BOTTLE)) {
-				IFluidHandlerItem handler=cur.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
+				IFluidHandlerItem handler=cur.getCapability(Capabilities.FluidHandler.ITEM);
 				if(handler!=null) {
 					Optional<ItemStack> is=CauponaApi.getFilledItemStack(handler,be.internal);
 					if(is.isPresent()) {
@@ -128,7 +132,7 @@ public class JugItem extends ItemFluidContainer  implements ICreativeModeTabItem
 			}
 		}else if(ray.getType() == Type.MISS) {
 			if(playerIn.isShiftKeyDown()) {
-				IFluidHandlerItem handler=cur.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
+				IFluidHandlerItem handler=cur.getCapability(Capabilities.FluidHandler.ITEM);
 				if(handler!=null) {
 					FluidStack fluid=handler.getFluidInTank(0);
 					if(!fluid.isEmpty()) {

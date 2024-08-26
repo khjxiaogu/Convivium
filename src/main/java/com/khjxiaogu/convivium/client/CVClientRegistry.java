@@ -38,40 +38,48 @@ import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
-import com.khjxiaogu.convivium.client.util.CVRenderType;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.teammoeg.caupona.CPGui;
 import com.teammoeg.caupona.CPMain;
+import com.teammoeg.caupona.client.gui.DoliumScreen;
+import com.teammoeg.caupona.client.gui.KitchenStoveScreen;
+import com.teammoeg.caupona.client.gui.PanScreen;
+import com.teammoeg.caupona.client.gui.PortableBrazierScreen;
+import com.teammoeg.caupona.client.gui.StewPotScreen;
+import com.teammoeg.caupona.client.gui.TBenchScreen;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CVClientRegistry {
-	 
+
+	@SubscribeEvent
+	public static void registerParticleFactories(RegisterMenuScreensEvent event) {
+		event.register(CVGui.PLATTER.get(), PlatterScreen::new);
+		event.register(CVGui.PAM.get(), PamScreen::new);
+		event.register(CVGui.WHISK.get(), WhiskScreen::new);
+		event.register(CVGui.VENDING.get(), BeverageVendingScreen::new);
+		event.register(CVGui.BASIN.get(), BasinScreen::new);
+	}
 	@SuppressWarnings("unused")
 	@SubscribeEvent
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
-		MenuScreens.register(CVGui.PLATTER.get(), PlatterScreen::new);
-		MenuScreens.register(CVGui.PAM.get(), PamScreen::new);
-		MenuScreens.register(CVGui.WHISK.get(), WhiskScreen::new);
-		MenuScreens.register(CVGui.VENDING.get(), BeverageVendingScreen::new);
-		MenuScreens.register(CVGui.BASIN.get(), BasinScreen::new);
+
 		BlockEntityRenderers.register(CVBlockEntityTypes.COG_CAGE.get(), CogRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AOELIPILE.get(), AeolipileRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(),FruitPlatterRenderer::new);
@@ -105,7 +113,7 @@ public class CVClientRegistry {
 		FruitPlatterRenderer.models.put(item,new FruitModel(name,type));
 	}
 	private static Item get(String modid,String id) {
-		return ForgeRegistries.ITEMS.getValue(new ResourceLocation(modid,id));
+		return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(modid,id));
 	}
 	@SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {

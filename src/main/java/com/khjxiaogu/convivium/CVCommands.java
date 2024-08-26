@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
 import com.khjxiaogu.convivium.util.evaluator.ConstantEnvironment;
@@ -30,13 +28,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-@Mod.EventBusSubscriber(modid=CVMain.MODID)
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+@EventBusSubscriber(modid=CVMain.MODID)
 public class CVCommands {
-	private static LazyOptional<BlockInput[]> def_palette=LazyOptional.of(()->
+	private static Lazy<BlockInput[]> def_palette=Lazy.of(()->
 		new BlockInput[] {
 			      new BlockInput(Blocks.WHITE_WOOL.defaultBlockState(),Set.of(), null),
 			      new BlockInput(Blocks.ORANGE_WOOL.defaultBlockState(), Set.of(), null),
@@ -70,7 +68,7 @@ public class CVCommands {
 										BoundingBox bb=BoundingBox.fromCorners(BlockPosArgument.getBlockPos(e, "pos1"), BlockPosArgument.getBlockPos(e, "pos2"));
 										ServerLevel level=e.getSource().getLevel();
 										
-										BlockInput[] ips=def_palette.orElse(def_nopalette);
+										BlockInput[] ips=def_palette.get();
 										CVCommands.place(bb, level, expr, ips,false);
 										e.getSource().sendSuccess(()->Utils.string("Succeed!"), false);
 										return Command.SINGLE_SUCCESS;
@@ -88,7 +86,7 @@ public class CVCommands {
 													BoundingBox bb=BoundingBox.fromCorners(BlockPosArgument.getBlockPos(e, "pos1"), BlockPosArgument.getBlockPos(e, "pos2"));
 													ServerLevel level=e.getSource().getLevel();
 													
-													BlockInput[] ips=def_palette.orElse(def_nopalette);
+													BlockInput[] ips=def_palette.get();
 													CVCommands.place(bb, level, expr, ips,true);
 													e.getSource().sendSuccess(()->Utils.string("Succeed!"), false);
 													return Command.SINGLE_SUCCESS;

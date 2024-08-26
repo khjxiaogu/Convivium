@@ -42,8 +42,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class PamRenderer extends RotationRenderer<PamBlockEntity> {
 	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"pestle_and_mortar_rotor");

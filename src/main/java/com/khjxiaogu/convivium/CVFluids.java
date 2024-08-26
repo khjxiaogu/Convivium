@@ -27,17 +27,17 @@ import com.khjxiaogu.convivium.fluid.BaseFluid;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistries.Keys;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries.Keys;
 
 public class CVFluids {
 	private static class TextureColorPair {
@@ -116,39 +116,39 @@ public class CVFluids {
 		}
 	}
 
-	private static final ResourceLocation STILL_WATER_TEXTURE = new ResourceLocation("block/water_still");
-	private static final ResourceLocation STILL_MILK_TEXTURE = new ResourceLocation("forge", "block/milk_still");
-	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = new ResourceLocation(CVMain.MODID, "block/beverage_fluid");
-	static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, CVMain.MODID);
+	private static final ResourceLocation STILL_WATER_TEXTURE = ResourceLocation.withDefaultNamespace("block/water_still");
+	private static final ResourceLocation STILL_MILK_TEXTURE = ResourceLocation.fromNamespaceAndPath("forge", "block/milk_still");
+	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
+	static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(BuiltInRegistries.FLUID, CVMain.MODID);
 	static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(Keys.FLUID_TYPES, CVMain.MODID);
 	//private static final Map<String, TextureColorPair> soupfluids = new HashMap<>();
-	public static final RegistryObject<FluidType> cocoa=FLUID_TYPES.register("hot_chocolate",()->bvg(0xff734e3d).create("hot_chocolate"));
-	public static final RegistryObject<FluidType> tea=FLUID_TYPES.register("tea",()->water(0xff6c902e).create("tea"));
-	public static final RegistryObject<FluidType> b_juice=FLUID_TYPES.register("berry_juice",()->water(0xffcc6d57).create("berry_juice"));
-	public static final RegistryObject<FluidType> d_juice=FLUID_TYPES.register("drupe_juice",()->water(0xffd48e2d).create("drupe_juice"));
-	public static final RegistryObject<FluidType> p_juice=FLUID_TYPES.register("pome_juice",()->water(0xffe3c25e).create("pome_juice"));
-	public static final RegistryObject<FluidType> b_wine=FLUID_TYPES.register("berry_must",()->bvg(0xffcc6d57).create("berry_must"));
-	public static final RegistryObject<FluidType> d_wine=FLUID_TYPES.register("drupe_must",()->bvg(0xffd48e2d).create("drupe_must"));
-	public static final RegistryObject<FluidType> p_wine=FLUID_TYPES.register("pome_must",()->bvg(0xffe3c25e).create("pome_must"));
-	public static final RegistryObject<FluidType> mixed=FLUID_TYPES.register("mixed",()->bvg(0xffee9999).createBVG("beverage"));
+	public static final DeferredHolder<FluidType, FluidType> cocoa=FLUID_TYPES.register("hot_chocolate",()->bvg(0xff734e3d).create("hot_chocolate"));
+	public static final DeferredHolder<FluidType, FluidType> tea=FLUID_TYPES.register("tea",()->water(0xff6c902e).create("tea"));
+	public static final DeferredHolder<FluidType, FluidType> b_juice=FLUID_TYPES.register("berry_juice",()->water(0xffcc6d57).create("berry_juice"));
+	public static final DeferredHolder<FluidType, FluidType> d_juice=FLUID_TYPES.register("drupe_juice",()->water(0xffd48e2d).create("drupe_juice"));
+	public static final DeferredHolder<FluidType, FluidType> p_juice=FLUID_TYPES.register("pome_juice",()->water(0xffe3c25e).create("pome_juice"));
+	public static final DeferredHolder<FluidType, FluidType> b_wine=FLUID_TYPES.register("berry_must",()->bvg(0xffcc6d57).create("berry_must"));
+	public static final DeferredHolder<FluidType, FluidType> d_wine=FLUID_TYPES.register("drupe_must",()->bvg(0xffd48e2d).create("drupe_must"));
+	public static final DeferredHolder<FluidType, FluidType> p_wine=FLUID_TYPES.register("pome_must",()->bvg(0xffe3c25e).create("pome_must"));
+	public static final DeferredHolder<FluidType, FluidType> mixed=FLUID_TYPES.register("mixed",()->bvg(0xffee9999).createBVG("beverage"));
 
-	public static final RegistryObject<Fluid> cocoaf=FLUIDS.register("hot_chocolate", () -> new BaseFluid(new ForgeFlowingFluid.Properties(cocoa,null,
+	public static final DeferredHolder<Fluid, BaseFluid> cocoaf=FLUIDS.register("hot_chocolate", () -> new BaseFluid(new BaseFlowingFluid.Properties(cocoa,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> teaf=FLUIDS.register("tea", () -> new BaseFluid(new ForgeFlowingFluid.Properties(tea,null,
+	public static final DeferredHolder<Fluid, BaseFluid> teaf=FLUIDS.register("tea", () -> new BaseFluid(new BaseFlowingFluid.Properties(tea,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> bjuicef=FLUIDS.register("berry_juice", () -> new BaseFluid(new ForgeFlowingFluid.Properties(b_juice,null,
+	public static final DeferredHolder<Fluid, BaseFluid> bjuicef=FLUIDS.register("berry_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(b_juice,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> djuicef=FLUIDS.register("drupe_juice", () -> new BaseFluid(new ForgeFlowingFluid.Properties(d_juice,null,
+	public static final DeferredHolder<Fluid, BaseFluid> djuicef=FLUIDS.register("drupe_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(d_juice,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> pjuicef=FLUIDS.register("pome_juice", () -> new BaseFluid(new ForgeFlowingFluid.Properties(p_juice,null,
+	public static final DeferredHolder<Fluid, BaseFluid> pjuicef=FLUIDS.register("pome_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(p_juice,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> bwinef=FLUIDS.register("berry_must", () -> new BaseFluid(new ForgeFlowingFluid.Properties(b_wine,null,
+	public static final DeferredHolder<Fluid, BaseFluid> bwinef=FLUIDS.register("berry_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(b_wine,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> dwinef=FLUIDS.register("drupe_must", () -> new BaseFluid(new ForgeFlowingFluid.Properties(d_wine,null,
+	public static final DeferredHolder<Fluid, BaseFluid> dwinef=FLUIDS.register("drupe_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(d_wine,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> pwinef=FLUIDS.register("pome_must", () -> new BaseFluid(new ForgeFlowingFluid.Properties(p_wine,null,
+	public static final DeferredHolder<Fluid, BaseFluid> pwinef=FLUIDS.register("pome_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(p_wine,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final RegistryObject<Fluid> mixedf=FLUIDS.register("mixed", () -> new BeverageFluid(new ForgeFlowingFluid.Properties(mixed,null,
+	public static final DeferredHolder<Fluid, BeverageFluid> mixedf=FLUIDS.register("mixed", () -> new BeverageFluid(new BaseFlowingFluid.Properties(mixed,null,
 			null).slopeFindDistance(1).explosionResistance(100F)));
 	public static Map<String,TextureColorPair> intern=new HashMap<>();
 	static {
@@ -170,8 +170,8 @@ public class CVFluids {
 		intern.put("cocoa_wine",bvg(0xca9787));
 		intern.put("chocolate_milk",bvg(0xc69f8f));
 		for(Entry<String, TextureColorPair> ent:intern.entrySet()) {
-			RegistryObject<FluidType> type=FLUID_TYPES.register(ent.getKey(),()->ent.getValue().create(ent.getKey()));
-			FLUIDS.register(ent.getKey(), () -> new BeverageFluid(new ForgeFlowingFluid.Properties(type,null,
+			DeferredHolder<FluidType, FluidType> type=FLUID_TYPES.register(ent.getKey(),()->ent.getValue().create(ent.getKey()));
+			FLUIDS.register(ent.getKey(), () -> new BeverageFluid(new BaseFlowingFluid.Properties(type,null,
 					null).slopeFindDistance(1).explosionResistance(100F)));
 		}
 	}

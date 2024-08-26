@@ -37,12 +37,11 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+@EventBusSubscriber
 public class RecipeReloadListener implements ResourceManagerReloadListener {
 	ReloadableServerResources data;
 	public static final Logger logger = LogManager.getLogger(CVMain.MODNAME + " recipe generator");
@@ -59,13 +58,6 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 
 	RecipeManager clientRecipeManager;
 
-	/**
-	 * @param event  
-	 */
-	@SubscribeEvent
-	public static void onTagsUpdated(TagsUpdatedEvent event) {
-
-	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRecipesUpdated(RecipesUpdatedEvent event) {

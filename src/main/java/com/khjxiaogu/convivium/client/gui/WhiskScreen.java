@@ -47,7 +47,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.material.Fluid;
 
 public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
-	private ResourceLocation TEXTURE = new ResourceLocation(CVMain.MODID, "textures/gui/whisk.png");
+	private ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/whisk.png");
 
 	WhiskBlockEntity blockEntity;
 
@@ -166,7 +166,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform);
+		this.renderBackground(transform,x,y,partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
@@ -191,7 +191,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 						RelishFluidRecipe rr=RelishFluidRecipe.recipes.get(f);
 						//System.out.println(f);
 						if(rr!=null) {
-							transform.blit(new ResourceLocation(CVMain.MODID,"textures/gui/relishes/"+rr.relish+".png")
+							transform.blit(ResourceLocation.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.relish+".png")
 							, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
 							19, 11,32,32);
 						}
@@ -201,7 +201,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 				RelishFluidRecipe rr=RelishFluidRecipe.recipes.get(blockEntity.tank.getFluid().getFluid());
 				if(rr!=null&&blockEntity.tank.getFluidAmount()>250)
 					for(int i=blockEntity.tank.getFluidAmount()/250-1;i>=0;i--) {
-						transform.blit(new ResourceLocation(CVMain.MODID,"textures/gui/relishes/"+rr.relish+".png")
+						transform.blit(ResourceLocation.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.relish+".png")
 								, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
 								19, 11,32,32);
 					}

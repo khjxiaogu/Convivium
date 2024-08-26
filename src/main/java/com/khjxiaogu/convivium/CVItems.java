@@ -23,18 +23,18 @@ import com.khjxiaogu.convivium.item.BeveragePotionFluid;
 import com.khjxiaogu.convivium.item.CVMaterialItem;
 import com.khjxiaogu.convivium.item.JugItem;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVItems {
-	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CVMain.MODID);
-	public static final RegistryObject<JugItem> JUG=ITEMS.register("jug",()->new JugItem(createProps().stacksTo(1)));
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, CVMain.MODID);
+	public static final DeferredHolder<Item, JugItem> JUG=ITEMS.register("jug",()->new JugItem(createProps().stacksTo(1)));
 	public static final String[] base_material = new String[] { "camellia_flower","camellia_seeds","clay_basin","dolium_lid","fresh_camellia_shoots","cocoa_powder","neroli","spice_blend","powdered_tea","steamed_camellia_shoots"};
 	public static final String[] base_drinks = new String[] {"berry_juice","berry_must","drupe_juice","drupe_must","pome_juice","pome_must","tea","hot_chocolate","milk","water"};
-	public static final RegistryObject<BeveragePotionFluid> POTION=ITEMS.register("potion_dummy", ()->new BeveragePotionFluid(createProps()));
+	public static final DeferredHolder<Item, BeveragePotionFluid> POTION=ITEMS.register("potion_dummy", ()->new BeveragePotionFluid(createProps()));
 	static {
 		for (String s : base_material) {
 			item(s, createProps());

@@ -18,21 +18,15 @@
 
 package com.khjxiaogu.convivium.fluid;
 
-import java.util.Optional;
-
-import com.khjxiaogu.convivium.util.BeverageInfo;
-
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
-public class BeverageFluid extends ForgeFlowingFluid {
+public class BeverageFluid extends BaseFlowingFluid {
 
 	@Override
 	public Fluid getSource() {
@@ -63,24 +57,6 @@ public class BeverageFluid extends ForgeFlowingFluid {
 	@Override
 	public boolean isSource(FluidState p_207193_1_) {
 		return true;
-	}
-
-	public static Optional<BeverageInfo> getInfo(FluidStack stack) {
-		if (stack.hasTag()) {
-			CompoundTag nbt = stack.getChildTag("beverage");
-			if (nbt != null)
-				return Optional.of(new BeverageInfo(nbt));
-		}
-		return Optional.empty();
-	}
-
-	public static void setInfo(FluidStack stack, BeverageInfo si) {
-		if(si!=null)
-			stack.getOrCreateTag().put("beverage", si.save());
-	}
-	public static void setInfoForClient(FluidStack stack, BeverageInfo si) {
-		if(si!=null)
-			stack.getOrCreateTag().put("beverage", si.saveClient());
 	}
 	@Override
 	public int getAmount(FluidState p_207192_1_) {

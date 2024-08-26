@@ -32,7 +32,7 @@ public class CVTags {
 		public static TagKey<Block> AQUEDUCT=create("aqueduct");
 		public static TagKey<Block> AQUEDUCT_MOVE=create("aqueduct_movable");
 		private static TagKey<Block> create(String s){
-			return  BlockTags.create(new ResourceLocation(CVMain.MODID, s));
+			return  BlockTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 		
 	}
@@ -44,14 +44,14 @@ public class CVTags {
 		public static TagKey<Item> SWEET=create("sweeteners");
 		public static TagKey<Item> ASSES=create("asses");
 		private static TagKey<Item> create(String s){
-			return ItemTags.create(new ResourceLocation(CVMain.MODID, s));
+			return ItemTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 	}
 	
 	public static class Fluids{
 		public static TagKey<Fluid> MENDABLE=create("mending_machine_fluid");
 		private static TagKey<Fluid> create(String s){
-			return FluidTags.create(new ResourceLocation(CVMain.MODID, s));
+			return FluidTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 
 		

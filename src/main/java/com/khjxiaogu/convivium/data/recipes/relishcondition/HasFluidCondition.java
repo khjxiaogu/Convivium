@@ -18,41 +18,20 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
-import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class HasFluidCondition implements RelishCondition {
+	public static final MapCodec<HasFluidCondition> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		BuiltInRegistries.FLUID.byNameCodec().fieldOf("relish").forGetter(o->o.f))
+		.apply(t, HasFluidCondition::new));
 	Fluid f;
-	@Override
-	public JsonElement serialize() {
-		JsonObject jo=new JsonObject();
-		jo.addProperty("relish", Utils.getRegistryName(f).toString());
-		jo.addProperty("type", getType());
-		return jo;
-	}
 
-	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS, f);
-	}
-	
-
-	public HasFluidCondition(FriendlyByteBuf buffer) {
-		this(buffer.readRegistryIdUnsafe(ForgeRegistries.FLUIDS));
-	}
-
-	public HasFluidCondition(JsonObject json) {
-		this(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(json,"relish"))));
-	}
 
 	public HasFluidCondition(Fluid relish) {
 		this.f=relish;
@@ -68,10 +47,5 @@ public class HasFluidCondition implements RelishCondition {
 		return p.getTranslation("recipe.convivium.relish_cond.contains_fluid",f.getFluidType().getDescription());
 	}
 
-	@Override
-	public String getType() {
-		// TODO Auto-generated method stub
-		return "contains_fluid";
-	}
 
 }

@@ -20,15 +20,14 @@ package com.khjxiaogu.convivium.blocks.foods;
 
 import java.util.List;
 
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.item.EdibleBlock;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
-import com.teammoeg.caupona.util.SauteedFoodInfo;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
@@ -39,7 +38,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 public class BeverageItem extends EdibleBlock {
-	public static final FoodProperties fakefood = new FoodProperties.Builder().nutrition(0).saturationMod(0f)
+	public static final FoodProperties fakefood = new FoodProperties.Builder().nutrition(0).saturationModifier(0f)
 			.build();
 	public final BeverageBlock bl;
 	public final boolean isSmpl;
@@ -56,7 +55,7 @@ public class BeverageItem extends EdibleBlock {
 		}
 	}
 	@Override
-	public int getUseDuration(ItemStack stack) {
+	public int getUseDuration(ItemStack stack,LivingEntity entity) {
 		return 16;
 	}
 
@@ -73,21 +72,14 @@ public class BeverageItem extends EdibleBlock {
 		}
 	}
 	public static BeverageInfo getInfo(ItemStack stack) {
-
-		CompoundTag soupTag = Utils.extractDataElement(stack,"beverage");
-		if (soupTag != null)
-			return new BeverageInfo(soupTag);
-		
-		return new BeverageInfo();
-	}
-
-	public static void setInfo(ItemStack stack, SauteedFoodInfo current) {
-		if (!current.isEmpty())
-			Utils.setDataElement(stack,"beverage", current.save());
+		BeverageInfo info= stack.get(CVComponents.BEVERAGE_INFO);
+		if(info==null)
+			return new BeverageInfo();
+		return info;
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		BeverageInfo info = BeverageItem.getInfo(stack);
 		info.appendTooltip(tooltip);
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);

@@ -1,9 +1,0 @@
-{
-	"values": [
-		"minecraft:apple",
-		"minecraft:golden_apple"
-	],
-	"optional": [
-		"#forge:fruits/pear"
-	]
-}

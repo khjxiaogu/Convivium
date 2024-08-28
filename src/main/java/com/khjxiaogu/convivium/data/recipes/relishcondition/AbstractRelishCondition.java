@@ -18,33 +18,15 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.GsonHelper;
+import com.mojang.datafixers.Products.P1;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
+import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
 
 public abstract class AbstractRelishCondition implements RelishCondition{
 	protected String relish;
-	@Override
-	public JsonElement serialize() {
-		JsonObject jo=new JsonObject();
-		jo.addProperty("relish", relish);
-		jo.addProperty("type", getType());
-		return jo;
-	}
-
-	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeUtf(relish);
-	}
-	
-
-	public AbstractRelishCondition(FriendlyByteBuf buffer) {
-		this(buffer.readUtf());
-	}
-	public AbstractRelishCondition(JsonObject json) {
-		this(GsonHelper.getAsString(json,"relish"));
+	public static <P extends AbstractRelishCondition> P1<Mu<P>,String>  codecStart(Instance<P> i) {
+		return i.group(Codec.STRING.fieldOf("relish").forGetter(o->o.relish));
 	}
 	public AbstractRelishCondition(String relish) {
 		super();

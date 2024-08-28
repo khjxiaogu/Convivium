@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.CommonHooks;
 
 public class CamelliaFlowerBlock extends CropBlock {
 
@@ -71,10 +72,10 @@ public class CamelliaFlowerBlock extends CropBlock {
 		if (pLevel.getRawBrightness(pPos, 0) >= 9) {
 			int i = this.getAge(pState);
 			if (i < this.getMaxAge()) {
-				if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(pLevel, pPos, pState,
+				if (CommonHooks.canCropGrow(pLevel, pPos, pState,
 						pRandom.nextInt(17) == 0)) {
 					pLevel.setBlock(pPos, this.getStateForAge(i + 1), 2);
-					net.minecraftforge.common.ForgeHooks.onCropsGrowPost(pLevel, pPos, pState);
+					CommonHooks.fireCropGrowPost(pLevel, pPos, pState);
 				}
 			}
 		}

@@ -47,7 +47,9 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
@@ -59,25 +61,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RangedWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidActionResult;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 
 public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInfinitable, MenuProvider {
 	public ItemStackHandler inv = new ItemStackHandler(6) {
@@ -86,7 +84,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			if (slot < 4)
 				return isValidInput(stack);
 			if (slot == 4)
-				return stack.getItem() == Items.GLASS_BOTTLE || Utils.getFluidType(stack) != Fluids.EMPTY || (stack.getItem()==Items.POTION&&PotionUtils.getPotion(stack)==Potions.WATER) ||stack.is(Items.WATER_BUCKET)||stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+				return stack.getItem() == Items.GLASS_BOTTLE || Utils.getFluidType(stack) != Fluids.EMPTY || (stack.getItem()==Items.POTION&&Optional.ofNullable(stack.get(DataComponents.POTION_CONTENTS)).flatMap(t->t.potion()).filter(t->t==Potions.WATER).isPresent()) ||stack.is(Items.WATER_BUCKET)||stack.getCapability(Capabilities.FluidHandler.ITEM)!=null;
 			return false;
 		}
 
@@ -108,7 +106,6 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
 	public static Codec<List<CurrentSwayInfo>> CSI_CODEC = Codec.list(CurrentSwayInfo.CODEC);
 	public static final int MAX_DENSE=3;
-	public BeverageInfo info;
 	public int process;
 	public int processMax;
 	public boolean isStiring;
@@ -117,7 +114,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public boolean rs;
 	public boolean inf;
 	public boolean isLastHeating;
-	public Fluid target;
+	public FluidStack target;
 	public LazyTickWorker contain;
 
 	public WhiskBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
@@ -140,12 +137,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
-		super.readCustomNBT(nbt, isClient);
-		if (nbt.contains("info"))
-			info = new BeverageInfo(nbt.getCompound("info"));
-		else
-			info = null;
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+		super.readCustomNBT(nbt, isClient,ra);
 		swayhint = new ArrayList<>(
 				CSI_CODEC.decode(NbtOps.INSTANCE, nbt.get("hint")).result().map(Pair::getFirst).orElse(List.of()));
 		process = nbt.getInt("process");
@@ -157,25 +150,15 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		inf = nbt.getBoolean("inf");
 		isLastHeating = nbt.getBoolean("last_heat");
 		if(nbt.contains("target"))
-			target=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(nbt.getString("target")));
-		if(nbt.contains("fluid")) {
-			tank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid")));
-		}
-		if(nbt.contains("tank"))
-			tank.readFromNBT(nbt.getCompound("tank"));
-		inv.deserializeNBT(nbt.getCompound("inv"));
+			target=FluidStack.parseOptional(ra, nbt);
+		tank.readFromNBT(ra,nbt.getCompound("tank"));
+		inv.deserializeNBT(ra,nbt.getCompound("inv"));
 
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
-		super.writeCustomNBT(nbt, isClient);
-		if (info != null) {
-			if(isClient)
-				nbt.put("info", info.saveClient());
-			else
-				nbt.put("info", info.save());
-		}
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+		super.writeCustomNBT(nbt, isClient,ra);
 		if (swayhint != null)
 			CSI_CODEC.encodeStart(NbtOps.INSTANCE, swayhint).result().ifPresent(t -> nbt.put("hint", t));
 
@@ -188,20 +171,9 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		nbt.putBoolean("inf", inf);
 		nbt.putBoolean("last_heat", isLastHeating);
 		if(target!=null)
-			nbt.putString("target", Utils.getRegistryName(target).toString());
-		if(isClient) {
-			
-			FluidStack fs=tank.getFluid();
-			if(!fs.isEmpty()) {
-				FluidStack tosend=new FluidStack(fs.getFluid(),fs.getAmount());
-				BeverageFluid.setInfoForClient(tosend, info);
-				nbt.put("fluid", tosend.writeToNBT(new CompoundTag()));
-			}else
-				nbt.put("fluid", FluidStack.EMPTY.writeToNBT(new CompoundTag()));
-		}else {
-			nbt.put("tank", tank.writeToNBT(new CompoundTag()));
-		}
-		nbt.put("inv", inv.serializeNBT());
+			nbt.put("target",target.save(ra));
+		nbt.put("tank", tank.writeToNBT(ra,new CompoundTag()));
+		nbt.put("inv", inv.serializeNBT(ra));
 	}
 
 	@Override
@@ -224,7 +196,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				return true;
 			}
 			
-			if(is.getItem()==Items.POTION&&PotionUtils.getPotion(is)==Potions.WATER) {
+			if(is.getItem()==Items.POTION&&Optional.ofNullable(is.get(DataComponents.POTION_CONTENTS)).flatMap(t->t.potion()).filter(t->t==Potions.WATER).isPresent()) {
 				FluidStack water=new FluidStack(Fluids.WATER,250);
 				if(accessabletank.fill(water,FluidAction.SIMULATE)==250) {
 					ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
@@ -545,20 +517,18 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	}
 
 	ChangeDetectedFluidHandler accessabletank = new ChangeDetectedFluidHandler();
-	LazyOptional<IItemHandler> down = LazyOptional.of(() -> new RangedWrapper(inv, 5, 6));
-	LazyOptional<IItemHandler> side = LazyOptional.of(() -> new RangedWrapper(inv, 0, 5));
-	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> accessabletank);
+
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == ForgeCapabilities.ITEM_HANDLER) {
-			if (side == Direction.DOWN)
-				return down.cast();
-			return this.side.cast();
+	public Object getCapability(BlockCapability<?, Direction> type, Direction d) {
+		if (type == Capabilities.ItemHandler.BLOCK) {
+			if (d == Direction.DOWN)
+				return new RangedWrapper(inv, 5, 6);
+			return new RangedWrapper(inv, 0, 5);
 		}
-		if (cap == ForgeCapabilities.FLUID_HANDLER)
-			return fl.cast();
-		return super.getCapability(cap, side);
+		if (type == Capabilities.FluidHandler.BLOCK)
+			return accessabletank;
+		return super.getCapability(type, d);
 	}
 
 	public class ChangeDetectedFluidHandler implements IFluidHandler {
@@ -697,7 +667,6 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			if (!drained.isEmpty() && action.execute()) {
 				if (tank.getFluid().isEmpty()) {
 					tank.setFluid(FluidStack.EMPTY);
-					info = null;
 					swayhint.clear();
 				}
 				syncData();
@@ -713,7 +682,6 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			if (!drained.isEmpty() && action.execute()) {
 				if (tank.getFluid().isEmpty()) {
 					tank.setFluid(FluidStack.EMPTY);
-					info = null;
 					swayhint.clear();
 				}
 				syncData();
@@ -759,5 +727,6 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public boolean setInfinity() {
 		return inf = !inf;
 	}
+
 
 }

@@ -24,7 +24,6 @@ import java.util.List;
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.blocks.stove.IStove;
@@ -33,6 +32,7 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -45,15 +45,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RangedWrapper;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 
 public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider {
 	public ItemStackHandler inv = new ItemStackHandler(5) {
@@ -80,32 +77,32 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		process=nbt.getInt("process");
 		processMax=nbt.getInt("processMax");
-		tankin.readFromNBT(nbt.getCompound("in"));
-		inv.deserializeNBT(nbt.getCompound("inv"));
+		tankin.readFromNBT(ra,nbt.getCompound("in"));
+		inv.deserializeNBT(ra,nbt.getCompound("inv"));
 		ListTag list=nbt.getList("outBuff",10);
 		items=new ArrayList<>();
 		for(int i=0;i<list.size();i++) {
-			items.add(ItemStack.of(list.getCompound(i)));
+			items.add(ItemStack.parse(ra,list.getCompound(i)).orElse(ItemStack.EMPTY));
 		}
 		isLastHeating=nbt.getBoolean("heating");
-		fs=FluidStack.loadFluidStackFromNBT(nbt.getCompound("fluid"));
+		fs=FluidStack.parseOptional(ra,nbt.getCompound("fluid"));
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		if(isClient) 
 			nbt.putBoolean("heating", isLastHeating);
 		nbt.putInt("process", process);
 		nbt.putInt("processMax", processMax);
-		nbt.put("in",tankin.writeToNBT(new CompoundTag()));
-		nbt.put("inv", inv.serializeNBT());
-		nbt.put("fluid", fs.writeToNBT(new CompoundTag()));
+		nbt.put("in",tankin.writeToNBT(ra, new CompoundTag()));
+		nbt.put("inv", inv.serializeNBT(ra));
+		nbt.put("fluid", fs.save(ra));
 		if(!isClient) {
 			ListTag tl=new ListTag();
-			items.forEach(t->tl.add(t.serializeNBT()));
+			items.forEach(t->tl.add(t.save(ra)));
 			nbt.put("outBuff", tl);
 		}
 	}
@@ -157,21 +154,8 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 			
 		}
 	}
-	LazyOptional<IItemHandler> down = LazyOptional.of(() -> new RangedWrapper(inv, 3, 6));
-	LazyOptional<IItemHandler> side = LazyOptional.of(() -> new RangedWrapper(inv, 0, 3));
-	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> tankin);
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == ForgeCapabilities.ITEM_HANDLER) {
-			if (side == Direction.DOWN)
-				return down.cast();
-			return this.side.cast();
-		}
-		if (cap == ForgeCapabilities.FLUID_HANDLER)
-			return fl.cast();
-		return super.getCapability(cap, side);
-	}
+
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
 		return new BasinContainer(pContainerId, pInventory, this);
@@ -180,5 +164,18 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 	@Override
 	public Component getDisplayName() {
 		return Utils.translate("container." + CVMain.MODID + ".basin.title");
+	}
+
+	@Override
+	public Object getCapability(BlockCapability<?, Direction> type, Direction d) {
+
+		if(type==Capabilities.FluidHandler.BLOCK)
+			return tankin;
+		if(type==Capabilities.ItemHandler.BLOCK) {
+			if (d == Direction.DOWN)
+				return new RangedWrapper(inv, 3, 6);
+			return new RangedWrapper(inv, 0, 3);
+		}
+		return super.getCapability(type, d);
 	}
 }

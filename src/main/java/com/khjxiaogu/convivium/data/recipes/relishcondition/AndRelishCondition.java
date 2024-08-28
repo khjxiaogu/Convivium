@@ -18,13 +18,12 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
-import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
-
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class AndRelishCondition extends LogicalRelishCondition {
-
+	public static final MapCodec<AndRelishCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).apply(t, AndRelishCondition::new));
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
@@ -37,15 +36,6 @@ public class AndRelishCondition extends LogicalRelishCondition {
 		return r1.test(t)&&r2.test(t);
 	}
 
-	public AndRelishCondition(FriendlyByteBuf pb) {
-		super(pb);
-		// TODO Auto-generated constructor stub
-	}
-
-	public AndRelishCondition(JsonObject jo) {
-		super(jo);
-		// TODO Auto-generated constructor stub
-	}
 
 	public AndRelishCondition(RelishCondition r1, RelishCondition r2) {
 		super(r1, r2);

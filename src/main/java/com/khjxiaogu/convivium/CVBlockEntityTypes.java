@@ -59,7 +59,7 @@ public class CVBlockEntityTypes {
 			REGISTER.register("pestle_and_mortar",makeType(PamBlockEntity::new,()->CVBlocks.pam));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasinBlockEntity>> BASIN=
 			REGISTER.register("basin",makeTypes2(BasinBlockEntity::new,()->List.of(CVBlocks.basin,CVBlocks.lead_basin)));
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntity>> AQUEDUCT=
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AqueductBlockEntity>> AQUEDUCT=
 			REGISTER.register("aqueduct",makeTypes2(AqueductBlockEntity::new,()->CVBlocks.aqueducts));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN=
 			REGISTER.register("aqueduct_controller",makeTypes2(AqueductControllerBlockEntity::new,()->CVBlocks.aqueduct_mains));

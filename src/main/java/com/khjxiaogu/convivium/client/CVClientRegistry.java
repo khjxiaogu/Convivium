@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium.client;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVGui;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.gui.BasinScreen;
@@ -125,7 +126,7 @@ public class CVClientRegistry {
 	public static void onTint(RegisterColorHandlersEvent.Item ev) {
 		ev.register((a, idx) -> {
 			//System.out.println(idx);
-			return idx==0?-1: BeverageInfo.getIColor(Utils.extractData(a));
+			return idx==0?-1: a.get(CVComponents.BEVERAGE_INFO).getIColor();
 			
 	      },CVBlocks.BEVERAGE.get());
 	}

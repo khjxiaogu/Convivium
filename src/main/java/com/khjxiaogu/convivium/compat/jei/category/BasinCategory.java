@@ -28,13 +28,13 @@ import com.teammoeg.caupona.compat.jei.category.BaseCallback;
 import com.teammoeg.caupona.util.Utils;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -44,7 +44,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 	public static RecipeType<BasinRecipe> TYPE=RecipeType.create(CVMain.MODID, "basin",BasinRecipe.class);
@@ -53,7 +53,7 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 
 	public BasinCategory(IGuiHelper guiHelper) {
 		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.lead_basin.get()));
-		ResourceLocation guiMain = new ResourceLocation(CVMain.MODID, "textures/gui/jei/basin.png");
+		ResourceLocation guiMain = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/jei/basin.png");
 		this.BACKGROUND = guiHelper.createDrawable(guiMain, 0, 0, 127, 63);
 	}
 
@@ -112,9 +112,9 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 			.addTooltipCallback(cb(recipe));
 		}
 		builder.addSlot(RecipeIngredientRole.INPUT, 23, 14)
-		.addIngredient(ForgeTypes.FLUID_STACK,new FluidStack(recipe.in, recipe.in.getAmount()))
+		.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.in.copy())
 		.setFluidRenderer(1000, false, 16, 37)
-		.addTooltipCallback(new BaseCallback(recipe.base, recipe.density));
+		.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density));
 		if(recipe.requireBasin) {
 			builder.addSlot(RecipeIngredientRole.CATALYST , 3, 22)
 			.addIngredients(VanillaTypes.ITEM_STACK,Arrays.asList(new ItemStack(CVBlocks.lead_basin.get())));

@@ -25,6 +25,7 @@ import com.teammoeg.caupona.network.CPBaseBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -55,7 +56,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		if(nbt.contains("from"))
 			from=Direction.values()[nbt.getInt("from")];
 		tonxt=nbt.getInt("processMax");
@@ -66,7 +67,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		if(from!=null)
 			nbt.putInt("from", from.ordinal());
 		nbt.putInt("processMax", tonxt);
@@ -152,12 +153,12 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			if(!bs.is(CVTags.Blocks.AQUEDUCT_MOVE))return false;
 			if(!bs2.is(Blocks.AIR))return false;
 			if(be!=null) {
-				CompoundTag nbt=be.serializeNBT();
+				CompoundTag nbt=be.saveWithoutMetadata(this.getLevel().registryAccess());
 				this.level.removeBlockEntity(src);
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
 				this.level.removeBlockEntity(src);
 				this.level.setBlock(dest, bs, 1|2);
-				this.level.getBlockEntity(dest).load(nbt);
+				this.level.getBlockEntity(dest).loadWithComponents(nbt, this.getLevel().registryAccess());
 			}else {
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
 				this.level.setBlock(dest, bs, 1|2);

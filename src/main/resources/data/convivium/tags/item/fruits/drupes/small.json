@@ -1,0 +1,8 @@
+{
+	"values": [],
+	"optional": [
+		"#c:fruits/cherry",
+		"#c:fruits/blackberry",
+		"#c:fruits/raspberry"
+	]
+}

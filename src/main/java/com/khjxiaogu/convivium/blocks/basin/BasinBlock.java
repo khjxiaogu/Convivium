@@ -19,14 +19,13 @@
 package com.khjxiaogu.convivium.blocks.basin;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -37,11 +36,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class BasinBlock extends CPHorizontalEntityBlock<BasinBlockEntity> {
 
@@ -54,37 +52,7 @@ public class BasinBlock extends CPHorizontalEntityBlock<BasinBlockEntity> {
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return shape;
 	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
-		InteractionResult p = super.use(state, worldIn, pos, player, handIn, hit);
-		if (p.consumesAction())
-			return p;
-		BlockEntity be=worldIn.getBlockEntity(pos);
-		if (be instanceof BasinBlockEntity pam) {
-			ItemStack held = player.getItemInHand(handIn);
-			FluidStack out=Utils.extractFluid(held);
-			if (!out.isEmpty()) {
-				if(pam.tankin.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-					pam.tankin.fill(out, FluidAction.EXECUTE);
-					ItemStack ret = held.getCraftingRemainingItem();
-					held.shrink(1);
-					ItemHandlerHelper.giveItemToPlayer(player, ret);
-					return InteractionResult.sidedSuccess(worldIn.isClientSide);
-				}
-			}
-			if (FluidUtil.interactWithFluidHandler(player, handIn, pam.tankin))
-				return InteractionResult.SUCCESS;
-			if (handIn == InteractionHand.MAIN_HAND) {
-				if(!worldIn.isClientSide)
-					NetworkHooks.openScreen((ServerPlayer) player, pam, pam.getBlockPos());
-				return InteractionResult.SUCCESS;
-			}
-		}
-		
-		return p;
-	}
+
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(newState.getBlock() instanceof BasinBlock)) {
@@ -95,5 +63,43 @@ public class BasinBlock extends CPHorizontalEntityBlock<BasinBlockEntity> {
 			}
 			worldIn.removeBlockEntity(pos);
 		}
+	}
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		InteractionResult p =super.useWithoutItem(state, level, pos, player, hitResult);
+		if (p.consumesAction())
+			return p;
+		BlockEntity be=level.getBlockEntity(pos);
+		if (be instanceof BasinBlockEntity pam) {
+			if(!level.isClientSide)
+				player.openMenu(pam, pam.getBlockPos());
+			return InteractionResult.sidedSuccess(level.isClientSide);
+		}
+		return p;
+	}
+	@Override
+	protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		// TODO Auto-generated method stub
+		ItemInteractionResult p = super.useItemOn(held, state, level, pos, player, hand, hitResult);
+		if (p.consumesAction())
+			return p;
+		BlockEntity be=level.getBlockEntity(pos);
+		if (be instanceof BasinBlockEntity pam) {
+			FluidStack out=Utils.extractFluid(held);
+			if (!out.isEmpty()) {
+				if(pam.tankin.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
+					pam.tankin.fill(out, FluidAction.EXECUTE);
+					ItemStack ret = held.getCraftingRemainingItem();
+					held.shrink(1);
+					ItemHandlerHelper.giveItemToPlayer(player, ret);
+					return ItemInteractionResult.sidedSuccess(level.isClientSide);
+				}
+			}
+			if (FluidUtil.interactWithFluidHandler(player, hand, pam.tankin))
+				return ItemInteractionResult.SUCCESS;
+			
+		}
+		
+		return p;
 	}
 }

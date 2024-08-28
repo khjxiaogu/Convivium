@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.blocks.camellia;
 
 import com.khjxiaogu.convivium.CVBlocks;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -35,7 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CamelliaBlock extends BushBlock implements BonemealableBlock {
-
+    public static final MapCodec<CamelliaBlock> CODEC = simpleCodec(CamelliaBlock::new);
 	public CamelliaBlock(Properties pProperties) {
 		super(pProperties);
 		// TODO Auto-generated constructor stub
@@ -71,14 +72,6 @@ public class CamelliaBlock extends BushBlock implements BonemealableBlock {
 		return true;
 	}
 
-	@Override
-	public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pStatex, boolean pIsClient) {
-		BlockPos above = pPos.above();
-		BlockState abovebs = pLevel.getBlockState(above);
-		return abovebs.isAir() || (abovebs.is(CVBlocks.CAMELLIA_FLOWER.get())
-				&& ((BonemealableBlock) abovebs.getBlock()).isValidBonemealTarget(pLevel, above, abovebs, pIsClient));
-	}
-
 	public boolean isBonemealSuccess(Level pLevel, RandomSource pRandom, BlockPos pPos, BlockState pStatex) {
 		BlockPos above = pPos.above();
 		BlockState abovebs = pLevel.getBlockState(above);
@@ -94,6 +87,19 @@ public class CamelliaBlock extends BushBlock implements BonemealableBlock {
 		}else if(abovebs.is(CVBlocks.CAMELLIA_FLOWER.get())){
 			((BonemealableBlock) abovebs.getBlock()).performBonemeal(pLevel, pRandom, above, abovebs);
 		}
+	}
+
+	@Override
+	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+		BlockPos above = pos.above();
+		BlockState abovebs = level.getBlockState(above);
+		return abovebs.isAir() || (abovebs.is(CVBlocks.CAMELLIA_FLOWER.get())
+				&& ((BonemealableBlock) abovebs.getBlock()).isValidBonemealTarget(level, above, abovebs));
+	}
+
+	@Override
+	protected MapCodec<? extends BushBlock> codec() {
+		return CODEC;
 	}
 
 }

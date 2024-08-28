@@ -30,6 +30,7 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -37,13 +38,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IInfinitable,MenuProvider {
 	public ItemStackHandler storage=new ItemStackHandler(6);
@@ -72,7 +72,7 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 		public @NotNull FluidStack drain(FluidStack resource, FluidAction oaction) {
 			if(getBlockState().getValue(BeverageVendingBlock.ACTIVE)&&resource.getAmount()>=250) {
 				if(resource.getAmount()!=250)
-					resource=new FluidStack(resource.getFluid(),250,resource.getTag());
+					resource=resource.copyWithAmount(250);
 				FluidAction action=oaction;
 				if(isInfinite)
 					action=FluidAction.SIMULATE;
@@ -119,9 +119,9 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		if(!isClient) {
-			storage.deserializeNBT(nbt.getCompound("storage"));
+			storage.deserializeNBT(ra,nbt.getCompound("storage"));
 			
 			
 			
@@ -129,21 +129,21 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 		isInfinite = nbt.getBoolean("inf");
 		if(nbt.contains("owner"))
 			owner=nbt.getUUID("owner");
-		tank.readFromNBT(nbt.getCompound("tank"));
+		tank.readFromNBT(ra,nbt.getCompound("tank"));
 		amt=nbt.getInt("amount");
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		if(!isClient) {
-			nbt.put("storage",storage.serializeNBT());
+			nbt.put("storage",storage.serializeNBT(ra));
 			
 			
 			
 		}
 		nbt.putBoolean("inf", isInfinite);
 		nbt.putUUID("owner", owner);
-		nbt.put("tank", tank.writeToNBT(new CompoundTag()));
+		nbt.put("tank", tank.writeToNBT(ra,new CompoundTag()));
 		nbt.putInt("amount", amt);
 	}
 
@@ -165,11 +165,10 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	public Component getDisplayName() {
 		return Utils.translate("container." + CVMain.MODID + ".beverage_vending_machine.title");
 	}
-	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> handler);
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == ForgeCapabilities.FLUID_HANDLER)
-			return fl.cast();
+	public Object getCapability(BlockCapability<?, Direction> cap, Direction side) {
+		if (cap == Capabilities.FluidHandler.BLOCK)
+			return handler;
 		return super.getCapability(cap, side);
 	}
 

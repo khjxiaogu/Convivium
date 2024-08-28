@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
@@ -75,11 +76,11 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 			FluidStack f=e.getFluidInTank(0);
 			if(!f.isEmpty()) {
 				tooltip.add(f.getHoverName());
-				Optional<BeverageInfo> oinfo = BeverageFluid.getInfo(f);
-				oinfo.ifPresent(info->{
+				BeverageInfo info = f.get(CVComponents.BEVERAGE_INFO);
+				if(info!=null){
 				PotionContents.addPotionTooltip(info.effects, tooltip::add, 1,20);
 				info.appendTooltip(tooltip);
-				});
+				}
 				tooltip.add(Utils.string(f.getAmount()+"/1250 mB"));
 				
 			}

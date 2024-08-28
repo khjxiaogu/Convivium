@@ -46,7 +46,7 @@ import net.minecraft.world.item.ItemStack;
 public class JEICompat implements IModPlugin {
 	@Override
 	public ResourceLocation getPluginUid() {
-		return new ResourceLocation(CVMain.MODID, "jei_plugin");
+		return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "jei_plugin");
 	}
 
 	@Override

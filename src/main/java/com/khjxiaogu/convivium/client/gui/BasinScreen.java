@@ -63,7 +63,7 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 			if (isMouseIn(mouseX, mouseY, 62, 24, 16, 37)) {
 				tooltip.add(blockEntity.tankin.getFluid().getDisplayName());
 			}
-			GuiUtils.handleGuiTank(transform.pose(), blockEntity.tankin, leftPos + 62, topPos + 24, 16, 37);
+			GuiUtils.handleGuiTank(transform, blockEntity.tankin, leftPos + 62, topPos + 24, 16, 37);
 		}
 
 		if (!tooltip.isEmpty())

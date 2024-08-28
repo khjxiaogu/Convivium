@@ -23,15 +23,27 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
+import com.teammoeg.caupona.CPBlockEntityTypes;
+import com.teammoeg.caupona.CPCapability;
+import com.teammoeg.caupona.CPItems;
+import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
+import com.teammoeg.caupona.util.FluidItemWrapper;
 import com.teammoeg.caupona.util.ICreativeModeTabItem;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 @EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -58,7 +70,21 @@ public class CVCommonBootStrap {
 		compositables.forEach(p->ComposterBlock.COMPOSTABLES.put(p.getFirst().get(),(float)p.getSecond()));
 	}
 
-
+	@SubscribeEvent
+	public static void onCapabilityInject(RegisterCapabilitiesEvent event) {
+		event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new FluidHandlerItemStack(CPCapability.SIMPLE_FLUID,stack,1250), CVItems.JUG.get());
+		//event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new FluidHandlerItemStack(CPCapability.SIMPLE_FLUID,stack,1250), CPItems.situla.get());
+		//event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.STEW_INFO.get()), CPItems.stews.toArray(Item[]::new));
+		//event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.SAUTEED_INFO.get()), CPItems.dish.toArray(Item[]::new));
+		CVBlockEntityTypes.REGISTER.getEntries().stream().map(t->t.get()).forEach(be->{
+			
+			event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, (BlockEntityType<?>)be,
+				(block,ctx)->(IItemHandler)((CPBaseBlockEntity)block).getCapability(Capabilities.ItemHandler.BLOCK, ctx));
+			event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, (BlockEntityType<?>)be,
+				(block,ctx)->(IFluidHandler)((CPBaseBlockEntity)block).getCapability(Capabilities.FluidHandler.BLOCK, ctx));
+			});
+		event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new FluidItemWrapper(stack), CPItems.stews.toArray(Item[]::new));
+	}
 	public static void registerDispensers() {
 		
 	}

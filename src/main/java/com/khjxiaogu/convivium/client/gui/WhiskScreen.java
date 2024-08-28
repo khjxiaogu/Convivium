@@ -100,7 +100,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					if(blockEntity.info!=null)
 						blockEntity.info.appendTooltip(tooltip);
 				}
-				GuiUtils.handleGuiTank(transform.pose(), blockEntity.tank, leftPos + 132, topPos + 45, 16, 46);
+				GuiUtils.handleGuiTank(transform, blockEntity.tank, leftPos + 132, topPos + 45, 16, 46);
 			}
 			
 			if(blockEntity.info!=null) {

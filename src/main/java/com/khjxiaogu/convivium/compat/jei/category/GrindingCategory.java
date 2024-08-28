@@ -29,13 +29,13 @@ import com.teammoeg.caupona.compat.jei.category.BaseCallback;
 import com.teammoeg.caupona.util.Utils;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -46,7 +46,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 	public static RecipeType<GrindingRecipe> TYPE=RecipeType.create(CVMain.MODID, "grinding",GrindingRecipe.class);
@@ -55,7 +54,7 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 
 	public GrindingCategory(IGuiHelper guiHelper) {
 		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.pam.get()));
-		ResourceLocation guiMain = new ResourceLocation(CVMain.MODID, "textures/gui/jei/pestle_and_mortar.png");
+		ResourceLocation guiMain = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/jei/pestle_and_mortar.png");
 		this.BACKGROUND = guiHelper.createDrawable(guiMain, 0, 0, 127, 63);
 	}
 
@@ -85,7 +84,7 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 	private static List<ItemStack> unpack(Pair<Ingredient, Integer> ps) {
 		List<ItemStack> sl = new ArrayList<>();
 		for (ItemStack is : ps.getFirst().getItems())
-			sl.add(ItemHandlerHelper.copyStackWithSize(is, ps.getSecond() > 0 ? ps.getSecond() : 1));
+			sl.add(is.copyWithCount(ps.getSecond() > 0 ? ps.getSecond() : 1));
 		return sl;
 	}
 	private static RecipeIngredientRole type(Pair<Ingredient, Integer> ps) {
@@ -135,12 +134,12 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 		}
 		if (!recipe.in.isEmpty())
 			builder.addSlot(RecipeIngredientRole.INPUT, 29, 14)
-					.addIngredient(ForgeTypes.FLUID_STACK,recipe.in)
+					.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.in)
 					.setFluidRenderer(1000, false, 16, 37)
-					.addTooltipCallback(new BaseCallback(recipe.base, recipe.density));
+					.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density));
 		if(!recipe.out.isEmpty())
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 81, 14)
-			.addIngredient(ForgeTypes.FLUID_STACK,recipe.out)
+			.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.out)
 			.setFluidRenderer(1000, false, 16, 37);
 	}
 

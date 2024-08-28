@@ -18,10 +18,6 @@
 
 package com.khjxiaogu.convivium.data.recipes.compare;
 
-import com.google.gson.JsonObject;
-
-import net.minecraft.network.FriendlyByteBuf;
-
 public class GE extends Compare {
 	public static final Compare C=new GE();
 	@Override
@@ -29,21 +25,9 @@ public class GE extends Compare {
 		return Float.compare(t1!=null?t1:0, num!=0?num:0)>=0;
 	}
 
-	@Override
-	public String getType() {
-		return "greater_equals";
-	}
-
 	public GE() {
 		super();
 	}
 
-	public GE(FriendlyByteBuf num) {
-		super(num);
-	}
-
-	public GE(JsonObject num) {
-		super(num);
-	}
 
 }

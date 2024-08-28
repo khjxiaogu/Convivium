@@ -18,10 +18,6 @@
 
 package com.khjxiaogu.convivium.data.recipes.compare;
 
-import com.google.gson.JsonObject;
-
-import net.minecraft.network.FriendlyByteBuf;
-
 public class EQ extends Compare {
 	public static final Compare C=new EQ();
 	@Override
@@ -31,19 +27,6 @@ public class EQ extends Compare {
 
 	public EQ() {
 
-	}
-
-	public EQ(FriendlyByteBuf num) {
-		super(num);
-	}
-
-	public EQ(JsonObject num) {
-		super(num);
-	}
-
-	@Override
-	public String getType() {
-		return "equals";
 	}
 
 }

@@ -1,0 +1,15 @@
+{
+	"values": [
+		"minecraft:melon_slice",
+		"minecraft:glistering_melon_slice"
+	],
+	"optional": [
+		"#c:fruits/melon",
+		"#c:fruits/orange",
+		"#c:fruits/lemon",
+		"#c:fruits/lime",
+		"#c:fruits/pomelo",
+		"#c:fruits/kiwi",
+		"#c:fruits/banana"
+	]
+}

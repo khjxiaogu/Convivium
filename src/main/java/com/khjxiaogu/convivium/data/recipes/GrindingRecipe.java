@@ -25,10 +25,7 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.data.InvalidRecipeException;
-import com.teammoeg.caupona.data.SerializeUtil;
 import com.teammoeg.caupona.fluid.SoupFluid;
-import com.teammoeg.caupona.util.StewInfo;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -36,11 +33,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.crafting.StrictNBTIngredient;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class GrindingRecipe extends IDataRecipe {
 	public static List<GrindingRecipe> recipes;
@@ -58,7 +53,7 @@ public class GrindingRecipe extends IDataRecipe {
 	}
 
 	public List<Pair<Ingredient, Integer>> items;
-	public ResourceLocation base;
+	public Fluid base;
 	public float density = 0;
 	public FluidStack in= FluidStack.EMPTY;
 	public FluidStack out= FluidStack.EMPTY;

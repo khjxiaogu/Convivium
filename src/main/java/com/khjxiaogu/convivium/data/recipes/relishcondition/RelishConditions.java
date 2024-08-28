@@ -18,57 +18,27 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
-import java.util.function.Function;
-
-import com.google.gson.JsonObject;
-import com.teammoeg.caupona.data.CachedDataDeserializer;
-import com.teammoeg.caupona.data.Deserializer;
-
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.teammoeg.caupona.data.DataDeserializerRegistry;
+import com.teammoeg.caupona.util.SerializeUtil;
 
 public class RelishConditions {
-	private static CachedDataDeserializer<RelishCondition,JsonObject> relishes=new CachedDataDeserializer<>() {
-
-		@Override
-		protected RelishCondition internalOf(JsonObject json) {
-			return getDeserializer(json.get("type").getAsString()).read(json);
-		}
-		
-	};
+	private static DataDeserializerRegistry<RelishCondition> relishes=new DataDeserializerRegistry<>();
 	static {
-		register("major", MajorRelishCondition::new, MajorRelishCondition::new);
-		register("only_major", OnlyMajorRelishCondition::new, OnlyMajorRelishCondition::new);
-		register("compare", RelishCompareCondition::new, RelishCompareCondition::new);
-		register("contains",HasRelishCondition::new, HasRelishCondition::new);
-		register("contains_fluid",HasFluidCondition::new, HasFluidCondition::new);
+		register("major", MajorRelishCondition.class, MajorRelishCondition.CODEC);
+		register("only_major", OnlyMajorRelishCondition.class, OnlyMajorRelishCondition.CODEC);
+		register("compare", RelishCompareCondition.class, RelishCompareCondition.CODEC);
+		register("contains",HasRelishCondition.class, HasRelishCondition.CODEC);
+		register("contains_fluid",HasFluidCondition.class, HasFluidCondition.CODEC);
 		
 		
-		register("and", AndRelishCondition::new, AndRelishCondition::new);
-		register("or", OrRelishCondition::new, OrRelishCondition::new);
+		register("and", AndRelishCondition.class, AndRelishCondition.CODEC);
+		register("or", OrRelishCondition.class, OrRelishCondition.CODEC);
 	}
-	public static void register(String name, Deserializer<JsonObject, RelishCondition> des) {
-		relishes.register(name, des);
-	}
-
-	public static void register(String name, Function<JsonObject, RelishCondition> rjson,
-			Function<FriendlyByteBuf, RelishCondition> rpacket) {
-		relishes.register(name, rjson, rpacket);
+	public static final Codec<RelishCondition> CODEC=relishes.createCodec();
+	public static <T extends RelishCondition> void register(String name,Class<T> cls,MapCodec<T> codec) {
+		relishes.register(name, cls, codec,SerializeUtil.toStreamCodec(codec));
 	}
 
-	public static RelishCondition of(JsonObject jsonElement) {
-		return relishes.of(jsonElement);
-	}
-
-	public static RelishCondition of(FriendlyByteBuf buffer) {
-		return relishes.of(buffer);
-	}
-
-	public static void write(RelishCondition e, FriendlyByteBuf buffer) {
-		buffer.writeUtf(e.getType());
-		e.write(buffer);
-	}
-
-	public static void clearCache() {
-		relishes.clearCache();
-	}
 }

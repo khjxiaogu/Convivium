@@ -122,6 +122,9 @@ public class BeverageInfo implements IFoodInfo {
 	public Vector3f getColor() {
 		return getColor(relishes);
 	}
+	public int getIColor() {
+		return getIColor(relishes);
+	}
 	public static Vector3f getColor(Fluid[] relishes) {
 		Vector3f clr=new Vector3f();
 		int cnt=0;
@@ -355,41 +358,20 @@ public class BeverageInfo implements IFoodInfo {
 		}
 		stacks.add(is);
 	}
-
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((effects == null) ? 0 : effects.hashCode());
-		result = prime * result + Arrays.hashCode(relishes);
-		result = prime * result + ((stacks == null) ? 0 : stacks.hashCode());
-		return result;
+	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, int healing,
+		float saturation, int heat) {
+		super();
+		this.stacks = stacks;
+		this.effects = effects;
+		this.swayeffects = swayeffects;
+		this.foodeffect = foodeffect;
+		this.relishes = relishes;
+		this.healing = healing;
+		this.saturation = saturation;
+		this.heat = heat;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BeverageInfo other = (BeverageInfo) obj;
-		if (effects == null) {
-			if (other.effects != null)
-				return false;
-		} else if (!effects.equals(other.effects))
-			return false;
-		if (!Arrays.equals(relishes, other.relishes))
-			return false;
-		if (stacks == null) {
-			if (other.stacks != null)
-				return false;
-		} else if (!stacks.equals(other.stacks))
-			return false;
-		return true;
-	}
+
 
 
 }

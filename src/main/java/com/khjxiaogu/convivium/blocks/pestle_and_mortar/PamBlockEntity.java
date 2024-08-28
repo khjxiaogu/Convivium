@@ -30,9 +30,11 @@ import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.util.SyncedFluidHandler;
 import com.teammoeg.caupona.util.Utils;
-
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -45,16 +47,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RangedWrapper;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 
 public class PamBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
 	public ItemStackHandler inv = new ItemStackHandler(6) {
@@ -132,37 +130,37 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		// TODO Auto-generated method stub
-		super.readCustomNBT(nbt, isClient);
+		super.readCustomNBT(nbt, isClient,ra);
 		process=nbt.getInt("process");
 		processMax=nbt.getInt("processMax");
-		tankin.readFromNBT(nbt.getCompound("in"));
-		tankout.readFromNBT(nbt.getCompound("out"));
-		inv.deserializeNBT(nbt.getCompound("inv"));
-		fout=FluidStack.loadFluidStackFromNBT(nbt.getCompound("fout"));
+		tankin.readFromNBT(ra,nbt.getCompound("in"));
+		tankout.readFromNBT(ra,nbt.getCompound("out"));
+		inv.deserializeNBT(ra,nbt.getCompound("inv"));
+		fout=FluidStack.parseOptional(ra,nbt.getCompound("fout"));
 		ListTag list=nbt.getList("outBuff",10);
 		items=new ArrayList<>();
 		for(int i=0;i<list.size();i++) {
-			items.add(ItemStack.of(list.getCompound(i)));
+			items.add(ItemStack.parseOptional(ra,list.getCompound(i)));
 		}
 		
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		// TODO Auto-generated method stub
-		super.writeCustomNBT(nbt, isClient);
+		super.writeCustomNBT(nbt, isClient,ra);
 		nbt.putInt("process", process);
 		nbt.putInt("processMax", processMax);
-		nbt.put("in",tankin.writeToNBT(new CompoundTag()));
-		nbt.put("out",tankout.writeToNBT(new CompoundTag()));
-		nbt.put("inv", inv.serializeNBT());
+		nbt.put("in",tankin.writeToNBT(ra,new CompoundTag()));
+		nbt.put("out",tankout.writeToNBT(ra,new CompoundTag()));
+		nbt.put("inv", inv.serializeNBT(ra));
 		if(isClient)return;
 		if(fout!=null)
-			nbt.put("fout", fout.writeToNBT(new CompoundTag()));
+			nbt.put("fout", fout.save(ra));
 		ListTag tl=new ListTag();
-		items.forEach(t->tl.add(t.serializeNBT()));
+		items.forEach(t->tl.add(t.save(ra)));
 		nbt.put("outBuff", tl);
 	}
 
@@ -222,21 +220,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			
 		}
 	}
-	LazyOptional<IItemHandler> down = LazyOptional.of(() -> new RangedWrapper(inv, 3, 6));
-	LazyOptional<IItemHandler> side = LazyOptional.of(() -> new RangedWrapper(inv, 0, 3));
-	LazyOptional<IFluidHandler> fl = LazyOptional.of(() -> tanks);
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == ForgeCapabilities.ITEM_HANDLER) {
-			if (side == Direction.DOWN)
-				return down.cast();
-			return this.side.cast();
-		}
-		if (cap == ForgeCapabilities.FLUID_HANDLER)
-			return fl.cast();
-		return super.getCapability(cap, side);
-	}
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
 		return new PamContainer(pContainerId, pInventory, this);
@@ -245,5 +229,17 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	@Override
 	public Component getDisplayName() {
 		return Utils.translate("container." + CVMain.MODID + ".pestle_and_mortar.title");
+	}
+
+	@Override
+	public Object getCapability(BlockCapability<?, Direction> type, Direction d) {
+		if (type == Capabilities.ItemHandler.BLOCK) {
+			if (d == Direction.DOWN)
+				return new RangedWrapper(inv, 3, 6);
+			return new RangedWrapper(inv, 0, 3);
+		}
+		if (type == Capabilities.FluidHandler.BLOCK)
+			return tanks;
+		return super.getCapability(type, d);
 	}
 }

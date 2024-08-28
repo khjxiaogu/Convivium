@@ -25,7 +25,6 @@ import com.khjxiaogu.convivium.blocks.vending.BeverageVendingContainer;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskContainer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -34,14 +33,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class CVGui {
 	public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BuiltInRegistries.MENU,
 			CVMain.MODID);
-	public static final DeferredHolder<MenuType<?>, MenuType<AbstractContainerMenu>> PLATTER = CONTAINERS.register("platter",
+	public static final DeferredHolder<MenuType<?>, MenuType<PlatterContainer>> PLATTER = CONTAINERS.register("platter",
 			() -> IMenuTypeExtension.create(PlatterContainer::new));
-	public static final DeferredHolder<MenuType<?>, MenuType<AbstractContainerMenu>> PAM = CONTAINERS.register("pestle_and_mortar",
+	public static final DeferredHolder<MenuType<?>, MenuType<PamContainer>> PAM = CONTAINERS.register("pestle_and_mortar",
 			() -> IMenuTypeExtension.create(PamContainer::new));
-	public static final DeferredHolder<MenuType<?>, MenuType<AbstractContainerMenu>> WHISK = CONTAINERS.register("whisk",
+	public static final DeferredHolder<MenuType<?>, MenuType<WhiskContainer>> WHISK = CONTAINERS.register("whisk",
 			() -> IMenuTypeExtension.create(WhiskContainer::new));
-	public static final DeferredHolder<MenuType<?>, MenuType<AbstractContainerMenu>> VENDING = CONTAINERS.register("beverage_vending_machine",
+	public static final DeferredHolder<MenuType<?>, MenuType<BeverageVendingContainer>> VENDING = CONTAINERS.register("beverage_vending_machine",
 			() -> IMenuTypeExtension.create(BeverageVendingContainer::new));
-	public static final DeferredHolder<MenuType<?>, MenuType<AbstractContainerMenu>> BASIN = CONTAINERS.register("basin",
+	public static final DeferredHolder<MenuType<?>, MenuType<BasinContainer>> BASIN = CONTAINERS.register("basin",
 			() -> IMenuTypeExtension.create(BasinContainer::new));
 }

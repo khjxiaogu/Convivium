@@ -91,7 +91,7 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 			if (isMouseIn(mouseX, mouseY, 123, 25, 32, 46)) {
 				tooltip.add(blockEntity.tank.getFluid().getDisplayName());
 			}
-			GuiUtils.handleGuiTank(transform.pose(), blockEntity.tank, leftPos + 123, topPos + 25, 32, 46);
+			GuiUtils.handleGuiTank(transform, blockEntity.tank, leftPos + 123, topPos + 25, 32, 46);
 		}
 		if (!tooltip.isEmpty())
 			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);

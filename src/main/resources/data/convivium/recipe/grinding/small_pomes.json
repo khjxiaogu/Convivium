@@ -1,0 +1,27 @@
+{
+	"type": "convivium:grinding",
+	"density": 0.0,
+	"fluidIn": {
+		"Amount": 250,
+		"FluidName": "minecraft:water"
+	},
+	"fluidOut": {
+		"Amount": 250,
+		"FluidName": "convivium:pome_juice"
+	},
+	"items": [
+		{
+			"count": 3,
+			"item": {"tag": "convivium:fruits/pomes/small"}
+		}
+	],
+	"keepInfo": false,
+	"outputs": [
+		{
+			"type": "c:nbt",
+			"count": 1,
+			"item": "caupona:scraps"
+		}
+	],
+	"time": 200
+}

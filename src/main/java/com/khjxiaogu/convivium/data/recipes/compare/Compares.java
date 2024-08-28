@@ -18,59 +18,32 @@
 
 package com.khjxiaogu.convivium.data.recipes.compare;
 
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.teammoeg.caupona.data.CachedDataDeserializer;
-import com.teammoeg.caupona.data.Deserializer;
+import com.mojang.serialization.Codec;
 
-import net.minecraft.network.FriendlyByteBuf;
+import mezz.jei.common.codecs.EnumCodec;
 
 public class Compares {
-	private static CachedDataDeserializer<Compare,JsonObject> compares=new CachedDataDeserializer<>() {
-
-		@Override
-		protected Compare internalOf(JsonObject json) {
-			return getDeserializer(json.get("comparator").getAsString()).read(json);
+	public final static Map<Compare,Comparators> map=new HashMap<>();
+	public enum Comparators{
+		greater(GT.C),
+		equals(EQ.C),
+		lesser(LT.C),
+		greater_equals(GE.C),
+		not_equals(NE.C),
+		lesser_equals(LE.C)
+		;
+		Compare comp;
+		
+		private Comparators(Compare comp) {
+			this.comp = comp;
+			map.put(comp, this);
 		}
 		
-	};
-	static {
-		register("greater",v-> GT.C,v-> GT.C);
-		register("equals",v-> EQ.C,v-> EQ.C);
-		register("lesser",v-> LT.C,v-> LT.C);
-		register("greater_equals",v-> GE.C,v-> GE.C);
-		register("not_equals",v-> NE.C,v-> NE.C);
-		register("lesser_equals",v-> LE.C,v-> LE.C);
-		
 	}
-	public static void register(String name, Deserializer<JsonObject, Compare> des) {
-		compares.register(name, des);
-	}
+	public static final Codec<Compare> CODEC=EnumCodec.create(Comparators.class, Comparators::valueOf).xmap(v->v.comp, map::get);
 
-	public static void register(String name, Function<JsonObject, Compare> rjson,
-			Function<FriendlyByteBuf, Compare> rpacket) {
-		compares.register(name, rjson, rpacket);
-	}
-	private static final JsonObject dummy=new JsonObject();
-	public static Compare of(JsonElement jsonElement) {
-		if(jsonElement.isJsonPrimitive()) {
-			return compares.getDeserializer(jsonElement.getAsString()).read(dummy);
-		}
-		return compares.of(jsonElement.getAsJsonObject());
-	}
 
-	public static Compare of(FriendlyByteBuf buffer) {
-		return compares.of(buffer);
-	}
-
-	public static void write(Compare e, FriendlyByteBuf buffer) {
-		buffer.writeUtf(e.getType());
-		e.write(buffer);
-	}
-
-	public static void clearCache() {
-		compares.clearCache();
-	}
 }

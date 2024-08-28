@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
 import com.khjxiaogu.convivium.util.evaluator.ConstantEnvironment;

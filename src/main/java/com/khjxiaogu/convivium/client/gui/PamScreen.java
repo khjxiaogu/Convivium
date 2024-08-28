@@ -63,13 +63,13 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 			if (isMouseIn(mouseX, mouseY, 42, 19, 16, 37)) {
 				tooltip.add(blockEntity.tankin.getFluid().getDisplayName());
 			}
-			GuiUtils.handleGuiTank(transform.pose(), blockEntity.tankin, leftPos + 42, topPos + 19, 16, 37);
+			GuiUtils.handleGuiTank(transform, blockEntity.tankin, leftPos + 42, topPos + 19, 16, 37);
 		}
 		if(!blockEntity.tankout.isEmpty()) {
 			if (isMouseIn(mouseX, mouseY, 133, 34, 16, 37)) {
 				tooltip.add(blockEntity.tankout.getFluid().getDisplayName());
 			}
-			GuiUtils.handleGuiTank(transform.pose(), blockEntity.tankout, leftPos + 133, topPos + 34, 16, 37);
+			GuiUtils.handleGuiTank(transform, blockEntity.tankout, leftPos + 133, topPos + 34, 16, 37);
 		}
 		if (!tooltip.isEmpty())
 			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);

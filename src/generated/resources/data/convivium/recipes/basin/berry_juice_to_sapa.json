@@ -12,7 +12,7 @@
   "leadBasin": true,
   "outputs": [
     {
-      "type": "forge:nbt",
+      "type": "c:nbt",
       "count": 1,
       "item": "caupona:sapa_spice_jar",
       "nbt": "{Damage:0}"

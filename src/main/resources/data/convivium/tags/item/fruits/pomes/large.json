@@ -1,0 +1,9 @@
+{
+	"values": [
+		"minecraft:apple",
+		"minecraft:golden_apple"
+	],
+	"optional": [
+		"#c:fruits/pear"
+	]
+}

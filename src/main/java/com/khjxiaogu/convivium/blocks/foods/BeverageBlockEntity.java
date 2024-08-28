@@ -24,6 +24,7 @@ import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.IInfinitable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,14 +43,14 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
-		internal = ItemStack.of(nbt.getCompound("bowl"));
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+		internal = ItemStack.parseOptional(ra,nbt.getCompound("bowl"));
 		isInfinite = nbt.getBoolean("inf");
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
-		nbt.put("bowl", internal.serializeNBT());
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+		nbt.put("bowl", internal.save(ra));
 		nbt.putBoolean("inf", isInfinite);
 	}
 

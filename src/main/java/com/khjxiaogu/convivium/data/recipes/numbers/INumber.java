@@ -21,8 +21,11 @@ package com.khjxiaogu.convivium.data.recipes.numbers;
 import java.util.function.ToDoubleFunction;
 
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
-import com.teammoeg.caupona.data.Writeable;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 
-public interface INumber extends Writeable,ToDoubleFunction<IEnvironment>{
+public interface INumber extends ToDoubleFunction<IEnvironment>{
 
+	Codec<INumber> CODEC=Codec.either(Codec.STRING.xmap(Expression::new,o->o.expr), Codec.FLOAT.xmap(Expression::of,o->o.num)).xmap(Either::unwrap, o->(o instanceof Expression.Constant cons)?Either.right(cons):Either.left((Expression)o));
+	Codec<INumber> STRING_CODEC=Codec.STRING.xmap(Expression::of, Object::toString);
 }

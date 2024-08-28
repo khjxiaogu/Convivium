@@ -27,6 +27,7 @@ import com.teammoeg.caupona.util.IInfinitable;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -35,7 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitable,MenuProvider {
 	public ItemStackHandler storage=new ItemStackHandler(4) {
@@ -71,8 +72,8 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		this.syncData();
 	}
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient) {
-		storage.deserializeNBT(nbt.getCompound("storage"));
+	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+		storage.deserializeNBT(ra,nbt.getCompound("storage"));
 		config=GlobalConfig.values()[nbt.getInt("config")];
 		int[] its=nbt.getIntArray("slot_config");
 		for(int i=0;i<4;i++) {
@@ -81,8 +82,8 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		isInfinite = nbt.getBoolean("inf");
 	}
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient) {
-		nbt.put("storage",storage.serializeNBT());
+	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+		nbt.put("storage",storage.serializeNBT(ra));
 		nbt.putInt("config", config.ordinal());
 		int[] its=new int[4];
 		for(int i=0;i<4;i++) {

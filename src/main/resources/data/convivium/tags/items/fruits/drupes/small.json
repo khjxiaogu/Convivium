@@ -1,8 +1,0 @@
-{
-	"values": [],
-	"optional": [
-		"#forge:fruits/cherry",
-		"#forge:fruits/blackberry",
-		"#forge:fruits/raspberry"
-	]
-}

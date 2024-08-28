@@ -23,9 +23,9 @@ import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -37,11 +37,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 
@@ -49,51 +48,61 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 		super(CVBlockEntityTypes.PAM, p_54120_);
 		// TODO Auto-generated constructor stub
 	}
-	static final VoxelShape shape = Shapes.or(Block.box(0, 0, 0, 16, 9, 16),Block.box(3, 9, 3, 13,14, 13),Block.box(6, 14, 6, 10,16, 10));
+
+	static final VoxelShape shape = Shapes.or(Block.box(0, 0, 0, 16, 9, 16), Block.box(3, 9, 3, 13, 14, 13), Block.box(6, 14, 6, 10, 16, 10));
+
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return shape;
 	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
-		InteractionResult p = super.use(state, worldIn, pos, player, handIn, hit);
-		if (p.consumesAction())
-			return p;
-		BlockEntity be=worldIn.getBlockEntity(pos);
-		if (be instanceof PamBlockEntity pam) {
-			ItemStack held = player.getItemInHand(handIn);
-			FluidStack out=Utils.extractFluid(held);
-			if (!out.isEmpty()) {
-				if(pam.tankin.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-					pam.tankin.fill(out, FluidAction.EXECUTE);
-					ItemStack ret = held.getCraftingRemainingItem();
-					held.shrink(1);
-					ItemHandlerHelper.giveItemToPlayer(player, ret);
-					return InteractionResult.sidedSuccess(worldIn.isClientSide);
-				}
-			}
-			if (FluidUtil.interactWithFluidHandler(player, handIn, pam.tanks))
-				return InteractionResult.SUCCESS;
-			if (handIn == InteractionHand.MAIN_HAND) {
-				if(!worldIn.isClientSide)
-					NetworkHooks.openScreen((ServerPlayer) player, pam, pam.getBlockPos());
-				return InteractionResult.SUCCESS;
-			}
-		}
-		
-		return p;
-	}
+
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(newState.getBlock() instanceof PamBlock)) {
 			if (worldIn.getBlockEntity(pos) instanceof PamBlockEntity dish) {
-				for(int i=0;i<dish.inv.getSlots();i++) {
+				for (int i = 0; i < dish.inv.getSlots(); i++) {
 					super.popResource(worldIn, pos, dish.inv.getStackInSlot(i));
 				}
 			}
 			worldIn.removeBlockEntity(pos);
 		}
+	}
+
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		InteractionResult p = super.useWithoutItem(state, level, pos, player, hitResult);
+		if (p.consumesAction())
+			return p;
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof PamBlockEntity pam) {
+			if (!level.isClientSide)
+				player.openMenu(pam, pam.getBlockPos());
+			return InteractionResult.sidedSuccess(level.isClientSide);
+		}
+		return p;
+	}
+
+	@Override
+	protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		ItemInteractionResult p = super.useItemOn(held, state, level, pos, player, hand, hitResult);
+		if (p.consumesAction())
+			return p;
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof PamBlockEntity pam) {
+			FluidStack out = Utils.extractFluid(held);
+			if (!out.isEmpty()) {
+				if (pam.tankin.fill(out, FluidAction.SIMULATE) == out.getAmount()) {
+					pam.tankin.fill(out, FluidAction.EXECUTE);
+					ItemStack ret = held.getCraftingRemainingItem();
+					held.shrink(1);
+					ItemHandlerHelper.giveItemToPlayer(player, ret);
+					return ItemInteractionResult.sidedSuccess(level.isClientSide);
+				}
+			}
+			if (FluidUtil.interactWithFluidHandler(player, hand, pam.tanks))
+				return ItemInteractionResult.SUCCESS;
+		}
+
+		return p;
 	}
 }

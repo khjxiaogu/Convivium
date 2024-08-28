@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,11 +23,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendingBlockEntity> {
 	public static final BooleanProperty ACTIVE=BooleanProperty.create("active");
@@ -75,56 +75,6 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 			worldIn.removeBlockEntity(pos);
 		}
 	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
-		InteractionResult p = super.use(state, worldIn, pos, player, handIn, hit);
-		if (p.consumesAction())
-			return p;
-		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
-			if(player.getUUID().equals(blockEntity.owner)) {
-				ItemStack held = player.getItemInHand(handIn);
-				FluidStack out=Utils.extractFluid(held);
-				if (!out.isEmpty()) {
-					if(blockEntity.tank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-						blockEntity.tank.fill(out, FluidAction.EXECUTE);
-						ItemStack ret = held.getCraftingRemainingItem();
-						held.shrink(1);
-						ItemHandlerHelper.giveItemToPlayer(player, ret);
-						return InteractionResult.sidedSuccess(worldIn.isClientSide);
-					}
-				}
-				if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.tank))
-					return InteractionResult.SUCCESS;
-				if(handIn == InteractionHand.MAIN_HAND) {
-					if (!worldIn.isClientSide)	
-						NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockEntity.getBlockPos());
-					return InteractionResult.SUCCESS;
-				}
-			}			
-			if(state.getValue(ACTIVE)) {
-				if (FluidUtil.interactWithFluidHandler(player, handIn, blockEntity.handler))
-					return InteractionResult.SUCCESS;
-			}else {
-				ItemStack held = player.getItemInHand(handIn);
-				if(held.is(CVTags.Items.ASSES)&&held.getCount()>=blockEntity.amt&&blockEntity.tank.getFluidAmount()>=250) {
-					if(blockEntity.isInfinite||ItemHandlerHelper.insertItem(blockEntity.storage,ItemHandlerHelper.copyStackWithSize(held, blockEntity.amt), true).isEmpty()) {
-						if(!worldIn.isClientSide) {
-							ItemStack it=held.split(blockEntity.amt);
-							if(!blockEntity.isInfinite)
-								ItemHandlerHelper.insertItem(blockEntity.storage,it, false);
-							if(held.isEmpty())
-								player.setItemInHand(handIn, ItemStack.EMPTY);
-							worldIn.setBlockAndUpdate(pos,state.setValue(ACTIVE, true));
-						}
-					}
-				}
-			}
-			return InteractionResult.SUCCESS;
-		}
-		return p;
-	}
 
 
 	@Override
@@ -145,5 +95,60 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 		}
 		
 		return 0;
+	}
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		InteractionResult p = super.useWithoutItem(state, level, pos, player, hitResult);
+		if (p.consumesAction())
+			return p;
+		if (level.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
+			if(player.getUUID().equals(blockEntity.owner)) {
+					if (!level.isClientSide)	
+						player.openMenu(blockEntity, blockEntity.getBlockPos());
+					return InteractionResult.sidedSuccess(level.isClientSide);
+			}			
+			return InteractionResult.FAIL;
+		}
+		return p;
+	}
+	@Override
+	protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		ItemInteractionResult p = super.useItemOn(held, state, level, pos, player, hand, hitResult);
+		if (p.consumesAction())
+			return p;
+		if (level.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {
+			if(player.getUUID().equals(blockEntity.owner)) {
+				FluidStack out=Utils.extractFluid(held);
+				if (!out.isEmpty()) {
+					if(blockEntity.tank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
+						blockEntity.tank.fill(out, FluidAction.EXECUTE);
+						ItemStack ret = held.getCraftingRemainingItem();
+						held.shrink(1);
+						ItemHandlerHelper.giveItemToPlayer(player, ret);
+						return ItemInteractionResult.sidedSuccess(level.isClientSide);
+					}
+				}
+				if (FluidUtil.interactWithFluidHandler(player, hand, blockEntity.tank))
+					return ItemInteractionResult.SUCCESS;
+			}			
+			if(state.getValue(ACTIVE)) {
+				if (FluidUtil.interactWithFluidHandler(player, hand, blockEntity.handler))
+					return ItemInteractionResult.SUCCESS;
+			}else {
+				if(held.is(CVTags.Items.ASSES)&&held.getCount()>=blockEntity.amt&&blockEntity.tank.getFluidAmount()>=250) {
+					if(blockEntity.isInfinite||ItemHandlerHelper.insertItem(blockEntity.storage,held.copyWithCount(blockEntity.amt), true).isEmpty()) {
+						if(!level.isClientSide) {
+							ItemStack it=held.split(blockEntity.amt);
+							if(!blockEntity.isInfinite)
+								ItemHandlerHelper.insertItem(blockEntity.storage,it, false);
+							if(held.isEmpty())
+								player.setItemInHand(hand, ItemStack.EMPTY);
+							level.setBlockAndUpdate(pos,state.setValue(ACTIVE, true));
+						}
+					}
+				}
+			}
+		}
+		return p;
 	}
 }

@@ -46,7 +46,7 @@ public class CVItems {
 			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),false));
 		}
 	}
-	public static RegistryObject<Item> item(String name,Properties props){
+	public static DeferredHolder<Item,CVMaterialItem> item(String name,Properties props){
 		return ITEMS.register(name,()->new CVMaterialItem(props));
 	}
 	static Properties createProps() {

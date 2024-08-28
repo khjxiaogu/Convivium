@@ -18,22 +18,14 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
-import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
-import net.minecraft.network.FriendlyByteBuf;
-
 public class OnlyMajorRelishCondition extends AbstractRelishCondition {
-
-	public OnlyMajorRelishCondition(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
-	public OnlyMajorRelishCondition(JsonObject json) {
-		super(json);
-	}
+	public static final MapCodec<OnlyMajorRelishCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).apply(t, OnlyMajorRelishCondition::new));
 
 	public OnlyMajorRelishCondition(String relish) {
 		super(relish);
@@ -49,10 +41,5 @@ public class OnlyMajorRelishCondition extends AbstractRelishCondition {
 		return p.getTranslation("recipe.convivium.relish_cond.only_major",RelishRecipe.recipes.get(relish).getText());
 	}
 
-	@Override
-	public String getType() {
-		// TODO Auto-generated method stub
-		return "only_major";
-	}
 
 }

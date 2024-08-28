@@ -18,22 +18,14 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
-import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
-import net.minecraft.network.FriendlyByteBuf;
-
 public class HasRelishCondition extends AbstractRelishCondition {
-
-	public HasRelishCondition(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
-	public HasRelishCondition(JsonObject json) {
-		super(json);
-	}
+	public static final MapCodec<HasRelishCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).apply(t, HasRelishCondition::new));
 
 	public HasRelishCondition(String relish) {
 		super(relish);
@@ -49,10 +41,5 @@ public class HasRelishCondition extends AbstractRelishCondition {
 		return p.getTranslation("recipe.convivium.relish_cond.contains",RelishRecipe.recipes.get(relish).getText());
 	}
 
-	@Override
-	public String getType() {
-		// TODO Auto-generated method stub
-		return "contains";
-	}
 
 }

@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
+import com.khjxiaogu.convivium.util.PotionItemInfo;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.api.events.EventResult;
 import com.teammoeg.caupona.api.events.FoodExchangeItemEvent;
@@ -73,7 +74,7 @@ public class CVCommonEvents {
 		Player playerIn = event.getEntity();
 		if (CVConfig.COMMON.canPlacePotion.get()&&is.is(Items.POTION)&&playerIn.isShiftKeyDown()) {
 			ItemStack replace=new ItemStack(CVItems.POTION.get(),is.getCount());
-			is.save(replace.getOrCreateTagElement("potion"));
+			replace.set(CVComponents.POTION_ITEM,new PotionItemInfo(is));
 			playerIn.setItemInHand(event.getHand(), replace);
 			CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn,event.getHand(), event.getHitVec()));
 			is.setCount(replace.getCount());

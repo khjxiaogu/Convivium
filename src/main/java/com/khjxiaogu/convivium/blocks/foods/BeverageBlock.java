@@ -18,14 +18,19 @@
 
 package com.khjxiaogu.convivium.blocks.foods;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVItems;
+import com.khjxiaogu.convivium.util.PotionItemInfo;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -36,7 +41,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -46,9 +50,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> {
 
@@ -62,7 +64,6 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 	static final VoxelShape shape = Block.box(4, 0, 4, 12, 15, 12);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public float getShadeBrightness(BlockState state, BlockGetter worldIn, BlockPos pos) {
 		return 1.0F;
 	}
@@ -96,19 +97,18 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
-		InteractionResult p = super.use(state, worldIn, pos, player, handIn, hit);
+	public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
+		InteractionResult p = super.useWithoutItem(state, worldIn, pos, player,  hit);
 		if (p.consumesAction())
 			return p;
 		if (worldIn.getBlockEntity(pos) instanceof BeverageBlockEntity dish &&
 				dish.internal != null) {
 			if(dish.internal.getItem() instanceof BeverageItem
-					&& dish.internal.isEdible()) {
+					&& dish.internal.getFoodProperties(null)!=null) {
 				FoodProperties fp = dish.internal.getFoodProperties(player);
-				if(fp.getNutrition()<=0) {
+				if(fp.nutrition()<=0) {
 					player.gameEvent(GameEvent.DRINK);
-					player.getFoodData().eat(dish.internal.getItem(), dish.internal, player);
+					player.getFoodData().eat(fp);
 					player.awardStat(Stats.ITEM_USED.get(dish.internal.getItem()));
 					if(!worldIn.isClientSide) {
 						CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer) player, dish.internal);
@@ -136,9 +136,9 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 			      }
 
 			      if (!worldIn.isClientSide) {
-			         for(MobEffectInstance mobeffectinstance : PotionUtils.getMobEffects(dish.internal)) {
-			            if (mobeffectinstance.getEffect().isInstantenous()) {
-			               mobeffectinstance.getEffect().applyInstantenousEffect(player, player, player, mobeffectinstance.getAmplifier(), 1.0D);
+			         for(MobEffectInstance mobeffectinstance : dish.internal.get(DataComponents.POTION_CONTENTS).getAllEffects()) {
+			            if (mobeffectinstance.getEffect().value().isInstantenous()) {
+			               mobeffectinstance.getEffect().value().applyInstantenousEffect(player, player, player, mobeffectinstance.getAmplifier(), 1.0D);
 			            } else {
 			            	player.addEffect(new MobEffectInstance(mobeffectinstance));
 			            }
@@ -161,9 +161,11 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		if (pLevel.getBlockEntity(pPos) instanceof BeverageBlockEntity dish) {
 			if(pStack.is(CVItems.POTION.get())) {
-				dish.internal = ItemStack.of(pStack.getOrCreateTagElement("potion"));
+				@Nullable PotionItemInfo comp=pStack.get(CVComponents.POTION_ITEM);
+				if(comp!=null)
+				dish.internal = comp.getStack();
 			}else
-				dish.internal = ItemHandlerHelper.copyStackWithSize(pStack, 1);
+				dish.internal = pStack.copyWithCount(1);
 		}
 	}
 
@@ -185,7 +187,7 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
 		if (pLevel.getBlockEntity(pPos) instanceof BeverageBlockEntity dish)
-			if (dish.internal != null && !dish.internal.isEmpty() && dish.internal.isEdible()) 
+			if (dish.internal != null && !dish.internal.isEmpty() && dish.internal.getFoodProperties(null)!=null) 
 				return 15;
 		
 		return 0;

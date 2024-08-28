@@ -26,12 +26,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public abstract class KineticBasedBlock<V extends CPBaseBlockEntity> extends CPHorizontalEntityBlock<V> {
 	public static final BooleanProperty ACTIVE=BooleanProperty.create("active");
 	public static final BooleanProperty LOCKED=BooleanProperty.create("locked");
-	public KineticBasedBlock(RegistryObject<BlockEntityType<V>> blockEntity, Properties p_54120_) {
+	public KineticBasedBlock(DeferredHolder<BlockEntityType<?>,BlockEntityType<V>> blockEntity, Properties p_54120_) {
 		super(blockEntity, p_54120_);
 		super.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
 	}

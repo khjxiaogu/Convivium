@@ -1,8 +1,6 @@
 package com.khjxiaogu.convivium.datagen;
 
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.AndRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.HasFluidCondition;
@@ -12,8 +10,7 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.MajorRelishCondition
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
-import com.teammoeg.caupona.data.IDataRecipe;
-
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -23,9 +20,11 @@ import net.minecraft.world.level.material.Fluid;
 
 public class TypeRecipeBuilder {
 	private BeverageTypeRecipe recipe;
+	ResourceLocation rl;
 	public TypeRecipeBuilder(ResourceLocation rl,Fluid out) {
-		recipe=new BeverageTypeRecipe(rl);
+		recipe=new BeverageTypeRecipe();
 		recipe.output=out;
+		this.rl=rl;
 	}
 	public TypeRecipeBuilder mustContains(Ingredient igd) {
 		recipe.must.add(igd);
@@ -109,10 +108,10 @@ public class TypeRecipeBuilder {
 		recipe.removeNBT=true;
 		return this;
 	}
-	public void end(Consumer<IDataRecipe> out) {
+	public void end(RecipeOutput out) {
 		if(temp!=null) {
 			recipe.relish.add(temp);
 		}
-		out.accept(recipe);
+		out.accept(rl,recipe,null);
 	}
 }

@@ -31,8 +31,8 @@ public class CVConfig {
 	public static void register() {
 		// ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT,
 		// Config.CLIENT_CONFIG);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CVConfig.COMMON_CONFIG);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CVConfig.SERVER_CONFIG);
+		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, CVConfig.COMMON_CONFIG);
+		ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, CVConfig.SERVER_CONFIG);
 	}
 
 	public static class Client {
@@ -49,18 +49,20 @@ public class CVConfig {
 		 * @param builder
 		 */
 		public BooleanValue canPlacePotion;
+
 		Common(ModConfigSpec.Builder builder) {
-			canPlacePotion=builder.comment("Set vanilla potion placable as beverage block").define("canPlacePotion", true);
+			canPlacePotion = builder.comment("Set vanilla potion placable as beverage block").define("canPlacePotion", true);
 		}
 	}
 
 	public static class Server {
 		public IntValue kineticRange;
 		public IntValue kineticValidation;
+
 		Server(ModConfigSpec.Builder builder) {
 			builder.push("kinetics");
-			kineticRange=builder.comment("Kinetic Transfer radius for aeolipile").defineInRange("kineticTransferRange",4, 1, Integer.MAX_VALUE);
-			kineticValidation=builder.comment("Kinetic validation ticks").defineInRange("kineticValidationTicks",20, 1, Integer.MAX_VALUE);
+			kineticRange = builder.comment("Kinetic Transfer radius for aeolipile").defineInRange("kineticTransferRange", 4, 1, Integer.MAX_VALUE);
+			kineticValidation = builder.comment("Kinetic validation ticks").defineInRange("kineticValidationTicks", 20, 1, Integer.MAX_VALUE);
 			builder.pop();
 		}
 	}

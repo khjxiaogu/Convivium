@@ -18,20 +18,21 @@
 
 package com.khjxiaogu.convivium.compat.jei.category;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
-import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.compat.jei.category.BaseCallback;
+import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 import com.teammoeg.caupona.util.Utils;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
+import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -45,10 +46,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
-	public static RecipeType<GrindingRecipe> TYPE=RecipeType.create(CVMain.MODID, "grinding",GrindingRecipe.class);
+public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRecipe>> {
+	@SuppressWarnings("rawtypes")
+	public static RecipeType<RecipeHolder> TYPE=RecipeType.create(CVMain.MODID, "grinding",RecipeHolder.class);
 	private IDrawable BACKGROUND;
 	private IDrawable ICON;
 
@@ -65,9 +67,9 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 
 	@SuppressWarnings("resource")
 	@Override
-	public void draw(GrindingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX,
+	public void draw(RecipeHolder<GrindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX,
 			double mouseY) {
-		String burnTime = String.valueOf(recipe.processTime / 20f) + "s";
+		String burnTime = String.valueOf(recipe.value().processTime / 20f) + "s";
 		stack.drawString(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
 	}
 
@@ -81,17 +83,15 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 		return ICON;
 	}
 
-	private static List<ItemStack> unpack(Pair<Ingredient, Integer> ps) {
-		List<ItemStack> sl = new ArrayList<>();
-		for (ItemStack is : ps.getFirst().getItems())
-			sl.add(is.copyWithCount(ps.getSecond() > 0 ? ps.getSecond() : 1));
-		return sl;
+	private static List<ItemStack> unpack(SizedOrCatalystIngredient sizedOrCatalystIngredient) {
+
+		return Arrays.asList(sizedOrCatalystIngredient.getItems());
 	}
-	private static RecipeIngredientRole type(Pair<Ingredient, Integer> ps) {
-		return ps.getSecond() == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
+	private static RecipeIngredientRole type(SizedOrCatalystIngredient sizedOrCatalystIngredient) {
+		return sizedOrCatalystIngredient.count() == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
 	}
 
-	private static class CatalistCallback implements IRecipeSlotTooltipCallback {
+	private static class CatalistCallback implements IRecipeSlotRichTooltipCallback {
 		int cnt;
 
 		public CatalistCallback(int cnt) {
@@ -100,31 +100,32 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 		}
 
 		@Override
-		public void onTooltip(IRecipeSlotView recipeSlotView, List<Component> tooltip) {
+		public void onRichTooltip(IRecipeSlotView recipeSlotView, ITooltipBuilder tooltip) {
 			if (cnt == 0)
 				tooltip.add(Utils.translate("gui.jei.category.caupona.catalyst"));
 		}
 
 	};
 
-	private static CatalistCallback cb(Pair<Ingredient, Integer> ps) {
-		return new CatalistCallback(ps.getSecond());
+	private static CatalistCallback cb(SizedOrCatalystIngredient sizedOrCatalystIngredient) {
+		return new CatalistCallback(sizedOrCatalystIngredient.count());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, GrindingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<GrindingRecipe> recipeh, IFocusGroup focuses) {
+		GrindingRecipe recipe=recipeh.value();
 		if (recipe.items.size() > 0) {
 			builder.addSlot(type(recipe.items.get(0)), 7, 6)
 					.addIngredients(VanillaTypes.ITEM_STACK, unpack(recipe.items.get(0)))
-					.addTooltipCallback(cb(recipe.items.get(0)));
+					.addRichTooltipCallback(cb(recipe.items.get(0)));
 			if (recipe.items.size() > 1) {
 				builder.addSlot(type(recipe.items.get(1)), 7, 24)
 						.addIngredients(VanillaTypes.ITEM_STACK, unpack(recipe.items.get(1)))
-						.addTooltipCallback(cb(recipe.items.get(1)));
+						.addRichTooltipCallback(cb(recipe.items.get(1)));
 				if (recipe.items.size() > 2) {
 					builder.addSlot(type(recipe.items.get(2)), 7, 42)
 							.addIngredients(VanillaTypes.ITEM_STACK, unpack(recipe.items.get(2)))
-							.addTooltipCallback(cb(recipe.items.get(2)));
+							.addRichTooltipCallback(cb(recipe.items.get(2)));
 				}
 			}
 		}
@@ -144,9 +145,10 @@ public class GrindingCategory implements IRecipeCategory<GrindingRecipe> {
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public RecipeType<GrindingRecipe> getRecipeType() {
-		return TYPE;
+	public RecipeType<RecipeHolder<GrindingRecipe>> getRecipeType() {
+		return (RecipeType)TYPE;
 	}
 
 }

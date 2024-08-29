@@ -22,8 +22,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.khjxiaogu.convivium.client.CVParticles;
-import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
-import com.khjxiaogu.convivium.network.PacketHandler;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.TabType;
 import com.teammoeg.caupona.util.Utils;
@@ -44,17 +42,19 @@ public class CVMain {
 	public static final String MODID = "convivium";
 	public static final String MODNAME = "Convivium";
 	public static final Logger logger = LogManager.getLogger(MODNAME);
-	public static final String BOOK_NBT_TAG=CVMain.MODID+":book_given";
-	public static DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
-	public static DeferredHolder<CreativeModeTab, CreativeModeTab> main=TABS.register("aaa_caupona_9v8_main",()->CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey()).withTabsAfter(CPMain.foods.getKey()).icon(()->new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
-	public static final TabType MAIN_TAB=new TabType(v->main.getKey().equals(v));
+	public static final String BOOK_NBT_TAG = CVMain.MODID + ":book_given";
+	public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
+	public static DeferredHolder<CreativeModeTab, CreativeModeTab> main = TABS.register("aaa_caupona_9v8_main", () -> CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey())
+		.withTabsAfter(CPMain.foods.getKey()).icon(() -> new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
+	public static final TabType MAIN_TAB = new TabType(v -> main.getKey().equals(v));
+
 	public static ResourceLocation rl(String path) {
 		return ResourceLocation.fromNamespaceAndPath(MODID, path);
 	}
 
 	public CVMain(IEventBus mod) {
 		NeoForgeMod.enableMilkFluid();
-		//mod.addListener(this::enqueueIMC);
+		// mod.addListener(this::enqueueIMC);
 		CVBlockEntityTypes.REGISTER.register(mod);
 		CVGui.CONTAINERS.register(mod);
 		CVParticles.REGISTER.register(mod);
@@ -67,12 +67,13 @@ public class CVMain {
 		CVRecipes.RECIPE_TYPES.register(mod);
 		CVMobEffects.EFFECTS.register(mod);
 		CVConfig.register();
-		PacketHandler.register();
+		CVComponents.REGISTRY.register(mod);
 
 	}
 
-	/*@SuppressWarnings("unused")
-	public void enqueueIMC(InterModEnqueueEvent event) {
-	   // InterModComms.sendTo("treechop", "getTreeChopAPI", () -> (Consumer)TreechopCompat::new);
-	}*/
+	/*
+	 * @SuppressWarnings("unused") public void enqueueIMC(InterModEnqueueEvent
+	 * event) { // InterModComms.sendTo("treechop", "getTreeChopAPI", () ->
+	 * (Consumer)TreechopCompat::new); }
+	 */
 }

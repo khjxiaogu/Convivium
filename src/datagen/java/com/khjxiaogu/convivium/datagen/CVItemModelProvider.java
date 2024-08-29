@@ -26,9 +26,9 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class CVItemModelProvider extends ItemModelProvider {
 
@@ -38,30 +38,32 @@ public class CVItemModelProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		for(String mt:CVItems.base_material) {
+		for (String mt : CVItems.base_material) {
 			texture(mt);
 		}
-		for(String mt:CVItems.base_drinks) {
-			simpleTexture(mt,"beverages/");
+		for (String mt : CVItems.base_drinks) {
+			simpleTexture(mt, "beverages/");
 		}
-		for(String mt:CVFluids.intern.keySet()) {
-			simpleTexture(mt,"beverages/");
+		for (String mt : CVFluids.intern.keySet()) {
+			simpleTexture(mt, "beverages/");
 		}
-		potTexture("beverage","alcohol_bottle","beverages/");
+		potTexture("beverage", "alcohol_bottle", "beverages/");
 		texture("jug");
 	}
 
 	public void itemModel(Item item, String name) {
-		super.withExistingParent(Utils.getRegistryName(item).getPath(), new ResourceLocation(CVMain.MODID, "block/" + name));
+		super.withExistingParent(Utils.getRegistryName(item).getPath(), ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/" + name));
 	}
-	public ItemModelBuilder potTexture(String n,String name, String par) {
-		return withExistingParent(n, new ResourceLocation("minecraft", "item/generated"))
-                .texture("layer0",new ResourceLocation(CVMain.MODID, "item/" + par + name))
-                .texture("layer1",new ResourceLocation(CVMain.MODID, "item/" + par + name+"_overlay"));
+
+	public ItemModelBuilder potTexture(String n, String name, String par) {
+		return withExistingParent(n, ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"))
+			.texture("layer0", ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par + name))
+			.texture("layer1", ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par + name + "_overlay"));
 	}
+
 	public ItemModelBuilder simpleTexture(String name, String par) {
-		return super.singleTexture(name, new ResourceLocation("minecraft", "item/generated"), "layer0",
-				new ResourceLocation(CVMain.MODID, "item/" + par + name));
+		return super.singleTexture(name, ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"), "layer0",
+			ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par + name));
 	}
 
 	public ItemModelBuilder texture(String name) {
@@ -69,7 +71,7 @@ public class CVItemModelProvider extends ItemModelProvider {
 	}
 
 	public ItemModelBuilder texture(String name, String par) {
-		return super.singleTexture(name, new ResourceLocation("minecraft", "item/generated"), "layer0",
-				new ResourceLocation(CVMain.MODID, "item/" + par));
+		return super.singleTexture(name, ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"), "layer0",
+			ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par));
 	}
 }

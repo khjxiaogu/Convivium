@@ -28,33 +28,36 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
 public class CVTags {
-	public static class Blocks{
-		public static TagKey<Block> AQUEDUCT=create("aqueduct");
-		public static TagKey<Block> AQUEDUCT_MOVE=create("aqueduct_movable");
-		private static TagKey<Block> create(String s){
-			return  BlockTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
+	public static class Blocks {
+		public static TagKey<Block> AQUEDUCT = create("aqueduct");
+		public static TagKey<Block> AQUEDUCT_MOVE = create("aqueduct_movable");
+
+		private static TagKey<Block> create(String s) {
+			return BlockTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
 		}
-		
+
 	}
-	public static class Items{
-		public static TagKey<Item> BEVERAGE_MATERIAL=create("beverage_material");
-		public static TagKey<Item> SPICE=create("spice");
-		public static TagKey<Item> FRUIT=create("fruits");
-		public static TagKey<Item> NUTS=create("nuts");
-		public static TagKey<Item> SWEET=create("sweeteners");
-		public static TagKey<Item> ASSES=create("asses");
-		private static TagKey<Item> create(String s){
+
+	public static class Items {
+		public static TagKey<Item> BEVERAGE_MATERIAL = create("beverage_material");
+		public static TagKey<Item> SPICE = create("spice");
+		public static TagKey<Item> FRUIT = create("fruits");
+		public static TagKey<Item> NUTS = create("nuts");
+		public static TagKey<Item> SWEET = create("sweeteners");
+		public static TagKey<Item> ASSES = create("asses");
+
+		private static TagKey<Item> create(String s) {
 			return ItemTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 	}
-	
-	public static class Fluids{
-		public static TagKey<Fluid> MENDABLE=create("mending_machine_fluid");
-		private static TagKey<Fluid> create(String s){
+
+	public static class Fluids {
+		public static TagKey<Fluid> MENDABLE = create("mending_machine_fluid");
+
+		private static TagKey<Fluid> create(String s) {
 			return FluidTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 
-		
 	}
-	
+
 }

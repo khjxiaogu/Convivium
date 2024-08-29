@@ -120,7 +120,7 @@ runs {
         // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
         modSource project.sourceSets.main
         modSource project.sourceSets.datagen
-        programArguments.addAll '--mod', project.mod_id,
+        arguments.addAll '--mod', project.mod_id,
          '--all',
          '--output', file('src/generated/resources/').getAbsolutePath(),
          '--existing', file('src/main/resources/').getAbsolutePath()

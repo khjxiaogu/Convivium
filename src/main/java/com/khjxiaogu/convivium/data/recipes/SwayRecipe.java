@@ -19,14 +19,10 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
@@ -34,25 +30,23 @@ import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
 import com.khjxiaogu.convivium.util.evaluator.VariantEnvironment;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.data.SerializeUtil;
-import com.teammoeg.caupona.data.Writeable;
-
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class SwayRecipe  extends IDataRecipe{
 
 
-	public SwayRecipe(ResourceLocation id, List<RelishCondition> relish, int priority, Map<String, INumber> locals,
+	public SwayRecipe(List<RelishCondition> relish, int priority, Map<String, INumber> locals,
 			List<SwayEffect> effects, ResourceLocation icon) {
-		super(id);
 		this.relish = relish;
 		this.priority = priority;
 		this.locals = locals;
@@ -65,9 +59,25 @@ public class SwayRecipe  extends IDataRecipe{
 	public Map<String,INumber> locals;
 	public List<SwayEffect> effects;
 	public ResourceLocation icon;
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public static List<SwayRecipe> recipes;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static List<RecipeHolder<SwayRecipe>> recipes;
+	public static MapCodec<SwayRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		Codec.list(RelishConditions.CODEC).optionalFieldOf("relish",List.of()).forGetter(o->o.relish),
+		Codec.INT.fieldOf("priority").forGetter(o->o.priority),
+		Codec.compoundList(Codec.STRING, INumber.CODEC).optionalFieldOf("locals",List.of()).forGetter(o->o.locals.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList())),
+		Codec.list(SwayEffect.CODEC).fieldOf("effects").forGetter(o->o.effects),
+		ResourceLocation.CODEC.fieldOf("icon").forGetter(o->o.icon)
+		).apply(t, SwayRecipe::new));
+	
+	public SwayRecipe(List<RelishCondition> relish, int priority, List<Pair<String, INumber>> locals, List<SwayEffect> effects, ResourceLocation icon) {
+		super();
+		this.relish = relish;
+		this.priority = priority;
+		locals.stream().forEach(p->this.locals.put(p.getFirst(),p.getSecond()));
+		this.effects = effects;
+		this.icon = icon;
+	}
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		// TODO Auto-generated method stub
@@ -78,19 +88,8 @@ public class SwayRecipe  extends IDataRecipe{
 		// TODO Auto-generated method stub
 		return TYPE.get();
 	}
-	public SwayRecipe(ResourceLocation id,JsonObject jo) {
-		super(id);
-		relish=SerializeUtil.parseJsonList(jo.get("relish"), RelishConditions::of);
-		priority=GsonHelper.getAsInt(jo, "priority",0);
-		locals=new LinkedHashMap<>();
-		for(Entry<String, JsonElement> s:jo.get("locals").getAsJsonObject().entrySet()) {
-			INumber expr=Expression.of(s.getValue());
-			locals.put(s.getKey(), expr);
-		}
-		effects=SerializeUtil.parseJsonList(jo.get("effects"),SwayEffect::new);
-		icon=new ResourceLocation(jo.get("icon").getAsString());
-		
-	}
+
+	/*
 	public SwayRecipe(ResourceLocation id,FriendlyByteBuf jo) {
 		super(id);
 		relish=SerializeUtil.readList(jo, RelishConditions::of);
@@ -100,28 +99,15 @@ public class SwayRecipe  extends IDataRecipe{
 		effects=SerializeUtil.readList(jo,SwayEffect::new);
 		icon=jo.readResourceLocation();
 		
-	}
-	@Override
-	public void serializeRecipeData(JsonObject json) {
-		// TODO Auto-generated method stub
-		json.add("relish", SerializeUtil.toJsonList(relish, RelishCondition::serialize));
-		json.addProperty("priority", priority);
-		JsonObject jo=new JsonObject();
-		for(Entry<String, INumber> p:locals.entrySet()) {
-			jo.add(p.getKey(), p.getValue().serialize());
-		}
-		json.add("locals",jo);
-		json.add("effects", SerializeUtil.toJsonList(effects, Writeable::serialize));
-		json.addProperty("icon", icon.toString());
-	}
-	
+	}*/
+/*
 	public void write(FriendlyByteBuf pb) {
 		SerializeUtil.writeList(pb, relish, RelishConditions::write);
 		pb.writeVarInt(priority);
 		SerializeUtil.writeList(pb, locals.entrySet(),(t,b)->{b.writeUtf(t.getKey());t.getValue().write(b);});
 		SerializeUtil.writeList(pb,effects,Writeable::write);
 		pb.writeResourceLocation(icon);
-	}
+	}*/
 	public IEnvironment createChildEnv(IEnvironment par) {
 		return new VariantEnvironment(par,locals);
 	}

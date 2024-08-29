@@ -19,48 +19,53 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.google.gson.JsonObject;
-import com.khjxiaogu.convivium.util.SUtils;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.util.Utils;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class RelishFluidRecipe extends IDataRecipe {
 	public Fluid fluid;
 	public String relish;
 	public Map<String,Float> variantData=new HashMap<>();
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public static Map<Fluid,RelishFluidRecipe> recipes;
-
-	public RelishFluidRecipe(ResourceLocation id, Fluid fluid, String relish) {
-		super(id);
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static Map<Fluid, RecipeHolder<RelishFluidRecipe>> recipes;
+	public static final MapCodec<RelishFluidRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+			BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(o->o.fluid),
+			Codec.STRING.fieldOf("relish").forGetter(o->o.relish),
+			Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList())))
+		).apply(t, RelishFluidRecipe::new));
+	public RelishFluidRecipe(Fluid fluid, String relish) {
 		this.fluid = fluid;
 		this.relish = relish;
 	}
-	public RelishFluidRecipe(ResourceLocation id,FriendlyByteBuf pb) {
+	public RelishFluidRecipe(Fluid fluid, String relish,Optional<List<Pair<String, Float>>> variantData) {
+		super();
+		this.fluid = fluid;
+		this.relish = relish;
+		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
+	}
+/*	public RelishFluidRecipe(ResourceLocation id,FriendlyByteBuf pb) {
 		super(id);
 		fluid=pb.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
 		relish=pb.readUtf();
 		variantData=SUtils.fromPacket(pb);
 	}
-	public RelishFluidRecipe(ResourceLocation id,JsonObject jo) {
-		super(id);
-		fluid=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(jo, "fluid")));
-		relish=GsonHelper.getAsString(jo, "relish");
-		variantData=SUtils.fromJson(jo,"variants");
-	}
+*/
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER.get();
@@ -70,15 +75,10 @@ public class RelishFluidRecipe extends IDataRecipe {
 		return TYPE.get();
 	}
 
-	@Override
-	public void serializeRecipeData(JsonObject json) {
-		json.addProperty("fluid",Utils.getRegistryName(fluid).toString());
-		json.addProperty("relish",relish);
-		json.add("variants",SUtils.toJson(variantData));
-	}
+/*
 	public void write(FriendlyByteBuf pb) {
 		pb.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS, fluid);
 		pb.writeUtf(relish);
 		SUtils.toPacket(pb, variantData);
-	}
+	}*/
 }

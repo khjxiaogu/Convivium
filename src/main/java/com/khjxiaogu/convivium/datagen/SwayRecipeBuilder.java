@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.khjxiaogu.convivium.data.recipes.SwayEffect;
@@ -35,19 +34,19 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.HasRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.MajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
-import com.teammoeg.caupona.data.IDataRecipe;
-
+import net.minecraft.core.Holder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 
 public class SwayRecipeBuilder {
 	public static class SwayEffectBuilder<T>{
-		MobEffect effect;
+		Holder<MobEffect> effect;
 		INumber amplifier;
 		INumber duration;
 		Function<SwayEffect,T> fin;
 		List<CompareCondition> compare=new ArrayList<>();
-		public SwayEffectBuilder(Function<SwayEffect,T> p,MobEffect effect) {
+		public SwayEffectBuilder(Function<SwayEffect,T> p,Holder<MobEffect> effect) {
 			super();
 			this.fin=p;
 			this.effect = effect;
@@ -110,13 +109,13 @@ public class SwayRecipeBuilder {
 		this.priority=p;
 		return this;
 	}
-	public SwayEffectBuilder<SwayRecipeBuilder> effect(MobEffect me){
+	public SwayEffectBuilder<SwayRecipeBuilder> effect(Holder<MobEffect> me){
 		return new SwayEffectBuilder<>(k->{
 			effects.add(k);
 			return this;
 		},me);
 	}
-	public void end(Consumer<IDataRecipe> out) {
-		out.accept(new SwayRecipe(id,relish, priority, locals, effects, icon));
+	public void end(RecipeOutput out) {
+		out.accept(id,new SwayRecipe(relish, priority, locals, effects, icon),null);
 	}
 }

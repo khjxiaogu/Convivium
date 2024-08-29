@@ -35,12 +35,14 @@ import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 @EventBusSubscriber
 public class RecipeReloadListener implements ResourceManagerReloadListener {
 	ReloadableServerResources data;
@@ -70,21 +72,21 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 
 	public static void buildRecipeLists(RecipeManager recipeManager) {
 		
-		Collection<Recipe<?>> recipes = recipeManager.getRecipes();
+		Collection<RecipeHolder<?>> recipes = recipeManager.getRecipes();
 		if (recipes.size() == 0)
 			return;
 	
 		logger.info("Building recipes...");
 		Stopwatch sw = Stopwatch.createStarted();
 		BeverageTypeRecipe.sorted = filterRecipes(recipes, BeverageTypeRecipe.class, BeverageTypeRecipe.TYPE).collect(Collectors.toList());
-		BeverageTypeRecipe.sorted.sort((t2, t1) -> t1.getPriority() - t2.getPriority());
+		BeverageTypeRecipe.sorted.sort((t2, t1) -> t1.value().getPriority() - t2.value().getPriority());
 		ContainingRecipe.recipes=new HashMap<>();
-		ContainingRecipe.recipes=filterRecipes(recipes,ContainingRecipe.class,ContainingRecipe.TYPE).collect(Collectors.toMap(t->t.fluid, t->t));
+		ContainingRecipe.recipes=filterRecipes(recipes,ContainingRecipe.class,ContainingRecipe.TYPE).collect(Collectors.toMap(t->t.value().fluid, t->t));
 
 		ConvertionRecipe.recipes=filterRecipes(recipes,ConvertionRecipe.class,ConvertionRecipe.TYPE).collect(Collectors.toList());
 		GrindingRecipe.recipes=filterRecipes(recipes,GrindingRecipe.class,GrindingRecipe.TYPE).collect(Collectors.toList());
-		RelishFluidRecipe.recipes=filterRecipes(recipes,RelishFluidRecipe.class,RelishFluidRecipe.TYPE).collect(Collectors.toMap(t->t.fluid, t->t));
-		RelishRecipe.recipes=filterRecipes(recipes,RelishRecipe.class,RelishRecipe.TYPE).collect(Collectors.toMap(t->t.relishName, t->t));
+		RelishFluidRecipe.recipes=filterRecipes(recipes,RelishFluidRecipe.class,RelishFluidRecipe.TYPE).collect(Collectors.toMap(t->t.value().fluid, t->t));
+		RelishRecipe.recipes=filterRecipes(recipes,RelishRecipe.class,RelishRecipe.TYPE).collect(Collectors.toMap(t->t.value().relishName, t->t));
 		SwayRecipe.recipes=filterRecipes(recipes,SwayRecipe.class,SwayRecipe.TYPE).collect(Collectors.toList());
 		TasteRecipe.recipes=filterRecipes(recipes,TasteRecipe.class,TasteRecipe.TYPE).collect(Collectors.toList());
 		RelishItemRecipe.recipes=filterRecipes(recipes,RelishItemRecipe.class,RelishItemRecipe.TYPE).collect(Collectors.toList());
@@ -93,8 +95,10 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 		logger.info("Recipes built, cost {}", sw);
 	}
 
-	static <R extends Recipe<?>> Stream<R> filterRecipes(Collection<Recipe<?>> recipes, Class<R> recipeClass,
-			RegistryObject<RecipeType<Recipe<?>>> recipeType) {
-		return recipes.stream().filter(iRecipe -> iRecipe.getType() == recipeType.get()).map(recipeClass::cast);
+
+	@SuppressWarnings("unchecked")
+	static <R extends Recipe<?>> Stream<RecipeHolder<R>> filterRecipes(Collection<RecipeHolder<?>> recipes, Class<R> class1,
+			DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> recipeType) {
+		return recipes.stream().filter(iRecipe -> iRecipe.value().getType() == recipeType.get()).map(t->(RecipeHolder<R>)t);
 	}
 }

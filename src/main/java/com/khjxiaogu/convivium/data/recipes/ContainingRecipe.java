@@ -20,30 +20,33 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.Map;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.teammoeg.caupona.CPCapability;
+import com.teammoeg.caupona.components.ItemHoldedFluidData;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.data.InvalidRecipeException;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ContainingRecipe extends IDataRecipe {
-	public static Map<Fluid,ContainingRecipe> recipes;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
- 
+	public static Map<Fluid, RecipeHolder<ContainingRecipe>> recipes;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static final MapCodec<ContainingRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(o->o.output),
+		BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(o->o.fluid)
+		).apply(t, ContainingRecipe::new));
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER.get();
@@ -56,37 +59,25 @@ public class ContainingRecipe extends IDataRecipe {
 
 	public Item output;
 	public Fluid fluid;
-
-	public ContainingRecipe(ResourceLocation id, JsonObject jo) {
-		super(id);
-		output = ForgeRegistries.ITEMS.getValue(new ResourceLocation(jo.get("item").getAsString()));
-		fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(jo.get("fluid").getAsString()));
-		if (output == null || output == Items.AIR || fluid == null || fluid == Fluids.EMPTY)
-			throw new InvalidRecipeException();
-	}
+/*
 
 	public ContainingRecipe(ResourceLocation id, FriendlyByteBuf pb) {
 		super(id);
 		output = pb.readRegistryIdUnsafe(ForgeRegistries.ITEMS);
 		fluid = pb.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
-	}
+	}*/
 
 
-	public ContainingRecipe(ResourceLocation id, Item output, Fluid fluid) {
-		super(id);
+	public ContainingRecipe(Item output, Fluid fluid) {
 		this.output = output;
 		this.fluid = fluid;
 	}
-
+/*
 	public void write(FriendlyByteBuf pack) {
 		pack.writeRegistryIdUnsafe(ForgeRegistries.ITEMS, output);
 		pack.writeRegistryIdUnsafe(ForgeRegistries.FLUIDS, fluid);
 	}
-
-	public void serializeRecipeData(JsonObject jo) {
-		jo.addProperty("item", Utils.getRegistryName(output).toString());
-		jo.addProperty("fluid", Utils.getRegistryName(fluid).toString());
-	}
+*/
 
 	public ItemStack handle(Fluid f) {
 		ItemStack is = new ItemStack(output);
@@ -100,12 +91,13 @@ public class ContainingRecipe extends IDataRecipe {
 
 	public ItemStack handle(FluidStack stack) {
 		ItemStack is = new ItemStack(output);
-		Utils.writeItemFluid(is, stack);
+		is.applyComponents(stack.getComponentsPatch());
+		is.set(CPCapability.ITEM_FLUID,new ItemHoldedFluidData(stack.getFluid()));
 		return is;
 	}
 	public static Fluid reverseFluidType(Item item) {
 		//if(recipes==null)
 		//	return Fluids.EMPTY;
-		return recipes.values().stream().filter(t->t.output==item).map(t->t.fluid).findFirst().orElse(Fluids.EMPTY);
+		return recipes.values().stream().map(t->t.value()).filter(t->t.output==item).map(t->t.fluid).findFirst().orElse(Fluids.EMPTY);
 	}
 }

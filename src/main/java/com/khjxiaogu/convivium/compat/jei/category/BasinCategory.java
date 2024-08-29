@@ -19,8 +19,6 @@
 package com.khjxiaogu.convivium.compat.jei.category;
 
 import java.util.Arrays;
-import java.util.List;
-
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
@@ -29,8 +27,9 @@ import com.teammoeg.caupona.util.Utils;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
+import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -44,10 +43,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class BasinCategory implements IRecipeCategory<BasinRecipe> {
-	public static RecipeType<BasinRecipe> TYPE=RecipeType.create(CVMain.MODID, "basin",BasinRecipe.class);
+public class BasinCategory implements IRecipeCategory<RecipeHolder<BasinRecipe>> {
+	@SuppressWarnings("rawtypes")
+	public static RecipeType<RecipeHolder> TYPE=RecipeType.create(CVMain.MODID, "basin",RecipeHolder.class);
 	private IDrawable BACKGROUND;
 	private IDrawable ICON;
 
@@ -64,9 +64,9 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 
 	@SuppressWarnings("resource")
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX,
+	public void draw(RecipeHolder<BasinRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX,
 			double mouseY) {
-		String burnTime = String.valueOf(recipe.processTime / 20f) + "s";
+		String burnTime = String.valueOf(recipe.value().processTime / 20f) + "s";
 		stack.drawString(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
 	}
 
@@ -81,10 +81,10 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 	}
 
 	private static RecipeIngredientRole type(BasinRecipe ps) {
-		return ps.inputCount == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
+		return ps.in.amount() == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
 	}
 
-	private static class CatalistCallback implements IRecipeSlotTooltipCallback {
+	private static class CatalistCallback implements IRecipeSlotRichTooltipCallback {
 		int cnt;
 
 		public CatalistCallback(int cnt) {
@@ -93,7 +93,7 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 		}
 
 		@Override
-		public void onTooltip(IRecipeSlotView recipeSlotView, List<Component> tooltip) {
+		public void onRichTooltip(IRecipeSlotView recipeSlotView, ITooltipBuilder tooltip) {
 			if (cnt == 0)
 				tooltip.add(Utils.translate("gui.jei.category.caupona.catalyst"));
 		}
@@ -101,18 +101,19 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 	};
 
 	private static CatalistCallback cb(BasinRecipe ps) {
-		return new CatalistCallback(ps.inputCount);
+		return new CatalistCallback(ps.in.amount());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, BasinRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BasinRecipe> recipeh, IFocusGroup focuses) {
+		BasinRecipe recipe=recipeh.value();
 		if (recipe.item != null) {
 			builder.addSlot(type(recipe), 49, 43)
 			.addIngredients(VanillaTypes.ITEM_STACK,Arrays.asList( recipe.item.getItems()))
-			.addTooltipCallback(cb(recipe));
+			.addRichTooltipCallback(cb(recipe));
 		}
 		builder.addSlot(RecipeIngredientRole.INPUT, 23, 14)
-		.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.in.copy())
+		.addIngredients(NeoForgeTypes.FLUID_STACK,Arrays.asList(recipe.in.getFluids()))
 		.setFluidRenderer(1000, false, 16, 37)
 		.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density));
 		if(recipe.requireBasin) {
@@ -128,9 +129,10 @@ public class BasinCategory implements IRecipeCategory<BasinRecipe> {
 	}
 
 
-	@Override
-	public RecipeType<BasinRecipe> getRecipeType() {
-		return TYPE;
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public RecipeType<RecipeHolder<BasinRecipe>> getRecipeType() {
+		return (RecipeType)TYPE;
 	}
+
 
 }

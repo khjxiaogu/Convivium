@@ -35,7 +35,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class CVBookGenerator extends JsonGenerator {
 	private Map<String, JsonObject> langs = new HashMap<>();
@@ -64,18 +64,16 @@ public class CVBookGenerator extends JsonGenerator {
 
 	}
 
-
-
 	public CVBookGenerator(PackOutput output, ExistingFileHelper helper) {
-		super(PackType.SERVER_DATA,output, helper,"Convivium Patchouli");
+		super(PackType.SERVER_DATA, output, helper, "Convivium Patchouli");
 	}
 
 	String[] allangs = { "zh_cn", "en_us" };
 
 	private void loadLang(String locale) {
 		try {
-			Resource rc = helper.getResource(new ResourceLocation(CVMain.MODID, "lang/" + locale + ".json"),
-					PackType.CLIENT_RESOURCES);
+			Resource rc = helper.getResource(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "lang/" + locale + ".json"),
+				PackType.CLIENT_RESOURCES);
 			JsonObject jo = JsonParser.parseReader(new InputStreamReader(rc.open(), "UTF-8")).getAsJsonObject();
 			langs.put(locale, jo);
 
@@ -84,12 +82,12 @@ public class CVBookGenerator extends JsonGenerator {
 			e.printStackTrace();
 		}
 	}
+
 	@Override
 	protected void gather(JsonStorage reciver) {
 
 		for (String lang : allangs)
 			loadLang(lang);
-
 
 	}
 }

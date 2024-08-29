@@ -51,7 +51,7 @@ public class RelishCompareCondition extends AbstractRelishCondition {
 
 	@Override
 	public String getTranslation(TranslationProvider p) {
-		return p.getTranslation("recipe.convivium.relish_cond.number",RelishRecipe.recipes.get(relish).getText());
+		return p.getTranslation("recipe.convivium.relish_cond.number",RelishRecipe.recipes.get(relish).value().getText());
 	}
 
 }

@@ -29,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -57,11 +58,11 @@ public class ClientEvents {
 	public static void addTooltip(ItemTooltipEvent ev)
 	{
 		if(ev.getEntity()!=null)
-		for(TasteRecipe ti:TasteRecipe.recipes) {
-			if(ti.item.test(ev.getItemStack())) {
+		for(RecipeHolder<TasteRecipe> ti:TasteRecipe.recipes) {
+			if(ti.value().item.test(ev.getItemStack())) {
 				for(int i=0;i<Constants.TASTES.length;i++) {
 					String sway=Constants.TASTES[i];
-					float sn=ti.variantData.getOrDefault(sway, 0f);
+					float sn=ti.value().variantData.getOrDefault(sway, 0f);
 					if(sn==0)continue;
 					String key="taste.convivium."+sway;
 					if(sn<0)

@@ -31,7 +31,6 @@ import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.teammoeg.caupona.data.CPRecipeSerializer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -40,35 +39,36 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVRecipes {
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
-			.create(BuiltInRegistries.RECIPE_SERIALIZER, CVMain.MODID);
+		.create(BuiltInRegistries.RECIPE_SERIALIZER, CVMain.MODID);
 	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister
-			.create(BuiltInRegistries.RECIPE_TYPE, CVMain.MODID);
+		.create(BuiltInRegistries.RECIPE_TYPE, CVMain.MODID);
 	static {
-		TasteRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("taste",()->new CPRecipeSerializer<>(TasteRecipe::new,TasteRecipe::new,TasteRecipe::write));
-		GrindingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("grinding",()->new CPRecipeSerializer<>(GrindingRecipe::new,GrindingRecipe::new,GrindingRecipe::write));
-		ContainingRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("containing",()->new CPRecipeSerializer<>(ContainingRecipe::new,ContainingRecipe::new,ContainingRecipe::write));
-		ConvertionRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("convertion",()->new CPRecipeSerializer<>(ConvertionRecipe::new,ConvertionRecipe::new,ConvertionRecipe::write));
-		RelishFluidRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("relish_fluid",()->new CPRecipeSerializer<>(RelishFluidRecipe::new,RelishFluidRecipe::new,RelishFluidRecipe::write));
-		RelishRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("relish",()->new CPRecipeSerializer<>(RelishRecipe::new,RelishRecipe::new,RelishRecipe::write));
-		BeverageTypeRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("beverage",()->new CPRecipeSerializer<>(BeverageTypeRecipe::new,BeverageTypeRecipe::new,BeverageTypeRecipe::write));
-		SwayRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("sway",()->new CPRecipeSerializer<>(SwayRecipe::new,SwayRecipe::new,SwayRecipe::write));
-		RelishItemRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("relish_item",()->new CPRecipeSerializer<>(RelishItemRecipe::new,RelishItemRecipe::new,RelishItemRecipe::write));
-		BasinRecipe.SERIALIZER=RECIPE_SERIALIZERS.register("basin",()->new CPRecipeSerializer<>(BasinRecipe::new,BasinRecipe::new,BasinRecipe::write));
+		TasteRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("taste", () -> new CPRecipeSerializer<>(TasteRecipe.CODEC));
+		GrindingRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("grinding", () -> new CPRecipeSerializer<>(GrindingRecipe.CODEC));
+		ContainingRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("containing", () -> new CPRecipeSerializer<>(ContainingRecipe.CODEC));
+		ConvertionRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("convertion", () -> new CPRecipeSerializer<>(ConvertionRecipe.CODEC));
+		RelishFluidRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("relish_fluid", () -> new CPRecipeSerializer<>(RelishFluidRecipe.CODEC));
+		RelishRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("relish", () -> new CPRecipeSerializer<>(RelishRecipe.CODEC));
+		BeverageTypeRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("beverage", () -> new CPRecipeSerializer<>(BeverageTypeRecipe.CODEC));
+		SwayRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("sway", () -> new CPRecipeSerializer<>(SwayRecipe.CODEC));
+		RelishItemRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("relish_item", () -> new CPRecipeSerializer<>(RelishItemRecipe.CODEC));
+		BasinRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("basin", () -> new CPRecipeSerializer<>(BasinRecipe.CODEC));
 	}
 
 	static {
-		TasteRecipe.TYPE=createType("taste");
-		GrindingRecipe.TYPE=createType("grinding");
-		ContainingRecipe.TYPE=createType("containing");
-		ConvertionRecipe.TYPE=createType("convertion");
-		RelishFluidRecipe.TYPE=createType("relish_fluid");
-		RelishRecipe.TYPE=createType("relish");
-		BeverageTypeRecipe.TYPE=createType("beverage");
-		SwayRecipe.TYPE=createType("sway");
-		RelishItemRecipe.TYPE=createType("relish_item");
-		BasinRecipe.TYPE=createType("basin");
+		TasteRecipe.TYPE = createType("taste");
+		GrindingRecipe.TYPE = createType("grinding");
+		ContainingRecipe.TYPE = createType("containing");
+		ConvertionRecipe.TYPE = createType("convertion");
+		RelishFluidRecipe.TYPE = createType("relish_fluid");
+		RelishRecipe.TYPE = createType("relish");
+		BeverageTypeRecipe.TYPE = createType("beverage");
+		SwayRecipe.TYPE = createType("sway");
+		RelishItemRecipe.TYPE = createType("relish_item");
+		BasinRecipe.TYPE = createType("basin");
 	}
-	public static DeferredHolder<RecipeType<?>, RecipeType<Recipe<?>>> createType(String s){
-		return RECIPE_TYPES.register(s,()->RecipeType.simple(ResourceLocation.fromNamespaceAndPath(CVMain.MODID ,s)));
+
+	public static DeferredHolder<RecipeType<?>, RecipeType<Recipe<?>>> createType(String s) {
+		return RECIPE_TYPES.register(s, RecipeType::simple);
 	}
 }

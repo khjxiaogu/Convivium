@@ -32,15 +32,15 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVGui {
 	public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BuiltInRegistries.MENU,
-			CVMain.MODID);
+		CVMain.MODID);
 	public static final DeferredHolder<MenuType<?>, MenuType<PlatterContainer>> PLATTER = CONTAINERS.register("platter",
-			() -> IMenuTypeExtension.create(PlatterContainer::new));
+		() -> IMenuTypeExtension.create(PlatterContainer::new));
 	public static final DeferredHolder<MenuType<?>, MenuType<PamContainer>> PAM = CONTAINERS.register("pestle_and_mortar",
-			() -> IMenuTypeExtension.create(PamContainer::new));
+		() -> IMenuTypeExtension.create(PamContainer::new));
 	public static final DeferredHolder<MenuType<?>, MenuType<WhiskContainer>> WHISK = CONTAINERS.register("whisk",
-			() -> IMenuTypeExtension.create(WhiskContainer::new));
+		() -> IMenuTypeExtension.create(WhiskContainer::new));
 	public static final DeferredHolder<MenuType<?>, MenuType<BeverageVendingContainer>> VENDING = CONTAINERS.register("beverage_vending_machine",
-			() -> IMenuTypeExtension.create(BeverageVendingContainer::new));
+		() -> IMenuTypeExtension.create(BeverageVendingContainer::new));
 	public static final DeferredHolder<MenuType<?>, MenuType<BasinContainer>> BASIN = CONTAINERS.register("basin",
-			() -> IMenuTypeExtension.create(BasinContainer::new));
+		() -> IMenuTypeExtension.create(BasinContainer::new));
 }

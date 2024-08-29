@@ -20,47 +20,55 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.google.gson.JsonObject;
-import com.khjxiaogu.convivium.util.SUtils;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class TasteRecipe extends IDataRecipe {
 	public Map<String,Float> variantData;
 	public int priority;
 	public Ingredient item;
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public static List<TasteRecipe> recipes;
-
-	public TasteRecipe(ResourceLocation id, Map<String, Float> variantData, int priority, Ingredient item) {
-		super(id);
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static List<RecipeHolder<TasteRecipe>> recipes;
+	public static final MapCodec<TasteRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()))),
+		Codec.INT.optionalFieldOf("priority",0).forGetter(o->o.priority),
+		Ingredient.CODEC.fieldOf("item").forGetter(o->o.item)
+	).apply(t, TasteRecipe::new));
+	public TasteRecipe(Optional<List<Pair<String, Float>>> variantData, int priority, Ingredient item) {
+		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
+		this.priority = priority;
+		this.item = item;
+	}
+	
+	public TasteRecipe(Map<String, Float> variantData, int priority, Ingredient item) {
+		super();
 		this.variantData = variantData;
 		this.priority = priority;
 		this.item = item;
 	}
-	public TasteRecipe(ResourceLocation id,JsonObject json) {
-		super(id);
-		item=Ingredient.fromJson(json.get("item"));
-		priority=GsonHelper.getAsInt(json,"priority", 0);
-		variantData=SUtils.fromJson(json, "variants");
-	}
+
+	/*
 	public TasteRecipe(ResourceLocation id,FriendlyByteBuf pb) {
 		super(id);
 		item=Ingredient.fromNetwork(pb);
 		priority=pb.readVarInt();
 		variantData=SUtils.fromPacket(pb);
 		
-	}
+	}*/
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER.get();
@@ -70,16 +78,9 @@ public class TasteRecipe extends IDataRecipe {
 	public RecipeType<?> getType() {
 		return TYPE.get();
 	}
-
-	@Override
-	public void serializeRecipeData(JsonObject json) {
-		json.add("item", item.toJson());
-		json.addProperty("priority",priority);
-		json.add("variants",SUtils.toJson(variantData));
-	}
-	public void write(FriendlyByteBuf pb) {
+	/*public void write(FriendlyByteBuf pb) {
 		item.toNetwork(pb);
 		pb.writeVarInt(priority);
 		SUtils.toPacket(pb, variantData);
-	}
+	}*/
 }

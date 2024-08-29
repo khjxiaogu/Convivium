@@ -21,14 +21,16 @@ package com.khjxiaogu.convivium.datagen;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
@@ -37,42 +39,30 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootDataId;
-import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class CVLootGenerator extends LootTableProvider {
 
-	public CVLootGenerator(DataGenerator dataGeneratorIn) {
-		super(dataGeneratorIn.getPackOutput(), Set.of(), VanillaLootTableProvider.create(dataGeneratorIn.getPackOutput()).getTables());
+	public CVLootGenerator(DataGenerator dataGeneratorIn, CompletableFuture<HolderLookup.Provider> future) {
+		super(dataGeneratorIn.getPackOutput(), Set.of(), VanillaLootTableProvider.create(dataGeneratorIn.getPackOutput(), future).getTables(), future);
 	}
 
 	@Override
 	public List<SubProviderEntry> getTables() {
-		return Arrays.asList(new SubProviderEntry(() -> new LTBuilder(), LootContextParamSets.BLOCK));
-	}
-
-	@Override
-	protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext) {
-		map.forEach((p_278897_, p_278898_) -> {
-			p_278898_.validate(validationcontext.setParams(p_278898_.getParamSet()).enterElement("{" + p_278897_ + "}", new LootDataId<>(LootDataType.TABLE, p_278897_)));
-		});
-		//map.forEach((name, table) -> LootTables.validate(validationtracker, name, table));
+		return Arrays.asList(new SubProviderEntry(LTBuilder::new, LootContextParamSets.BLOCK));
 	}
 
 	private static class LTBuilder extends VanillaBlockLoot {
-		protected LTBuilder() {
-			super();
+		protected LTBuilder(HolderLookup.Provider registry) {
+			super(registry);
 		}
 
 		@Override
@@ -85,44 +75,45 @@ public class CVLootGenerator extends LootTableProvider {
 			dropSelf(CVBlocks.whisk.get());
 			dropSelf(CVBlocks.basin.get());
 			dropSelf(CVBlocks.lead_basin.get());
-			add(CVBlocks.CAMELLIA_FLOWER.get(),LootTable.lootTable()
+			add(CVBlocks.CAMELLIA_FLOWER.get(), LootTable.lootTable()
 				.withPool(LootPool.lootPool()
 					.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
 						.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CamelliaFlowerBlock.AGE, 3)))
 					.setRolls(ConstantValue.exactly(1))
-					.add(LootItem.lootTableItem(cpi("camellia_seeds")).apply(SetItemCountFunction.setCount(UniformGenerator.between(1,2)))))
+					.add(LootItem.lootTableItem(cpi("camellia_seeds")).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
 				.withPool(LootPool.lootPool()
 					.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
 						.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CamelliaFlowerBlock.AGE, 0)))
 					.setRolls(ConstantValue.exactly(1.0F))
 					.add(LootItem.lootTableItem(cpi("fresh_camellia_shoots")).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))))
 				.withPool(LootPool.lootPool()
-						.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
-							.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CamelliaFlowerBlock.AGE, 1)))
-						.setRolls(ConstantValue.exactly(1.0F))
-						.add(LootItem.lootTableItem(cpi("camellia_flower")).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))))
+					.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
+						.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CamelliaFlowerBlock.AGE, 1)))
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(cpi("camellia_flower")).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))))
 				.withPool(LootPool.lootPool()
-						.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
-							.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CamelliaFlowerBlock.AGE, 2)))
-						.setRolls(ConstantValue.exactly(1.0F))
-						.add(LootItem.lootTableItem(cpi("camellia_flower")).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2)))))
-			);
+					.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
+						.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CamelliaFlowerBlock.AGE, 2)))
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(cpi("camellia_flower")).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2))))));
 			dropSelf(CVBlocks.BEVERAGE_VENDING_MACHINE.get());
-			
-			for(RegistryObject<Block> b:CVBlocks.aqueducts) {
+
+			for (DeferredHolder<Block, Block> b : CVBlocks.aqueducts) {
 				dropSelf(b.get());
 			}
-			for(RegistryObject<Block> b:CVBlocks.aqueduct_mains) {
+			for (DeferredHolder<Block, Block> b : CVBlocks.aqueduct_mains) {
 				dropSelf(b.get());
 			}
 		}
 
 		private Block cp(String name) {
-			return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(CVMain.MODID, name));
+			return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name));
 		}
+
 		private Item cpi(String name) {
-			return ForgeRegistries.ITEMS.getValue(new ResourceLocation(CVMain.MODID, name));
+			return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name));
 		}
+
 		ArrayList<Block> added = new ArrayList<>();
 
 		@Override
@@ -141,6 +132,6 @@ public class CVLootGenerator extends LootTableProvider {
 			super.add(pBlock, pLootTableBuilder);
 		}
 
-
 	}
+
 }

@@ -18,11 +18,8 @@
 
 package com.khjxiaogu.convivium.datagen;
 
-import java.util.function.Consumer;
-
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
-import com.teammoeg.caupona.data.IDataRecipe;
-
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -45,7 +42,7 @@ public class TasteRecipeBuilder{
 		priority=ig;
 		return this;
 	}
-	public void end(Consumer<IDataRecipe> out) {
-		out.accept(new TasteRecipe(rl,vars.variantData, priority, item));
+	public void end(RecipeOutput out) {
+		out.accept(rl,new TasteRecipe(vars.variantData, priority, item),null);
 	}
 }

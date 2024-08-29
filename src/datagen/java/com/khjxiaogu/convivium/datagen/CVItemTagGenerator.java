@@ -18,8 +18,6 @@
 
 package com.khjxiaogu.convivium.datagen;
 
-
-
 import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVMain;
@@ -28,6 +26,7 @@ import com.teammoeg.caupona.CPMain;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.TagsProvider;
@@ -37,28 +36,30 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class CVItemTagGenerator extends TagsProvider<Item> {
 
-	public CVItemTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper,CompletableFuture<HolderLookup.Provider> provider) {
-		super(dataGenerator.getPackOutput(), Registries.ITEM,provider, modId, existingFileHelper);
+	public CVItemTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper, CompletableFuture<HolderLookup.Provider> provider) {
+		super(dataGenerator.getPackOutput(), Registries.ITEM, provider, modId, existingFileHelper);
 	}
 
 	static final String fd = "farmersdelight";
 	static final String sf = "simplefarming:";
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
-		for(String s:new String[] {"berries","pomes","drupes"})
-			tag(CVTags.Items.FRUIT).addTag(ItemTags.create(mrl("fruits/"+s+"/small"))).addTag(ItemTags.create(mrl("fruits/"+s+"/large")));
-		/*tag(CVTags.Items.FRUIT).add(rk(Items.GLOW_BERRIES,Items.SWEET_BERRIES,Items.APPLE,Items.MELON_SLICE,Items.GOLDEN_APPLE,Items.GLISTERING_MELON_SLICE)).add(cp("fig","wolfberries"));*/
-		tag(CVTags.Items.SPICE).add(cv("neroli","spice_blend")).add(cp("asafoetida"));
+		for (String s : new String[] { "berries", "pomes", "drupes" })
+			tag(CVTags.Items.FRUIT).addTag(ItemTags.create(mrl("fruits/" + s + "/small"))).addTag(ItemTags.create(mrl("fruits/" + s + "/large")));
+		/*
+		 * tag(CVTags.Items.FRUIT).add(rk(Items.GLOW_BERRIES,Items.SWEET_BERRIES,Items.
+		 * APPLE,Items.MELON_SLICE,Items.GOLDEN_APPLE,Items.GLISTERING_MELON_SLICE)).add
+		 * (cp("fig","wolfberries"));
+		 */
+		tag(CVTags.Items.SPICE).add(cv("neroli", "spice_blend")).add(cp("asafoetida"));
 		tag(CVTags.Items.NUTS).add(cp("walnut"));
-		tag(CVTags.Items.SWEET).add(rk(Items.SUGAR,Items.HONEYCOMB,Items.HONEY_BOTTLE));
+		tag(CVTags.Items.SWEET).add(rk(Items.SUGAR, Items.HONEYCOMB, Items.HONEY_BOTTLE));
 		tag(CVTags.Items.ASSES).add(cp("asses"));
 	}
 
@@ -69,23 +70,26 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	private TagAppender<Item> tag(ResourceLocation s) {
 		return this.tag(ItemTags.create(s));
 	}
+
 	private ResourceKey<Item>[] rk(Item... b) {
-		ResourceKey[] rks=new ResourceKey[b.length];
-		for(int i=0;i<b.length;i++) {
-			rks[i]=rki(b[i]);
+		ResourceKey[] rks = new ResourceKey[b.length];
+		for (int i = 0; i < b.length; i++) {
+			rks[i] = rki(b[i]);
 		}
 		return rks;
 	}
+
 	private ResourceKey<Item> rki(Item b) {
-		
-		return ForgeRegistries.ITEMS.getResourceKey(b).orElseGet(()->b.builtInRegistryHolder().key());
+
+		return BuiltInRegistries.ITEM.getResourceKey(b).orElseGet(() -> b.builtInRegistryHolder().key());
 	}
-	private ResourceLocation rl(RegistryObject<Item> it) {
+
+	private ResourceLocation rl(DeferredHolder<Item, Item> it) {
 		return it.getId();
 	}
 
 	private ResourceLocation rl(String r) {
-		return new ResourceLocation(r);
+		return ResourceLocation.parse(r);
 	}
 
 	private TagKey<Item> otag(String s) {
@@ -97,52 +101,55 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 	}
 
 	private ResourceLocation mrl(String s) {
-		return new ResourceLocation(CVMain.MODID, s);
+		return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s);
 	}
 
 	private ResourceLocation frl(String s) {
-		return new ResourceLocation("forge", s);
+		return ResourceLocation.fromNamespaceAndPath("c", s);
 	}
 
 	private TagKey<Item> ftag(String s) {
-		TagKey<Item> tag = ItemTags.create(new ResourceLocation("forge", s));
+		TagKey<Item> tag = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", s));
 		this.tag(tag);
 		return tag;
 	}
 
 	private ResourceLocation mcrl(String s) {
-		return new ResourceLocation(s);
+		return ResourceLocation.withDefaultNamespace(s);
 	}
 
 	@Override
 	public String getName() {
 		return CVMain.MODID + " item tags";
 	}
+
 	private ResourceKey<Item>[] cv(String... b) {
-		ResourceKey[] rks=new ResourceKey[b.length];
-		for(int i=0;i<b.length;i++) {
-			rks[i]=cvi(b[i]);
+		ResourceKey[] rks = new ResourceKey[b.length];
+		for (int i = 0; i < b.length; i++) {
+			rks[i] = cvi(b[i]);
 		}
 		return rks;
 	}
+
 	private ResourceKey<Item> cvi(String s) {
-		return ResourceKey.create(Registries.ITEM,mrl(s));
+		return ResourceKey.create(Registries.ITEM, mrl(s));
 	}
+
 	private ResourceKey<Item>[] cp(String... b) {
-		ResourceKey[] rks=new ResourceKey[b.length];
-		for(int i=0;i<b.length;i++) {
-			rks[i]=cpi(b[i]);
+		ResourceKey[] rks = new ResourceKey[b.length];
+		for (int i = 0; i < b.length; i++) {
+			rks[i] = cpi(b[i]);
 		}
 		return rks;
 	}
+
 	private ResourceKey<Item> cpi(String s) {
-		return ResourceKey.create(Registries.ITEM,new ResourceLocation(CPMain.MODID, s));
+		return ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CPMain.MODID, s));
 	}
-/*
-	@Override
-	protected Path getPath(ResourceLocation id) {
-		return this.generator.getOutputFolder()
-				.resolve("data/" + id.getNamespace() + "/tags/items/" + id.getPath() + ".json");
-	}*/
+	/*
+	 * @Override protected Path getPath(ResourceLocation id) { return
+	 * this.generator.getOutputFolder() .resolve("data/" + id.getNamespace() +
+	 * "/tags/items/" + id.getPath() + ".json"); }
+	 */
 
 }

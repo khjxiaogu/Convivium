@@ -20,27 +20,30 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.teammoeg.caupona.api.CauponaHooks;
+import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.data.InvalidRecipeException;
-import com.teammoeg.caupona.fluid.SoupFluid;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class GrindingRecipe extends IDataRecipe {
-	public static List<GrindingRecipe> recipes;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
+	public static List<RecipeHolder<GrindingRecipe>> recipes;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
@@ -52,7 +55,7 @@ public class GrindingRecipe extends IDataRecipe {
 		return TYPE.get();
 	}
 
-	public List<Pair<Ingredient, Integer>> items;
+	public List<SizedOrCatalystIngredient> items;
 	public Fluid base;
 	public float density = 0;
 	public FluidStack in= FluidStack.EMPTY;
@@ -60,16 +63,18 @@ public class GrindingRecipe extends IDataRecipe {
 	public List<ItemStack> output;
 	public int processTime=200;
 	public boolean keepInfo = false;
-	
-	
-
-
-
-
-
-	public GrindingRecipe(ResourceLocation id, List<Pair<Ingredient, Integer>> items, ResourceLocation base,
+	public static final MapCodec<GrindingRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		Codec.list(SizedOrCatalystIngredient.FLAT_CODEC).fieldOf("items").forGetter(o->o.items),
+		BuiltInRegistries.FLUID.byNameCodec().fieldOf("base").forGetter(o->o.base),
+		Codec.FLOAT.fieldOf("density").forGetter(o->o.density),
+		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidIn",FluidStack.EMPTY).forGetter(o->o.in),
+		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
+		Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(o->o.output),
+		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
+		Codec.BOOL.fieldOf("keepInfo").forGetter(o->o.keepInfo)
+		).apply(t, GrindingRecipe::new));
+	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base,
 			float density, FluidStack in, FluidStack out, List<ItemStack> output, int processTime, boolean keepInfo) {
-		super(id);
 		this.items = items;
 		this.base = base;
 		this.density = density;
@@ -80,9 +85,8 @@ public class GrindingRecipe extends IDataRecipe {
 		this.keepInfo = keepInfo;
 	}
 
-	public GrindingRecipe(ResourceLocation id, List<Pair<Ingredient, Integer>> items, ResourceLocation base,
+	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base,
 			float density, List<ItemStack> output, int processTime,boolean keepInfo) {
-		super(id);
 		this.items = items;
 		this.base = base;
 		this.density = density;
@@ -90,7 +94,7 @@ public class GrindingRecipe extends IDataRecipe {
 		this.processTime = processTime;
 		this.keepInfo = keepInfo;
 	}
-
+/*
 	public GrindingRecipe(ResourceLocation id, JsonObject jo) {
 		super(id);
 		if (jo.has("items"))
@@ -118,17 +122,17 @@ public class GrindingRecipe extends IDataRecipe {
 
 	}
 
-
+*/
 
 	public static boolean testInput(ItemStack stack) {
-		return recipes.stream().anyMatch(t -> t.items.stream().anyMatch(i -> i.getFirst().test(stack)));
+		return recipes.stream().map(t->t.value()).anyMatch(t -> t.items.stream().anyMatch(i -> i.test(stack)));
 	}
 
 	public static GrindingRecipe test(FluidStack f, ItemStackHandler inv) {
 		ItemStack is0 = inv.getStackInSlot(0);
 		ItemStack is1 = inv.getStackInSlot(1);
 		ItemStack is2 = inv.getStackInSlot(2);
-		return recipes.stream().filter(t -> t.test(f, is0, is1, is2)).findFirst().orElse(null);
+		return recipes.stream().map(t->t.value()).filter(t -> t.test(f, is0, is1, is2)).findFirst().orElse(null);
 	}
 
 	public boolean test(FluidStack f, ItemStack... ss) {
@@ -149,16 +153,18 @@ public class GrindingRecipe extends IDataRecipe {
 			return false;
 
 		if (density != 0 || base != null) {
-			StewInfo info = SoupFluid.getInfo(f);
-			if (base != null && !info.base.equals(base))
+			IFoodInfo info = CauponaHooks.getInfo(f).orElse(null);
+			if(info==null)
+				return false;
+			if (base != null && info.getBase()!=base)
 				return false;
 			if (info.getDensity() < density)
 				return false;
 		}
-		for (Pair<Ingredient, Integer> igd : items) {
+		for (SizedOrCatalystIngredient igd : items) {
 			boolean flag = false;
 			for (ItemStack is : ss) {
-				if (igd.getFirst().test(is) && is.getCount() >= igd.getSecond()) {
+				if (igd.test(is)) {
 					flag = true;
 					break;
 				}
@@ -171,32 +177,31 @@ public class GrindingRecipe extends IDataRecipe {
 
 	private List<ItemStack> handle(FluidStack f) {
 		
-		if (keepInfo) {
-			StewInfo info = SoupFluid.getInfo(f);
-			SoupFluid.setInfo(out, info);
-		}
 		f.shrink(in.getAmount());
 		List<ItemStack> fss=new ArrayList<>();
-		for(ItemStack is:output)
-			fss.add(is.copy());
+		for(ItemStack is:output) {
+			ItemStack iss=is.copy();
+			iss.applyComponents(f.getComponentsPatch());
+			fss.add(iss);
+		}
 		return fss;
 	}
 
 	public List<ItemStack> handle(FluidStack f, ItemStackHandler inv) {
-		for (Pair<Ingredient, Integer> igd : items) {
-			if (igd.getSecond() == 0)
+		for (SizedOrCatalystIngredient igd : items) {
+			if (igd.count() == 0)
 				continue;
 			for (int i = 0; i < 3; i++) {
 				ItemStack is = inv.getStackInSlot(i);
-				if (igd.getFirst().test(is)) {
-					is.shrink(igd.getSecond());
+				if (igd.test(is)) {
+					is.shrink(igd.count());
 					break;
 				}
 			}
 		}
 		return handle(f);
 	}
-
+/*
 	public GrindingRecipe(ResourceLocation id, FriendlyByteBuf data) {
 		super(id);
 		
@@ -225,28 +230,5 @@ public class GrindingRecipe extends IDataRecipe {
 		SerializeUtil.writeList(data, output, (t,d)->d.writeItem(t));
 		data.writeVarInt(processTime);
 	}
-
-	@Override
-	public void serializeRecipeData(JsonObject json) {
-		json.add("items", SerializeUtil.toJsonList(items, (r) -> {
-			JsonObject jo = new JsonObject();
-			jo.add("item", r.getFirst().toJson());
-			jo.addProperty("count", r.getSecond());
-			return jo;
-		}));
-		
-		
-		if (base != null)
-			json.addProperty("base", base.toString());
-		if(!in.isEmpty())
-			json.add("fluidIn", SerializeUtil.writeFluidStack(in));
-		if(!out.isEmpty())
-			json.add("fluidOut", SerializeUtil.writeFluidStack(out));
-
-		json.addProperty("density", density);
-		json.addProperty("keepInfo", keepInfo);
-		json.add("outputs",SerializeUtil.toJsonList(output, t->StrictNBTIngredient.of(t).toJson()));
-		json.addProperty("time", processTime);
-	}
-
+*/
 }

@@ -19,30 +19,30 @@
 package com.khjxiaogu.convivium.util;
 
 public class Constants {
-	public static final String SWEETNESS_DELTA =	"sweetnessDelta";
-	public static final String ASTRINGENCY_DELTA =	"astringencyDelta";
-	public static final String PUNGENCY_DELTA =		"pungencyDelta";
-	public static final String THICKNESS_DELTA =	"thicknessDelta";
-	public static final String SOOTHINGNESS_DELTA =	"soothingnessDelta";
-	public static final String DISPLAY =			"display";
-	public static final String SWEETNESS =			"sweetness";
-	public static final String ASTRINGENCY =		"astringency";
-	public static final String PUNGENCY =			"pungency";
-	public static final String THICKNESS =			"thickness";
-	public static final String SOOTHINGNESS =		"soothingness";
-	public static final String TEA="bath";
-	public static final String MILK="cereal";
-	public static final String COCOA="fire";
-	public static final String WATER="hearth";
-	public static final String JUICE="seasons";
-	public static final String WINE="wine";
-	public static final String NONE="none";
-	public static final int CLR_SWEET=0xf6c6db;
-	public static final int CLR_PUNGENT=0xfbcebb;
-	public static final int CLR_ROUSING=0xd3e1fa;
-	public static final int CLR_ASTRINGENCY=0xe6f79b;
-	public static final int CLR_THICKNESS=0xdeece9;
-	public static final String[] TASTES=new String[] {SWEETNESS,PUNGENCY,SOOTHINGNESS,ASTRINGENCY,THICKNESS};
-	public static final int[] COLOR_OF_TASTES=new int[] {CLR_SWEET,CLR_PUNGENT,CLR_ROUSING,CLR_ASTRINGENCY,CLR_THICKNESS};
+	public static final String SWEETNESS_DELTA = "sweetnessDelta";
+	public static final String ASTRINGENCY_DELTA = "astringencyDelta";
+	public static final String PUNGENCY_DELTA = "pungencyDelta";
+	public static final String THICKNESS_DELTA = "thicknessDelta";
+	public static final String SOOTHINGNESS_DELTA = "soothingnessDelta";
+	public static final String DISPLAY = "display";
+	public static final String SWEETNESS = "sweetness";
+	public static final String ASTRINGENCY = "astringency";
+	public static final String PUNGENCY = "pungency";
+	public static final String THICKNESS = "thickness";
+	public static final String SOOTHINGNESS = "soothingness";
+	public static final String TEA = "bath";
+	public static final String MILK = "cereal";
+	public static final String COCOA = "fire";
+	public static final String WATER = "hearth";
+	public static final String JUICE = "seasons";
+	public static final String WINE = "wine";
+	public static final String NONE = "none";
+	public static final int CLR_SWEET = 0xf6c6db;
+	public static final int CLR_PUNGENT = 0xfbcebb;
+	public static final int CLR_ROUSING = 0xd3e1fa;
+	public static final int CLR_ASTRINGENCY = 0xe6f79b;
+	public static final int CLR_THICKNESS = 0xdeece9;
+	public static final String[] TASTES = new String[] { SWEETNESS, PUNGENCY, SOOTHINGNESS, ASTRINGENCY, THICKNESS };
+	public static final int[] COLOR_OF_TASTES = new int[] { CLR_SWEET, CLR_PUNGENT, CLR_ROUSING, CLR_ASTRINGENCY, CLR_THICKNESS };
 
 }

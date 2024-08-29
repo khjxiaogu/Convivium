@@ -21,30 +21,25 @@ package com.khjxiaogu.convivium.data.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
+import com.google.common.collect.ImmutableList;
+import com.khjxiaogu.convivium.util.FloatSizedOrCatalystIngredient;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.data.SerializeUtil;
-import com.teammoeg.caupona.util.Utils;
+import com.teammoeg.caupona.util.FloatemStack;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.crafting.StrictNBTIngredient;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ConvertionRecipe extends IDataRecipe {
-	public static List<ConvertionRecipe> recipes;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
+	public static List<RecipeHolder<ConvertionRecipe>> recipes;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
@@ -55,21 +50,26 @@ public class ConvertionRecipe extends IDataRecipe {
 	public RecipeType<?> getType() {
 		return TYPE.get();
 	}
-
-	public List<Pair<Ingredient, Float>> items;
-	public List<Pair<ItemStack, Float>> output=new ArrayList<>();
-	public Fluid in= Fluids.EMPTY;
-	public Fluid out= Fluids.EMPTY;
+	public static final MapCodec<ConvertionRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		Codec.list(FloatSizedOrCatalystIngredient.FLAT_CODEC).optionalFieldOf("items",ImmutableList.of()).forGetter(o->o.items),
+		Codec.list(FloatemStack.CODEC).optionalFieldOf("outputs",ImmutableList.of()).forGetter(o->o.output),
+		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidIn",FluidStack.EMPTY).forGetter(o->o.in),
+		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
+		Codec.INT.fieldOf("temperature").forGetter(o->o.temperature),
+		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
+		Codec.BOOL.fieldOf("consumeAll").forGetter(o->o.consumeExtra)
+		).apply(t, ConvertionRecipe::new));
+	public List<FloatSizedOrCatalystIngredient> items;
+	public List<FloatemStack> output=new ArrayList<>();
+	public FluidStack in= FluidStack.EMPTY;
+	public FluidStack out= FluidStack.EMPTY;
 	public int temperature=0;
 	public int processTime=200;
-	public int inpart=1;
-	public int outpart=1;
 	public boolean consumeExtra;
+	
 
-
-	public ConvertionRecipe(ResourceLocation id, List<Pair<Ingredient, Float>> items, Fluid in, Fluid out,
+	public ConvertionRecipe(List<FloatSizedOrCatalystIngredient> items, FluidStack in, FluidStack out,
 			int temperature, int processTime, boolean consumeExtra) {
-		super(id);
 		this.items = items;
 		this.in = in;
 		this.out = out;
@@ -77,32 +77,17 @@ public class ConvertionRecipe extends IDataRecipe {
 		this.processTime = processTime;
 		this.consumeExtra = consumeExtra;
 	}
-
-	public ConvertionRecipe(ResourceLocation id, JsonObject jo) {
-		super(id);
-		if (jo.has("items"))
-			items = SerializeUtil.parseJsonList(jo.get("items"),
-					j -> Pair.of(Ingredient.fromJson(j.get("item")), (j.has("count") ? j.get("count").getAsFloat() : 1)));
-		if (jo.has("fluidIn")) {
-			in=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(jo, "fluidIn")));
-			inpart=GsonHelper.getAsInt(jo, "inNum",1);
-		}
-		if (jo.has("fluidOut")) {
-			out=ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(jo, "fluidOut")));
-			outpart=GsonHelper.getAsInt(jo, "outNum",1);
-		}
-		if(jo.has("outputs")) 
-			output = SerializeUtil.parseJsonList(jo.get("outputs"),t->Pair.of(Ingredient.fromJson(t.get("item")).getItems()[0],t.has("count")?t.get("count").getAsFloat():1));
-		
-		
-		
-		if(jo.has("time"))
-			processTime=jo.get("time").getAsInt();
-		if(jo.has("temperature"))
-			temperature=jo.get("temperature").getAsInt();
-		consumeExtra=GsonHelper.getAsBoolean(jo,"consumeAll",false);
+	public ConvertionRecipe(List<FloatSizedOrCatalystIngredient> items, List<FloatemStack> output, FluidStack in,FluidStack out, int temperature, int processTime, boolean consumeExtra) {
+		super();
+		this.items = items;
+		this.output = output;
+		this.in = in;
+		this.out = out;
+		this.temperature = temperature;
+		this.processTime = processTime;
+		this.consumeExtra = consumeExtra;
 	}
-
+/*
 	public ConvertionRecipe(ResourceLocation id, FriendlyByteBuf data) {
 		super(id);
 		
@@ -133,32 +118,7 @@ public class ConvertionRecipe extends IDataRecipe {
 		data.writeVarInt(temperature);
 		data.writeBoolean(consumeExtra);
 	}
+*/
 
-	@Override
-	public void serializeRecipeData(JsonObject json) {
-		if(items.size()>0)
-		json.add("items", SerializeUtil.toJsonList(items, (r) -> {
-			JsonObject jo = new JsonObject();
-			jo.add("item", r.getFirst().toJson());
-			jo.addProperty("count", r.getSecond());
-			return jo;
-		}));
-		if(output.size()>0)
-		json.add("outputs", SerializeUtil.toJsonList(output, (r) -> {
-			JsonObject jo = new JsonObject();
-			jo.add("item", StrictNBTIngredient.of(r.getFirst()).toJson());
-			jo.addProperty("count", r.getSecond());
-			return jo;
-		}));
-		if(in!=Fluids.EMPTY)
-			json.addProperty("fluidIn", Utils.getRegistryName(in).toString());
-		if(out!=Fluids.EMPTY)
-			json.addProperty("fluidOut", Utils.getRegistryName(out).toString());
-		json.addProperty("inNum", inpart);
-		json.addProperty("outNum", outpart);
-		json.addProperty("time", processTime);
-		json.addProperty("temperature", temperature);
-		json.addProperty("consumeAll", consumeExtra);
-	}
 
 }

@@ -23,11 +23,14 @@ import java.util.Map;
 
 import com.mojang.serialization.Codec;
 
-import mezz.jei.common.codecs.EnumCodec;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.StringRepresentable.StringRepresentableCodec;
+
+
 
 public class Compares {
 	public final static Map<Compare,Comparators> map=new HashMap<>();
-	public enum Comparators{
+	public enum Comparators implements StringRepresentable{
 		greater(GT.C),
 		equals(EQ.C),
 		lesser(LT.C),
@@ -41,9 +44,14 @@ public class Compares {
 			this.comp = comp;
 			map.put(comp, this);
 		}
+
+		@Override
+		public String getSerializedName() {
+			return name();
+		}
 		
 	}
-	public static final Codec<Compare> CODEC=EnumCodec.create(Comparators.class, Comparators::valueOf).xmap(v->v.comp, map::get);
+	public static final Codec<Compare> CODEC=new StringRepresentableCodec<>(Comparators.values(), Comparators::valueOf,Comparators::ordinal).xmap(v->v.comp, map::get);
 
 
 }

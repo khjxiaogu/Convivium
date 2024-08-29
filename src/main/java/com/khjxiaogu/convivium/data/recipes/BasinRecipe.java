@@ -22,37 +22,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.teammoeg.caupona.CPCapability;
-import com.teammoeg.caupona.components.StewInfo;
+import com.teammoeg.caupona.api.CauponaHooks;
+import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.data.InvalidRecipeException;
-import com.teammoeg.caupona.fluid.SoupFluid;
 import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredientType;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class BasinRecipe extends IDataRecipe {
-	public static List<BasinRecipe> recipes;
-	public static DeferredHolder<RecipeType<?>,RecipeType<?>> TYPE;
+	public static List<RecipeHolder<BasinRecipe>> recipes;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 
 	@Override
@@ -74,34 +66,34 @@ public class BasinRecipe extends IDataRecipe {
 	public static final MapCodec<BasinRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		BuiltInRegistries.FLUID.byNameCodec().optionalFieldOf("base").forGetter(o->Optional.ofNullable(o.base)),
 		Codec.FLOAT.optionalFieldOf("density", 0f).forGetter(o->o.density),
-		SizedOrCatalystFluidIngredient.FLAT_CODEC.fieldOf("fluidIn").forGetter(o->o.in),
-		SizedOrCatalystIngredient.FLAT_CODEC.fieldOf("item").forGetter(o->o.item),
+		SizedOrCatalystFluidIngredient.FLAT_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
+		SizedOrCatalystIngredient.FLAT_CODEC.optionalFieldOf("item").forGetter(o->Optional.ofNullable(o.item)),
+		Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(o->o.output),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("leadBasin").forGetter(o->o.requireBasin)
 		).apply(t, BasinRecipe::new));
-	public BasinRecipe( FluidStack in,SizedIngredient item, List<ItemStack> output, int inputCount, int processTime,boolean requireBasin) {
+	public BasinRecipe( SizedOrCatalystFluidIngredient in,SizedOrCatalystIngredient item, List<ItemStack> output, int inputCount, int processTime,boolean requireBasin) {
 		this.in = in;
 		this.output = output;
 		this.item = item;
-		this.inputCount = inputCount;
 		this.processTime = processTime;
 		this.requireBasin=requireBasin;
 
 	}
-	public BasinRecipe(Optional<Fluid> base, float density, SizedOrCatalystFluidIngredient in, 
-		SizedOrCatalystIngredient item,List<ItemStack> output, int processTime,boolean requireBasin) {
+	public BasinRecipe(Optional<Fluid> base, float density, Optional<SizedOrCatalystFluidIngredient> in, 
+		Optional<SizedOrCatalystIngredient> item,List<ItemStack> output, int processTime,boolean requireBasin) {
 		this.base = base.orElse(Fluids.EMPTY);
 		this.density = density;
-		this.in = in;
+		this.in = in.orElse(null);
 		this.output = output;
-		this.item = item;
+		this.item = item.orElse(null);
 		this.processTime = processTime;
 		this.requireBasin=requireBasin;
 	}
 
 
 	public static BasinRecipe testAll(FluidStack f,ItemStack is,boolean isLead) {
-		return recipes.stream().filter(t->!t.requireBasin||isLead).filter(t -> t.test(f)).filter(t->t.item==null||(t.item.test(is)&&is.getCount()>=t.inputCount)).findFirst().orElse(null);
+		return recipes.stream().map(t->t.value()).filter(t->!t.requireBasin||isLead).filter(t -> t.test(f)).filter(t->t.item==null||t.item.test(is)).findFirst().orElse(null);
 	}
 
 	public boolean test(FluidStack f) {
@@ -109,8 +101,10 @@ public class BasinRecipe extends IDataRecipe {
 			return false;
 
 		if (density != 0 || base != null) {
-			f.get(CPCapability.STEW_INFO);
-			if (base != null && !info.base.equals(base))
+			IFoodInfo info=CauponaHooks.getInfo(f).orElse(null);
+			if(info==null)
+				return false;
+			if (base != null && base!=info.getBase())
 				return false;
 			if (info.getDensity() < density)
 				return false;
@@ -119,8 +113,8 @@ public class BasinRecipe extends IDataRecipe {
 	}
 
 	public List<ItemStack> handle(FluidStack f,ItemStack isi) {
-		f.shrink(in.getAmount());
-		isi.shrink(inputCount);
+		f.shrink(in.amount());
+		isi.shrink(item.count());
 		List<ItemStack> fss=new ArrayList<>();
 		for(ItemStack is:output)
 			fss.add(is.copy());
@@ -130,7 +124,7 @@ public class BasinRecipe extends IDataRecipe {
 
 
 	public static boolean testInput(ItemStack stack) {
-		return recipes.stream().anyMatch(t->t.item.test(stack));
+		return recipes.stream().map(t->t.value()).anyMatch(t->t.item.test(stack));
 	}
 
 }

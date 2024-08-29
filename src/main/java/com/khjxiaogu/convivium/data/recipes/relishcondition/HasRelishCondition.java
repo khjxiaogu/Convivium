@@ -38,7 +38,7 @@ public class HasRelishCondition extends AbstractRelishCondition {
 
 	@Override
 	public String getTranslation(TranslationProvider p) {
-		return p.getTranslation("recipe.convivium.relish_cond.contains",RelishRecipe.recipes.get(relish).getText());
+		return p.getTranslation("recipe.convivium.relish_cond.contains",RelishRecipe.recipes.get(relish).value().getText());
 	}
 
 

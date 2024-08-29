@@ -22,6 +22,7 @@ import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
@@ -107,9 +108,9 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 						clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
 						combinedOverlayIn);
 			}else {
-				clr=blockEntity.info.getColor();
-				IClientFluidTypeExtensions tattr=IClientFluidTypeExtensions.of(blockEntity.target);
+				IClientFluidTypeExtensions tattr=IClientFluidTypeExtensions.of(blockEntity.target.getFluid());
 				alp=blockEntity.process*1f/blockEntity.processMax;
+				clr=clr(tattr.getTintColor(blockEntity.target));
 				GuiUtils.drawTexturedColoredRect(builder, matrixStack, .125f, .125f, .75f, .75f, clr.x(), clr.y(),
 						clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
 						combinedOverlayIn);

@@ -25,6 +25,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
@@ -63,6 +64,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -92,6 +94,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
 			syncData();
+			recipeTested=false;
 		}
 
 		@Override
@@ -114,7 +117,9 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public boolean rs;
 	public boolean inf;
 	public boolean isLastHeating;
+	public boolean recipeTested;
 	public FluidStack target;
+	public FluidStack RecipeOutput;
 	public LazyTickWorker contain;
 
 	public WhiskBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
@@ -235,11 +240,13 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	}
 
 	public boolean isValidInput(ItemStack is) {
-		return is.is(CVTags.Items.BEVERAGE_MATERIAL) || TasteRecipe.recipes.stream().anyMatch(t -> t.item.test(is))
-				|| ConvertionRecipe.recipes.stream().filter(t -> t.items != null)
-						.flatMap(t -> t.items.stream().map(o -> o.getFirst())).anyMatch(t -> t.test(is));
+		return is.is(CVTags.Items.BEVERAGE_MATERIAL) || TasteRecipe.recipes.stream().map(t->t.value()).anyMatch(t -> t.item.test(is))
+				|| ConvertionRecipe.recipes.stream().map(t->t.value()).filter(t -> t.items != null)
+						.flatMap(t -> t.items.stream()).anyMatch(t -> t.test(is));
 	}
-
+	public void testRecipe() {
+		
+	}
 	@Override
 	public void tick() {
 		super.tick();
@@ -326,12 +333,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			}
 			if (process <= 0) {
 				process = processMax = 0;
-				if (target == null)
-					target = tank.getFluid().getFluid();
-				FluidStack fsn = new FluidStack(target, tank.getFluidAmount(), tank.getFluid().getTag());
-				target=null;
-				BeverageFluid.setInfo(fsn, info);
-				tank.setFluid(fsn);
+				tank.setFluid(target);
 			}
 			this.syncData();
 		} else {
@@ -562,11 +564,11 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				return 0;
 			boolean isEmpty = tank.getFluid().isEmpty();
 			int filled = tank.fill(resource, action);
-			if (filled != 0) {
+			if (filled != 0) {//add same fluid
 				if (action.execute()) {
-					if (isEmpty) {
+					if (isEmpty) {//add new fluid: compute and cache sway hint
 						if (resource.getFluid() instanceof BeverageFluid) {
-							info = BeverageFluid.getInfo(resource).orElse(null);
+							BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
 							if (info != null) {
 								BeveragePendingContext context = new BeveragePendingContext(info);
 								setSwayhint(context.getSwayHint());
@@ -574,49 +576,54 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 							}
 						}
 					}
-					if (tank.getFluidAmount() % 250 == 0) {
+					if (tank.getFluidAmount() % 250 == 0) {//add fluid to existing
 						// System.out.print(5);
-						if (info == null) {
-							FluidStack fs = tank.getFluid();
-							int amt = fs.getAmount() / 250;
+						BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
+						if (info == null) {//not beverage fluid: create a temporary info and compute sway hint
 							info = new BeverageInfo();
-							for (int i = 0; i < amt; i++) {
-								info.relishes[i] = fs.getFluid();
-							}
-							BeveragePendingContext context = new BeveragePendingContext(info);
-							setSwayhint(context.getSwayHint());
-						} else if (!(resource.getFluid() instanceof BeverageFluid)) {
 							FluidStack fs = tank.getFluid();
 							int amt = fs.getAmount() / 250;
 							for (int i = 0; i < amt; i++) {
 								info.relishes[i] = fs.getFluid();
 							}
-							BeveragePendingContext context = new BeveragePendingContext(info);
-							setSwayhint(context.getSwayHint());
 						}
+
+						BeveragePendingContext context = new BeveragePendingContext(info);
+						setSwayhint(context.getSwayHint());
 					}
 					syncData();
+					recipeTested=false;
 				}
-			} else if (tank.isFluidValid(resource) && resource.getAmount() >= 250) {
+			} else if (tank.isFluidValid(resource) && resource.getAmount() >= 250) {//mix new relish fluid
 				// System.out.print(0);
+				BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
+				if (info == null) {//not beverage fluid: create info
+					info = new BeverageInfo();
+					FluidStack fs = tank.getFluid();
+					int amt = fs.getAmount() / 250;
+					for (int i = 0; i < amt; i++) {
+						info.relishes[i] = fs.getFluid();
+					}
+				}
 				FluidStack stack = tank.getFluid();
 				if (stack.getAmount() % 250 == 0) {
 					int amt = stack.getAmount() / 250;
-					if (info != null && info.getRelishCount() != amt)
+					if (info.getRelishCount() != amt)//mix irregularly: reject
 						return 0;
 					Fluid actual = resource.getFluid();
 					int famt = Math.min(5 - amt, resource.getAmount() / 250);
-					if (actual instanceof BeverageFluid) {
-						BeverageInfo other = BeverageFluid.getInfo(resource).orElse(null);
+					if (actual instanceof BeverageFluid) {//mix two beverage
+						BeverageInfo other = resource.get(CVComponents.BEVERAGE_INFO);
 						if (other != null) {
 							if (other.equals(info)) {
 								if (action.execute()) {
+									info=info.copy();
 									info.merge(other, amt, famt);
 									Pair<List<CurrentSwayInfo>, Fluid> swi = info.adjustParts(amt, amt + famt);
 									setSwayhint(swi.getFirst());
-									FluidStack fsn = new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250,
-											tank.getFluid().getTag());
-									BeverageFluid.setInfo(fsn, info);
+									FluidStack fsn =new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250);
+									fsn.applyComponents(tank.getFluid().getComponentsPatch());
+									fsn.set(CVComponents.BEVERAGE_INFO, info);
 									tank.setFluid(fsn);
 								}
 								return famt * 250;
@@ -624,33 +631,32 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 						}
 					}
 					// System.out.print(3);
-					if (action.execute()) {
+					if (action.execute()) {//mix beverage with relish fluid
 						// System.out.print(4);
-						if (info == null) {
+						if (!resource.has(CVComponents.BEVERAGE_INFO)) {//mix two relish fluid
+							info=info.copy();
 							// System.out.print(5);
-							info = new BeverageInfo();
-							for (int i = 0; i < amt; i++) {
-								info.relishes[i] = stack.getFluid();
-							}
 							for (int i = amt; i < amt + famt; i++) {
 								info.relishes[i] = actual;
 							}
 							Pair<List<CurrentSwayInfo>, Fluid> swi = info.handleSway();
 							setSwayhint(swi.getFirst());
-							target = info.checkFluidType();
-							tank.getFluid().setAmount(tank.getFluidAmount() + famt * 250);
-						} else {
+							target = new FluidStack(info.checkFluidType(),tank.getFluidAmount() + famt * 250);
+							target.set(CVComponents.BEVERAGE_INFO, info);
+						} else {//mix relish fluid and beverage fluid
 							// System.out.print(6);
+							info=info.copy();
 							for (int i = amt; i < amt + famt; i++) {
 								info.relishes[i] = actual;
 							}
 							Pair<List<CurrentSwayInfo>, Fluid> swi = info.adjustParts(amt, amt + famt);
 							setSwayhint(swi.getFirst());
-							tank.getFluid().setAmount(tank.getFluidAmount() + famt * 250);
-							target = swi.getSecond();
+							target = new FluidStack(swi.getSecond(),tank.getFluidAmount() + famt * 250);
+							target.set(CVComponents.BEVERAGE_INFO, info);
 						}
 						process = processMax = 400;
 						syncData();
+						recipeTested=false;
 					}
 					return famt * 250;
 				}
@@ -670,6 +676,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					swayhint.clear();
 				}
 				syncData();
+				recipeTested=false;
 			}
 			return drained;
 		}
@@ -685,6 +692,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					swayhint.clear();
 				}
 				syncData();
+				recipeTested=false;
 			}
 			return drained;
 		}

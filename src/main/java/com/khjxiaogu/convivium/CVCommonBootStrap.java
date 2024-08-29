@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
-import com.teammoeg.caupona.CPBlockEntityTypes;
 import com.teammoeg.caupona.CPCapability;
 import com.teammoeg.caupona.CPItems;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
@@ -48,48 +47,53 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 @EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CVCommonBootStrap {
-	public static final List<Pair<Supplier<? extends ItemLike>,Float>> compositables = new ArrayList<>();
+	public static final List<Pair<Supplier<? extends ItemLike>, Float>> compositables = new ArrayList<>();
+
 	@SubscribeEvent
 	public static void onCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
-		CreativeTabItemHelper helper=new CreativeTabItemHelper(event.getTabKey(),event.getTab());
-		CVItems.ITEMS.getEntries().forEach(e->{
-			if(e.get() instanceof ICreativeModeTabItem item) {
+		CreativeTabItemHelper helper = new CreativeTabItemHelper(event.getTabKey(), event.getTab());
+		CVItems.ITEMS.getEntries().forEach(e -> {
+			if (e.get() instanceof ICreativeModeTabItem item) {
 				item.fillItemCategory(helper);
 			}
 		});
 		helper.register(event);
-		
+
 	}
-	public static <R extends ItemLike,T extends R> DeferredHolder<R,T> asCompositable(DeferredHolder<R,T> obj, float val) {
+
+	public static <R extends ItemLike, T extends R> DeferredHolder<R, T> asCompositable(DeferredHolder<R, T> obj, float val) {
 		compositables.add(Pair.of(obj, val));
 		return obj;
 	}
+
 	@SubscribeEvent
 	public static void onCommonSetup(@SuppressWarnings("unused") FMLCommonSetupEvent event) {
 		registerDispensers();
-		compositables.forEach(p->ComposterBlock.COMPOSTABLES.put(p.getFirst().get(),(float)p.getSecond()));
+		compositables.forEach(p -> ComposterBlock.COMPOSTABLES.put(p.getFirst().get(), (float) p.getSecond()));
 	}
 
 	@SubscribeEvent
 	public static void onCapabilityInject(RegisterCapabilitiesEvent event) {
-		event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new FluidHandlerItemStack(CPCapability.SIMPLE_FLUID,stack,1250), CVItems.JUG.get());
-		//event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new FluidHandlerItemStack(CPCapability.SIMPLE_FLUID,stack,1250), CPItems.situla.get());
-		//event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.STEW_INFO.get()), CPItems.stews.toArray(Item[]::new));
-		//event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.SAUTEED_INFO.get()), CPItems.dish.toArray(Item[]::new));
-		CVBlockEntityTypes.REGISTER.getEntries().stream().map(t->t.get()).forEach(be->{
-			
-			event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, (BlockEntityType<?>)be,
-				(block,ctx)->(IItemHandler)((CPBaseBlockEntity)block).getCapability(Capabilities.ItemHandler.BLOCK, ctx));
-			event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, (BlockEntityType<?>)be,
-				(block,ctx)->(IFluidHandler)((CPBaseBlockEntity)block).getCapability(Capabilities.FluidHandler.BLOCK, ctx));
-			});
-		event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new FluidItemWrapper(stack), CPItems.stews.toArray(Item[]::new));
+		event.registerItem(Capabilities.FluidHandler.ITEM, (stack, o) -> new FluidHandlerItemStack(CPCapability.SIMPLE_FLUID, stack, 1250), CVItems.JUG.get());
+		// event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new
+		// FluidHandlerItemStack(CPCapability.SIMPLE_FLUID,stack,1250),
+		// CPItems.situla.get());
+		// event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.STEW_INFO.get()),
+		// CPItems.stews.toArray(Item[]::new));
+		// event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.SAUTEED_INFO.get()),
+		// CPItems.dish.toArray(Item[]::new));
+		CVBlockEntityTypes.REGISTER.getEntries().stream().map(t -> t.get()).forEach(be -> {
+
+			event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, (BlockEntityType<?>) be,
+				(block, ctx) -> (IItemHandler) ((CPBaseBlockEntity) block).getCapability(Capabilities.ItemHandler.BLOCK, ctx));
+			event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, (BlockEntityType<?>) be,
+				(block, ctx) -> (IFluidHandler) ((CPBaseBlockEntity) block).getCapability(Capabilities.FluidHandler.BLOCK, ctx));
+		});
+		event.registerItem(Capabilities.FluidHandler.ITEM, (stack, o) -> new FluidItemWrapper(stack), CPItems.stews.toArray(Item[]::new));
 	}
+
 	public static void registerDispensers() {
-		
+
 	}
 
-
-	
-	
 }

@@ -19,57 +19,67 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.google.gson.JsonObject;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.util.SUtils;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class RelishRecipe extends IDataRecipe {
 	public ResourceLocation tag;
 	public String relishName;
 	public Map<String,Float> variantData=new HashMap<>();
-	public String color;
-	public static Map<String,RelishRecipe> recipes;
-	public RelishRecipe(ResourceLocation id,String name, ResourceLocation tag, String color) {
-		super(id);
+	public TextColor color;
+	public static Map<String, RecipeHolder<RelishRecipe>> recipes;
+	public RelishRecipe(String name, ResourceLocation tag, String color) {
 		this.relishName=name;
 		this.tag = tag;
-		this.color = color;
+		this.color = TextColor.parseColor(color).getOrThrow();
 	}
-	public static RegistryObject<RecipeSerializer<?>> SERIALIZER;
-	public static RegistryObject<RecipeType<Recipe<?>>> TYPE;
-	public RelishRecipe(ResourceLocation id) {
-		super(id);
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static final MapCodec<RelishRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+		ResourceLocation.CODEC.fieldOf("tag").forGetter(o->o.tag),
+		Codec.STRING.fieldOf("relish").forGetter(o->o.relishName),
+		Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()))),
+		TextColor.CODEC.optionalFieldOf("color",TextColor.fromLegacyFormat(ChatFormatting.WHITE)).forGetter(o->o.color)
+		).apply(t, RelishRecipe::new));
+	public RelishRecipe() {
 	}
 
+	public RelishRecipe(ResourceLocation tag, String relishName, Optional<List<Pair<String, Float>>> variantData,TextColor color) {
+		super();
+		this.tag = tag;
+		this.relishName = relishName;
+		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
+		this.color = color;
+	}
+/*
 	public RelishRecipe(ResourceLocation id,FriendlyByteBuf pb) {
 		super(id);
 		relishName=pb.readUtf();
 		tag=pb.readResourceLocation();
 		color=pb.readUtf();
 		variantData=SUtils.fromPacket(pb);
-	}
-	public RelishRecipe(ResourceLocation id,JsonObject jo) {
-		super(id);
-		relishName=GsonHelper.getAsString(jo, "name",id.toString());
-		tag=new ResourceLocation(GsonHelper.getAsString(jo, "tag"));
-		color=GsonHelper.getAsString(jo, "color","WHITE");
-		variantData=SUtils.fromJson(jo,"variants");
-	}
+	}*/
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER.get();
@@ -77,25 +87,18 @@ public class RelishRecipe extends IDataRecipe {
 	public MutableComponent getText() {
 		return getText(relishName,color);
 	}
-	public static MutableComponent getText(String relishName,String color2) {
-		return Utils.translate("gui." + CVMain.MODID +".relish."+relishName+".name").setStyle(Style.EMPTY.withColor(TextColor.parseColor(color2)));
+	public static MutableComponent getText(String relishName,TextColor color2) {
+		return Utils.translate("gui." + CVMain.MODID +".relish."+relishName+".name").setStyle(Style.EMPTY.withColor(color2));
 	}
 	@Override
 	public RecipeType<?> getType() {
 		return TYPE.get();
 	}
-
-	@Override
-	public void serializeRecipeData(JsonObject json) {
-		json.addProperty("name", relishName);
-		json.addProperty("tag", tag.toString());
-		json.addProperty("color", color);
-		json.add("variants",SUtils.toJson(variantData));
-	}
+/*
 	public void write(FriendlyByteBuf pb) {
 		pb.writeUtf(relishName);
 		pb.writeResourceLocation(tag);
 		pb.writeUtf(color);
 		SUtils.toPacket(pb, variantData);
-	}
+	}*/
 }

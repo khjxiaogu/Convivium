@@ -65,7 +65,7 @@ public class BeverageInfo implements IFoodInfo {
 	public String activeRelish2 = "";
 	public int healing;
 	public float saturation;
-	public int heat;
+	private int heat;
 
 	public BeverageInfo() {
 		effects = new ArrayList<>();
@@ -367,24 +367,30 @@ public class BeverageInfo implements IFoodInfo {
 			this.saturation = 0;
 	}
 
-	public void addItem(ItemStack is, float parts) {
+	public boolean addItem(ItemStack is, float parts) {
 		for (FloatemStack i : stacks) {
 			if (i.equals(is)) {
 				i.setCount(i.getCount() + is.getCount() / parts);
-				return;
+				return true;
 			}
 		}
+		if(stacks.size()>=20)
+			return false;
 		stacks.add(new FloatemStack(is.copy(), is.getCount() / parts));
+		return true;
 	}
 
-	public void addItem(FloatemStack is) {
+	public boolean addItem(FloatemStack is) {
 		for (FloatemStack i : stacks) {
 			if (i.equals(is.getStack())) {
 				i.setCount(i.getCount() + is.getCount());
-				return;
+				return true;
 			}
 		}
+		if(stacks.size()>=20)
+			return false;
 		stacks.add(is);
+		return true;
 	}
 
 	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, int healing,

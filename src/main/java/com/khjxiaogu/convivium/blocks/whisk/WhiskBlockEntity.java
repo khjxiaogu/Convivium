@@ -19,8 +19,10 @@
 package com.khjxiaogu.convivium.blocks.whisk;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -93,8 +95,11 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
+			if (slot < 4) {
+				resetAdding();
+			}
 			syncData();
-			recipeTested=false;
+
 		}
 
 		@Override
@@ -104,6 +109,10 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			return super.getSlotLimit(slot);
 		}
 	};
+	public static final int IDLE=0;
+	public static final int ADDING_INGREDIENT=1;
+	public static final int MIXING=2;
+	public static final int HEATING=3;
 	public FluidTank tank = new FluidTank(1250,
 			e -> RelishFluidRecipe.recipes.containsKey(e.getFluid()) || e.getFluid() instanceof BeverageFluid);
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
@@ -111,8 +120,9 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public static final int MAX_DENSE=3;
 	public int process;
 	public int processMax;
-	public boolean isStiring;
+	public int status;
 	public int heating;
+	public int temperature;
 	public boolean isHeating;
 	public boolean rs;
 	public boolean inf;
@@ -141,6 +151,11 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 	}
 
+	protected void resetAdding() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Override
 	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		super.readCustomNBT(nbt, isClient,ra);
@@ -148,7 +163,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				CSI_CODEC.decode(NbtOps.INSTANCE, nbt.get("hint")).result().map(Pair::getFirst).orElse(List.of()));
 		process = nbt.getInt("process");
 		processMax = nbt.getInt("processMax");
-		isStiring = nbt.getBoolean("isStir");
+		status = nbt.getInt("status");
 		heating = nbt.getInt("heat");
 		isHeating = nbt.getBoolean("heating");
 		rs = nbt.getBoolean("rs");
@@ -169,7 +184,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 		nbt.putInt("process", process);
 		nbt.putInt("processMax", processMax);
-		nbt.putBoolean("isStir", isStiring);
+		nbt.putInt("status", status);
 		nbt.putInt("heat", heating);
 		nbt.putBoolean("heating", isHeating);
 		nbt.putBoolean("rs", rs);
@@ -244,8 +259,149 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				|| ConvertionRecipe.recipes.stream().map(t->t.value()).filter(t -> t.items != null)
 						.flatMap(t -> t.items.stream()).anyMatch(t -> t.test(is));
 	}
-	public void testRecipe() {
-		
+	public void tryMixItems() {
+		BeverageInfo info=tank.getFluid().get(CVComponents.BEVERAGE_INFO);;
+		if (info == null) {//not beverage fluid: create a temporary info
+			info = new BeverageInfo();
+			FluidStack fs = tank.getFluid();
+			int amt = fs.getAmount() / 250;
+			for (int i = 0; i < amt; i++) {
+				info.relishes[i] = fs.getFluid();
+			}
+		}
+		int amt = tank.getFluidAmount() / 250;
+		for (int i = 0; i < 4; i++) {
+			ItemStack is = inv.getStackInSlot(i);
+			if (!is.isEmpty()&&isValidInput(is)) {
+				if (is.getItem() != Items.POTION) {
+					if(!info.addItem(is,amt))
+						return;
+				}else {
+					for (MobEffectInstance eff : is.get(DataComponents.POTION_CONTENTS).getAllEffects())
+						info.addEffect(eff, amt);
+				}
+			}
+		}
+		Pair<List<CurrentSwayInfo>, Fluid> val = info.handleSway();
+		setSwayhint(val.getFirst());
+		target=new FluidStack(val.getSecond(),amt*250);
+		target.applyComponents(tank.getFluid().getComponentsPatch());
+		target.set(CVComponents.BEVERAGE_INFO, info);
+		process = processMax = 400;
+		status=ADDING_INGREDIENT;
+		syncData();
+	}
+	public void tryConvertType() {	
+		Set<ConvertionRecipe> recipes=new HashSet<>();
+		for (RecipeHolder<ConvertionRecipe> r : ConvertionRecipe.recipes){
+			if(r.value().temperature<=temperature)
+			recipes.add(r.value());
+		}
+		BeverageInfo info=tank.getFluid().get(CVComponents.BEVERAGE_INFO);;
+		if (info == null) {//not beverage fluid: create a temporary info
+			info = new BeverageInfo();
+			FluidStack fs = tank.getFluid();
+			int amt = fs.getAmount() / 250;
+			for (int i = 0; i < amt; i++) {
+				info.relishes[i] = fs.getFluid();
+			}
+		}
+		for(ConvertionRecipe r:recipes) {
+			boolean worked = false;
+				if (!r.in.isEmpty()) {
+					boolean flag = false;
+					int cntx = 0;
+					for (Fluid f : info.relishes) {
+						if (f == r.in.getFluid()) {
+							flag = true;
+							cntx++;
+						}
+					}
+					if (!flag)
+						break outer;
+					if (cntx < r.in.getAmount()/250)
+						break outer;
+				}
+				int newpart = info.getRelishCount() + r.outpart - r.inpart;
+				if (newpart > 5 || newpart <= 0) {
+					break;
+				}
+				float tccn = info.getDensity();
+
+				if (r.items != null && !r.items.isEmpty()) {
+
+					for (Pair<Ingredient, Float> i : r.items) {
+						boolean flag = true;
+						for (FloatemStack fs : info.stacks) {
+							float ccn = i.getSecond() / amt;
+
+							if (i.getFirst().test(fs.getStack()) && fs.getCount() >= ccn) {
+								tccn -= ccn;
+								flag = false;
+								break;
+							}
+						}
+						if (flag)
+							break outer;
+					}
+				}
+				if (r.output != null && !r.output.isEmpty()) {
+					for (Pair<ItemStack, Float> i : r.output) {
+						tccn += i.getSecond() / cnt;
+					}
+				}
+				if (tccn * cnt / newpart > MAX_DENSE)
+					break;
+				rc = r;
+				worked = true;
+				if (rc != null) {
+					List<Fluid> fs = new ArrayList<>();
+					int nin = rc.inpart;
+					if (rc.in != Fluids.EMPTY) {
+						for (int i = 0; i < 5; i++) {
+							Fluid f = info.relishes[i];
+							info.relishes[i] = null;
+							if (f == null)
+								continue;
+							if (nin != 0 && f == rc.in) {
+								nin--;
+							} else
+								fs.add(f);
+						}
+						if (rc.out != Fluids.EMPTY)
+							for (int i = 0; i < rc.outpart; i++)
+								fs.add(rc.out);
+						for (int i = 0; i < fs.size(); i++) {
+							info.relishes[i] = fs.get(i);
+						}
+					} else {
+						int cntx = info.getRelishCount();
+						for (int i = cntx; i < cntx + rc.outpart; i++) {
+							info.relishes[i] = rc.out;
+						}
+					}
+
+					if (rc.items != null && !rc.items.isEmpty()) {
+						for (Pair<Ingredient, Float> i : rc.items) {
+							for (FloatemStack fss : info.stacks) {
+								if (i.getFirst().test(fss.getStack())) {
+									fss.setCount(fss.getCount() - i.getSecond() / amt);
+									break;
+								}
+							}
+						}
+					}
+					if (rc.output != null && !rc.output.isEmpty()) {
+						for (Pair<ItemStack, Float> i : rc.output) {
+							info.addItem(i.getFirst(), i.getSecond() / amt);
+						}
+					}
+					
+					
+					
+				}
+		}
+
 	}
 	@Override
 	public void tick() {
@@ -262,225 +418,14 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			return;
 		if (processMax != 0 && getSpeed() > 0) {
 			process -= speed;
-			if (isStiring) {
-				boolean flag = false;
-				for (int i = 0; i < 4; i++) {
-					ItemStack is = inv.getStackInSlot(i);
-					if (!is.isEmpty()&&isValidInput(is)) {
-						if (is.getItem() != Items.POTION) {
-							flag |= true;
-						}
-					}
-				}
-				if (!flag) {
-					isStiring = false;
-					process = processMax = 0;
-				} else if (process <= 200) {
-					isStiring = false;
-					if (info == null)
-						info = new BeverageInfo();
-					int amt = tank.getFluidAmount() / 250;
-					float cnt = 0;
-					boolean hasItem = false;
-					cnt = info.getDensity() * amt;
-					for (int i = 0; i < 4; i++) {
-						ItemStack is = inv.getStackInSlot(i);
-						if (!is.isEmpty()&&isValidInput(is)) {
-							if (is.getItem() != Items.POTION) {
-								cnt++;
-							}
-							hasItem = true;
-						}
-					}
-					if (!hasItem || cnt / amt > MAX_DENSE) {
-						process = processMax = 0;
-					} else {
-						int camt = tank.getFluidAmount() / 250;
-						NonNullList<ItemStack> interninv = NonNullList.withSize(4, ItemStack.EMPTY);
-						for (int i = 0; i < 4; i++) {
-							ItemStack is = inv.getStackInSlot(i);
-							if (!is.isEmpty()&&isValidInput(is)) {
-								if (is.getItem() == Items.POTION) {
-									for (MobEffectInstance eff : PotionUtils.getMobEffects(is))
-										info.addEffect(eff, camt);
-									inv.setStackInSlot(i, new ItemStack(Items.GLASS_BOTTLE));
-								} else {
-									for (int j = 0; j < 4; j++) {
-										ItemStack ois = interninv.get(j);
-										if (ois.isEmpty()) {
-											interninv.set(j, is.copy());
-											break;
-										} else if (ItemStack.isSameItemSameTags(ois, is)) {
-											ois.setCount(ois.getCount() + is.getCount());
-											break;
-										}
-									}
-									inv.setStackInSlot(i, is.getCraftingRemainingItem());
-								}
-							}
-						}
-						for (int i = 0; i < 4; i++) {
-							ItemStack is = interninv.get(i);
-							if (is.isEmpty())
-								break;
-							info.addItem(is, camt);
-						}
-						Pair<List<CurrentSwayInfo>, Fluid> val = info.handleSway();
-						setSwayhint(val.getFirst());
-						target = val.getSecond();
-					}
-				}
-			}
+
 			if (process <= 0) {
 				process = processMax = 0;
 				tank.setFluid(target);
 			}
 			this.syncData();
 		} else {
-			if (tank.getFluidAmount() % 250 == 0) {
-				int amt = tank.getFluidAmount() / 250;
-				float cnt = 0;
-				boolean hasItem = false;
-				if (info != null) {
-					cnt = info.getDensity() * amt;
-					for (int i = 0; i < 4; i++) {
-						ItemStack is = inv.getStackInSlot(i);
-						if (!is.isEmpty()&&isValidInput(is)) {
-							if (is.getItem() != Items.POTION) {
-								cnt++;
-							}
-							hasItem = true;
-						}
-					}
-				} else {
-					for (int i = 0; i < 4; i++) {
-						ItemStack is = inv.getStackInSlot(i);
-						if (!is.isEmpty()&&isValidInput(is)) {
-							if (is.getItem() != Items.POTION) {
-								cnt++;
-							}
-							hasItem = true;
-						}
-					}
-				}
-				if (hasItem && cnt / amt <= MAX_DENSE) {
-					isStiring = true;
-					process = processMax = 400;
-				} else if (info != null) {
-					ConvertionRecipe rc = null;
-					for (ConvertionRecipe r : ConvertionRecipe.recipes) {
-						int k = 5;
-						boolean worked = false;
-						outer: while (k-- > 0) {
-							if (r.temperature > info.heat)
-								break;
-							if (r.in != Fluids.EMPTY) {
-								boolean flag = false;
-								int cntx = 0;
-								for (Fluid f : info.relishes) {
-									if (f == r.in) {
-										flag = true;
-										cntx++;
-									}
-								}
-								if (!flag)
-									break outer;
-								if (cntx < r.inpart)
-									break outer;
-							}
-							int newpart = info.getRelishCount() + r.outpart - r.inpart;
-							if (newpart > 5 || newpart <= 0) {
-								break;
-							}
-							float tccn = info.getDensity();
 
-							if (r.items != null && !r.items.isEmpty()) {
-
-								for (Pair<Ingredient, Float> i : r.items) {
-									boolean flag = true;
-									for (FloatemStack fs : info.stacks) {
-										float ccn = i.getSecond() / amt;
-
-										if (i.getFirst().test(fs.getStack()) && fs.getCount() >= ccn) {
-											tccn -= ccn;
-											flag = false;
-											break;
-										}
-									}
-									if (flag)
-										break outer;
-								}
-							}
-							if (r.output != null && !r.output.isEmpty()) {
-								for (Pair<ItemStack, Float> i : r.output) {
-									tccn += i.getSecond() / cnt;
-								}
-							}
-							if (tccn * cnt / newpart > MAX_DENSE)
-								break;
-							rc = r;
-							worked = true;
-							if (rc != null) {
-								List<Fluid> fs = new ArrayList<>();
-								int nin = rc.inpart;
-								if (rc.in != Fluids.EMPTY) {
-									for (int i = 0; i < 5; i++) {
-										Fluid f = info.relishes[i];
-										info.relishes[i] = null;
-										if (f == null)
-											continue;
-										if (nin != 0 && f == rc.in) {
-											nin--;
-										} else
-											fs.add(f);
-									}
-									if (rc.out != Fluids.EMPTY)
-										for (int i = 0; i < rc.outpart; i++)
-											fs.add(rc.out);
-									for (int i = 0; i < fs.size(); i++) {
-										info.relishes[i] = fs.get(i);
-									}
-								} else {
-									int cntx = info.getRelishCount();
-									for (int i = cntx; i < cntx + rc.outpart; i++) {
-										info.relishes[i] = rc.out;
-									}
-								}
-
-								if (rc.items != null && !rc.items.isEmpty()) {
-									for (Pair<Ingredient, Float> i : rc.items) {
-										for (FloatemStack fss : info.stacks) {
-											if (i.getFirst().test(fss.getStack())) {
-												fss.setCount(fss.getCount() - i.getSecond() / amt);
-												break;
-											}
-										}
-									}
-								}
-								if (rc.output != null && !rc.output.isEmpty()) {
-									for (Pair<ItemStack, Float> i : rc.output) {
-										info.addItem(i.getFirst(), i.getSecond() / amt);
-									}
-								}
-								
-								
-								
-							}
-						}
-						if (worked) {
-							int cn = info.getRelishCount() * 250;
-							Pair<List<CurrentSwayInfo>, Fluid> i = info.adjustParts(tank.getFluidAmount(), cn);
-							setSwayhint(i.getFirst());
-							target = i.getSecond();
-							tank.getFluid().setAmount(cn);
-							process = processMax = rc.processTime;
-							this.syncData();
-							break;
-						}
-					}
-				}
-
-			}
 
 		}
 
@@ -512,7 +457,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 						info.heat++;
 					heating = 0;
 				}
-			}
+				
 		}
 		if (isLastHeating != ilh)
 			this.syncData();
@@ -560,7 +505,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 		@Override
 		public int fill(FluidStack resource, FluidAction action) {
-			if (processMax != 0)
+			if (status >ADDING_INGREDIENT)
 				return 0;
 			boolean isEmpty = tank.getFluid().isEmpty();
 			int filled = tank.fill(resource, action);
@@ -590,11 +535,16 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 						BeveragePendingContext context = new BeveragePendingContext(info);
 						setSwayhint(context.getSwayHint());
+						temperature=(temperature*tank.getFluidAmount()-filled)/tank.getFluidAmount();
 					}
+					
+					resetAdding();
 					syncData();
-					recipeTested=false;
+					
 				}
 			} else if (tank.isFluidValid(resource) && resource.getAmount() >= 250) {//mix new relish fluid
+				if(getSpeed()==0)//not stiring, can not mix
+					return 0;
 				// System.out.print(0);
 				BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
 				if (info == null) {//not beverage fluid: create info
@@ -624,6 +574,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 									FluidStack fsn =new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250);
 									fsn.applyComponents(tank.getFluid().getComponentsPatch());
 									fsn.set(CVComponents.BEVERAGE_INFO, info);
+									temperature=(temperature*amt)/(famt+amt);
 									tank.setFluid(fsn);
 								}
 								return famt * 250;
@@ -633,6 +584,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					// System.out.print(3);
 					if (action.execute()) {//mix beverage with relish fluid
 						// System.out.print(4);
+						temperature=(temperature*amt)/(famt+amt);
 						if (!resource.has(CVComponents.BEVERAGE_INFO)) {//mix two relish fluid
 							info=info.copy();
 							// System.out.print(5);
@@ -654,9 +606,11 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 							target = new FluidStack(swi.getSecond(),tank.getFluidAmount() + famt * 250);
 							target.set(CVComponents.BEVERAGE_INFO, info);
 						}
+						resetAdding();
+						status=MIXING;
 						process = processMax = 400;
 						syncData();
-						recipeTested=false;
+						
 					}
 					return famt * 250;
 				}
@@ -667,32 +621,35 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 		@Override
 		public FluidStack drain(FluidStack resource, FluidAction action) {
-			if (processMax != 0)
+			if (status >ADDING_INGREDIENT)
 				return FluidStack.EMPTY;
 			FluidStack drained = tank.drain(resource, action);
 			if (!drained.isEmpty() && action.execute()) {
 				if (tank.getFluid().isEmpty()) {
 					tank.setFluid(FluidStack.EMPTY);
 					swayhint.clear();
+					temperature=0;
 				}
+				resetAdding();
 				syncData();
-				recipeTested=false;
+				
 			}
 			return drained;
 		}
 
 		@Override
 		public FluidStack drain(int maxDrain, FluidAction action) {
-			if (processMax != 0)
+			if (status >ADDING_INGREDIENT)
 				return FluidStack.EMPTY;
 			FluidStack drained = tank.drain(maxDrain, action);
 			if (!drained.isEmpty() && action.execute()) {
 				if (tank.getFluid().isEmpty()) {
 					tank.setFluid(FluidStack.EMPTY);
 					swayhint.clear();
+					temperature=0;
 				}
+				resetAdding();
 				syncData();
-				recipeTested=false;
 			}
 			return drained;
 		}

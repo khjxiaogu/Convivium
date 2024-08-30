@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.util.FloatSizedOrCatalystIngredient;
@@ -38,6 +39,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ConvertionRecipe extends IDataRecipe {
 	public static List<RecipeHolder<ConvertionRecipe>> recipes;
+	public static Set<Integer> activeLevel;
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 

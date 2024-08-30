@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -41,6 +42,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ContainingRecipe extends IDataRecipe {
 	public static Map<Fluid, RecipeHolder<ContainingRecipe>> recipes;
+
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 	public static final MapCodec<ContainingRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(

@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,10 +81,11 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 		Stopwatch sw = Stopwatch.createStarted();
 		BeverageTypeRecipe.sorted = filterRecipes(recipes, BeverageTypeRecipe.class, BeverageTypeRecipe.TYPE).collect(Collectors.toList());
 		BeverageTypeRecipe.sorted.sort((t2, t1) -> t1.value().getPriority() - t2.value().getPriority());
-		ContainingRecipe.recipes=new HashMap<>();
 		ContainingRecipe.recipes=filterRecipes(recipes,ContainingRecipe.class,ContainingRecipe.TYPE).collect(Collectors.toMap(t->t.value().fluid, t->t));
 
 		ConvertionRecipe.recipes=filterRecipes(recipes,ConvertionRecipe.class,ConvertionRecipe.TYPE).collect(Collectors.toList());
+		ConvertionRecipe.activeLevel=new HashSet<>();
+		ConvertionRecipe.recipes.forEach(t->ConvertionRecipe.activeLevel.add(t.value().temperature));
 		GrindingRecipe.recipes=filterRecipes(recipes,GrindingRecipe.class,GrindingRecipe.TYPE).collect(Collectors.toList());
 		RelishFluidRecipe.recipes=filterRecipes(recipes,RelishFluidRecipe.class,RelishFluidRecipe.TYPE).collect(Collectors.toMap(t->t.value().fluid, t->t));
 		RelishRecipe.recipes=filterRecipes(recipes,RelishRecipe.class,RelishRecipe.TYPE).collect(Collectors.toMap(t->t.value().relishName, t->t));

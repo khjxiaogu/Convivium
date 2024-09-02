@@ -19,7 +19,6 @@
 package com.khjxiaogu.convivium.client;
 
 
-import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.RotationUtils;
@@ -30,14 +29,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
-@EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber
 public class ClientEvents {
 	/**
 	 * @param load  

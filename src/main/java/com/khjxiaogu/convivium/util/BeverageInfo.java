@@ -117,7 +117,7 @@ public class BeverageInfo implements IFoodInfo {
 	}
 
 	public BeverageInfo copy() {
-		return new BeverageInfo(stacks,effects,swayeffects,foodeffect,relishes,activeRelish1,activeRelish2,healing,saturation,heat);
+		return new BeverageInfo(stacks.stream().map(t->t.copy()).collect(Collectors.toList()),effects.stream().map(t->new MobEffectInstance(t)).collect(Collectors.toList()),swayeffects,foodeffect.stream().map(t->t.copy()).collect(Collectors.toList()),relishes,activeRelish1,activeRelish2,healing,saturation,heat);
 	}
 	public void appendTooltip(List<Component> tt) {
 		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish1);

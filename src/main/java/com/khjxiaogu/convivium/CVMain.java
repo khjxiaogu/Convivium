@@ -68,6 +68,7 @@ public class CVMain {
 		CVMobEffects.EFFECTS.register(mod);
 		CVConfig.register();
 		CVComponents.REGISTRY.register(mod);
+		
 
 	}
 

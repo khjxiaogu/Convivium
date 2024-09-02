@@ -21,17 +21,22 @@ package com.khjxiaogu.convivium.client.gui;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskContainer;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
+import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.CurrentSwayInfo;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.client.util.GuiUtils;
+import com.teammoeg.caupona.components.StewInfo;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.ChatFormatting;
@@ -44,7 +49,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	private ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/whisk.png");
@@ -95,40 +102,43 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		super.render(transform, mouseX, mouseY, partial);
 		if (blockEntity.processMax == 0) {
 			if (!blockEntity.tank.isEmpty()) {
+				FluidStack fluid = blockEntity.tank.getFluid();
+				BeverageInfo info=null;
+				if(blockEntity.target!=null)
+					info=blockEntity.target.get(CVComponents.BEVERAGE_INFO);
+				if(info==null)
+					info=fluid.get(CVComponents.BEVERAGE_INFO);
+				
+				
+				int amt = fluid.getAmount() / 250;
+				if (info == null) {// not beverage fluid: create a temporary info
+					info = new BeverageInfo();
+					for (int i = 0; i < amt; i++) {
+						info.relishes[i] = fluid.getFluid();
+					}
+				}
 				if (isMouseIn(mouseX, mouseY, 132, 45, 16, 46)) {
-					tooltip.add(blockEntity.tank.getFluid().getDisplayName());
-					if(blockEntity.info!=null)
-						blockEntity.info.appendTooltip(tooltip);
+					tooltip.add(blockEntity.tank.getFluid().getHoverName());
+					
+					if(info!=null)
+						info.appendTooltip(tooltip);
 				}
 				GuiUtils.handleGuiTank(transform, blockEntity.tank, leftPos + 132, topPos + 45, 16, 46);
-			}
-			
-			if(blockEntity.info!=null) {
 				for(int i=4;i>=0;i--) {
-					Fluid f=blockEntity.info.relishes[i];
+					Fluid f=info.relishes[i];
 					if(f!=null) {
-						RelishFluidRecipe rr=RelishFluidRecipe.recipes.get(f);
+						RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f);
 						
 						if(rr!=null) {
-							RelishRecipe r=RelishRecipe.recipes.get(rr.relish);
+							RecipeHolder<RelishRecipe> r=RelishRecipe.recipes.get(rr.value().relish);
 							if(isMouseIn(mouseX, mouseY, 152,45+9*(4-i), 19, 9)) {
-								tooltip.add(r.getText());
+								tooltip.add(r.value().getText());
 							}
 						}
 					}
 				}
-			}else if(!blockEntity.tank.isEmpty()){
-				RelishFluidRecipe rr=RelishFluidRecipe.recipes.get(blockEntity.tank.getFluid().getFluid());
-				if(rr!=null&&blockEntity.tank.getFluidAmount()>250) {
-					RelishRecipe r=RelishRecipe.recipes.get(rr.relish);
-					if(r!=null) {
-						int i=blockEntity.tank.getFluidAmount()/250;
-						if(isMouseIn(mouseX, mouseY, 152,45+9*(5-i), 19, 9*i)) {
-							tooltip.add(r.getText());
-						}
-					}
-				}
 			}
+			
 		}
 		if(!blockEntity.swayhint.isEmpty()) {
 			int n1=0;
@@ -184,27 +194,34 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 				idx=(RotationUtils.getTicks()/5)%4;
 			transform.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52);
 		}else {
-			if(blockEntity.info!=null) {
+			if(!blockEntity.tank.isEmpty()) {
+				BeverageInfo info=null;
+				FluidStack fluid = blockEntity.tank.getFluid();
+				if(blockEntity.target!=null)
+					info=blockEntity.target.get(CVComponents.BEVERAGE_INFO);
+				if(info==null)
+					info=fluid.get(CVComponents.BEVERAGE_INFO);
+				
+				
+				int amt = fluid.getAmount() / 250;
+				if (info == null) {// not beverage fluid: create a temporary info
+					info = new BeverageInfo();
+					for (int i = 0; i < amt; i++) {
+						info.relishes[i] = fluid.getFluid();
+					}
+				}
 				for(int i=4;i>=0;i--) {
-					Fluid f=blockEntity.info.relishes[i];
+					Fluid f=info.relishes[i];
 					if(f!=null) {
-						RelishFluidRecipe rr=RelishFluidRecipe.recipes.get(f);
+						RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f);
 						//System.out.println(f);
 						if(rr!=null) {
-							transform.blit(ResourceLocation.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.relish+".png")
+							transform.blit(ResourceLocation.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.value().relish+".png")
 							, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
 							19, 11,32,32);
 						}
 					}
 				}
-			}else if(!blockEntity.tank.isEmpty()){
-				RelishFluidRecipe rr=RelishFluidRecipe.recipes.get(blockEntity.tank.getFluid().getFluid());
-				if(rr!=null&&blockEntity.tank.getFluidAmount()>250)
-					for(int i=blockEntity.tank.getFluidAmount()/250-1;i>=0;i--) {
-						transform.blit(ResourceLocation.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.relish+".png")
-								, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
-								19, 11,32,32);
-					}
 			}
 			if(!blockEntity.swayhint.isEmpty()) {
 				int n1=0;

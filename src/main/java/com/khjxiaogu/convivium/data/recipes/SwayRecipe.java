@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,6 +75,7 @@ public class SwayRecipe  extends IDataRecipe{
 		super();
 		this.relish = relish;
 		this.priority = priority;
+		this.locals=new HashMap<>();
 		locals.stream().forEach(p->this.locals.put(p.getFirst(),p.getSecond()));
 		this.effects = effects;
 		this.icon = icon;

@@ -1,5 +1,6 @@
 # User-specific stuff
 .idea/
+.eclipse/
 /.project
 /.classpath
 .settings/
@@ -122,3 +123,4 @@ run/
 /src/generated/resources/.cache/
 /bin/
 /run1/
+/runs

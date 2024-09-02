@@ -25,6 +25,7 @@ import com.teammoeg.caupona.util.SerializeUtil;
 
 public class RelishConditions {
 	private static DataDeserializerRegistry<RelishCondition> relishes=new DataDeserializerRegistry<>();
+	public static final Codec<RelishCondition> CODEC=relishes.createCodec();
 	static {
 		register("major", MajorRelishCondition.class, MajorRelishCondition.CODEC);
 		register("only_major", OnlyMajorRelishCondition.class, OnlyMajorRelishCondition.CODEC);
@@ -36,7 +37,7 @@ public class RelishConditions {
 		register("and", AndRelishCondition.class, AndRelishCondition.CODEC);
 		register("or", OrRelishCondition.class, OrRelishCondition.CODEC);
 	}
-	public static final Codec<RelishCondition> CODEC=relishes.createCodec();
+	
 	public static <T extends RelishCondition> void register(String name,Class<T> cls,MapCodec<T> codec) {
 		relishes.register(name, cls, codec,SerializeUtil.toStreamCodec(codec));
 	}

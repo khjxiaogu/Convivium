@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class TasteRecipe extends IDataRecipe {
 		Ingredient.CODEC.fieldOf("item").forGetter(o->o.item)
 	).apply(t, TasteRecipe::new));
 	public TasteRecipe(Optional<List<Pair<String, Float>>> variantData, int priority, Ingredient item) {
+		this.variantData=new HashMap<>();
 		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
 		this.priority = priority;
 		this.item = item;

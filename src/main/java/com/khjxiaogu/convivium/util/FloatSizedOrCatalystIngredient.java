@@ -96,7 +96,9 @@ public final class FloatSizedOrCatalystIngredient {
 	public boolean test(FloatemStack stack) {
 		return ingredient.test(stack.getStack()) && stack.getCount() >= count;
 	}
-
+	public boolean testWithPart(FloatemStack stack,int parts) {
+		return ingredient.test(stack.getStack()) && stack.getCount() >= count*parts;
+	}
 	/**
 	 * Returns a list of the stacks from this {@link #ingredient}, with an updated
 	 * {@link #count}.

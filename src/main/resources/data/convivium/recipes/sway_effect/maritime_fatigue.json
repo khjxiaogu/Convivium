@@ -22,9 +22,9 @@
 	"icon": "convivium:mob_effect/maritime_fatigue",
 	"locals": {
 		"display": "naspsobalance+ppupthwanewax",
-		"astringencyDelta": "if(-astringency+0,-if(10/1.0-max(nas,pso),10,(x-y)/(4*1.0)),-10)",
+		"astringencyDelta": "if(-astringency+0,-if(10/1.0-max(nas,pso),10,(nas-pso)/(4*1.0)),-10)",
 		"pungencyDelta": "if(pungency+3,if(ppu-pth,max(0,10/1.0-ppu),-ppu)/4,10)",
-		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,nas),10,(x-y)/(4*1.0)),10)",
+		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,nas),10,(pso-nas)/(4*1.0)),10)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": "if(thickness+3,if(pth-ppu,max(0,10/1.0-pth),-pth)/4,10)",
 		"nas": "max(0,-astringency+0)",

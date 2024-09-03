@@ -11,12 +11,12 @@
 				{
 					"compare": "greater",
 					"left": "nswnpublend",
-					"right": 1.2
+					"right": 0.18
 				}
 			],
 			"effect": "minecraft:hunger",
-			"level": "max(1,min(3,floor(nthnsowanewax/0.18)-1))",
-			"time": "300.0*max(1,min(2,nthnsowanewax/0.18))"
+			"level": "max(1,min(3,floor((nthnsowanewax+nswnpublend)/2/0.18)-1))",
+			"time": "300.0*max(1,min(2,(nthnsowanewax+nswnpublend)/2/0.18))"
 		}
 	],
 	"icon": "minecraft:mob_effect/hunger",

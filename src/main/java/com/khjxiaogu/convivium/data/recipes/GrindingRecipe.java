@@ -20,6 +20,8 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -65,7 +67,7 @@ public class GrindingRecipe extends IDataRecipe {
 	public boolean keepInfo = false;
 	public static final MapCodec<GrindingRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		Codec.list(SizedOrCatalystIngredient.FLAT_CODEC).fieldOf("items").forGetter(o->o.items),
-		BuiltInRegistries.FLUID.byNameCodec().fieldOf("base").forGetter(o->o.base),
+		BuiltInRegistries.FLUID.byNameCodec().optionalFieldOf("base").forGetter(o->Optional.ofNullable(o.base)),
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density),
 		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidIn",FluidStack.EMPTY).forGetter(o->o.in),
 		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
@@ -73,10 +75,10 @@ public class GrindingRecipe extends IDataRecipe {
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("keepInfo").forGetter(o->o.keepInfo)
 		).apply(t, GrindingRecipe::new));
-	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base,
+	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Optional<Fluid> base,
 			float density, FluidStack in, FluidStack out, List<ItemStack> output, int processTime, boolean keepInfo) {
 		this.items = items;
-		this.base = base;
+		this.base = base.orElse(null);
 		this.density = density;
 		this.in = in;
 		this.out = out;

@@ -4,15 +4,14 @@
 	"items": [
 		{
 			"count": 1,
-			"item": {"item": "convivium:steamed_camellia_shoots"}
+			"item": "convivium:steamed_camellia_shoots"
 		}
 	],
 	"keepInfo": false,
 	"outputs": [
 		{
-			"type": "c:nbt",
 			"count": 1,
-			"item": "convivium:powdered_tea"
+			"id": "convivium:powdered_tea"
 		}
 	],
 	"time": 300

@@ -61,17 +61,26 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 
 		@Override
 		protected void onContentsChanged(int slot) {
-			// TODO Auto-generated method stub
 			super.onContentsChanged(slot);
+			isRecipeTested=false;
 			syncData();
 		}
 	};
-	public final FluidTank tankin = new FluidTank(1000);
+	public final FluidTank tankin = new FluidTank(1000) {
+
+		@Override
+		protected void onContentsChanged() {
+			super.onContentsChanged();
+			isRecipeTested=false;
+		}
+		
+	};
 	public int process;
 	public int processMax;
 	public List<ItemStack> items=new ArrayList<>();
 	public boolean isLastHeating;
 	public FluidStack fs=FluidStack.EMPTY;
+	boolean isRecipeTested=false;
 	public BasinBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.BASIN.get(), pWorldPosition, pBlockState);
 	}
@@ -99,7 +108,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 		nbt.putInt("processMax", processMax);
 		nbt.put("in",tankin.writeToNBT(ra, new CompoundTag()));
 		nbt.put("inv", inv.serializeNBT(ra));
-		nbt.put("fluid", fs.save(ra));
+		nbt.put("fluid", fs.saveOptional(ra));
 		if(!isClient) {
 			ListTag tl=new ListTag();
 			items.forEach(t->tl.add(t.save(ra)));
@@ -132,6 +141,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 				isLastHeating = false;
 				items.replaceAll(t->Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,Utils.insertToOutput(inv,2,Utils.insertToOutput(inv,1,t)))));
 				items.removeIf(ItemStack::isEmpty);
+				isRecipeTested=false;
 				if(items.isEmpty()) {
 					processMax=0;
 				}
@@ -143,13 +153,16 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 			}
 			this.syncData();
 		}else if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
-			isLastHeating = false;
-			BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
-			if(recipe!=null) {
-				fs=tankin.getFluidInTank(0).copy();
-				items=recipe.handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
-				process=processMax=recipe.processTime;
-				this.syncData();
+			if(!isRecipeTested) {
+				isLastHeating = false;
+				BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
+				if(recipe!=null) {
+					fs=tankin.getFluidInTank(0).copy();
+					items=recipe.handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
+					process=processMax=recipe.processTime;
+					this.syncData();
+				}
+				isRecipeTested=true;
 			}
 			
 		}

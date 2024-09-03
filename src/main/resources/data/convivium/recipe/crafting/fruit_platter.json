@@ -5,6 +5,6 @@
 		{"item": "minecraft:name_tag"}
 	],
 	"result": {
-		"item": "convivium:fruit_platter"
+		"id": "convivium:fruit_platter"
 	}
 }

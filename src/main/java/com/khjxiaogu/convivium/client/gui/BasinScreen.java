@@ -59,11 +59,11 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
 		tooltip.clear();
 		super.render(transform, mouseX, mouseY, partial);
-		if(!blockEntity.tankin.isEmpty()) {
+		if(!getBlockEntity().tankin.isEmpty()) {
 			if (isMouseIn(mouseX, mouseY, 62, 24, 16, 37)) {
-				tooltip.add(blockEntity.tankin.getFluid().getDisplayName());
+				tooltip.add(getBlockEntity().tankin.getFluid().getHoverName());
 			}
-			GuiUtils.handleGuiTank(transform, blockEntity.tankin, leftPos + 62, topPos + 24, 16, 37);
+			GuiUtils.handleGuiTank(transform, getBlockEntity().tankin, leftPos + 62, topPos + 24, 16, 37);
 		}
 
 		if (!tooltip.isEmpty())
@@ -82,20 +82,23 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform, x, y, partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		if(blockEntity.isLastHeating) {
+		if(getBlockEntity().isLastHeating) {
 			transform.blit(TEXTURE, leftPos+37, topPos+28, 176, 0, 16, 29);
 		}
-		if (blockEntity.processMax > 0) {
-			transform.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(blockEntity.processMax-blockEntity.process)*1f/blockEntity.processMax), 43);
+		if (getBlockEntity().processMax > 0) {
+			transform.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().processMax-getBlockEntity().process)*1f/getBlockEntity().processMax), 43);
 		}
 	}
 
 	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	}
+
+	public BasinBlockEntity getBlockEntity() {
+		return blockEntity;
 	}
 
 }

@@ -89,7 +89,7 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 		transform.drawCenteredString(this.font,""+blockEntity.amt,leftPos + 57,topPos + 19, 0xffffff);
 		if(!blockEntity.tank.isEmpty()) {
 			if (isMouseIn(mouseX, mouseY, 123, 25, 32, 46)) {
-				tooltip.add(blockEntity.tank.getFluid().getDisplayName());
+				tooltip.add(blockEntity.tank.getFluid().getHoverName());
 			}
 			GuiUtils.handleGuiTank(transform, blockEntity.tank, leftPos + 123, topPos + 25, 32, 46);
 		}
@@ -109,7 +109,6 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform,x,y,partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);

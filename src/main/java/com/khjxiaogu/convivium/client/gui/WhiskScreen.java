@@ -21,8 +21,6 @@ package com.khjxiaogu.convivium.client.gui;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
@@ -36,7 +34,6 @@ import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.client.util.GuiUtils;
-import com.teammoeg.caupona.components.StewInfo;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.ChatFormatting;
@@ -176,7 +173,6 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform,x,y,partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);

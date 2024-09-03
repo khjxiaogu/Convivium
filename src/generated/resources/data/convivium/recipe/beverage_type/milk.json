@@ -1,0 +1,24 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "minecraft:milk",
+  "priority": 0,
+  "relish": [
+    {
+      "type": "contains_fluid",
+      "relish": "minecraft:milk"
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

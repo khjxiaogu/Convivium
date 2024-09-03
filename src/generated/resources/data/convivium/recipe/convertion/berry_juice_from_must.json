@@ -1,0 +1,14 @@
+{
+  "type": "convivium:convertion",
+  "consumeAll": false,
+  "fluidIn": {
+    "amount": 250,
+    "id": "convivium:berry_must"
+  },
+  "fluidOut": {
+    "amount": 250,
+    "id": "convivium:berry_juice"
+  },
+  "temperature": 40,
+  "time": 200
+}

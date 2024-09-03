@@ -1,0 +1,30 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:fruits"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:mulled_wine",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "wine"
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    {
+      "tag": "convivium:spice"
+    }
+  ],
+  "time": 200
+}

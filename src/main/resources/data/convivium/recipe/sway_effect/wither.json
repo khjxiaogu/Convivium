@@ -1,0 +1,44 @@
+{
+	"type": "convivium:sway",
+	"effects": [
+		{
+			"condition": [
+				{
+					"compare": "greater",
+					"left": "nasppublend",
+					"right": 0.18
+				},
+				{
+					"compare": "greater",
+					"left": "psopthblend",
+					"right": 0.18
+				}
+			],
+			"effect": "minecraft:wither",
+			"level": "max(1,min(3,floor((nasppublend+psopthblend)/2/0.18)-1))",
+			"time": "100.0*max(1,min(2,(nasppublend+psopthblend)/2/0.18))"
+		}
+	],
+	"icon": "minecraft:mob_effect/wither",
+	"locals": {
+		"display": "nasppublend+psopthblend",
+		"astringencyDelta": "if(-astringency-2,-max(0,3-1.0*sqrt(nas*ppu)/2),-10)",
+		"pungencyDelta": "if(pungency+2,max(0,3-1.0*sqrt(ppu*nas)/2),10)",
+		"soothingnessDelta": "if(soothingness+0,max(0,3-1.0*sqrt(pso*pth)/2),10)",
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "if(thickness+0,max(0,3-1.0*sqrt(pth*pso)/2),10)",
+		"nas": "max(0,-astringency-2)",
+		"ppu": "max(0,pungency+2)",
+		"nasppublend": "1.0*sqrt(nas*ppu)/2",
+		"pso": "max(0,soothingness+0)",
+		"pth": "max(0,thickness+0)",
+		"psopthblend": "1.0*sqrt(pso*pth)/2"
+	},
+	"priority": 0,
+	"relish": [
+		{
+			"type": "major",
+			"relish": "cereal"
+		}
+	]
+}

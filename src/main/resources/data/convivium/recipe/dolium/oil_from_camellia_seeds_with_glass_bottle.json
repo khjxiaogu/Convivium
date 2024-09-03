@@ -1,0 +1,23 @@
+{
+	"type": "caupona:dolium",
+	"amount": 0,
+	"container": {
+		"item": "minecraft:glass_bottle"
+	},
+	"density": 0.0,
+	"items": [
+		{
+			"count": 16,
+			"tag": "convivium:camellia_seeds"
+		},
+		{
+			"count": 0,
+			"tag": "minecraft:anvil"
+		}
+	],
+	"keepInfo": false,
+	"output": {
+		"count": 1,
+		"id": "caupona:gravy_boat"
+	}
+}

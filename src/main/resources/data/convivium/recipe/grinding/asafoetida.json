@@ -4,15 +4,14 @@
 	"items": [
 		{
 			"count": 1,
-			"item": {"item": "caupona:silphium"}
+			"item": "caupona:silphium"
 		}
 	],
 	"keepInfo": false,
 	"outputs": [
 		{
-			"type": "c:nbt",
 			"count": 1,
-			"item": "caupona:asafoetida"
+			"id": "caupona:asafoetida"
 		}
 	],
 	"time": 600

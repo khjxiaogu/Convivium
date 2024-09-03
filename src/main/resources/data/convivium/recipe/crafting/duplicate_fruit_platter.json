@@ -5,7 +5,7 @@
 		{"item": "convivium:fruit_platter"}
 	],
 	"result": {
-		"item": "convivium:fruit_platter",
+		"id": "convivium:fruit_platter",
 		"count": 2
 	}
 }

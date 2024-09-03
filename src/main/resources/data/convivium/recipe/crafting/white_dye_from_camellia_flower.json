@@ -4,6 +4,6 @@
 		{"item": "convivium:camellia_flower"}
 	],
 	"result": {
-		"item": "minecraft:white_dye"
+		"id": "minecraft:white_dye"
 	}
 }

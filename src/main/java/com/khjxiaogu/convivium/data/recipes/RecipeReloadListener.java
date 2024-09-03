@@ -55,7 +55,6 @@ public class RecipeReloadListener implements ResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
-		System.out.println("triggered reload");
 		buildRecipeLists(data.getRecipeManager());
 	}
 

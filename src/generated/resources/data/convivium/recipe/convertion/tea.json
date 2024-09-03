@@ -1,0 +1,20 @@
+{
+  "type": "convivium:convertion",
+  "consumeAll": false,
+  "fluidIn": {
+    "amount": 250,
+    "id": "minecraft:water"
+  },
+  "fluidOut": {
+    "amount": 250,
+    "id": "convivium:tea"
+  },
+  "items": [
+    {
+      "count": 1.0,
+      "item": "convivium:powdered_tea"
+    }
+  ],
+  "temperature": 60,
+  "time": 200
+}

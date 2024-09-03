@@ -158,7 +158,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		nbt.put("inv", inv.serializeNBT(ra));
 		if(isClient)return;
 		if(fout!=null)
-			nbt.put("fout", fout.save(ra));
+			nbt.put("fout", fout.saveOptional(ra));
 		ListTag tl=new ListTag();
 		items.forEach(t->tl.add(t.save(ra)));
 		nbt.put("outBuff", tl);

@@ -14,7 +14,7 @@
 		}
 	},
 	"result": {
-		"item": "convivium:sandstone_aqueduct",
+		"id": "convivium:sandstone_aqueduct",
 		"count": 3
 	}
 }

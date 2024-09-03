@@ -2,25 +2,25 @@
 	"type": "convivium:grinding",
 	"density": 0.0,
 	"fluidIn": {
-		"Amount": 250,
-		"FluidName": "minecraft:water"
+		"amount": 250,
+		"id": "minecraft:water"
 	},
 	"fluidOut": {
-		"Amount": 250,
-		"FluidName": "convivium:drupe_juice"
+		"amount": 250,
+		"id": "convivium:drupe_juice"
 	},
 	"items": [
 		{
 			"count": 4,
-			"item": {"tag": "convivium:fruits/drupes/small"}
+			"tag": "convivium:fruits/drupes/small"
 		}
 	],
 	"keepInfo": false,
 	"outputs": [
 		{
-			"type": "c:nbt",
+
 			"count": 1,
-			"item": "caupona:scraps"
+			"id": "caupona:scraps"
 		}
 	],
 	"time": 200

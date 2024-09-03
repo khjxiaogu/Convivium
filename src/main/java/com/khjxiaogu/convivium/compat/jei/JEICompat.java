@@ -28,6 +28,8 @@ import com.khjxiaogu.convivium.compat.jei.category.BasinCategory;
 import com.khjxiaogu.convivium.compat.jei.category.GrindingCategory;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
+import com.teammoeg.caupona.client.util.GuiUtils;
+import com.teammoeg.caupona.compat.jei.GuiTankHandler;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -38,6 +40,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -79,9 +82,16 @@ public class JEICompat implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
-
+		IIngredientManager manager=registry.getJeiHelpers().getIngredientManager();
 		registry.addRecipeClickArea(PamScreen.class, 108, 23,22, 15, GrindingCategory.TYPE);
 		registry.addRecipeClickArea(BasinScreen.class, 82, 19,16, 43, BasinCategory.TYPE);
+
+		registry.addGuiContainerHandler(PamScreen.class, new GuiTankHandler<PamScreen>(manager)
+			.addTank(42, 19, 16, 37, t->t.getBlockEntity().tankin.getFluid())
+			.addTank(133, 34, 16, 37, t->t.getBlockEntity().tankout.getFluid()));
+		registry.addGuiContainerHandler(BasinScreen.class, new GuiTankHandler<BasinScreen>(manager)
+			.addTank(62, 24, 16, 37, t->t.getBlockEntity().tankin.getFluid()));
+		
 	}
 
 	@Override

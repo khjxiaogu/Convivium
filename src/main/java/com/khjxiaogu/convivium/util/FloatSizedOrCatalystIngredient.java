@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.util.FloatemStack;
 
@@ -21,9 +22,10 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 
 public final class FloatSizedOrCatalystIngredient {
+	public static final Codec<Float> NON_NEGATIVE_FLOAT=Codec.FLOAT.validate(t->t>=0?DataResult.success(t):DataResult.error(()->("Value must be non-negative: "+t)));
 	public static final Codec<FloatSizedOrCatalystIngredient> FLAT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Ingredient.MAP_CODEC_NONEMPTY.forGetter(FloatSizedOrCatalystIngredient::ingredient),
-		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(Codec.FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))
+		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(NON_NEGATIVE_FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))
 		.apply(instance, FloatSizedOrCatalystIngredient::new));
 
 	/**
@@ -44,7 +46,7 @@ public final class FloatSizedOrCatalystIngredient {
 	 */
 	public static final Codec<FloatSizedOrCatalystIngredient> NESTED_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(FloatSizedOrCatalystIngredient::ingredient),
-		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(Codec.FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))
+		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(NON_NEGATIVE_FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))
 		.apply(instance, FloatSizedOrCatalystIngredient::new));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, FloatSizedOrCatalystIngredient> STREAM_CODEC = StreamCodec.composite(

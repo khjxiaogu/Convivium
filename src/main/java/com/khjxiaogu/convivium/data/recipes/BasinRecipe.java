@@ -82,7 +82,7 @@ public class BasinRecipe extends IDataRecipe {
 	}
 	public BasinRecipe(Optional<Fluid> base, float density, Optional<SizedOrCatalystFluidIngredient> in, 
 		Optional<SizedOrCatalystIngredient> item,List<ItemStack> output, int processTime,boolean requireBasin) {
-		this.base = base.orElse(Fluids.EMPTY);
+		this.base = base.orElse(null);
 		this.density = density;
 		this.in = in.orElse(null);
 		this.output = output;

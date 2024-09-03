@@ -1,0 +1,33 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:chocolate_tea",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "fire"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "bath"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

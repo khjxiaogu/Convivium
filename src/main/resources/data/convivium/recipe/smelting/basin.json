@@ -3,6 +3,8 @@
 	"ingredient": {
 		"item": "convivium:clay_basin"
 	},
-	"result": "convivium:basin",
+	"result":{
+		"id":"convivium:basin"
+	},
 	"experience": 0.35
 }

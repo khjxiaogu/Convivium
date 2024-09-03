@@ -18,18 +18,25 @@
 
 package com.khjxiaogu.convivium;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class CVWorldGen {
-	public static final ResourceKey<PlacedFeature> PATCH_CAMELLIA = PlacementUtils.createKey("convivium:patch_camellia");
+	public static final ResourceKey<PlacedFeature> PATCH_CAMELLIA = createPlacedKey("patch_camellia");
 
-	public static final ResourceKey<ConfiguredFeature<?, ?>> CAMELLIA = FeatureUtils.createKey("convivium:camellia");
+	public static final ResourceKey<ConfiguredFeature<?, ?>> CAMELLIA = createConfiguredKey("camellia");
 
 	public CVWorldGen() {
 	}
-
+    public static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredKey(String name) {
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(CVMain.MODID,name));
+    }
+    public static ResourceKey<PlacedFeature> createPlacedKey(String name) {
+        return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(CVMain.MODID,name));
+    }
 }

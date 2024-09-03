@@ -39,6 +39,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries.Keys;
 
 public class CVFluids {
+	static Map<String,TextureColorPair> data=new HashMap<>();
 	private static class TextureColorPair {
 		ResourceLocation texture;
 		int c;
@@ -48,8 +49,11 @@ public class CVFluids {
 			this.texture = t;
 			this.c = c;
 		}
-
+		public TextureColorPair copy() {
+			return new TextureColorPair(texture,c);
+		}
 		public FluidType create(String n) {
+			data.put(n, this.copy());
 			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
 				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n)) {
 
@@ -82,36 +86,7 @@ public class CVFluids {
 
 		public FluidType createBVG(String n) {
 			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
-				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n)) {
-
-				@Override
-				public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-					consumer.accept(new IClientFluidTypeExtensions() {
-
-						@Override
-						public int getTintColor(FluidStack stack) {
-							return stack.get(CVComponents.BEVERAGE_INFO).getIColor();
-						}
-
-						@Override
-						public int getTintColor() {
-							return c;
-						}
-
-						@Override
-						public ResourceLocation getStillTexture() {
-							return texture;
-						}
-
-						@Override
-						public ResourceLocation getFlowingTexture() {
-							return texture;
-						}
-
-					});
-				}
-
-			};
+				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n));
 
 			return ft;
 		}

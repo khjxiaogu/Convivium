@@ -2,25 +2,22 @@
 	"type": "caupona:dolium",
 	"items": [
 		{
-			"item": {
-				"item": "convivium:camellia_seeds"
-			},
+			"item": "convivium:camellia_seeds",
 			"count": 16
 		},
 		{
-			"item": {
-				"item": "minecraft:dirt"
-			},
+			"item": "minecraft:dirt",
 			"count": 2
 		}
 	],
-	"fluid": "minecraft:water",
+	"fluid":{
+		"fluid":"minecraft:water",
+		"amount": 1000
+	},
 	"density": 0.0,
-	"amount": 1000,
 	"keepInfo": false,
 	"output": {
-		"type": "c:nbt",
-		"item": "convivium:camellia_plant",
+		"id": "convivium:camellia_plant",
 		"count": 1
 	}
 }

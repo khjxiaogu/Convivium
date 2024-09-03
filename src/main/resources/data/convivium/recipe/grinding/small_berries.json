@@ -2,25 +2,24 @@
 	"type": "convivium:grinding",
 	"density": 0.0,
 	"fluidIn": {
-		"Amount": 250,
-		"FluidName": "minecraft:water"
+		"amount": 250,
+		"id": "minecraft:water"
 	},
 	"fluidOut": {
-		"Amount": 250,
-		"FluidName": "convivium:berry_juice"
+		"amount": 250,
+		"id": "convivium:berry_juice"
 	},
 	"items": [
 		{
 			"count": 4,
-			"item": {"tag": "convivium:fruits/berries/small"}
+			"tag": "convivium:fruits/berries/small"
 		}
 	],
 	"keepInfo": false,
 	"outputs": [
 		{
-			"type": "c:nbt",
 			"count": 1,
-			"item": "caupona:scraps"
+			"id": "caupona:scraps"
 		}
 	],
 	"time": 200

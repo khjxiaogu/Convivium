@@ -1,0 +1,24 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:spice"
+    },
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:pome_must",
+  "priority": 0,
+  "relish": [
+    {
+      "type": "contains_fluid",
+      "relish": "convivium:pome_must"
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

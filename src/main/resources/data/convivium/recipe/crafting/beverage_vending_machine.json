@@ -23,6 +23,6 @@
 		}
 	},
 	"result": {
-		"item": "convivium:beverage_vending_machine"
+		"id": "convivium:beverage_vending_machine"
 	}
 }

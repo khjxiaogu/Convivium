@@ -1,0 +1,20 @@
+{
+  "type": "convivium:convertion",
+  "consumeAll": false,
+  "fluidIn": {
+    "amount": 250,
+    "id": "minecraft:water"
+  },
+  "fluidOut": {
+    "amount": 250,
+    "id": "convivium:hot_chocolate"
+  },
+  "items": [
+    {
+      "count": 1.0,
+      "item": "convivium:cocoa_powder"
+    }
+  ],
+  "temperature": 40,
+  "time": 200
+}

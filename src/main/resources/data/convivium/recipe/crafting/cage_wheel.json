@@ -17,7 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "convivium:cage_wheel",
+		"id": "convivium:cage_wheel",
 		"count": 2
 	}
 }

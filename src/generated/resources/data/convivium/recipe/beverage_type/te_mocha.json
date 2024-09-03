@@ -1,0 +1,37 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "output": "convivium:te_mocha",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "and",
+        "cond1": {
+          "type": "contains",
+          "relish": "bath"
+        },
+        "cond2": {
+          "type": "contains",
+          "relish": "cereal"
+        }
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "fire"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

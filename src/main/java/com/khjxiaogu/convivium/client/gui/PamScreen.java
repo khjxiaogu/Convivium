@@ -59,17 +59,17 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
 		tooltip.clear();
 		super.render(transform, mouseX, mouseY, partial);
-		if(!blockEntity.tankin.isEmpty()) {
+		if(!getBlockEntity().tankin.isEmpty()) {
 			if (isMouseIn(mouseX, mouseY, 42, 19, 16, 37)) {
-				tooltip.add(blockEntity.tankin.getFluid().getDisplayName());
+				tooltip.add(getBlockEntity().tankin.getFluid().getHoverName());
 			}
-			GuiUtils.handleGuiTank(transform, blockEntity.tankin, leftPos + 42, topPos + 19, 16, 37);
+			GuiUtils.handleGuiTank(transform, getBlockEntity().tankin, leftPos + 42, topPos + 19, 16, 37);
 		}
-		if(!blockEntity.tankout.isEmpty()) {
+		if(!getBlockEntity().tankout.isEmpty()) {
 			if (isMouseIn(mouseX, mouseY, 133, 34, 16, 37)) {
-				tooltip.add(blockEntity.tankout.getFluid().getDisplayName());
+				tooltip.add(getBlockEntity().tankout.getFluid().getHoverName());
 			}
-			GuiUtils.handleGuiTank(transform, blockEntity.tankout, leftPos + 133, topPos + 34, 16, 37);
+			GuiUtils.handleGuiTank(transform, getBlockEntity().tankout, leftPos + 133, topPos + 34, 16, 37);
 		}
 		if (!tooltip.isEmpty())
 			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);
@@ -87,20 +87,23 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 
 	@Override
 	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		this.renderBackground(transform,x,y,partial);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		if(blockEntity.getSpeed()>0) {
+		if(getBlockEntity().getSpeed()>0) {
 			transform.blit(TEXTURE, leftPos+86, topPos+1, 176, 0, 24, 24);
 		}
-		if (blockEntity.processMax > 0) {
-			transform.blit(TEXTURE, leftPos + 108, topPos + 23, 176, 24, (int) (22*(blockEntity.processMax-blockEntity.process)*1f/blockEntity.processMax), 15);
+		if (getBlockEntity().processMax > 0) {
+			transform.blit(TEXTURE, leftPos + 108, topPos + 23, 176, 24, (int) (22*(getBlockEntity().processMax-getBlockEntity().process)*1f/getBlockEntity().processMax), 15);
 		}
 	}
 
 	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	}
+
+	public PamBlockEntity getBlockEntity() {
+		return blockEntity;
 	}
 
 }

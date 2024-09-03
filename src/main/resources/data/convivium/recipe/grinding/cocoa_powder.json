@@ -4,15 +4,14 @@
 	"items": [
 		{
 			"count": 1,
-			"item": {"item": "minecraft:cocoa_beans"}
+			"item": "minecraft:cocoa_beans"
 		}
 	],
 	"keepInfo": false,
 	"outputs": [
 		{
-			"type": "c:nbt",
 			"count": 1,
-			"item": "convivium:cocoa_powder"
+			"id": "convivium:cocoa_powder"
 		}
 	],
 	"time": 300

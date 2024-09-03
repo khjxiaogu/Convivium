@@ -1,0 +1,21 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [],
+  "density": 0.0,
+  "optional": [],
+  "output": "convivium:saidi_tea",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "bath"
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    {
+      "tag": "convivium:sweeteners"
+    }
+  ],
+  "time": 200
+}

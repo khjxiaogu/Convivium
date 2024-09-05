@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{"item": "minecraft:book"},
+		[
+			{"item": "convivium:fresh_camellia_shoots"},
+			{"item": "convivium:water"}
+		]
+	],
+	"result": {
+		"item": "patchouli:guide_book",
+		"nbt": "{\"patchouli:book\":\"convivium:book\"}"
+	},
+  "conditions": [
+    {
+        "modid": "patchouli",
+        "type": "neoforge:mod_loaded"
+    }
+  ]
+}

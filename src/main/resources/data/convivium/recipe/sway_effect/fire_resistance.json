@@ -23,8 +23,8 @@
 	"locals": {
 		"display": "pswnthwanewax+psonpubalance",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency+0,-if(10/1.0-max(npu,pso),10,(x-y)/(4*1.0)),-10)",
-		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,npu),10,(x-y)/(4*1.0)),10)",
+		"pungencyDelta": "if(-pungency+0,-if(10/1.0-max(npu,pso),10,(npu-pso)/(4*1.0)),-10)",
+		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,npu),10,(pso-npu)/(4*1.0)),10)",
 		"sweetnessDelta": "if(sweetness-2,if(psw-nth,max(0,10/1.0-psw),-psw)/4,10)",
 		"thicknessDelta": "if(-thickness+2,-if(nth-psw,max(0,10/1.0-nth),-nth)/4,-10)",
 		"psw": "max(0,sweetness-2)",

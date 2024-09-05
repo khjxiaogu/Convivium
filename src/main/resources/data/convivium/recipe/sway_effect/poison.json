@@ -22,8 +22,8 @@
 	"icon": "minecraft:mob_effect/poison",
 	"locals": {
 		"display": "ppupasbalance+pswnsocontra",
-		"astringencyDelta": "if(astringency+0,if(10/1.0-max(pas,ppu),10,(x-y)/(4*1.0)),10)",
-		"pungencyDelta": "if(pungency+0,if(10/1.0-max(ppu,pas),10,(x-y)/(4*1.0)),10)",
+		"astringencyDelta": "if(astringency+0,if(10/1.0-max(pas,ppu),10,(pas-ppu)/(4*1.0)),10)",
+		"pungencyDelta": "if(pungency+0,if(10/1.0-max(ppu,pas),10,(ppu-pas)/(4*1.0)),10)",
 		"soothingnessDelta": "if(-soothingness+0,-if(nso-psw,max(0,10/1.0-nso),-nso)/4,-10)",
 		"sweetnessDelta": "if(sweetness+0,if(psw-nso,max(0,10/1.0-psw),-psw)/4,10)",
 		"thicknessDelta": 0.0,

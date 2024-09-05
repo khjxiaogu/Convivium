@@ -22,10 +22,10 @@
 	"icon": "minecraft:mob_effect/haste",
 	"locals": {
 		"display": "nswnasbalance+nthppucontra",
-		"astringencyDelta": "if(-astringency-2,-if(10/0.95-max(nas,nsw),10,(x-y)/(4*0.95)),-10)",
+		"astringencyDelta": "if(-astringency-2,-if(10/0.95-max(nas,nsw),10,(nas-nsw)/(4*0.95)),-10)",
 		"pungencyDelta": "if(pungency+0,if(ppu-nth,max(0,10/1.0-ppu),-ppu)/4,10)",
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(-sweetness+2,-if(10/0.95-max(nsw,nas),10,(x-y)/(4*0.95)),-10)",
+		"sweetnessDelta": "if(-sweetness+2,-if(10/0.95-max(nsw,nas),10,(nsw-nas)/(4*0.95)),-10)",
 		"thicknessDelta": "if(-thickness+0,-if(nth-ppu,max(0,10/1.0-nth),-nth)/4,-10)",
 		"nsw": "max(0,-sweetness+2)",
 		"nas": "max(0,-astringency-2)",

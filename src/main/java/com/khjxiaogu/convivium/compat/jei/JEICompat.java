@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.gui.BasinScreen;
+import com.khjxiaogu.convivium.client.gui.BeverageVendingScreen;
 import com.khjxiaogu.convivium.client.gui.PamScreen;
+import com.khjxiaogu.convivium.client.gui.WhiskScreen;
 import com.khjxiaogu.convivium.compat.jei.category.BasinCategory;
 import com.khjxiaogu.convivium.compat.jei.category.GrindingCategory;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
-import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.compat.jei.GuiTankHandler;
 
 import mezz.jei.api.IModPlugin;
@@ -91,6 +92,10 @@ public class JEICompat implements IModPlugin {
 			.addTank(133, 34, 16, 37, t->t.getBlockEntity().tankout.getFluid()));
 		registry.addGuiContainerHandler(BasinScreen.class, new GuiTankHandler<BasinScreen>(manager)
 			.addTank(62, 24, 16, 37, t->t.getBlockEntity().tankin.getFluid()));
+		registry.addGuiContainerHandler(WhiskScreen.class, new GuiTankHandler<WhiskScreen>(manager)
+			.addTank(132, 45, 16, 46, t->t.getBlockEntity().tank.getFluid()));
+		registry.addGuiContainerHandler(BeverageVendingScreen.class, new GuiTankHandler<BeverageVendingScreen>(manager)
+			.addTank(123, 25, 32, 46, t->t.getBlockEntity().tank.getFluid()));
 		
 	}
 

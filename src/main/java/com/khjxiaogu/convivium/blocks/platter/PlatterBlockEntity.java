@@ -56,6 +56,8 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 	};
 	boolean isInfinite = false;
 	public GlobalConfig config=GlobalConfig.PILED;
+	public Object renderingContext;
+	public Object renderingContextLock=new Object();
 	public SlotConfig[] slotconfig=new SlotConfig[] {SlotConfig.MODEL,SlotConfig.MODEL,SlotConfig.MODEL,SlotConfig.MODEL};
 	public PlatterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.PLATTER.get(), pWorldPosition, pBlockState);
@@ -80,6 +82,7 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 			slotconfig[i]=SlotConfig.values()[its[i]];
 		}
 		isInfinite = nbt.getBoolean("inf");
+		renderingContext=null;
 	}
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {

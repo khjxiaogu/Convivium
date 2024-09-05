@@ -136,8 +136,8 @@ public class CVRecipeProvider extends RecipeProvider {
 		out.accept(rl("convertion/cocoa_from_milk"),
 			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)), new FluidStack(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), 40, 200, false),
 			null);
-		out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA), null);
-		out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA), null);
+		//out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA), null);
+		//out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA), null);
 		for (String s : List.of("pome", "drupe", "berry"))
 			out.accept(rl("basin/" + s + "_juice_to_sapa"), new BasinRecipe(SizedOrCatalystFluidIngredient.of(cvfluid(s + "_juice"), 250), SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),
 				List.of(new ItemStack(cpitem("sapa_spice_jar"))), 1, 200, true), null);

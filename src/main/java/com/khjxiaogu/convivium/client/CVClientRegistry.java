@@ -18,8 +18,6 @@
 
 package com.khjxiaogu.convivium.client;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
@@ -44,6 +42,7 @@ import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.BuiltInRegistries;

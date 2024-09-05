@@ -80,13 +80,13 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		super.init();
 		this.addRenderableWidget(btn1 = new ImageButton(
 				Button.builder(hon, btn -> {if(btn1.state!=2)
-			blockEntity.sendMessage((short) 1,btn1.state);}).pos(leftPos + 119, topPos + 117).size(20, 20)
+			getBlockEntity().sendMessage((short) 1,btn1.state);}).pos(leftPos + 119, topPos + 117).size(20, 20)
 				, 176, 72, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(hrs) :(btn1.state==1 ? Tooltip.create(hoff):Tooltip.create(hon))));
 		
 		this.addRenderableWidget(btn2 = new ImageButton(
 				Button.builder(hon, btn -> {
-			blockEntity.sendMessage((short) 0,btn2.state);}).pos(leftPos + 141, topPos + 117).size(20, 20)
+			getBlockEntity().sendMessage((short) 0,btn2.state);}).pos(leftPos + 141, topPos + 117).size(20, 20)
 				, 176, 132, 256, 256, TEXTURE,
 				() -> (btn2.state==0 ? Tooltip.create(rs):Tooltip.create(nors))));
 	}
@@ -94,15 +94,15 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	@Override
 	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
 		tooltip.clear();
-		btn2.state=blockEntity.rs?0:1;
-		btn1.state=btn2.state==0?2:(blockEntity.isHeating?0:1);
+		btn2.state=getBlockEntity().rs?0:1;
+		btn1.state=btn2.state==0?2:(getBlockEntity().isHeating?0:1);
 		super.render(transform, mouseX, mouseY, partial);
-		if (blockEntity.processMax == 0) {
-			if (!blockEntity.tank.isEmpty()) {
-				FluidStack fluid = blockEntity.tank.getFluid();
+		if (getBlockEntity().processMax == 0) {
+			if (!getBlockEntity().tank.isEmpty()) {
+				FluidStack fluid = getBlockEntity().tank.getFluid();
 				BeverageInfo info=null;
-				if(blockEntity.target!=null)
-					info=blockEntity.target.get(CVComponents.BEVERAGE_INFO);
+				if(getBlockEntity().target!=null)
+					info=getBlockEntity().target.get(CVComponents.BEVERAGE_INFO);
 				if(info==null)
 					info=fluid.get(CVComponents.BEVERAGE_INFO);
 				
@@ -115,12 +115,12 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					}
 				}
 				if (isMouseIn(mouseX, mouseY, 132, 45, 16, 46)) {
-					tooltip.add(blockEntity.tank.getFluid().getHoverName());
+					tooltip.add(getBlockEntity().tank.getFluid().getHoverName());
 					
 					if(info!=null)
 						info.appendTooltip(tooltip);
 				}
-				GuiUtils.handleGuiTank(transform, blockEntity.tank, leftPos + 132, topPos + 45, 16, 46);
+				GuiUtils.handleGuiTank(transform, getBlockEntity().tank, leftPos + 132, topPos + 45, 16, 46);
 				for(int i=4;i>=0;i--) {
 					Fluid f=info.relishes[i];
 					if(f!=null) {
@@ -137,10 +137,10 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 			}
 			
 		}
-		if(!blockEntity.swayhint.isEmpty()) {
+		if(!getBlockEntity().swayhint.isEmpty()) {
 			int n1=0;
 			int n2=0;
-			for(CurrentSwayInfo swh:blockEntity.swayhint) {
+			for(CurrentSwayInfo swh:getBlockEntity().swayhint) {
 				if(swh.active>0) {
 					if(isMouseIn(mouseX,mouseY,18+20*(n2++),65,18,18))
 						tooltip.add(Utils.translate(swh.icon.toLanguageKey("sway","name")));
@@ -176,25 +176,25 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		if (blockEntity.getSpeed() > 0) {
+		if (getBlockEntity().getSpeed() > 0) {
 			transform.blit(TEXTURE, leftPos + 128, topPos + 8, 176, 0, 24, 24);
 		}
-		if (blockEntity.isLastHeating) {
+		if (getBlockEntity().isLastHeating) {
 			transform.blit(TEXTURE, leftPos + 130, topPos + 96, 176, 24, 19, 19);
 		}
-		if (blockEntity.processMax > 0) {
+		if (getBlockEntity().processMax > 0) {
 			transform.blit(TEXTURE, leftPos + 111, topPos + 42, 176, 43,
-					(int) (17 * (blockEntity.processMax - blockEntity.process) * 1f / blockEntity.processMax), 13);
+					(int) (17 * (getBlockEntity().processMax - getBlockEntity().process) * 1f / getBlockEntity().processMax), 13);
 			int idx=0;
-			if(blockEntity.getSpeed()>0)
+			if(getBlockEntity().getSpeed()>0)
 				idx=(RotationUtils.getTicks()/5)%4;
 			transform.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52);
 		}else {
-			if(!blockEntity.tank.isEmpty()) {
+			if(!getBlockEntity().tank.isEmpty()) {
 				BeverageInfo info=null;
-				FluidStack fluid = blockEntity.tank.getFluid();
-				if(blockEntity.target!=null)
-					info=blockEntity.target.get(CVComponents.BEVERAGE_INFO);
+				FluidStack fluid = getBlockEntity().tank.getFluid();
+				if(getBlockEntity().target!=null)
+					info=getBlockEntity().target.get(CVComponents.BEVERAGE_INFO);
 				if(info==null)
 					info=fluid.get(CVComponents.BEVERAGE_INFO);
 				
@@ -219,10 +219,10 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					}
 				}
 			}
-			if(!blockEntity.swayhint.isEmpty()) {
+			if(!getBlockEntity().swayhint.isEmpty()) {
 				int n1=0;
 				int n2=0;
-				for(CurrentSwayInfo swh:blockEntity.swayhint) {
+				for(CurrentSwayInfo swh:getBlockEntity().swayhint) {
 					if(swh.active>0) {
 						drawActiveSway(transform,18+20*(n2++),65,swh);
 					}else {
@@ -261,6 +261,10 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	}
 	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	}
+
+	public WhiskBlockEntity getBlockEntity() {
+		return blockEntity;
 	}
 
 }

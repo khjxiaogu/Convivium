@@ -51,7 +51,7 @@ public class CVCommonEvents {
 			if (!ev.isBlockAccess) {
 				RecipeHolder<ContainingRecipe> recipe = ContainingRecipe.recipes.get(ev.fs.getFluid());
 				if (recipe != null) {
-					ev.out = recipe.value().handle(ev.fs.getFluid());
+					ev.out = recipe.value().handle(ev.fs);
 					ev.setResult(EventResult.ALLOW);
 				}
 			}

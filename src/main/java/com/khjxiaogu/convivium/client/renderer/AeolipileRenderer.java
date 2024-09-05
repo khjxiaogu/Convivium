@@ -63,9 +63,11 @@ public class AeolipileRenderer implements BlockEntityRenderer<AeolipileBlockEnti
 		BlockPos facingPos=blockEntity.getFacingPos();
 		boolean isBlack=RotationUtils.isBlackGrid(facingPos);
 		matrixStack.pushPose();
-		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		
 		if(state.getValue(KineticBasedBlock.ACTIVE))
-			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,1f,0f,0f,isBlack),0.5f,0.5f,0.5f);
+			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,(float) (facing.toYRot()*Math.PI/180f),1f,0f,0f,isBlack),0.5f,0.5f,0.5f);
+		else
+			matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
 		//System.out.println("render");
 		ModelUtils.renderModel(isBlack?aeolipile_cw:aeolipile,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn,combinedOverlayIn);
 		matrixStack.popPose();

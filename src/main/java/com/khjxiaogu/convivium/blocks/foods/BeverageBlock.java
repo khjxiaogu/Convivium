@@ -33,7 +33,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +49,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> {
 
@@ -95,7 +93,6 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
 		InteractionResult p = super.useWithoutItem(state, worldIn, pos, player,  hit);

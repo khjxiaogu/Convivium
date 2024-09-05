@@ -64,10 +64,9 @@ public class BeveragePendingContext extends IPendingContext {
 			relishFluids.add(s);
 			RecipeHolder<RelishFluidRecipe> rfr = RelishFluidRecipe.recipes.get(s);
 			if (rfr != null) {
-				relishes.compute(rfr.value().relish, (k, v) -> v == null ? 1 : v + 1);
+				relishes.merge(rfr.value().relish, 1,SUtils.INT_SUM);
 				rfr.value().variantData.forEach((e, d) -> {
-					double actual = d.doubleValue() / cnt;
-					variant.compute(e, (k, v) -> v == null ? actual : actual + v);
+					variant.merge(e,d.doubleValue() / cnt,SUtils.SUM);
 				});
 			}
 		}
@@ -80,12 +79,12 @@ public class BeveragePendingContext extends IPendingContext {
 			info.activeRelish1 = activerelish.get(0);
 		}
 		outer: for (FloatemStack fs : info.stacks) {
+			Map<String,Double> lvar=new HashMap<>();
 			for (RecipeHolder<RelishItemRecipe> isr : RelishItemRecipe.recipes) {
 				if (isr.value().item.test(fs.getStack())) {
-					relishes.compute(isr.value().relish, (k, v) -> v == null ? 1 : v + 1);
+					relishes.merge(isr.value().relish, 1, (a,b)->a+b);
 					isr.value().variantData.forEach((e, d) -> {
-						double actual = d.doubleValue() * fs.getCount();
-						variant.compute(e, (k, v) -> v == null ? actual : actual + v);
+						lvar.merge(e,d.doubleValue(),SUtils.SUM);
 					});
 					continue outer;
 				}
@@ -94,21 +93,23 @@ public class BeveragePendingContext extends IPendingContext {
 			for (RecipeHolder<TasteRecipe> recipe : TasteRecipe.recipes) {
 				if (recipe.value().item.test(fs.getStack())) {
 					recipe.value().variantData.forEach((e, f) -> {
-						double actual = f.doubleValue() * fs.getCount();
-						variant.compute(e, (k, v) -> v == null ? actual : actual + v);
+						lvar.merge(e,f.doubleValue(),SUtils.SUM);
 					});
 					break;
 				}
 			}
 			totalItems += fs.getCount();
+			for(Entry<String, Double> p:lvar.entrySet()) {
+				variant.merge(p.getKey(),30*p.getValue()*Mth.sin(Math.min(fs.getCount(), 30)*Mth.PI/60)/Mth.PI,SUtils.SUM);
+			}
+			
 		}
 		for (String rel : activerelish) {
 
 			RecipeHolder<RelishRecipe> rr1 = RelishRecipe.recipes.get(rel);
 			if (rr1 != null) {
 				rr1.value().variantData.forEach((e, d) -> {
-					double actual = d.doubleValue();
-					variant.compute(e, (k, v) -> v == null ? actual : actual + v);
+					variant.merge(e,d.doubleValue(),SUtils.SUM);
 				});
 			}
 		}

@@ -42,10 +42,117 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEntity> {
 	public static final Map<Item,FruitModel> models=new HashMap<>();
+	public static class FruitPlatterRenderingContext{
+		private static final Quaternionf[] piled_rotations=new Quaternionf[] {
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*2/4),0,1,0)),
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*3/4),0,1,0)),
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*4/4),0,1,0)),
+			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*5/4),0,1,0))
+		};
+		private static final Quaternionf[] grided_rotations=new Quaternionf[] {
+			new Quaternionf().rotateXYZ((float) ((90+10)/180f*Math.PI),-(float) (10/180f*Math.PI),-(float) (15/180f*Math.PI)),
+			new Quaternionf().rotateXYZ((float) ((90+10)/180f*Math.PI),+(float) (15/180f*Math.PI),-(float) (15/180f*Math.PI)),
+			new Quaternionf().rotateXYZ((float) ((90-15)/180f*Math.PI),-(float) (15/180f*Math.PI),+(float) (15/180f*Math.PI)),
+			new Quaternionf().rotateXYZ((float) ((90-15)/180f*Math.PI),+(float) (15/180f*Math.PI),+(float) (15/180f*Math.PI))
+		};
+		@SuppressWarnings("unchecked")
+		private static final ImmutableSet<String>[] model_names=new ImmutableSet[] {
+			ImmutableSet.of("FruitUnit1"),
+			ImmutableSet.of("FruitUnit2"),
+			ImmutableSet.of("FruitUnit3"),
+			ImmutableSet.of("FruitUnit4")
+		}; 
+		public static class FruitPlatterRenderingPart{
+			int type;
+			int modelIndex;
+			FruitModel model;
+			ItemStack stack;
+			public FruitPlatterRenderingPart(FruitModel model,boolean isGrided) {
+				super();
+				type=isGrided?5:1;
+				this.model = model;
+			}
+			public FruitPlatterRenderingPart(int modelIndex, FruitModel model) {
+				super();
+				type=2;
+				this.modelIndex = modelIndex;
+				this.model = model;
+			}
+			public FruitPlatterRenderingPart(ItemStack stack,boolean isGrided) {
+				super();
+				type=isGrided?4:3;
+				this.stack = stack;
+			}
+		}
+		public void setPart(int position,FruitModel model,boolean isGrided) {
+			parts[position-1]=new FruitPlatterRenderingPart(model,isGrided);
+		}
+		public void setPart(int position,int modelIndex, FruitModel model) {
+			parts[position-1]=new FruitPlatterRenderingPart(modelIndex,model);
+		}
+		public void setPart(int position,ItemStack stack,boolean isGrided) {
+			parts[position-1]=new FruitPlatterRenderingPart(stack,isGrided);
+		}
+		FruitPlatterRenderingPart[] parts=new FruitPlatterRenderingPart[4];
+		public void render(ItemRenderer render,BlockEntity blockEntity,MultiBufferSource buffer,PoseStack matrixStack,int combinedLightIn, int combinedOverlayIn) {
+			
+			for(int i=1;i<=4;i++) {
+				FruitPlatterRenderingPart cpart=parts[i-1];
+				if(cpart!=null) {
+					switch(cpart.type) {
+					case 1:renderPartPiledAllFruit(i,cpart.model,blockEntity,buffer,matrixStack,combinedLightIn,combinedOverlayIn);break;
+					case 2:renderPartPiledSingleFruit(i,cpart.modelIndex,cpart.model,blockEntity,buffer,matrixStack,combinedLightIn,combinedOverlayIn);break;
+					case 3:renderPartPiledItem(i,cpart.stack,render,blockEntity,buffer,matrixStack,combinedLightIn,combinedOverlayIn);break;
+					case 4:renderPartGridedItem(i,cpart.stack,render,blockEntity,buffer,matrixStack,combinedLightIn,combinedOverlayIn);break;
+					case 5:renderGridedFruit(i,cpart.model,blockEntity,buffer,matrixStack,combinedLightIn,combinedOverlayIn);break;
+					}
+				}
+				
+			}
+			
+		}
+		public static void renderPartPiledAllFruit(int position,FruitModel rss,BlockEntity blockEntity,MultiBufferSource buffer,PoseStack matrixStack,int combinedLightIn, int combinedOverlayIn) {
+			ModelUtils.tesellateModel(blockEntity,rss.getPiled(position-1), rss.getBuffer(buffer),matrixStack, combinedOverlayIn);
+		}
+		public static void renderPartPiledSingleFruit(int position,int modelIndex,FruitModel rss,BlockEntity blockEntity,MultiBufferSource buffer,PoseStack matrixStack,int combinedLightIn, int combinedOverlayIn) {
+			ModelUtils.tesellateModelGroups(blockEntity,rss.getPiled(modelIndex), rss.getBuffer(buffer),model_names[position-1],matrixStack,  combinedOverlayIn);
+		}
+		public static void renderGridedFruit(int position,FruitModel rss,BlockEntity blockEntity,MultiBufferSource buffer,PoseStack matrixStack,int combinedLightIn, int combinedOverlayIn) {
+			ModelUtils.renderModelGroups(rss.getGrid(), rss.getBuffer(buffer),model_names[position-1],
+				matrixStack, combinedLightIn, combinedOverlayIn);
+		}
+		public static void renderPartPiledItem(int position,ItemStack is,ItemRenderer render,BlockEntity blockEntity,MultiBufferSource buffer,PoseStack matrixStack,int combinedLightIn, int combinedOverlayIn) {
+			matrixStack.pushPose();
+			matrixStack.translate(0.375, 3/16f, 0.5f);
+			matrixStack.scale(1.5f,1, 1.5f);
+			matrixStack.mulPose(piled_rotations[position-1]);
+			matrixStack.mulPose(GuiUtils.rotate90);
+			matrixStack.translate(0,0,-(position-1)/32f);
+			render.render(is, ItemDisplayContext.GROUND, false,
+					matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
+			matrixStack.popPose();
+		}
+		public static void renderPartGridedItem(int position,ItemStack is,ItemRenderer render,BlockEntity blockEntity,MultiBufferSource buffer,PoseStack matrixStack,int combinedLightIn, int combinedOverlayIn) {
+
+			
+			matrixStack.pushPose();
+			matrixStack.translate((((position&1)==0)?11/16f:5/16f),3/16f,(position<=2?4/16f:11/16f));
+			
+			matrixStack.mulPose(grided_rotations[position-1]);
+			//matrixStack.scale(.85f, .85f, .85f);
+			render.render(is, ItemDisplayContext.GROUND, false,
+					matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
+			matrixStack.popPose();
+		}
+		
+		
+
+	}
 	private final ItemRenderer render;
 	/**
 	 * @param rendererDispatcherIn
@@ -54,22 +161,9 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 		render=rendererDispatcherIn.getItemRenderer();
 	}
 
-	private static Quaternionf[] rotations=new Quaternionf[] {
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*2/4),0,1,0)),
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*3/4),0,1,0)),
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*4/4),0,1,0)),
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*5/4),0,1,0))
-	};
-	@SuppressWarnings({ "resource", "deprecation" })
-	@Override
-	public void render(PlatterBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {
-		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
-			return;
-		BlockState state = blockEntity.getBlockState();
-		if (!state.is(CVBlocks.platter.get()))
-			return;
-		//System.out.println("render");
+
+	public void fillContext(PlatterBlockEntity blockEntity,FruitPlatterRenderingContext ctx) {
+		System.out.println("updated rendering info");
 		Map<Item,Integer> items=new HashMap<>();
 		boolean canFull=blockEntity.config==GlobalConfig.PILED;
 		FruitModel[] model=new FruitModel[4];
@@ -90,7 +184,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 				Item is=items.keySet().stream().findFirst().orElse(null);
 				FruitModel rss=models.get(is);
 				if(rss!=null) {
-					ModelUtils.tesellateModel(blockEntity,rss.getPiled(items.get(is)-1), rss.getBuffer(buffer),matrixStack, combinedOverlayIn);
+					ctx.setPart(items.get(is), rss,false);
 					return;
 				}
 			}else {
@@ -114,9 +208,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 					int j=0;
 					for(int i=0;i<4;i++) {
 						if(model[i]==null)continue;
-						j++;
-						ModelUtils.tesellateModelGroups(blockEntity,model[i].getPiled(total-1), model[i].getBuffer(buffer),ImmutableSet.of("FruitUnit"+j),
-								matrixStack,  combinedOverlayIn);
+						ctx.setPart(++j,total-1,model[i]);
 					}
 					return;
 				}
@@ -124,26 +216,11 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			}
 		}
 		if(blockEntity.config==GlobalConfig.PILED) {
-			int j=0;
-			matrixStack.pushPose();
-			matrixStack.translate(0.375, 3/16f, 0.5f);
-			matrixStack.scale(1.5f,1, 1.5f);
-			
-			
 			for(int i=1;i<=4;i++) {
 				ItemStack is=blockEntity.storage.getStackInSlot(i-1);
 				if(is.isEmpty())continue;
-				matrixStack.pushPose();
-				matrixStack.mulPose(rotations[i-1]);
-				matrixStack.mulPose(GuiUtils.rotate90);
-				matrixStack.translate(0,0,-(j++)/32f);
-				
-				
-				render.render(is, ItemDisplayContext.GROUND, false,
-						matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
-				matrixStack.popPose();
+				ctx.setPart(i, is, false);
 			}
-			matrixStack.popPose();
 			return;
 		}
 		
@@ -151,29 +228,38 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			ItemStack is=blockEntity.storage.getStackInSlot(i-1);
 			if(!is.isEmpty()) {
 				if(model[i-1]!=null) {
-				ModelUtils.renderModelGroups(model[i-1].getGrid(), model[i-1].getBuffer(buffer),ImmutableSet.of("FruitUnit"+i),
-						matrixStack, combinedLightIn, combinedOverlayIn);
+					ctx.setPart(i,model[i-1],true);
 				}else {
-					float rx=0;
-					float ry=0;
-					float rz=0;
-					switch(i) {
-					case 1:rx=(float) ((90+10)/180f*Math.PI);rz=-(float) (15/180f*Math.PI);ry=-(float) (10/180f*Math.PI);break;
-					case 2:rx=(float) ((90+10)/180f*Math.PI);rz=-(float) (15/180f*Math.PI);ry=+(float) (15/180f*Math.PI);break;
-					case 3:rx=(float) ((90-15)/180f*Math.PI);rz=+(float) (15/180f*Math.PI);ry=-(float) (15/180f*Math.PI);break;
-					case 4:rx=(float) ((90-15)/180f*Math.PI);rz=+(float) (15/180f*Math.PI);ry=+(float) (15/180f*Math.PI);break;
-					}
-					matrixStack.pushPose();
-					matrixStack.translate((((i&1)==0)?11:5)/16f,3/16f,(i<=2?4:11)/16f);
-					
-					matrixStack.mulPose(new Quaternionf().rotateXYZ(rx,ry,rz));
-					//matrixStack.scale(.85f, .85f, .85f);
-					render.render(is, ItemDisplayContext.GROUND, false,
-							matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
-					matrixStack.popPose();
+					ctx.setPart(i, is, true);
 				}
 			}
 		}
+	}
+	public FruitPlatterRenderingContext getOrCreateContext(PlatterBlockEntity blockEntity) {
+		if(blockEntity.renderingContext==null) {
+			synchronized(blockEntity.renderingContextLock) {
+				if(blockEntity.renderingContext==null) {
+					FruitPlatterRenderingContext ctx=new FruitPlatterRenderingContext();
+					fillContext(blockEntity,ctx);
+					blockEntity.renderingContext=ctx;
+				}
+			}
+		}
+		return (FruitPlatterRenderingContext) blockEntity.renderingContext;
+		
+	}
+	@SuppressWarnings({ "resource", "deprecation" })
+	@Override
+	public void render(PlatterBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLightIn, int combinedOverlayIn) {
+		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
+			return;
+		BlockState state = blockEntity.getBlockState();
+		if (!state.is(CVBlocks.platter.get()))
+			return;
+		getOrCreateContext(blockEntity).render(render, blockEntity, buffer, matrixStack, combinedLightIn, combinedOverlayIn);
+		//System.out.println("render");
+		
 		
 	}
 

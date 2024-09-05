@@ -63,7 +63,6 @@ public class CamelliaFlowerBlock extends CropBlock {
 	/**
 	 * Performs a random tick on a block.
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 
 	public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {

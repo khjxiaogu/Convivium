@@ -84,7 +84,7 @@ runs {
         // "SCAN": For mods scan.
         // "REGISTRIES": For firing of registry events.
         // "REGISTRYDUMP": For getting the contents of all registries.
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.markers', 'REGISTRYDUMP'
 
         // Recommended logging level for the console
         // You can set various levels here.
@@ -97,7 +97,6 @@ runs {
     client {
         // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
         modSource project.sourceSets.client
-        modSource project.sourceSets.main
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
 
@@ -118,7 +117,6 @@ runs {
         // workingDirectory project.file('run-data')
 		//modSource project.sourceSets.datagen
         // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-        modSource project.sourceSets.main
         modSource project.sourceSets.datagen
         arguments.addAll '--mod', project.mod_id,
          '--all',

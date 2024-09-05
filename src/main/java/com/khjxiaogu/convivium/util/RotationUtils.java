@@ -61,7 +61,9 @@ public class RotationUtils {
 	public static Quaternionf getRotation(float pt, float x, float y, float z, boolean black) {
 		return new Quaternionf(new AxisAngle4f((float) (getCycle(pt, black) * 2 * Math.PI), x, y, z));
 	}
-
+	public static Quaternionf getRotation(float pt,float delta, float x, float y, float z, boolean black) {
+		return new Quaternionf(new AxisAngle4f((float) (getCycle(pt, black) * 2 * Math.PI)+delta, x, y, z));
+	}
 	public static Quaternionf getYRotation(float pt, BlockPos pos) {
 		return getYRotation(pt, isBlackGrid(pos));
 	}

@@ -21,6 +21,7 @@ package com.khjxiaogu.convivium.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
@@ -29,6 +30,8 @@ import com.teammoeg.caupona.util.SerializeUtil;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class SUtils {
+	public static final BiFunction<Double,Double,Double> SUM=(a,b)->a+b;
+	public static final BiFunction<Integer,Integer,Integer> INT_SUM=(a,b)->a+b;
 	public static Map<String, Float> fromJson(JsonObject json, String name) {
 		Map<String, Float> variantData = new HashMap<>();
 		if (json.has(name)) {

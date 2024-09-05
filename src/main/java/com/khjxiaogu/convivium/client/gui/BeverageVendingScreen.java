@@ -65,19 +65,19 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 		super.init();
 		this.clearWidgets();
 		this.addRenderableWidget(btnsl1 = new ImageButton(
-				Button.builder(p8, btn -> blockEntity.sendMessage((short) 0,0)).pos(leftPos + 101, topPos + 16).size(14, 14)
+				Button.builder(p8, btn -> getBlockEntity().sendMessage((short) 0,0)).pos(leftPos + 101, topPos + 16).size(14, 14)
 				, 176, 14, 256, 256, TEXTURE,
 				() -> Tooltip.create(p8)));
 		this.addRenderableWidget(btnsl2 = new ImageButton(
-				Button.builder(p1, btn -> blockEntity.sendMessage((short) 1,0)).pos(leftPos + 86, topPos + 16).size(14, 14)
+				Button.builder(p1, btn -> getBlockEntity().sendMessage((short) 1,0)).pos(leftPos + 86, topPos + 16).size(14, 14)
 				, 176, 0, 256, 256, TEXTURE,
 				() -> Tooltip.create(p1)));
 		this.addRenderableWidget(btnsl3 = new ImageButton(
-				Button.builder(m1, btn -> blockEntity.sendMessage((short) 2,0)).pos(leftPos + 27, topPos + 16).size(14, 14)
+				Button.builder(m1, btn -> getBlockEntity().sendMessage((short) 2,0)).pos(leftPos + 27, topPos + 16).size(14, 14)
 				, 176, 28, 256, 256, TEXTURE,
 				() -> Tooltip.create(m1)));
 		this.addRenderableWidget(btnsl4 = new ImageButton(
-				Button.builder(m8, btn -> blockEntity.sendMessage((short) 3,0)).pos(leftPos + 12, topPos + 16).size(14, 14)
+				Button.builder(m8, btn -> getBlockEntity().sendMessage((short) 3,0)).pos(leftPos + 12, topPos + 16).size(14, 14)
 				, 176, 42, 256, 256, TEXTURE,
 				() -> Tooltip.create(m8)));
 	}
@@ -86,12 +86,12 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
 		tooltip.clear();
 		super.render(transform, mouseX, mouseY, partial);
-		transform.drawCenteredString(this.font,""+blockEntity.amt,leftPos + 57,topPos + 19, 0xffffff);
-		if(!blockEntity.tank.isEmpty()) {
+		transform.drawCenteredString(this.font,""+getBlockEntity().amt,leftPos + 57,topPos + 19, 0xffffff);
+		if(!getBlockEntity().tank.isEmpty()) {
 			if (isMouseIn(mouseX, mouseY, 123, 25, 32, 46)) {
-				tooltip.add(blockEntity.tank.getFluid().getHoverName());
+				tooltip.add(getBlockEntity().tank.getFluid().getHoverName());
 			}
-			GuiUtils.handleGuiTank(transform, blockEntity.tank, leftPos + 123, topPos + 25, 32, 46);
+			GuiUtils.handleGuiTank(transform, getBlockEntity().tank, leftPos + 123, topPos + 25, 32, 46);
 		}
 		if (!tooltip.isEmpty())
 			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);
@@ -117,6 +117,10 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 
 	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	}
+
+	public BeverageVendingBlockEntity getBlockEntity() {
+		return blockEntity;
 	}
 
 }

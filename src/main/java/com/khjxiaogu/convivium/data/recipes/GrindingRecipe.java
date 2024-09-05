@@ -178,8 +178,8 @@ public class GrindingRecipe extends IDataRecipe {
 	}
 
 	private List<ItemStack> handle(FluidStack f) {
-		
-		f.shrink(in.getAmount());
+		if(in.getAmount()>0)
+			f.shrink(in.getAmount());
 		List<ItemStack> fss=new ArrayList<>();
 		for(ItemStack is:output) {
 			ItemStack iss=is.copy();

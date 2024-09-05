@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
 public class BeverageInfo implements IFoodInfo {
@@ -79,7 +81,7 @@ public class BeverageInfo implements IFoodInfo {
 		Codec.list(SerializeUtil.fromRFBBStreamCodec(MobEffectInstance.STREAM_CODEC, MobEffectInstance.CODEC)).fieldOf("effects").forGetter(o -> o.effects),
 		Codec.list(SerializeUtil.fromRFBBStreamCodec(MobEffectInstance.STREAM_CODEC, MobEffectInstance.CODEC)).fieldOf("sway").forGetter(o -> o.swayeffects),
 		Codec.list(ChancedEffect.CODEC).fieldOf("feffects").forGetter(o -> o.foodeffect),
-		Codec.list(SerializeUtil.idOrKey(BuiltInRegistries.FLUID)).fieldOf("relish").forGetter(o -> Arrays.asList(o.relishes)),
+		Codec.list(SerializeUtil.idOrKey(BuiltInRegistries.FLUID)).fieldOf("relish").forGetter(o -> Arrays.stream(o.relishes).map(n->n==null?Fluids.EMPTY:n).collect(Collectors.toList())),
 		Codec.STRING.fieldOf("activeRelish1").forGetter(o -> o.activeRelish1),
 		Codec.STRING.fieldOf("activeRelish2").forGetter(o -> o.activeRelish2),
 		Codec.INT.fieldOf("heal").forGetter(o -> o.healing),
@@ -89,16 +91,18 @@ public class BeverageInfo implements IFoodInfo {
 	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, List<Fluid> relishes, String activeRelish1,
 		String activeRelish2, int healing, float saturation, int heat) {
 		super();
+		
 		this.stacks = stacks;
 		this.effects = effects;
 		this.swayeffects = swayeffects;
 		this.foodeffect = foodeffect;
-		this.relishes = relishes.toArray(Fluid[]::new);
+		this.relishes = relishes.stream().map(t->t==Fluids.EMPTY?null:t).toArray(Fluid[]::new);
 		this.activeRelish1 = activeRelish1;
 		this.activeRelish2 = activeRelish2;
 		this.healing = healing;
 		this.saturation = saturation;
 		this.heat = heat;
+		
 	}
 
 	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, String activeRelish1,
@@ -117,7 +121,7 @@ public class BeverageInfo implements IFoodInfo {
 	}
 
 	public BeverageInfo copy() {
-		return new BeverageInfo(stacks.stream().map(t->t.copy()).collect(Collectors.toList()),effects.stream().map(t->new MobEffectInstance(t)).collect(Collectors.toList()),swayeffects,foodeffect.stream().map(t->t.copy()).collect(Collectors.toList()),relishes,activeRelish1,activeRelish2,healing,saturation,heat);
+		return new BeverageInfo(stacks.stream().map(t->t.copy()).collect(Collectors.toList()),effects.stream().map(t->new MobEffectInstance(t)).collect(Collectors.toList()),new ArrayList<>(swayeffects),foodeffect.stream().map(t->t.copy()).collect(Collectors.toList()),relishes,activeRelish1,activeRelish2,healing,saturation,heat);
 	}
 	public void appendTooltip(List<Component> tt) {
 		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish1);
@@ -328,6 +332,7 @@ public class BeverageInfo implements IFoodInfo {
 	}
 
 	public void completeData() {
+		stacks.removeIf(t->t.isEmpty());
 		stacks.sort(Comparator.<FloatemStack>comparingDouble(e -> e.getCount()).thenComparingInt(t -> Item.getId(t.getItem())));
 		foodeffect.sort(
 			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
@@ -335,7 +340,6 @@ public class BeverageInfo implements IFoodInfo {
 		effects.sort(
 			Comparator.<MobEffectInstance, String>comparing(e -> e.getEffect().getRegisteredName())
 				.thenComparingInt(e -> e.getAmplifier()).thenComparingInt(e -> e.getDuration()));
-
 	}
 
 	public void recalculateHAS() {
@@ -410,6 +414,25 @@ public class BeverageInfo implements IFoodInfo {
 	public Fluid getBase() {
 		
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(relishes);
+		result = prime * result + Objects.hash(effects, foodeffect, healing, heat, saturation, stacks, swayeffects);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		BeverageInfo other = (BeverageInfo) obj;
+		return Objects.equals(effects, other.effects) && Objects.equals(foodeffect, other.foodeffect) && healing == other.healing && heat == other.heat && Arrays.equals(relishes, other.relishes)
+			&& Float.floatToIntBits(saturation) == Float.floatToIntBits(other.saturation) && Objects.equals(stacks, other.stacks) && Objects.equals(swayeffects, other.swayeffects);
 	}
 
 

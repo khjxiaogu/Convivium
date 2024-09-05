@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,6 +28,7 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
@@ -73,18 +75,18 @@ public class BeverageTypeRecipe extends IDataRecipe {
 		Codec.list(RelishConditions.CODEC).optionalFieldOf("relish").forGetter(o->Optional.ofNullable(o.relish)),
 		Codec.list(Codec.STRING).optionalFieldOf("allowedRelish").forGetter(o->Optional.ofNullable(o.allowedRelish)),
 		Codec.INT.fieldOf("priority").forGetter(o->o.priority),
-		Codec.INT.fieldOf("time").forGetter(o->o.time),
+		Codec.INT.fieldOf("time").forGetter(o->o.time), 
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density),
-		BuiltInRegistries.FLUID.byNameCodec().fieldOf("output").forGetter(o->o.output),
+		BuiltInRegistries.FLUID.byNameCodec().validate(n->n==Fluids.EMPTY?DataResult.error(()->"Output fluid can not be empty"):DataResult.success(n)).fieldOf("output").forGetter(o->o.output),
 		Codec.BOOL.fieldOf("removeNBT").forGetter(o->o.removeNBT)
 		).apply(t, BeverageTypeRecipe::new));
 		
 	public BeverageTypeRecipe(Optional<List<Ingredient>> must, Optional<List<Ingredient>> optional, Optional<List<RelishCondition>> relish, Optional<List<String>> allowedRelish, int priority, int time, float density, Fluid output,
 		boolean removeNBT) {
-		this.must = must.orElse(null);
-		this.optional = optional.orElse(null);
-		this.relish = relish.orElse(null);
-		this.allowedRelish = allowedRelish.orElse(null);
+		this.must = must.orElse(Arrays.asList());
+		this.optional = optional.orElse(Arrays.asList());
+		this.relish = relish.orElse(Arrays.asList());
+		this.allowedRelish = allowedRelish.orElse(Arrays.asList());
 		this.priority = priority;
 		this.time = time;
 		this.density = density;
@@ -132,23 +134,22 @@ public class BeverageTypeRecipe extends IDataRecipe {
 		if (ctx.getTotalItems() < density)
 			return false;
 		
-		if(relish!=null)
+		if(!relish.isEmpty())
 			if(!relish.stream().anyMatch(t->t.test(ctx)))
 				return false;
-		if(allowedRelish!=null&&!allowedRelish.isEmpty()) {
+		if(!allowedRelish.isEmpty()) {
 			if(ctx.relishes.keySet().stream().anyMatch(t->!allowedRelish.contains(t)))
 				return false;
 		}
-		if(must!=null&&!must.isEmpty()) {
-			if(!must.stream().allMatch(t->ctx.getItems().stream().map(e->e.getStack()).anyMatch(e->t.test(e))))
-				return false;
+		List<FloatemTagStack> filtered=new ArrayList<>(ctx.getItems());
+		if(!must.isEmpty()) {
+			for(Ingredient i:must) {
+				if(!filtered.removeIf(t->i.test(t.getStack())))
+					return false;
+			}
 		}
-		if(optional!=null&&!optional.isEmpty())
-			for(FloatemTagStack is:ctx.getItems()) {
-				if(must!=null) {
-					if(must.stream().anyMatch(e->e.test(is.getStack())))
-						continue;
-				}
+		if(!optional.isEmpty())
+			for(FloatemTagStack is:filtered) {
 				if(!optional.stream().anyMatch(e->e.test(is.getStack())))
 					return false;
 			}

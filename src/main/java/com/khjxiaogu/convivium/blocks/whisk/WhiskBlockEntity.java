@@ -52,12 +52,10 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
@@ -66,7 +64,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -127,6 +124,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public int status;
 	public int heating;
 	public int temperature;
+	public int lastProcess;
 	public boolean isHeating;
 	public boolean rs;
 	public boolean inf;
@@ -160,9 +158,10 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			process=processMax=0;
 			status=IDLE;
 			
-			recipeTested=false;
+			
 		}
-		
+		lastProcess=0;
+		recipeTested=false;
 	}
 
 	@Override
@@ -178,10 +177,17 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		rs = nbt.getBoolean("rs");
 		inf = nbt.getBoolean("inf");
 		isLastHeating = nbt.getBoolean("last_heat");
+		temperature = nbt.getInt("temperature");
 		if (nbt.contains("target"))
-			target = FluidStack.parseOptional(ra, nbt);
+			target = FluidStack.parseOptional(ra, nbt.getCompound("target"));
+		
 		tank.readFromNBT(ra, nbt.getCompound("tank"));
-		inv.deserializeNBT(ra, nbt.getCompound("inv"));
+		if(!isClient) {
+			inv.deserializeNBT(ra, nbt.getCompound("inv"));
+			temperature = nbt.getInt("temperature");
+		}
+		
+		lastProcess=nbt.getInt("lastProcess");
 
 	}
 
@@ -199,10 +205,14 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		nbt.putBoolean("rs", rs);
 		nbt.putBoolean("inf", inf);
 		nbt.putBoolean("last_heat", isLastHeating);
+		
 		if (target != null)
-			nbt.put("target", target.save(ra));
+			nbt.put("target", target.saveOptional(ra));
 		nbt.put("tank", tank.writeToNBT(ra, new CompoundTag()));
-		nbt.put("inv", inv.serializeNBT(ra));
+		if(!isClient) {
+			nbt.put("inv", inv.serializeNBT(ra));
+			nbt.putInt("temperature", temperature);
+		}
 	}
 
 	@Override
@@ -271,7 +281,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 	public void tryMixItems() {
 		BeverageInfo info = tank.getFluid().get(CVComponents.BEVERAGE_INFO);
-		;
+		
 		if (info == null) {// not beverage fluid: create a temporary info
 			info = new BeverageInfo();
 			FluidStack fs = tank.getFluid();
@@ -279,22 +289,30 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			for (int i = 0; i < amt; i++) {
 				info.relishes[i] = fs.getFluid();
 			}
+		}else {
+			info=info.copy();
 		}
 		int amt = tank.getFluidAmount() / 250;
+		int count=0;
 		for (int i = 0; i < 4; i++) {
 			ItemStack is = inv.getStackInSlot(i);
 			if (!is.isEmpty() && isValidInput(is)) {
 				if (is.getItem() != Items.POTION) {
 					if (!info.addItem(is, amt))
 						return;
+					else
+						count++;
 				} else {
 					for (MobEffectInstance eff : is.get(DataComponents.POTION_CONTENTS).getAllEffects())
 						info.addEffect(eff, amt);
 				}
 			}
 		}
+		if(count==0)return;
 		Pair<List<CurrentSwayInfo>, Fluid> val = info.handleSway();
+		info.completeData();
 		setSwayhint(val.getFirst());
+		System.out.println(val.getSecond());
 		target = new FluidStack(val.getSecond(), amt * 250);
 		target.applyComponents(tank.getFluid().getComponentsPatch());
 		target.set(CVComponents.BEVERAGE_INFO, info);
@@ -306,98 +324,115 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public void tryConvertType() {
 		Set<ConvertionRecipe> recipes = new HashSet<>();
 		for (RecipeHolder<ConvertionRecipe> r : ConvertionRecipe.recipes) {
-			if (r.value().temperature <= temperature && r.value().in.getAmount() % 250 == 0 && r.value().out.getAmount() % 250 == 0)
+			if (r.value().temperature <= temperature && r.value().in.getAmount() % 250 == 0 && r.value().out.getAmount() % 250 == 0) {
 				recipes.add(r.value());
+			}
 		}
 		BeverageInfo info = tank.getFluid().get(CVComponents.BEVERAGE_INFO);
 		FluidStack fluid = tank.getFluid();
-		int amt = fluid.getAmount() / 250;
+		int camt = fluid.getAmount() / 250;
 		if (info == null) {// not beverage fluid: create a temporary info
 			info = new BeverageInfo();
-			for (int i = 0; i < amt; i++) {
+			for (int i = 0; i < camt; i++) {
 				info.relishes[i] = fluid.getFluid();
 			}
 		}
-		List<Fluid> fs = new ArrayList<>();
-		outer:
-		for (ConvertionRecipe r : recipes) {
-			if (!r.in.isEmpty()) {
-				int nin = r.in.getAmount()/250;
-				for (Fluid f : info.relishes) {
-					if (nin != 0 && f == r.in.getFluid()) {
-						nin--;
-					}else if(f!=null){
-						fs.add(f);
-					}
-				}
-				if (nin>0)
-					continue;
-			}
-			int newpart = info.getRelishCount() + r.out.getAmount() / 250 - r.in.getAmount() / 250;
-			if (newpart > 5 || newpart <= 0) {
-				break;
-			}
-
-			if (r.items != null && !r.items.isEmpty()) {
-
-				for (FloatSizedOrCatalystIngredient i : r.items) {
-					boolean flag = true;
-					for (FloatemStack stack : info.stacks) {
-						if (i.testWithPart(stack, amt)) {
-							// tccn -= i.count();
-							flag = false;
-							break;
+		if(info.getRelishCount()!=camt)return;
+		int tprocessTime=0;
+		boolean requireCopy=true;
+		nextrcp:for(int inc=0;inc<10;inc++) {
+			outer:
+			for (ConvertionRecipe r : recipes) {
+				int amt=info.getRelishCount();
+				List<Fluid> fs = new ArrayList<>();
+				if (!r.in.isEmpty()) {
+					int nin = r.in.getAmount()/250;
+					for (Fluid f : info.relishes) {
+						if (nin != 0 && f == r.in.getFluid()) {
+							nin--;
+							
+						}else if(f!=null){
+							fs.add(f);
 						}
 					}
-					if (flag)
+					if (nin>0)
 						continue outer;
 				}
-			}
-			// no longer have counting test
-			/*
-			 * if (r.items != null && !r.items.isEmpty()) {
-			 * 
-			 * for (FloatSizedOrCatalystIngredient i : r.items) { boolean flag = true; for
-			 * (FloatemStack fs : info.stacks) { if (i.testWithPart(fs,amt)) { tccn -=
-			 * i.count(); flag = false; break; } } if (flag) break outer; } } if (r.output
-			 * != null && !r.output.isEmpty()) { for (FloatemStack i : r.output) { tccn +=
-			 * i.getCount(); } } if (tccn * cnt / newpart > MAX_DENSE) break;
-			 */
-			
-			if (!r.out.isEmpty())
-				for (int i = 0; i < r.out.getAmount()/250; i++)
-					fs.add(r.out.getFluid());
-			//recipe ok,copy and prepare to write
-			int newAmount=fs.size();
-			info=info.copy();
-			for (int i = 0; i < fs.size(); i++) {
-				info.relishes[i] = fs.get(i);
-			}
-			
-			if (r.items != null && !r.items.isEmpty()) {
+				int newpart = info.getRelishCount() + r.out.getAmount() / 250 - r.in.getAmount() / 250;
+				if (newpart > 5 || newpart <= 0) {
+					continue outer;
+				}
+	
+				if (r.items != null && !r.items.isEmpty()) {
+	
+					for (FloatSizedOrCatalystIngredient i : r.items) {
+						boolean flag = true;
+						for (FloatemStack stack : info.stacks) {
+							if (i.testWithPart(stack, amt)) {
+								// tccn -= i.count();
+								flag = false;
+								break;
+							}
+						}
+						if (flag)
+							continue outer;
+					}
+				}
+				// no longer have counting test
+				/*
+				 * if (r.items != null && !r.items.isEmpty()) {
+				 * 
+				 * for (FloatSizedOrCatalystIngredient i : r.items) { boolean flag = true; for
+				 * (FloatemStack fs : info.stacks) { if (i.testWithPart(fs,amt)) { tccn -=
+				 * i.count(); flag = false; break; } } if (flag) break outer; } } if (r.output
+				 * != null && !r.output.isEmpty()) { for (FloatemStack i : r.output) { tccn +=
+				 * i.getCount(); } } if (tccn * cnt / newpart > MAX_DENSE) break;
+				 */
 				
-				for (FloatSizedOrCatalystIngredient i : r.items) {
-					for (FloatemStack fss : info.stacks) {
-						if (i.testWithPart(fss,newAmount)) {
-							fss.shrink(i.count()/amt);
-							break;
+				if (!r.out.isEmpty())
+					for (int i = 0; i < r.out.getAmount()/250; i++)
+						fs.add(r.out.getFluid());
+				//recipe ok,copy and prepare to write
+				
+				if(requireCopy) {
+					info=info.copy();
+					requireCopy=false;
+				}
+				for (int i = 0; i < fs.size(); i++) {
+					
+					info.relishes[i] = fs.get(i);
+				}
+				int newAmount=fs.size();
+				if (r.items != null && !r.items.isEmpty()) {
+					
+					for (FloatSizedOrCatalystIngredient i : r.items) {
+						for (FloatemStack fss : info.stacks) {
+							if (i.testWithPart(fss,amt)) {
+								fss.shrink(i.count()/amt);
+								break;
+							}
 						}
 					}
 				}
-			}
-			if (r.output != null && !r.output.isEmpty()) {
-				for (FloatemStack i : r.output) {
-					info.addItem(i.copyWithCount(i.getCount()/amt));
+				if (r.output != null && !r.output.isEmpty()) {
+					for (FloatemStack i : r.output) {
+						info.addItem(i.copyWithCount(i.getCount()/amt));
+					}
 				}
+				info.adjustParts(amt, newAmount);
+				tprocessTime=Math.max(r.processTime,tprocessTime+r.processTime/6);
+				continue nextrcp;
 			}
-			process=processMax=r.processTime;
+			break;
+		}
+		if(tprocessTime>0) {
+			process=processMax=tprocessTime;
 			Pair<List<CurrentSwayInfo>, Fluid> res=info.handleSway();
-			target=new FluidStack(res.getSecond(),newAmount*250);
+			info.completeData();
+			target=new FluidStack(res.getSecond(),info.getRelishCount()*250);
 			target.applyComponents(tank.getFluid().getComponentsPatch());
 			target.set(CVComponents.BEVERAGE_INFO, info);
 			status=MIXING;
-			break;
-			
 		}
 
 	}
@@ -448,14 +483,26 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 			if (process <= 0) {
 				process = processMax = 0;
+				
+				
+				if(status==ADDING_INGREDIENT) {
+					status=IDLE;
+					for(int i=0;i<4;i++) {
+						inv.setStackInSlot(i, inv.getStackInSlot(i).getCraftingRemainingItem());
+					}
+				}
 				status=IDLE;
 				tank.setFluid(target);
 				recipeTested=false;
 			}
 			this.syncData();
 		} 
-		if(!recipeTested)
-			tryMixItems();
+		if(!recipeTested&&status==IDLE) {
+				tryConvertType();
+			if(status==IDLE)
+				tryMixItems();
+			recipeTested=true;
+		}
 		applyHeat();
 		if (isLastHeating != ilh)
 			this.syncData();
@@ -591,7 +638,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 							}
 							Pair<List<CurrentSwayInfo>, Fluid> swi = info.handleSway();
 							setSwayhint(swi.getFirst());
-							target = new FluidStack(info.checkFluidType(), tank.getFluidAmount() + famt * 250);
+							info.completeData();
+							target = new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250);
 							target.set(CVComponents.BEVERAGE_INFO, info);
 						} else {// mix relish fluid and beverage fluid
 							// System.out.print(6);
@@ -601,6 +649,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 							}
 							Pair<List<CurrentSwayInfo>, Fluid> swi = info.adjustParts(amt, amt + famt);
 							setSwayhint(swi.getFirst());
+							info.completeData();
 							target = new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250);
 							target.set(CVComponents.BEVERAGE_INFO, info);
 						}

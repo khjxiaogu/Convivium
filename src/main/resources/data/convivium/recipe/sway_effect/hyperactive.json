@@ -22,10 +22,10 @@
 	"icon": "caupona:mob_effect/hyperactive",
 	"locals": {
 		"display": "nsonthblend+nswnasbalance",
-		"astringencyDelta": "if(-astringency+0,-if(10/0.9-max(nas,nsw),10,(x-y)/(4*0.9)),-10)",
+		"astringencyDelta": "if(-astringency+0,-if(10/0.9-max(nas,nsw),10,(nas-nsw)/(4*0.9)),-10)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1.0*sqrt(nso*nth)/2),-10)",
-		"sweetnessDelta": "if(-sweetness+0,-if(10/0.9-max(nsw,nas),10,(x-y)/(4*0.9)),-10)",
+		"sweetnessDelta": "if(-sweetness+0,-if(10/0.9-max(nsw,nas),10,(nsw-nas)/(4*0.9)),-10)",
 		"thicknessDelta": "if(-thickness+1,-max(0,3-1.0*sqrt(nth*nso)/2),-10)",
 		"nso": "max(0,-soothingness-1)",
 		"nth": "max(0,-thickness+1)",

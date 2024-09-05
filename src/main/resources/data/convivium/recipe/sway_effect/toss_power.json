@@ -22,11 +22,11 @@
 	"icon": "convivium:mob_effect/toss_power",
 	"locals": {
 		"display": "nthnasbalance+psopswcontra",
-		"astringencyDelta": "if(-astringency-3,-if(10/1.2-max(nas,nth),10,(x-y)/(4*1.2)),-10)",
+		"astringencyDelta": "if(-astringency-3,-if(10/1.2-max(nas,nth),10,(nas-nth)/(4*1.2)),-10)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "if(soothingness+0,if(pso-psw,max(0,10/1.0-pso),-pso)/4,10)",
 		"sweetnessDelta": "if(sweetness+0,if(psw-pso,max(0,10/1.0-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+2,-if(10/1.2-max(nth,nas),10,(x-y)/(4*1.2)),-10)",
+		"thicknessDelta": "if(-thickness+2,-if(10/1.2-max(nth,nas),10,(nth-nas)/(4*1.2)),-10)",
 		"nth": "max(0,-thickness+2)",
 		"nas": "max(0,-astringency-3)",
 		"nthnasbalance": "1.2*max(0,log((nth^2+nas^2)/(abs(nth-nas)+1))/1.5)",

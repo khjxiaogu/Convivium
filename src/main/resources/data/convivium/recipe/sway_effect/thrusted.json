@@ -22,9 +22,9 @@
 	"icon": "convivium:mob_effect/thrusted",
 	"locals": {
 		"display": "pasnsobalance+ppupthwanewax",
-		"astringencyDelta": "if(astringency+0,if(10/1.0-max(pas,nso),10,(x-y)/(4*1.0)),10)",
+		"astringencyDelta": "if(astringency+0,if(10/1.0-max(pas,nso),10,(pas-nso)/(4*1.0)),10)",
 		"pungencyDelta": "if(pungency+3,if(ppu-pth,max(0,10/1.0-ppu),-ppu)/4,10)",
-		"soothingnessDelta": "if(-soothingness+0,-if(10/1.0-max(nso,pas),10,(x-y)/(4*1.0)),-10)",
+		"soothingnessDelta": "if(-soothingness+0,-if(10/1.0-max(nso,pas),10,(nso-pas)/(4*1.0)),-10)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": "if(thickness+3,if(pth-ppu,max(0,10/1.0-pth),-pth)/4,10)",
 		"pas": "max(0,astringency+0)",

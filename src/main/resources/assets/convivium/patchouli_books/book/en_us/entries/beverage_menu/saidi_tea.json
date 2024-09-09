@@ -1,7 +1,7 @@
 {
 	"category": "convivium:beverage_menu",
 	"icon": "convivium:saidi_tea",
-	"name": "Ṣaʿidi Tea",
+	"name": "Sa'idi Tea (Ṣaʿidi Tea)",
 	"pages": [
 		{
 			"type": "convivium:beverage_recipe",

@@ -10,7 +10,7 @@
 			"item": "minecraft:iron_ingot"
 		},
 		"L": {
-			"item": "caupona:lead_nugget"
+			"tag": "c:nuggets/lead"
 		}
 	},
 	"result": {

@@ -8,11 +8,11 @@
 	"items": [
 		{
 			"count": 16,
-			"tag": "convivium:camellia_seeds"
+			"item": "convivium:camellia_seeds"
 		},
 		{
 			"count": 0,
-			"tag": "minecraft:anvil"
+			"item": "minecraft:anvil"
 		}
 	],
 	"keepInfo": false,

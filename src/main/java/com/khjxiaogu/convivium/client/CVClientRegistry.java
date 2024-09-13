@@ -40,6 +40,7 @@ import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
+import com.khjxiaogu.convivium.client.renderer.WolfFountainRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
 
@@ -70,6 +71,7 @@ public class CVClientRegistry {
 		event.register(CVGui.WHISK.get(), WhiskScreen::new);
 		event.register(CVGui.VENDING.get(), BeverageVendingScreen::new);
 		event.register(CVGui.BASIN.get(), BasinScreen::new);
+		
 	}
 
 	@SuppressWarnings("unused")
@@ -86,6 +88,8 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE.get(), BeverageRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE_VENDING_MACHINE.get(), VendingRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BASIN.get(), BasinRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.WOLF_FOUNTAIN.get(), WolfFountainRenderer::new);
+		
 	}
 	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
 	@SubscribeEvent

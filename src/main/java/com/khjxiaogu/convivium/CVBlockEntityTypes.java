@@ -33,6 +33,7 @@ import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlockEntity;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
+import com.khjxiaogu.convivium.blocks.wolf_fountain.WolfFountainBlockEntity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
@@ -58,6 +59,9 @@ public class CVBlockEntityTypes {
 		makeTypes2(AqueductBlockEntity::new, () -> CVBlocks.aqueducts));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN = REGISTER.register("aqueduct_controller",
 		makeTypes2(AqueductControllerBlockEntity::new, () -> CVBlocks.aqueduct_mains));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WolfFountainBlockEntity>> WOLF_FOUNTAIN = REGISTER.register("wolf_fountain",
+		makeType(WolfFountainBlockEntity::new, () -> CVBlocks.wolf_fountain));
+	
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageBlockEntity>> BEVERAGE = REGISTER.register("beverage", makeType(BeverageBlockEntity::new, () -> CVBlocks.BEVERAGE));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageVendingBlockEntity>> BEVERAGE_VENDING_MACHINE = REGISTER.register("beverage_vending_machine",
 		makeType(BeverageVendingBlockEntity::new, () -> CVBlocks.BEVERAGE_VENDING_MACHINE));

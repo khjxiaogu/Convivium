@@ -48,6 +48,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.food.FoodProperties.Builder;
 import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -285,32 +286,6 @@ public class BeverageInfo implements IFoodInfo {
 		return saturation;
 	}
 
-	@SuppressWarnings("deprecation")
-	public FoodProperties getFood() {
-
-		FoodProperties.Builder b = new FoodProperties.Builder();
-		for (MobEffectInstance eff : effects) {
-			if (eff != null) {
-				b.effect(eff, 1);
-			}
-		}
-		for (ChancedEffect ef : foodeffect) {
-			b.effect(ef.effectSupplier(), ef.chance);
-		}
-		for (MobEffectInstance ef : effects) {
-			b.effect(() -> new MobEffectInstance(ef), 1);
-		}
-		for (MobEffectInstance ef : swayeffects) {
-			b.effect(() -> new MobEffectInstance(ef), 1);
-		}
-		b.nutrition(healing);
-		if (Float.isNaN(saturation))
-			b.saturationModifier(0);
-		else
-			b.saturationModifier(saturation);
-		b.alwaysEdible();
-		return b.build();
-	}
 
 	@Override
 	public List<PossibleEffect> getEffects() {
@@ -433,6 +408,36 @@ public class BeverageInfo implements IFoodInfo {
 		BeverageInfo other = (BeverageInfo) obj;
 		return Objects.equals(effects, other.effects) && Objects.equals(foodeffect, other.foodeffect) && healing == other.healing && heat == other.heat && Arrays.equals(relishes, other.relishes)
 			&& Float.floatToIntBits(saturation) == Float.floatToIntBits(other.saturation) && Objects.equals(stacks, other.stacks) && Objects.equals(swayeffects, other.swayeffects);
+	}
+
+	@Override
+	public Builder getFood(int extraHealing, int extraSaturation) {
+		FoodProperties.Builder b = new FoodProperties.Builder();
+		for (MobEffectInstance eff : effects) {
+			if (eff != null) {
+				b.effect(eff, 1);
+			}
+		}
+		for (ChancedEffect ef : foodeffect) {
+			b.effect(ef.effectSupplier(), ef.chance);
+		}
+		for (MobEffectInstance ef : effects) {
+			b.effect(() -> new MobEffectInstance(ef), 1);
+		}
+		for (MobEffectInstance ef : swayeffects) {
+			b.effect(() -> new MobEffectInstance(ef), 1);
+		}
+		float extraSat=0;
+		if(healing+extraHealing>0) {
+			extraSat=extraSaturation/(healing+extraHealing);
+		}
+		b.nutrition(healing+extraHealing);
+		if (Float.isNaN(saturation))
+			b.saturationModifier(extraSat);
+		else
+			b.saturationModifier(saturation+extraSat);
+		b.alwaysEdible();
+		return b;
 	}
 
 

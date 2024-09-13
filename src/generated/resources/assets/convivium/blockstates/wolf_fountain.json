@@ -1,0 +1,184 @@
+{
+  "variants": {
+    "active=false,facing=east,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=east,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=east,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=east,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=east,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=east,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=north,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=north,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=north,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=north,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=north,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=north,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=south,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=south,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=south,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=south,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=south,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=south,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=west,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=false,facing=west,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=false,facing=west,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=false,facing=west,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=false,facing=west,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=false,facing=west,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=true,facing=east,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=east,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=east,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=east,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=east,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=east,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=north,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=north,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=north,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=north,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=north,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=north,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=south,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=south,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=south,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=south,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=south,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=south,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=west,heat=0,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    },
+    "active=true,facing=west,heat=0,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    },
+    "active=true,facing=west,heat=1,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    },
+    "active=true,facing=west,heat=1,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    },
+    "active=true,facing=west,heat=2,waterlogged=false": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    },
+    "active=true,facing=west,heat=2,waterlogged=true": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    }
+  }
+}

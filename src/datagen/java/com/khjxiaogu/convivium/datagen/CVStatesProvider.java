@@ -86,7 +86,8 @@ public class CVStatesProvider extends BlockStateProvider {
 		simpleBlock(cvblock("fruit_platter"), obmf(CPMain.MODID, "dish"));
 		simpleBlockItem(cvblock("camellia_plant"), bmf("camellia_plant"));
 		itemModel(CVBlocks.CAMELLIA_FLOWER.get(), bmf("camellia_product_stage_c"));
-
+		this.horizontalBlock(CVBlocks.wolf_fountain.get(), bs->bs.getValue(KineticBasedBlock.ACTIVE)?bmf("wolf_fountain_2"):bmf("wolf_fountain_1"));
+		blockItemModel("wolf_fountain","_0");
 		this.getVariantBuilder(CVBlocks.CAMELLIA_FLOWER.get())
 			.partialState().with(CamelliaFlowerBlock.AGE, 0).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_1"), 0, false))
 			.partialState().with(CamelliaFlowerBlock.AGE, 1).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_2b"), 0, false))

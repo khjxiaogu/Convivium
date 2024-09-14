@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.blocks.kinetics;
 
-import com.khjxiaogu.convivium.CVConfig;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.LazyTickWorker;
 
@@ -28,26 +27,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity {
+public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity implements KineticConnected {
 	protected LazyTickWorker process;
 	protected int speed;//
 	public KineticTransferBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
 		super(pType, pWorldPosition, pBlockState);
-		process = new LazyTickWorker(CVConfig.SERVER.kineticValidation.get(),()->{
-			if(this.speed!=0) {
-				this.speed = 0;
-				if(getSpeed()==0)
-					this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, false));
-				return true;
-			}
-			return false;
-		});
+		process = KineticConnected.createKineticValidator(this);
 	}
 
+	@Override
 	public int getSpeed() {
 		return speed;
 	};
 
+	@Override
 	public void setSpeed(int val) {
 		if (speed > val)
 			return;
@@ -80,5 +73,5 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity {
 			this.syncData();
 		}
 	}
-	public abstract boolean isReceiver() ;
+
 }

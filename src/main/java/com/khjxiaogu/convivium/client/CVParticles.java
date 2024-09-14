@@ -29,10 +29,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class CVParticles {
 	public static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister
 			.create(BuiltInRegistries.PARTICLE_TYPE, CVMain.MODID);
-
 	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> FLOW = REGISTER.register("flow",
 			() -> new SimpleParticleType(false));
-	public static final DeferredHolder<ParticleType<?>, ColorParticleType> SPLASH = REGISTER.register("splash",
-		() -> new ColorParticleType(false));
+	public static final DeferredHolder<ParticleType<?>, InputParticleType> SPLASH = REGISTER.register("splash",
+		() -> new InputParticleType(false));
 
 }

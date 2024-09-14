@@ -21,6 +21,7 @@ package com.khjxiaogu.convivium.blocks.aqueduct;
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
+import com.khjxiaogu.convivium.blocks.kinetics.KineticConnected;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
@@ -138,9 +139,7 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 					moving=dir.getCounterClockWise();
 				}
 				Vec3i v3=moving.getNormal();
-				
-				BlockPos facingPos=pPos.relative(pState.getValue(AqueductControllerBlock.FACING));
-				if(pLevel.getBlockEntity(facingPos) instanceof KineticTransferBlockEntity ent) {
+				if(pLevel.getBlockEntity(pPos) instanceof KineticConnected ent) {
 					pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0225*ent.getSpeed()));
 				}
 				

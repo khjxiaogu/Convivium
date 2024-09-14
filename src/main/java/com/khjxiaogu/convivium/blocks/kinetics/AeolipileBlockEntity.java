@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
-import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVConfig;
 import com.teammoeg.caupona.blocks.CPHorizontalBlock;
 import com.teammoeg.caupona.blocks.pot.StewPotBlockEntity;
@@ -56,9 +55,9 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 		process = new LazyTickWorker(Mth.ceil(CVConfig.SERVER.kineticValidation.get() / 2f),()->{
 			Set<BlockPos> pss = getAll();
 			for (BlockPos pos : pss) {
-				if (level.getBlockEntity(pos) instanceof KineticTransferBlockEntity cog) {
+				if (level.getBlockEntity(pos) instanceof KineticConnected cog) {
 					cog.setSpeed(speed);
-					if (level.getBlockEntity(pos.below()) instanceof KineticTransferBlockEntity cog2&&cog2.isReceiver()) {
+					if (level.getBlockEntity(pos.below()) instanceof KineticConnected cog2&&cog2.isReceiver()) {
 						cog2.setSpeed(speed);
 					}
 				}
@@ -112,7 +111,7 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 		return false;
 	}
 	public boolean isReciver(BlockPos bs) {
-		if(level.getBlockEntity(bs) instanceof KineticTransferBlockEntity transfer) {
+		if(level.getBlockEntity(bs) instanceof KineticConnected transfer) {
 			return transfer.isReceiver();
 		}
 		return false;

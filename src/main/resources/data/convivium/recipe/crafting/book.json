@@ -11,7 +11,7 @@
 		"item": "patchouli:guide_book",
 		"nbt": "{\"patchouli:book\":\"convivium:book\"}"
 	},
-  "conditions": [
+  "neoforge:conditions": [
     {
         "modid": "patchouli",
         "type": "neoforge:mod_loaded"

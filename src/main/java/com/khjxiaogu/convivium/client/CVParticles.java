@@ -30,6 +30,9 @@ public class CVParticles {
 	public static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister
 			.create(BuiltInRegistries.PARTICLE_TYPE, CVMain.MODID);
 
-	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SPLASH = REGISTER.register("splash",
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> FLOW = REGISTER.register("flow",
 			() -> new SimpleParticleType(false));
+	public static final DeferredHolder<ParticleType<?>, ColorParticleType> SPLASH = REGISTER.register("splash",
+		() -> new ColorParticleType(false));
+
 }

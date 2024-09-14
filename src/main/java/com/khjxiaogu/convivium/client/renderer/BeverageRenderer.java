@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -48,11 +47,11 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 	@SuppressWarnings("unchecked")
 	public static final Pair<Vec3,Quaternionf>[] rots=new Pair[] {
 		Pair.of(Vec3.ZERO.add(0,0,0), new Quaternionf()),//side
-		Pair.of(Vec3.ZERO.add(0,0,6/16f), new Quaternionf(new AxisAngle4f((float) (Math.PI/2),0,1,0))),//side
-		Pair.of(Vec3.ZERO.add(6/16f,0,6/16f), new Quaternionf(new AxisAngle4f((float) (Math.PI),0,1,0))),//side
-		Pair.of(Vec3.ZERO.add(6/16f,0,0), new Quaternionf(new AxisAngle4f(-(float) (Math.PI/2),0,1,0))), //side
-		Pair.of(Vec3.ZERO.add(0, 6/16f, 0), new Quaternionf(new AxisAngle4f((float) (Math.PI/2),1,0,0))),
-		Pair.of(Vec3.ZERO.add(0,0,6/16f), new Quaternionf(new AxisAngle4f(-(float) (Math.PI/2),1,0,0)))
+		Pair.of(Vec3.ZERO.add(0,0,6/16f), new Quaternionf().rotateY((float) (Math.PI/2))),//side
+		Pair.of(Vec3.ZERO.add(6/16f,0,6/16f), new Quaternionf().rotateY((float) (Math.PI))),//side
+		Pair.of(Vec3.ZERO.add(6/16f,0,0), new Quaternionf().rotateY(-(float) (Math.PI/2))), //side
+		Pair.of(Vec3.ZERO.add(0, 6/16f, 0), new Quaternionf().rotateX((float) (Math.PI/2))),
+		Pair.of(Vec3.ZERO.add(0,0,6/16f), new Quaternionf().rotateX(-(float) (Math.PI/2)))
 	};
 	/**
 	 * @param rendererDispatcherIn  

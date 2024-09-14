@@ -90,20 +90,32 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 	}
 	public void findNext(Level l, BlockPos orig,Direction dir,Set<BlockPos> pos) {
 		BlockPos crn=orig.relative(dir);
-		if(l.isLoaded(crn)&&isCage(l.getBlockState(crn),dir.getOpposite()))
+		if(l.isLoaded(crn)&&isCage(crn,dir.getOpposite()))
 			findNext(l,crn,crn,true,pos);
 	}
 	/**
 	 * @param dir  
 	 */
-	public boolean isCage(BlockState bs,Direction dir) {
-		return bs.is(CVBlocks.cage.get());
+	public boolean isCage(BlockPos bs,Direction dir) {
+		if(level.getBlockEntity(bs) instanceof Cog cog) {
+			return cog.isCageTowards(dir);
+		}
+		return false;
 	}
 	/**
 	 * @param dir  
 	 */
-	public boolean isCog(BlockState bs,Direction dir) {
-		return bs.is(CVBlocks.cog.get());
+	public boolean isCog(BlockPos bs,Direction dir) {
+		if(level.getBlockEntity(bs) instanceof Cog cog) {
+			return cog.isCogTowards(dir);
+		}
+		return false;
+	}
+	public boolean isReciver(BlockPos bs) {
+		if(level.getBlockEntity(bs) instanceof KineticTransferBlockEntity transfer) {
+			return transfer.isReceiver();
+		}
+		return false;
 	}
 	public void findNext(Level l, BlockPos crn, BlockPos orig,boolean isCage,Set<BlockPos> pos) {
 		if (dist(crn, orig)) {
@@ -111,11 +123,15 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 				for (Direction dir : Utils.horizontals) {
 					BlockPos act = crn.relative(dir);
 					if (l.isLoaded(act) && 
-							((isCage&&isCog(l.getBlockState(act),dir.getOpposite()))||
-							(!isCage&&this.isCage(l.getBlockState(act),dir.getOpposite())))) {
+							((isCage&&isCog(act,dir.getOpposite()))||
+							(!isCage&&this.isCage(act,dir.getOpposite())))) {
 						findNext(l, act, orig,!isCage,pos);
 					}
 				}
+			}
+		}else {
+			if (isReciver(crn)) {
+				pos.add(crn);
 			}
 		}
 	}

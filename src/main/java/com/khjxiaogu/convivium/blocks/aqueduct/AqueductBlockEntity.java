@@ -96,7 +96,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 						int dz=from.getStepZ();
 						double rx=from.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
 						double rz=from.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
-						this.level.addParticle(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,-dx*0.048, 0,-dz*0.048);
+						this.level.addParticle(CVParticles.FLOW.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,-dx*0.048, 0,-dz*0.048);
 						//System.out.println("tic"+dx+","+dz);
 					}
 					Direction[] dirs=this.getBlockState().getValue(AqueductBlock.CONN).getNext(from);
@@ -108,7 +108,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 							double rx=di.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
 							double rz=di.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
 							
-							this.level.addParticle(CVParticles.SPLASH.get(),center.x()+0.46*dx+rx,center.y()+0.45,center.z()+0.46*dz+rz,-dx*0.048, 0,-dz*0.048);
+							this.level.addParticle(CVParticles.FLOW.get(),center.x()+0.46*dx+rx,center.y()+0.45,center.z()+0.46*dz+rz,-dx*0.048, 0,-dz*0.048);
 							//System.out.println("tic"+dx+","+dz);
 						}
 					}

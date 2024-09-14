@@ -95,7 +95,7 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity> {
 			
 			if(!is.isEmpty()) {
 				matrixStack.pushPose();
-				matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (Math.PI*(i-2)/4),0,1,0)),0.5f,0.5f,0.5f);
+				matrixStack.rotateAround(new Quaternionf().rotateAxis((float) (Math.PI*(i-2)/4),0,1,0),0.5f,0.5f,0.5f);
 				matrixStack.translate(5/16f,type?(4/16f):(8/16f),5/16f);
 				matrixStack.mulPose(new Quaternionf().rotateXYZ(type?30:-10,0,30));
 				matrixStack.scale(0.5f, 0.5f, 0.5f);

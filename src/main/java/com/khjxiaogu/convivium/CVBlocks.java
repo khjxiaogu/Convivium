@@ -36,7 +36,7 @@ import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlock;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlock;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlock;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlock;
-import com.khjxiaogu.convivium.blocks.wolf_fountain.WolfStatueBlock;
+import com.khjxiaogu.convivium.blocks.wolf_fountain.WolfFountainBlock;
 import com.teammoeg.caupona.item.CPBlockItem;
 
 import net.minecraft.core.BlockPos;
@@ -66,7 +66,7 @@ public class CVBlocks {
 	public static final DeferredHolder<Block, BasinBlock> basin = baseblock("basin", () -> new BasinBlock(getKineticProps()));
 	public static final DeferredHolder<Block, BasinBlock> lead_basin = baseblock("lead_basin", () -> new BasinBlock(Block.Properties.of().sound(SoundType.METAL)
 		.strength(3.5f, 10).noOcclusion()));
-	public static final DeferredHolder<Block, WolfStatueBlock> wolf_fountain = baseblock("wolf_fountain", () -> new WolfStatueBlock(getKineticProps()));
+	public static final DeferredHolder<Block, WolfFountainBlock> wolf_fountain = baseblock("wolf_fountain", () -> new WolfFountainBlock(getKineticProps()));
 
 	public static final List<DeferredHolder<Block, Block>> aqueducts = new ArrayList<>();
 	public static final List<DeferredHolder<Block, Block>> aqueduct_mains = new ArrayList<>();

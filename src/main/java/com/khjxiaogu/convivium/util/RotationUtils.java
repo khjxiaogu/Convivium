@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.util;
 
-import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import net.minecraft.core.BlockPos;
@@ -55,14 +54,14 @@ public class RotationUtils {
 	}
 
 	public static Quaternionf getYRotation(float pt, boolean black) {
-		return new Quaternionf(new AxisAngle4f((float) (getCycle(pt, black) * 2 * Math.PI), 0, 1, 0));
+		return new Quaternionf().rotationY((float) (getCycle(pt, black) * 2 * Math.PI));
 	}
 
 	public static Quaternionf getRotation(float pt, float x, float y, float z, boolean black) {
-		return new Quaternionf(new AxisAngle4f((float) (getCycle(pt, black) * 2 * Math.PI), x, y, z));
+		return new Quaternionf().rotationAxis((float) (getCycle(pt, black) * 2 * Math.PI), x, y, z);
 	}
-	public static Quaternionf getRotation(float pt,float delta, float x, float y, float z, boolean black) {
-		return new Quaternionf(new AxisAngle4f((float) (getCycle(pt, black) * 2 * Math.PI)+delta, x, y, z));
+	public static Quaternionf getRotation(float pt,float x, float y, float z,float delta,float dx,float dy,float dz, boolean black) {
+		return new Quaternionf().rotationAxis(delta,dx,dy,dz).mul(new Quaternionf().rotationAxis((float) (getCycle(pt, black) * 2 * Math.PI), x, y, z));
 	}
 	public static Quaternionf getYRotation(float pt, BlockPos pos) {
 		return getYRotation(pt, isBlackGrid(pos));

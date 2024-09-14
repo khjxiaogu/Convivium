@@ -34,7 +34,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlockEntity> {
-	static final Quaternionf rotation= new Quaternionf(new AxisAngle4f((float) Math.PI,0,0,1));
+	static final Quaternionf rotation= new Quaternionf().rotateAxis((float) Math.PI,0,0,1);
 	@SuppressWarnings({ "deprecation", "resource" })
 	@Override
 	public void render(BeverageVendingBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
@@ -45,7 +45,7 @@ public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlock
 		if(!state.is(CVBlocks.BEVERAGE_VENDING_MACHINE.get()))return;
 		Direction dir=state.getValue(CPHorizontalBlock.FACING);
 		matrixStack.pushPose();
-		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f(-(float)(dir.toYRot()/180*Math.PI),0,1,0)),0.5f,0.5f,0.5f);
+		matrixStack.rotateAround(new Quaternionf().rotateAxis(-(float)(dir.toYRot()/180*Math.PI),0,1,0),0.5f,0.5f,0.5f);
 		matrixStack.scale(1/38f,1/38f, 1);
 		matrixStack.mulPose(rotation);
 		matrixStack.translate(0,0,3/128f);

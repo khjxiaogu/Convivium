@@ -44,6 +44,7 @@ import com.khjxiaogu.convivium.client.renderer.WolfFountainRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
 
+import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -151,7 +152,8 @@ public class CVClientRegistry {
 
 	@SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-		event.registerSpriteSet(CVParticles.SPLASH.get(), SplashParticle.Provider::new);
+		event.registerSpriteSet(CVParticles.FLOW.get(), FlowParticle.Provider::new);
+		event.registerSpriteSet(CVParticles.SPLASH.get(), FountainSplashParticle.Provider::new);
 	}
 
 	@SubscribeEvent

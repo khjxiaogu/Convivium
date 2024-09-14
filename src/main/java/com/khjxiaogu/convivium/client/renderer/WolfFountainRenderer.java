@@ -27,7 +27,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WolfFountainRenderer extends RotationRenderer<WolfFountainBlockEntity> {
-	public static final DynamicBlockModelReference cage=ModelUtils.getModel(CVMain.MODID,"cage_wheel");
+	public static final DynamicBlockModelReference cage=ModelUtils.getModel(CVMain.MODID,"wolf_fountain_rotor");
 	/**
 	 * @param rendererDispatcherIn  
 	 */

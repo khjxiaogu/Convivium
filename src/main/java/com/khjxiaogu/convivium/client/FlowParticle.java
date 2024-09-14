@@ -26,10 +26,10 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.particles.SimpleParticleType;
 
-public class SplashParticle extends TextureSheetParticle {
+public class FlowParticle extends TextureSheetParticle {
    private final SpriteSet sprites;
 
-   SplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
+   FlowParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
       super(pLevel, pX, pY, pZ);
       this.sprites = pSprites;
       this.setSize(0.01F, 0.01F);
@@ -66,7 +66,7 @@ public class SplashParticle extends TextureSheetParticle {
       }
 
       public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-         return new SplashParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.sprites);
+         return new FlowParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.sprites);
       }
    }
 }

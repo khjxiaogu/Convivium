@@ -77,13 +77,6 @@ public class CVRecipeProvider extends RecipeProvider {
 		// null, 0f, new FluidStack(Fluids.WATER,250),new
 		// FluidStack(CVFluids.pjuicef.get(),250),List.of(new
 		// ItemStack(cpitem("scraps"))), 200, false));
-		relish(out, Constants.TEA, "#7eb3c2", CVFluids.teaf.get());
-		relish(out, Constants.MILK, "#dac381", NeoForgeMod.MILK.get());
-		relish(out, Constants.COCOA, "#ea9359", CVFluids.cocoaf.get());
-		relish(out, Constants.WATER, "#886a51", Fluids.WATER);
-		relish(out, Constants.JUICE, "#aac35d", CVFluids.bjuicef.get(), CVFluids.djuicef.get(), CVFluids.pjuicef.get());
-		relish(out, Constants.WINE, "#ce6c71", CVFluids.bwinef.get(), CVFluids.dwinef.get(), CVFluids.pwinef.get());
-		relish(out, Constants.NONE, "#ffffff");
 		/*
 		 * createME("night_vision") .major(Constants.TEA)
 		 * .local(Constants.SWEETNESS_DELTA,0)
@@ -119,6 +112,15 @@ public class CVRecipeProvider extends RecipeProvider {
 		 * .effect(MobEffects.SATURATION).amp("1").time("100").compare("3",GT.C,"1").
 		 * next() .end(out);
 		 */
+		//out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA), null);
+		//out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA), null);
+		relish(out, Constants.TEA, "#7eb3c2", CVFluids.teaf.get());
+		relish(out, Constants.MILK, "#dac381", NeoForgeMod.MILK.get());
+		relish(out, Constants.COCOA, "#ea9359", CVFluids.cocoaf.get());
+		relish(out, Constants.WATER, "#886a51", Fluids.WATER);
+		relish(out, Constants.JUICE, "#aac35d", CVFluids.bjuicef.get(), CVFluids.djuicef.get(), CVFluids.pjuicef.get());
+		relish(out, Constants.WINE, "#ce6c71", CVFluids.bwinef.get(), CVFluids.dwinef.get(), CVFluids.pwinef.get());
+		relish(out, Constants.NONE, "#ffffff");
 		out.accept(rl("bottle/beverage"), new ContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get()), null);
 		for (String s : CVItems.base_drinks) {
 			if (s.equals("milk")) {
@@ -133,21 +135,16 @@ public class CVRecipeProvider extends RecipeProvider {
 			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("powdered_tea"), 1f)), new FluidStack(Fluids.WATER, 250), cvfluid("tea", 250), 60, 200, false), null);
 		out.accept(rl("convertion/cocoa_from_water"),
 			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)), new FluidStack(Fluids.WATER, 250), cvfluid("hot_chocolate", 250), 40, 200, false), null);
-		out.accept(rl("convertion/cocoa_from_milk"),
-			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)), new FluidStack(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), 40, 200, false),
-			null);
-		//out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA), null);
-		//out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA), null);
+		out.accept(rl("convertion/cocoa_from_milk"),new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)),
+			new FluidStack(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), 40, 200, false),null);
 		for (String s : List.of("pome", "drupe", "berry"))
-			out.accept(rl("basin/" + s + "_juice_to_sapa"), new BasinRecipe(SizedOrCatalystFluidIngredient.of(cvfluid(s + "_juice"), 250), SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),
-				List.of(new ItemStack(cpitem("sapa_spice_jar"))), 1, 200, true), null);
+			out.accept(rl("basin/" + s + "_juice_to_sapa"), new BasinRecipe(SizedOrCatalystFluidIngredient.of(cvfluid(s + "_juice"), 250), 
+				SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),List.of(new ItemStack(cpitem("sapa_spice_jar"))), 1, 200, true), null);
 		for (String s : List.of("pome", "drupe", "berry"))
 			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(List.of(), cvfluid(s + "_must", 250), cvfluid(s + "_juice", 250), 40, 200, false), null);
-		for (String s : CVFluids.intern.keySet()) {
+		for (String s : CVFluids.intern.keySet())
 			out.accept(rl("bottle/" + s), new ContainingRecipe(cvitem(s), cvfluid(s)), null);
-		}
 		type("hot_chocolate").has(Constants.COCOA).canContains(SPICE).canContains(SWEET).time(200).end(out);
-
 		type("mulled_wine").has(WINE).allow(WATER).mustContains(SPICE).canContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
 		type("jaegertee").has(WINE).and().has(TEA).allow(WATER).mustContains(SPICE).canContains(SWEET).canContains(FRUIT).priority(100).time(200).end(out);
 		type("posca").has(WINE).and().has(JUICE).allow(WATER).canContains(FRUIT).priority(100).time(200).end(out);

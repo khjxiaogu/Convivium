@@ -75,7 +75,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity {
 					int dz=-moving.getStepZ();
 					double rx=moving.getClockWise().getStepX()*(Math.random()-0.5)*6/8f;
 					double rz=moving.getClockWise().getStepZ()*(Math.random()-0.5)*6/8f;
-					this.level.addParticle(CVParticles.SPLASH.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,-dx*0.05, 0,-dz*0.05);
+					this.level.addParticle(CVParticles.FLOW.get(),center.x()+0.5*dx+rx,center.y()+0.45,center.z()+0.5*dz+rz,-dx*0.05, 0,-dz*0.05);
 					//System.out.println("tic"+dx+","+dz);
 				}
 				

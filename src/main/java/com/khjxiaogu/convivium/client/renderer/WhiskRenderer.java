@@ -75,7 +75,7 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 				ItemStack is=blockEntity.inv.getStackInSlot(i);
 				if(!is.isEmpty()) {
 					matrixStack.pushPose();
-					matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (Math.PI*(i+0.35)/2),0,1,0)),0.5f,0.5f,0.5f);
+					matrixStack.rotateAround(new Quaternionf().rotateAxis((float) (Math.PI*(i+0.35)/2),0,1,0),0.5f,0.5f,0.5f);
 					matrixStack.translate(6/16f,(6/16f),6/16f);
 					matrixStack.mulPose(new Quaternionf().rotateXYZ(0,-30,0));
 					matrixStack.scale(0.5f, 0.5f, 0.5f);

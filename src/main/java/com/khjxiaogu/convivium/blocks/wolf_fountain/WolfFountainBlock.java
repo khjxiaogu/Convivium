@@ -2,8 +2,6 @@ package com.khjxiaogu.convivium.blocks.wolf_fountain;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -15,20 +13,18 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class WolfStatueBlock extends KineticBasedBlock<WolfFountainBlockEntity> implements SimpleWaterloggedBlock {
-	public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 2);
+public class WolfFountainBlock extends KineticBasedBlock<WolfFountainBlockEntity> implements SimpleWaterloggedBlock {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public WolfStatueBlock(Properties blockProps) {
+	public WolfFountainBlock(Properties blockProps) {
 		super(CVBlockEntityTypes.WOLF_FOUNTAIN, blockProps);
-		super.registerDefaultState(this.defaultBlockState().setValue(HEAT, 0).setValue(WATERLOGGED, false));
+		super.registerDefaultState(this.defaultBlockState().setValue(LOCKED, false).setValue(WATERLOGGED, false));
 	}
 
 	static final VoxelShape shapeNS = Block.box(3, 0, 0, 13, 16, 16);
@@ -46,14 +42,14 @@ public class WolfStatueBlock extends KineticBasedBlock<WolfFountainBlockEntity> 
 	protected void createBlockStateDefinition(
 			net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(HEAT).add(WATERLOGGED);
+		builder.add(LOCKED).add(WATERLOGGED);
 	}
 
 	@SuppressWarnings("resource")
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-				.setValue(HEAT, 0).setValue(WATERLOGGED,
+				.setValue(LOCKED, false).setValue(WATERLOGGED,
 						context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
 
 	}

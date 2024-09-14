@@ -49,10 +49,10 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 	public static final Map<Item,FruitModel> models=new HashMap<>();
 	public static class FruitPlatterRenderingContext{
 		private static final Quaternionf[] piled_rotations=new Quaternionf[] {
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*2/4),0,1,0)),
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*3/4),0,1,0)),
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*4/4),0,1,0)),
-			new Quaternionf(new AxisAngle4f((float) (Math.PI/2*5/4),0,1,0))
+			new Quaternionf().rotateY((float) (Math.PI/2*2/4)),
+			new Quaternionf().rotateY((float) (Math.PI/2*3/4)),
+			new Quaternionf().rotateY((float) (Math.PI/2*4/4)),
+			new Quaternionf().rotateY((float) (Math.PI/2*5/4))
 		};
 		private static final Quaternionf[] grided_rotations=new Quaternionf[] {
 			new Quaternionf().rotateXYZ((float) ((90+10)/180f*Math.PI),-(float) (10/180f*Math.PI),-(float) (15/180f*Math.PI)),
@@ -163,7 +163,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 
 
 	public void fillContext(PlatterBlockEntity blockEntity,FruitPlatterRenderingContext ctx) {
-		System.out.println("updated rendering info");
+		//System.out.println("updated rendering info");
 		Map<Item,Integer> items=new HashMap<>();
 		boolean canFull=blockEntity.config==GlobalConfig.PILED;
 		FruitModel[] model=new FruitModel[4];

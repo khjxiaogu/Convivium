@@ -1,0 +1,209 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube",
+	"ambientocclusion": false,
+	"texture_size": [64, 32],
+	"textures": {
+		"0": "caupona:block/wolf_statue_1",
+		"1": "convivium:block/cage_wheel",
+		"particle": "caupona:block/wolf_statue_1"
+	},
+	"elements": [
+		{
+			"name": "cwteeth12",
+			"from": [4, 6, 4],
+			"to": [12, 7, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"east": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"south": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"west": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"up": {"uv": [0, 0, 4, 4], "texture": "#1"},
+				"down": {"uv": [0, 4.5, 4, 8.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth13",
+			"from": [4, 3, 4],
+			"to": [5, 6, 5],
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth14",
+			"from": [11, 3, 4],
+			"to": [12, 6, 5],
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth15",
+			"from": [4, 3, 11],
+			"to": [5, 6, 12],
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth16",
+			"from": [11, 3, 11],
+			"to": [12, 6, 12],
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth22",
+			"from": [4.005, 6.005, 4.005],
+			"to": [11.995, 6.995, 11.995],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"east": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"south": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"west": {"uv": [0, 4, 4, 4.5], "texture": "#1"},
+				"up": {"uv": [0, 0, 4, 4], "texture": "#1"},
+				"down": {"uv": [0, 4.5, 4, 8.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth23",
+			"from": [4, 3, 4],
+			"to": [5, 6, 5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth24",
+			"from": [11, 3, 4],
+			"to": [12, 6, 5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth25",
+			"from": [4, 3, 11],
+			"to": [5, 6, 12],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "cwteeth26",
+			"from": [11, 3, 11],
+			"to": [12, 6, 12],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"east": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"south": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"west": {"uv": [4, 2.5, 4.25, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#1"},
+				"down": {"uv": [4, 4, 4.25, 4.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [7, 4, 7],
+			"to": [9, 9, 9],
+			"faces": {
+				"north": {"uv": [6, 0, 6.5, 2.5], "texture": "#1"},
+				"east": {"uv": [6, 0, 6.5, 2.5], "texture": "#1"},
+				"south": {"uv": [6, 0, 6.5, 2.5], "texture": "#1"},
+				"west": {"uv": [6, 0, 6.5, 2.5], "texture": "#1"},
+				"up": {"uv": [7, 0, 7.5, 1], "texture": "#1"},
+				"down": {"uv": [7, 0, 7.5, 1], "texture": "#1"}
+			}
+		},
+		{
+			"name": "washerTop",
+			"from": [6, 7, 6],
+			"to": [10, 8, 10],
+			"faces": {
+				"north": {"uv": [4, 2, 6, 2.5], "texture": "#1"},
+				"east": {"uv": [4, 2, 6, 2.5], "texture": "#1"},
+				"south": {"uv": [4, 2, 6, 2.5], "texture": "#1"},
+				"west": {"uv": [4, 2, 6, 2.5], "texture": "#1"},
+				"up": {"uv": [4, 0, 6, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "cage_wheel",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "CageWheel",
+					"origin": [8, 8, 8],
+					"color": 5,
+					"children": [
+						{
+							"name": "CWRight",
+							"origin": [8, 0, 8],
+							"color": 5,
+							"children": [0, 1, 2, 3, 4]
+						},
+						{
+							"name": "CWOblique",
+							"origin": [8, 0, 8],
+							"color": 5,
+							"children": [5, 6, 7, 8, 9]
+						},
+						{
+							"name": "CWAccessories",
+							"origin": [0, 0, 0],
+							"color": 0,
+							"children": [10, 11]
+						}
+					]
+				}
+			]
+		}
+	]
+}

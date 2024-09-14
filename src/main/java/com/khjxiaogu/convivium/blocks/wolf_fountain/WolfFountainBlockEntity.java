@@ -1,96 +1,88 @@
 package com.khjxiaogu.convivium.blocks.wolf_fountain;
 
+import org.joml.Vector2i;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.kinetics.Cog;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
+import com.khjxiaogu.convivium.client.CVParticles;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
-public class WolfFountainBlockEntity extends CPBaseBlockEntity {
-
+public class WolfFountainBlockEntity extends KineticTransferBlockEntity implements Cog{
+	int color;
+	public static final Vector2i[] spd1pos=new Vector2i[] {
+		new Vector2i(1,0),
+		new Vector2i(1,-1),
+		new Vector2i(2,-1),
+		new Vector2i(1,-2),
+		new Vector2i(2,-2),
+		new Vector2i(2,-3),
+		new Vector2i(2,-4),
+		new Vector2i(2,-5),
+		new Vector2i(2,-6),
+		new Vector2i(2,-7),
+		
+	};
+	public static final Vector2i[] spd2pos=new Vector2i[] {
+		new Vector2i(1,0),
+		new Vector2i(2,0),
+		new Vector2i(2,-1),
+		new Vector2i(2,-2),
+		new Vector2i(3,-2),
+		new Vector2i(3,-3),
+		new Vector2i(3,-4),
+		new Vector2i(3,-5),
+		new Vector2i(4,-5),
+		new Vector2i(4,-6),
+		new Vector2i(4,-7),
+	};
 	public WolfFountainBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.WOLF_FOUNTAIN.get(), pWorldPosition, pBlockState);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void handleMessage(short type, int data) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient, Provider registries) {
-		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient, Provider registries) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void tick() {
-		BlockState state=this.getBlockState();
-		Direction facing=state.getValue(AqueductControllerBlock.FACING);
-		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
-		BlockPos facingPos=getBlockPos().relative(facing);
-		BlockState bs=this.getLevel().getBlockState(facingPos);
-		BlockPos facingPos2=getBlockPos().relative(facing.getOpposite());
-		BlockState bs2=this.getLevel().getBlockState(facingPos2);
-		int spd=0;
-		if(bs.hasProperty(KineticBasedBlock.ACTIVE)&&bs.getValue(KineticBasedBlock.ACTIVE)) {
-			boolean isChanged=false;
-			if(!active) {
-				active=true;
-				state=state.setValue(KineticBasedBlock.ACTIVE, active);
-				isChanged=true;
-			}
-			boolean hasSignal=level.hasNeighborSignal(this.worldPosition);
-			boolean locked=state.getValue(KineticBasedBlock.LOCKED);
-			if(locked!=hasSignal) {
-				state=state.setValue(KineticBasedBlock.LOCKED, hasSignal);
-				isChanged=true;
-			}
-			if(isChanged)
-				this.level.setBlockAndUpdate(this.getBlockPos(),state);
-			if(hasSignal)
-				active=false;
-			if(level.getBlockEntity(facingPos) instanceof KineticTransferBlockEntity ent) {
-				spd=ent.getSpeed();
-			}
-		}else if(bs2.hasProperty(KineticBasedBlock.ACTIVE)&&bs2.getValue(KineticBasedBlock.ACTIVE)) {
-			boolean isChanged=false;
-			if(!active) {
-				active=true;
-				state=state.setValue(KineticBasedBlock.ACTIVE, active);
-				isChanged=true;
-			}
-			boolean hasSignal=level.hasNeighborSignal(this.worldPosition);
-			boolean locked=state.getValue(KineticBasedBlock.LOCKED);
-			if(locked!=hasSignal) {
-				state=state.setValue(KineticBasedBlock.LOCKED, hasSignal);
-				isChanged=true;
-			}
-			if(isChanged)
-				this.level.setBlockAndUpdate(this.getBlockPos(),state);
-			if(hasSignal)
-				active=false;
-			if(level.getBlockEntity(facingPos) instanceof KineticTransferBlockEntity ent) {
-				spd=ent.getSpeed();
-			}
-		}else if(active) {
-			active=false;
-			this.level.setBlockAndUpdate(this.getBlockPos(), state.setValue(KineticBasedBlock.ACTIVE, active));
+		super.tick();
+		if(this.level.isClientSide) {
+			//if(this.level.getGameTime()%20==0) {
+			Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
+		
+			Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
+			this.level.addParticle(CVParticles.SPLASH.get().withColor(0xffffffff),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
+			//}
 		}
+	}
+
+	@Override
+	public boolean isReceiver() {
+		return true;
+	}
+
+	@Override
+	public boolean isCogTowards(Direction facing) {
+		return false;
+	}
+
+	@Override
+	public boolean isCageTowards(Direction facing) {
+		return facing.getAxis()==this.getBlockState().getValue(WolfFountainBlock.FACING).getClockWise().getAxis();
 	}
 
 }

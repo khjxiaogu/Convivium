@@ -70,7 +70,7 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 		boolean isBlack=RotationUtils.isBlackGrid(blockEntity.getBlockPos());
 		
 		matrixStack.pushPose();
-		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		matrixStack.rotateAround(new Quaternionf().rotateAxis((float) (facing.toYRot()*Math.PI/180f),0,-1,0),0.5f,0.5f,0.5f);
 		boolean shouldApart=state.getValue(KineticBasedBlock.ACTIVE)&&state.getValue(KineticBasedBlock.LOCKED);
 		if(shouldApart)
 			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Wheels"),matrixStack, combinedLightIn, combinedOverlayIn);

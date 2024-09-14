@@ -19,13 +19,15 @@
 package com.khjxiaogu.convivium.blocks.kinetics;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVBlocks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CogeCageBlockEntity extends KineticTransferBlockEntity {
+public class CogeCageBlockEntity extends KineticTransferBlockEntity implements Cog{
 
 	public CogeCageBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.COG_CAGE.get(), pWorldPosition, pBlockState);
@@ -56,5 +58,14 @@ public class CogeCageBlockEntity extends KineticTransferBlockEntity {
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient, Provider registries) {
 		
+	}
+	@Override
+	public boolean isCogTowards(Direction facing) {
+		return this.getBlockState().is(CVBlocks.cog.get());
+	}
+
+	@Override
+	public boolean isCageTowards(Direction facing) {
+		return this.getBlockState().is(CVBlocks.cage.get());
 	}
 }

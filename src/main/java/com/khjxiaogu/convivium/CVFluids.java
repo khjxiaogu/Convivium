@@ -87,7 +87,7 @@ public class CVFluids {
 	}
 
 	private static final ResourceLocation STILL_WATER_TEXTURE = ResourceLocation.withDefaultNamespace("block/water_still");
-	private static final ResourceLocation STILL_MILK_TEXTURE = ResourceLocation.fromNamespaceAndPath("forge", "block/milk_still");
+	private static final ResourceLocation STILL_MILK_TEXTURE = ResourceLocation.fromNamespaceAndPath("neoforge", "block/milk_still");
 	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
 	static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(BuiltInRegistries.FLUID, CVMain.MODID);
 	static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(Keys.FLUID_TYPES, CVMain.MODID);

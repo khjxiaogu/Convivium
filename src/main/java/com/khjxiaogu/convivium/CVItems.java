@@ -18,6 +18,9 @@
 
 package com.khjxiaogu.convivium;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
 import com.khjxiaogu.convivium.item.BeveragePotionFluid;
 import com.khjxiaogu.convivium.item.CVMaterialItem;
@@ -36,15 +39,16 @@ public class CVItems {
 		"powdered_tea", "steamed_camellia_shoots" };
 	public static final String[] base_drinks = new String[] { "berry_juice", "berry_must", "drupe_juice", "drupe_must", "pome_juice", "pome_must", "tea", "hot_chocolate", "milk", "water" };
 	public static final DeferredHolder<Item, BeveragePotionFluid> POTION = ITEMS.register("potion_dummy", () -> new BeveragePotionFluid(createProps()));
+	public static List<DeferredHolder<Item, BeverageItem>> beverages=new ArrayList<>();
 	static {
 		for (String s : base_material) {
 			item(s, createProps());
 		}
 		for (String s : base_drinks) {
-			ITEMS.register(s, () -> new BeverageItem(CVBlocks.BEVERAGE.get(), createProps(), true));
+			beverages.add(ITEMS.register(s, () -> new BeverageItem(CVBlocks.BEVERAGE.get(), createProps(), true)));
 		}
 		for (String s : CVFluids.intern.keySet()) {
-			ITEMS.register(s, () -> new BeverageItem(CVBlocks.BEVERAGE.get(), createProps(), false));
+			beverages.add(ITEMS.register(s, () -> new BeverageItem(CVBlocks.BEVERAGE.get(), createProps(), false)));
 		}
 	}
 

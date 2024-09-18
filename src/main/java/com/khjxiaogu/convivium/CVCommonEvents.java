@@ -77,7 +77,7 @@ public class CVCommonEvents {
 		Player playerIn = event.getEntity();
 		if (CVConfig.COMMON.canPlacePotion.get() && is.is(Items.POTION) && playerIn.isShiftKeyDown()) {
 			ItemStack replace = new ItemStack(CVItems.POTION.get(), is.getCount());
-			replace.set(CVComponents.POTION_ITEM, new PotionItemInfo(is));
+			replace.set(CVComponents.POTION_ITEM, new PotionItemInfo(is.copy()));
 			playerIn.setItemInHand(event.getHand(), replace);
 			CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn, event.getHand(), event.getHitVec()));
 			is.setCount(replace.getCount());

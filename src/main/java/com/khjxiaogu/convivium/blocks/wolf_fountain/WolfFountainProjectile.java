@@ -17,9 +17,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class WolfFountainProjecttile extends Projectile {
+public class WolfFountainProjectile extends Projectile {
 
-	public WolfFountainProjecttile(EntityType<? extends Projectile> entityType, Level level) {
+	public WolfFountainProjectile(EntityType<? extends Projectile> entityType, Level level) {
 		super(entityType, level);
 		// TODO Auto-generated constructor stub
 	}
@@ -36,9 +36,9 @@ public class WolfFountainProjecttile extends Projectile {
         if (this.age++ >= this.lifetime) {
             this.remove(RemovalReason.DISCARDED);
         } else {
-        	vec33.add(0,-0.04,0);
+        	vec33=vec33.add(0,-0.04,0);
         	this.move(MoverType.SELF, vec33);
-        	vec33.scale(0.98);
+        	vec33=vec33.scale(0.98);
         }
         this.setDeltaMovement(vec33);
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
@@ -79,7 +79,7 @@ public class WolfFountainProjecttile extends Projectile {
 
 	@Override
 	protected void onHitEntity(EntityHitResult result) {
-		
+		//System.out.println("hit entity");
 		if(source!=null)
 			if(result.getEntity() instanceof LivingEntity&&this.level().getBlockEntity(source) instanceof WolfFountainBlockEntity wf) {
 				wf.applyEffectTo(verid, (LivingEntity)result.getEntity());
@@ -89,6 +89,7 @@ public class WolfFountainProjecttile extends Projectile {
 
 	@Override
 	protected void onHitBlock(BlockHitResult result) {
+		//System.out.println("hit block");
 		if(source!=null)
 			if(this.level().getBlockEntity(source) instanceof WolfFountainBlockEntity wf) {
 				wf.applyEffectTo(verid, result.getBlockPos(),result.getDirection());

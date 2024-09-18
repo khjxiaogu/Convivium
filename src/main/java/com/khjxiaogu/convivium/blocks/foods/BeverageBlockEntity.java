@@ -50,7 +50,8 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		nbt.put("bowl", internal.save(ra));
+		if(!internal.isEmpty())
+			nbt.put("bowl", internal.save(ra));
 		nbt.putBoolean("inf", isInfinite);
 	}
 

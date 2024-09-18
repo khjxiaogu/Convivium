@@ -89,7 +89,7 @@ public class CVCommonBootStrap {
 			event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, (BlockEntityType<?>) be,
 				(block, ctx) -> (IFluidHandler) ((CPBaseBlockEntity) block).getCapability(Capabilities.FluidHandler.BLOCK, ctx));
 		});
-		event.registerItem(Capabilities.FluidHandler.ITEM, (stack, o) -> new FluidItemWrapper(stack), CPItems.stews.toArray(Item[]::new));
+		event.registerItem(Capabilities.FluidHandler.ITEM, (stack, o) -> new FluidItemWrapper(stack), CVItems.beverages.stream().map(t->t.get()).toArray(Item[]::new));
 	}
 
 	public static void registerDispensers() {

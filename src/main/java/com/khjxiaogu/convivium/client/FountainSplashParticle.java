@@ -30,9 +30,10 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -40,57 +41,61 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FountainSplashParticle extends TextureSheetParticle {
-	private final SpriteSet sprites;
 	FountainSplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet, Either<ItemStack, FluidStack> stacks) {
 		super(pLevel, pX, pY, pZ);
 		this.setSize(0.01F, 0.01F);
-		this.sprites = spriteSet;
 		this.lifetime = 20;
+		this.setColor(0.3F, 0.5F, 1.0F);
 		stacks.ifLeft(stack -> {
-			//System.out.println("left");
-			this.setSpriteFromAge(spriteSet);
-			this.pickSprite(sprites);
+			//tint
 			int tint = 0xfffffff;
-			for (int i = 0; i <= 3; i++) {
-				int tclr = Minecraft.getInstance().getItemColors().getColor(stack, i);
-				if (tint == -1)
-					continue;
-				tint = tclr;
-				break;
-			}
+			int tclr = Minecraft.getInstance().getItemColors().getColor(stack, 0);
+			if(tclr!=-1)
+				tint=tclr;
+			//System.out.println(Integer.toHexString(tint));
+			//sprite
 			
 			this.setColor(FastColor.ARGB32.red(tint) / 255f, FastColor.ARGB32.green(tint) / 255f, FastColor.ARGB32.blue(tint) / 255f);
 			float alpha = FastColor.ARGB32.alpha(tint) / 255F;
+			//System.out.println("i"+alpha);
+			
 			this.setAlpha(alpha == 0 ? 1 : alpha);
+			this.setSpriteFromAge(spriteSet);
+			this.pickSprite(spriteSet);
+			renderType=ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 		});
-		this.setColor(0.3F, 0.5F, 1.0F);
+		
 		stacks.ifRight(stack -> {
 			//System.out.println("right");
 			IClientFluidTypeExtensions attr = IClientFluidTypeExtensions.of(stack.getFluid());
 			TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
 				.getSprite(attr.getStillTexture(stack));
 			int tint = attr.getTintColor(stack);
+			
 			this.setColor(FastColor.ARGB32.red(tint) / 255f, FastColor.ARGB32.green(tint) / 255f, FastColor.ARGB32.blue(tint) / 255f);
 			float alpha = FastColor.ARGB32.alpha(tint) / 255F;
 			this.setAlpha(alpha == 0 ? 1 : alpha);
+			//System.out.println("f"+alpha);
 			this.setSprite(sprite);
 			v1=(v1-v0)/8+v0;
 			u1=(u1-u0)/8+u0;
+			renderType=ParticleRenderType.TERRAIN_SHEET;
 			this.quadSize/=8;
-
 		});
+
+
 		this.gravity = 1.0F;
 		this.xd = pXSpeed;
 		this.yd = pYSpeed;
 		this.zd = pZSpeed;
 
 	}
-
+/*
 	public FountainSplashParticle withColor(ColorParticleOption option) {
 		this.setColor(option.getRed(), option.getGreen(), option.getBlue());
 		this.setAlpha(option.getAlpha());
 		return this;
-	}
+	}*/
 	float u0;
 	float u1;
 	float v0;
@@ -124,10 +129,10 @@ public class FountainSplashParticle extends TextureSheetParticle {
 	protected float getV1() {
 		return v1;
 	}
-
+	ParticleRenderType renderType;
 	@Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.TERRAIN_SHEET;
+        return renderType;
     }
 
 	private boolean stoppedByCollision;
@@ -145,8 +150,11 @@ public class FountainSplashParticle extends TextureSheetParticle {
 				&& x * x + y * y + z * z < 100) {
 
 				List<Entity> collides = this.level.getEntities(null, getBoundingBox().expandTowards(x, y, z));
-				if (collides.size() > 0) {
-					this.remove();
+				for(Entity e:collides) {
+					if(!(e instanceof Projectile)) {
+						this.remove();
+						return;
+					}
 				}
 				Vec3 vec3 = Entity.collideBoundingBox(null, new Vec3(x, y, z), this.getBoundingBox(), this.level, List.of());
 				x = vec3.x;

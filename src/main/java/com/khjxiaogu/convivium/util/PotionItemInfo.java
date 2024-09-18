@@ -18,4 +18,26 @@ public class PotionItemInfo {
 		return stack;
 	}
 
+	@Override
+	public int hashCode() {
+		return ItemStack.hashItemAndComponents(stack);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PotionItemInfo other = (PotionItemInfo) obj;
+		if (stack == null) {
+			if (other.stack != null)
+				return false;
+		} else if (!stack.equals(other.stack))
+			return false;
+		return true;
+	}
+
 }

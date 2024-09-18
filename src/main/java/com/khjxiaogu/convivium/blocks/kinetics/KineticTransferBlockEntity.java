@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity implements KineticConnected {
 	protected LazyTickWorker process;
 	protected int speed;//
+	boolean isSpeedApplied=false;
 	public KineticTransferBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
 		super(pType, pWorldPosition, pBlockState);
 		process = KineticConnected.createKineticValidator(this);
@@ -42,12 +43,17 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity imple
 
 	@Override
 	public void setSpeed(int val) {
-		if (speed > val)
+		if (isSpeedApplied&&speed > val)
 			return;
+		isSpeedApplied=true;
 		process.rewind();
+
 		if(speed!=val) {
 			if(getSpeed()==0) {
 				this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, true));
+			}
+			if(val==0) {
+				this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, false));
 			}
 			speed = val;
 			this.syncData();
@@ -69,6 +75,7 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity imple
 	@Override
 	public void tick() {
 		if(level.isClientSide)return;
+		isSpeedApplied=false;
 		if(process.tick()) {
 			this.syncData();
 		}

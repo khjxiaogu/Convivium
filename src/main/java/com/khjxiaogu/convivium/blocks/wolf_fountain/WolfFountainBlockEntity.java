@@ -9,8 +9,10 @@ import org.spongepowered.include.com.google.common.base.Objects;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVEntityTypes;
+import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.Cog;
+import com.khjxiaogu.convivium.blocks.kinetics.KineticConnected;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.client.CVParticles;
 import com.khjxiaogu.convivium.util.FoodPropertieHelper;
@@ -18,6 +20,7 @@ import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.util.ChancedEffect;
+import com.teammoeg.caupona.util.LazyTickWorker;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -27,6 +30,9 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -38,6 +44,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -221,6 +228,7 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 			}
 		}
 	}
+	static final FoodProperties EMPTY=new FoodProperties.Builder().build();
 	public void applyEffectTo(int currentVersion,LivingEntity entity) {
 		if(this.level.isClientSide)return;
 		if(currentVersion==this.currentVersion) {
@@ -236,19 +244,34 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 					CauponaHooks.getInfo(fluid.getFluid()).ifPresent(t->{
 						appliedEffect=FoodPropertieHelper.copyWithPart(t.getFood(), 5);
 					});
+					if(appliedEffect==null)
+						appliedEffect=EMPTY;
 				}
 			}
 			if(appliedEffect!=null) {
-				ItemStack fake=new ItemStack(Items.POTION);
-				if(item!=null) {
+				ItemStack fake=new ItemStack(CVItems.POTION.get());
+				if(item!=null) { 
 					workProcess++;
 					entity.eat(getLevel(), fake,appliedEffect);
 					if(workProcess==5) {
 						resetContent();
 					}
 				} else if(!fluid.isEmpty()){
-					if(!fluid.drain(50, FluidAction.EXECUTE).isEmpty())
+					FluidStack drained=fluid.drain(50, FluidAction.EXECUTE);
+					if(!drained.isEmpty()) {
+						
 						entity.eat(getLevel(), fake,appliedEffect);
+						if(drained.getFluidType().getTemperature()>270) {
+					        if (!entity.fireImmune()) {
+					            entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
+					            if (entity.getRemainingFireTicks() == 0) {
+					                entity.igniteForSeconds(8.0F);
+					            }
+					        }
+							if(drained.getFluidType().getTemperature()>1000)
+								entity.lavaHurt();
+						}
+					}
 				}
 			}
 		}
@@ -257,17 +280,19 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 	public void tick() {
 		super.tick();
 		if(this.level.isClientSide) {
-			if(!fluid.isEmpty()) {
-			//if(this.level.getGameTime()%20==0) {
-				Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
-				Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
-				
-				this.level.addParticle(CVParticles.SPLASH.get().with(fluid.getFluid()),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
-			}else if(item!=null) {
-				Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
-				
-				Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
-				this.level.addParticle(CVParticles.SPLASH.get().with(item),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
+			if(getSpeed()>0) {
+				if(!fluid.isEmpty()) {
+				//if(this.level.getGameTime()%20==0) {
+					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
+					Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
+					
+					this.level.addParticle(CVParticles.SPLASH.get().with(fluid.getFluid()),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
+				}else if(item!=null) {
+					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
+					
+					Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
+					this.level.addParticle(CVParticles.SPLASH.get().with(item),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
+				}
 			}
 			//}
 			return;
@@ -297,11 +322,12 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 						ItemStack its=cont.getInternal(i);
 						IFluidHandlerItem ifhi=FluidHandler.ITEM.getCapability(its, null);
 						if(ifhi!=null) {
-							FluidStack fs=ifhi.getFluidInTank(0);
+							FluidStack fs=ifhi.drain(1000, FluidAction.SIMULATE);
 							if(!fs.isEmpty()) {
 								if(fluid.fill(fs, FluidAction.SIMULATE)==fs.getAmount()) {
+									fs=ifhi.drain(1000, FluidAction.EXECUTE);
 									fluid.fill(fs, FluidAction.EXECUTE);
-									cont.setInternal(i,its.getCraftingRemainingItem());
+									cont.setInternal(i,ifhi.getContainer());
 									this.syncData();
 									break;
 								}
@@ -309,8 +335,9 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 
 						}else if(its.is(Items.POTION)) {
 							item=its;
-							cont.setInternal(i,its.getCraftingRemainingItem());
+							cont.setInternal(i,new ItemStack(Items.GLASS_BOTTLE));
 							this.syncData();
+							break;
 						}
 
 					}
@@ -318,9 +345,9 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 				}
 			}
 			if(!fluid.isEmpty()||item!=null) {
-				if(++throwProcess>=5) {
+				if(++throwProcess>=10) {
 					throwProcess=0;
-					WolfFountainProjecttile wfp=CVEntityTypes.WOLF_FOUNTAIN_DROP.get().create(this.level);
+					WolfFountainProjectile wfp=CVEntityTypes.WOLF_FOUNTAIN_DROP.get().create(this.level);
 					wfp.source=this.getBlockPos();
 					wfp.verid=this.currentVersion;
 					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();

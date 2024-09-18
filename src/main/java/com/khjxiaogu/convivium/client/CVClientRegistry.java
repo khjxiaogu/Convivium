@@ -18,10 +18,14 @@
 
 package com.khjxiaogu.convivium.client;
 
+import java.util.Map.Entry;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
+import com.khjxiaogu.convivium.CVEntityTypes;
 import com.khjxiaogu.convivium.CVFluids;
+import com.khjxiaogu.convivium.CVFluids.TextureColorPair;
 import com.khjxiaogu.convivium.CVGui;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.gui.BasinScreen;
@@ -40,12 +44,16 @@ import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
 import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
+import com.khjxiaogu.convivium.client.renderer.WolfFountainProjectileRenderer;
 import com.khjxiaogu.convivium.client.renderer.WolfFountainRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
+import com.teammoeg.caupona.CPEntityTypes;
 import com.teammoeg.caupona.CPMain;
+import com.teammoeg.caupona.client.renderer.CPBoatRenderer;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -60,6 +68,7 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CVClientRegistry {
@@ -89,13 +98,13 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE_VENDING_MACHINE.get(), VendingRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BASIN.get(), BasinRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.WOLF_FOUNTAIN.get(), WolfFountainRenderer::new);
+		EntityRenderers.register(CVEntityTypes.WOLF_FOUNTAIN_DROP.get(),WolfFountainProjectileRenderer::new);
 		
 	}
 	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
 	@SubscribeEvent
 	public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
 		event.registerFluidType(new IClientFluidTypeExtensions() {
-
 			@Override
 			public int getTintColor(FluidStack stack) {
 				BeverageInfo cmp=stack.get(CVComponents.BEVERAGE_INFO);
@@ -103,23 +112,37 @@ public class CVClientRegistry {
 					return 0xffee9999;
 				return cmp.getIColor();
 			}
-
 			@Override
 			public int getTintColor() {
 				return 0xffee9999;
 			}
-
 			@Override
 			public ResourceLocation getStillTexture() {
 				return STILL_BEVERAGE_TEXTURE;
 			}
-
 			@Override
 			public ResourceLocation getFlowingTexture() {
 				return STILL_BEVERAGE_TEXTURE;
 			}
-
 		}, CVFluids.mixed);
+		for(Entry<FluidType, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
+			TextureColorPair tcp=s.getValue();
+			event.registerFluidType(new IClientFluidTypeExtensions() {
+
+				@Override
+				public int getTintColor() {
+					return tcp.c();
+				}
+				@Override
+				public ResourceLocation getStillTexture() {
+					return tcp.texture();
+				}
+				@Override
+				public ResourceLocation getFlowingTexture() {
+					return tcp.texture();
+				}
+			},s.getKey());
+		}
 	}
 
 	@SubscribeEvent

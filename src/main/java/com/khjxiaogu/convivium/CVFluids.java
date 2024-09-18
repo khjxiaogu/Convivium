@@ -21,8 +21,6 @@ package com.khjxiaogu.convivium;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
-
 import com.khjxiaogu.convivium.fluid.BaseFluid;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
 
@@ -30,32 +28,28 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries.Keys;
 
 public class CVFluids {
-	static Map<String,TextureColorPair> data=new HashMap<>();
-	private static class TextureColorPair {
-		ResourceLocation texture;
-		int c;
-
-		public TextureColorPair(ResourceLocation t, int c) {
-			super();
-			this.texture = t;
-			this.c = c;
-		}
+	public static Map<FluidType,TextureColorPair> clientExtensiondata=new HashMap<>();
+	public static record TextureColorPair (ResourceLocation texture, int c) {
 		public TextureColorPair copy() {
 			return new TextureColorPair(texture,c);
 		}
+		public ResourceLocation texture() {
+			return texture;
+		}
+		public int c() {
+			return c;
+		}
 		public FluidType create(String n) {
-			data.put(n, this.copy());
+			
 			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
-				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n)) {
+				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n))/* {
 
 				@Override
 				public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
@@ -79,8 +73,8 @@ public class CVFluids {
 					});
 				}
 
-			};
-
+			}*/;
+			clientExtensiondata.put(ft, this.copy());
 			return ft;
 		}
 

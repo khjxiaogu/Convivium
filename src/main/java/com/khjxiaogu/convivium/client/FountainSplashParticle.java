@@ -41,7 +41,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FountainSplashParticle extends TextureSheetParticle {
 	private final SpriteSet sprites;
-	private boolean shouldChop;
 	FountainSplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet, Either<ItemStack, FluidStack> stacks) {
 		super(pLevel, pX, pY, pZ);
 		this.setSize(0.01F, 0.01F);

@@ -1,5 +1,10 @@
 {
-  "type": "convivium:containing",
-  "fluid": "convivium:pome_must",
+  "type": "caupona:bowl",
+  "fluid": {
+    "fluid": "convivium:pome_must"
+  },
+  "inType": {
+    "item": "minecraft:glass_bottle"
+  },
   "item": "convivium:pome_must"
 }

@@ -1,5 +1,10 @@
 {
-  "type": "convivium:containing",
-  "fluid": "convivium:syllabub",
+  "type": "caupona:bowl",
+  "fluid": {
+    "fluid": "convivium:syllabub"
+  },
+  "inType": {
+    "item": "minecraft:glass_bottle"
+  },
   "item": "convivium:syllabub"
 }

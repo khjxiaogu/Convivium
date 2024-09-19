@@ -1,0 +1,28 @@
+{
+  "type": "convivium:grinding",
+  "density": 0.0,
+  "fluidIn": {
+    "type": "convivium:beverage",
+    "amount": 250,
+    "density": 0.0,
+    "relish": [
+      {
+        "type": "only_major",
+        "relish": "hearth"
+      }
+    ]
+  },
+  "fluidOut": {
+    "amount": 250,
+    "id": "convivium:fallback_sorbet"
+  },
+  "items": [
+    {
+      "count": 1,
+      "item": "minecraft:ice"
+    }
+  ],
+  "keepInfo": true,
+  "outputs": [],
+  "time": 200
+}

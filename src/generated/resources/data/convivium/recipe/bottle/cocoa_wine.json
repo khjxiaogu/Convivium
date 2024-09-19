@@ -1,5 +1,10 @@
 {
-  "type": "convivium:containing",
-  "fluid": "convivium:cocoa_wine",
+  "type": "caupona:bowl",
+  "fluid": {
+    "fluid": "convivium:cocoa_wine"
+  },
+  "inType": {
+    "item": "minecraft:glass_bottle"
+  },
   "item": "convivium:cocoa_wine"
 }

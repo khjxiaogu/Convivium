@@ -1,0 +1,8 @@
+{
+  "type": "caupona:bowl",
+  "fluid": {
+    "fluid": "convivium:milk_sorbet"
+  },
+  "inType": [],
+  "item": "convivium:milk_sorbet"
+}

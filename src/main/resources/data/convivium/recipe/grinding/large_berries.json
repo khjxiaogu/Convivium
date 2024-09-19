@@ -3,7 +3,7 @@
 	"density": 0.0,
 	"fluidIn": {
 		"amount": 250,
-		"id": "minecraft:water"
+		"fluid": "minecraft:water"
 	},
 	"fluidOut": {
 		"amount": 250,

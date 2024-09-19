@@ -134,7 +134,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	public int processMax;
 	public boolean recipeTested=false;
 	public List<ItemStack> items=new ArrayList<>();
-	public FluidStack fout;
+	public FluidStack fout=FluidStack.EMPTY;
 	public PamBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.PAM.get(), pWorldPosition, pBlockState);
 	}
@@ -206,6 +206,15 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 				}
 			return;
 		}
+		if(!recipeTested&&items.isEmpty()&&fout.isEmpty()){
+			recipeTested=true;
+			GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
+			if(recipe!=null) 
+				process=processMax=recipe.processTime;
+			else
+				process=processMax=0;
+			this.syncData();
+		}
 		if(processMax!=0) {
 			
 			if(process<=0) {
@@ -220,22 +229,18 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 				process-=getSpeed();
 				if(process<=0) {
 					GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
-					fout=recipe.out.copy();
-					if(recipe.keepInfo) {
-						fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
+					if(recipe!=null) {
+						fout=recipe.out.copy();
+						if(recipe.keepInfo) {
+							fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
+						}
+						items=recipe.handle(tankin.getFluidInTank(0), inv);
+					}else if(items.isEmpty()&&fout.isEmpty()){
+						process=processMax=0;
 					}
-					items=recipe.handle(tankin.getFluidInTank(0), inv);
 				}
 			}
 			this.syncData();
-		}else if(!recipeTested){
-			recipeTested=true;
-			GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
-			if(recipe!=null) {
-				process=processMax=recipe.processTime;
-				this.syncData();
-			}
-			
 		}
 	}
 

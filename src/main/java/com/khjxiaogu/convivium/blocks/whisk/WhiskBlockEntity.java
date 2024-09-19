@@ -318,7 +318,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		target = new FluidStack(val.getSecond(), amt * 250);
 		target.applyComponents(tank.getFluid().getComponentsPatch());
 		target.set(CVComponents.BEVERAGE_INFO, info);
-		process = processMax = 400;
+		processMax = 400;
+		if(status!=ADDING_INGREDIENT) {
+			process = 400;
+		}else
+			process=Math.max(100, process);
+			
 		status = ADDING_INGREDIENT;
 		syncData();
 	}

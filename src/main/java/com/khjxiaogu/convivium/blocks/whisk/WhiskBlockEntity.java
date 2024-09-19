@@ -589,7 +589,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				if (getSpeed() == 0)// not stiring, can not mix
 					return 0;
 				// System.out.print(0);
-				BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
+				BeverageInfo info = tank.getFluid().get(CVComponents.BEVERAGE_INFO);
 				if (info == null) {// not beverage fluid: create info
 					info = new BeverageInfo();
 					FluidStack fs = tank.getFluid();

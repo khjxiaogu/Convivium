@@ -1,6 +1,7 @@
 {
   "type": "convivium:beverage",
   "allowedRelish": [
+    "wine",
     "hearth"
   ],
   "density": 0.0,

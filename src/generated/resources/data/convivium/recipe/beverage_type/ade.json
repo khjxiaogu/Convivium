@@ -1,6 +1,9 @@
 {
   "type": "convivium:beverage",
-  "allowedRelish": [],
+  "allowedRelish": [
+    "seasons",
+    "hearth"
+  ],
   "density": 0.0,
   "optional": [
     {

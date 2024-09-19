@@ -180,7 +180,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		temperature = nbt.getInt("temperature");
 		if (nbt.contains("target"))
 			target = FluidStack.parseOptional(ra, nbt.getCompound("target"));
-		
+		else
+			target=null;
 		tank.readFromNBT(ra, nbt.getCompound("tank"));
 		if(!isClient) {
 			inv.deserializeNBT(ra, nbt.getCompound("inv"));
@@ -208,6 +209,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		
 		if (target != null)
 			nbt.put("target", target.saveOptional(ra));
+		
 		nbt.put("tank", tank.writeToNBT(ra, new CompoundTag()));
 		if(!isClient) {
 			nbt.put("inv", inv.serializeNBT(ra));
@@ -493,6 +495,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 				}
 				status=IDLE;
 				tank.setFluid(target);
+				target=null;
 				recipeTested=false;
 			}
 			this.syncData();

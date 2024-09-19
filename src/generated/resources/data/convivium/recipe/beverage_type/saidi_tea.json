@@ -1,6 +1,8 @@
 {
   "type": "convivium:beverage",
-  "allowedRelish": [],
+  "allowedRelish": [
+    "bath"
+  ],
   "density": 0.0,
   "optional": [],
   "output": "convivium:saidi_tea",

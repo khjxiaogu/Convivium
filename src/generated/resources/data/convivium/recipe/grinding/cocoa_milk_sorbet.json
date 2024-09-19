@@ -4,6 +4,8 @@
   "fluidIn": {
     "type": "convivium:beverage",
     "allowedRelish": [
+      "fire",
+      "cereal",
       "hearth"
     ],
     "amount": 250,

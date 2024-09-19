@@ -70,13 +70,16 @@ public class BeverageIngredientBuilder {
 		return this;
 	}
 	public BeverageIngredientBuilder major(String relish) {
+		allow(relish);
 		return cond(new MajorRelishCondition(relish));
 	}
 	public BeverageIngredientBuilder only(String relish) {
+		allow(relish);
 		return cond(new OnlyMajorRelishCondition(relish));
 	}
 
 	public BeverageIngredientBuilder has(String relish) {
+		allow(relish);
 		return cond(new HasRelishCondition(relish));
 	}
 	public BeverageIngredientBuilder has(Fluid relish) {
@@ -102,6 +105,6 @@ public class BeverageIngredientBuilder {
 		if(temp!=null) {
 			relish.add(temp);
 		}
-		return new BeverageFluidIngredient(must.isEmpty()?Optional.empty():Optional.of(must),optional.isEmpty()?Optional.empty():Optional.of(optional),relish.isEmpty()?Optional.empty():Optional.of(relish),allowedRelish.isEmpty()?Optional.empty():Optional.of(allowedRelish), density);
+		return new BeverageFluidIngredient(must,optional,relish,allowedRelish, density);
 	}
 }

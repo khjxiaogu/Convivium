@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVIngredients;
@@ -29,10 +30,10 @@ import net.neoforged.neoforge.fluids.crafting.FluidIngredientType;
 
 public class BeverageFluidIngredient extends FluidIngredient {
 	public static final MapCodec<BeverageFluidIngredient> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-		Codec.list(Ingredient.CODEC).optionalFieldOf("required").forGetter(o->Optional.ofNullable(o.must)),
-		Codec.list(Ingredient.CODEC).optionalFieldOf("optional").forGetter(o->Optional.ofNullable(o.optional)),
-		Codec.list(RelishConditions.CODEC).optionalFieldOf("relish").forGetter(o->Optional.ofNullable(o.relish)),
-		Codec.list(Codec.STRING).optionalFieldOf("allowedRelish").forGetter(o->Optional.ofNullable(o.allowedRelish)),
+		Codec.list(Ingredient.CODEC).optionalFieldOf("required",ImmutableList.of()).forGetter(o->o.must),
+		Codec.list(Ingredient.CODEC).optionalFieldOf("optional",ImmutableList.of()).forGetter(o->o.optional),
+		Codec.list(RelishConditions.CODEC).optionalFieldOf("relish",ImmutableList.of()).forGetter(o->o.relish),
+		Codec.list(Codec.STRING).optionalFieldOf("allowedRelish",ImmutableList.of()).forGetter(o->o.allowedRelish),
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density)
 		).apply(t, BeverageFluidIngredient::new));
 	public List<Ingredient> must;
@@ -42,12 +43,12 @@ public class BeverageFluidIngredient extends FluidIngredient {
 	public float density;
 
 
-	public BeverageFluidIngredient(Optional<List<Ingredient>> must, Optional<List<Ingredient>> optional, Optional<List<RelishCondition>> relish, Optional<List<String>> allowedRelish, float density) {
+	public BeverageFluidIngredient(List<Ingredient> must, List<Ingredient> optional, List<RelishCondition> relish, List<String> allowedRelish, float density) {
 		super();
-		this.must = must.orElse(null);
-		this.optional = optional.orElse(null);
-		this.relish = relish.orElse(null);
-		this.allowedRelish = allowedRelish.orElse(null);
+		this.must = must;
+		this.optional = optional;
+		this.relish = relish;
+		this.allowedRelish = allowedRelish;
 		this.density = density;
 	}
 

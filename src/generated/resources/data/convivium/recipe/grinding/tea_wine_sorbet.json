@@ -4,6 +4,8 @@
   "fluidIn": {
     "type": "convivium:beverage",
     "allowedRelish": [
+      "bath",
+      "wine",
       "hearth"
     ],
     "amount": 250,

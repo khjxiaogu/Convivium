@@ -68,13 +68,16 @@ public class TypeRecipeBuilder {
 		return this;
 	}
 	public TypeRecipeBuilder major(String relish) {
+		allow(relish);
 		return cond(new MajorRelishCondition(relish));
 	}
 	public TypeRecipeBuilder only(String relish) {
+		allow(relish);
 		return cond(new OnlyMajorRelishCondition(relish));
 	}
 
 	public TypeRecipeBuilder has(String relish) {
+		allow(relish);
 		return cond(new HasRelishCondition(relish));
 	}
 	public TypeRecipeBuilder has(Fluid relish) {

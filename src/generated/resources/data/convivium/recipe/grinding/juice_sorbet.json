@@ -4,6 +4,7 @@
   "fluidIn": {
     "type": "convivium:beverage",
     "allowedRelish": [
+      "seasons",
       "hearth"
     ],
     "amount": 250,

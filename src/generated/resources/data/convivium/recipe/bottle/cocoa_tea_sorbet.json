@@ -3,6 +3,8 @@
   "fluid": {
     "fluid": "convivium:cocoa_tea_sorbet"
   },
-  "inType": [],
+  "inType": {
+    "item": "convivium:flatbread"
+  },
   "item": "convivium:cocoa_tea_sorbet"
 }

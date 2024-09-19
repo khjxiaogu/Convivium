@@ -158,7 +158,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		relishnames.put("wine", Constants.WINE);
 		relishnames.put("water", Constants.WATER);
 		for(String s : CVFluids.sorbets) {
-			out.accept(rl("bottle/" + s+"_sorbet"), new BowlContainingRecipe(cvitem(s+"_sorbet"), cvfluid(s+"_sorbet"),Ingredient.of(CVBlocks.FLAT_BREAD.get())), null);
+			out.accept(rl("bottle/" + s+"_sorbet"), new BowlContainingRecipe(cvitem(s+"_sorbet"), cvfluid(s+"_sorbet"),Ingredient.of(cvitem("flatbread"))), null);
 			String[] relishes=s.split("_");
 			FluidIngredient input;
 			if(s.equals("fallback")) {

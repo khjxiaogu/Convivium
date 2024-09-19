@@ -69,7 +69,7 @@ public class CVMain {
 		CVConfig.register();
 		CVComponents.REGISTRY.register(mod);
 		CVEntityTypes.ENTITY_TYPES.register(mod);
-		
+		CVIngredients.FLUID.register(mod);
 
 	}
 

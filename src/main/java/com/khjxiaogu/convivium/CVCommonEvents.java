@@ -18,18 +18,12 @@
 
 package com.khjxiaogu.convivium;
 
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 import com.khjxiaogu.convivium.util.PotionItemInfo;
-import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
-import com.teammoeg.caupona.api.events.EventResult;
-import com.teammoeg.caupona.api.events.FoodExchangeItemEvent;
-
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -45,7 +39,7 @@ public class CVCommonEvents {
 		event.addListener(new RecipeReloadListener(event.getServerResources()));
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void bowlContainerFood(ContanerContainFoodEvent ev) {
 		if (ev.origin.getItem() == Items.GLASS_BOTTLE) {
 			if (!ev.isBlockAccess) {
@@ -56,9 +50,9 @@ public class CVCommonEvents {
 				}
 			}
 		}
-	}
+	}*/
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void isExtractAllowed(FoodExchangeItemEvent.Pre event) {
 		if (!event.getOrigin().is(Items.GLASS_BOTTLE))
 			event.setResult(EventResult.ALLOW);
@@ -68,7 +62,7 @@ public class CVCommonEvents {
 	public static void isExchangeAllowed(FoodExchangeItemEvent.Post event) {
 		if ((!event.getOrigin().is(Items.GLASS_BOTTLE)) && event.getTarget().is(Items.GLASS_BOTTLE))
 			event.setResult(EventResult.ALLOW);
-	}
+	}*/
 
 	@SuppressWarnings("resource")
 	@SubscribeEvent

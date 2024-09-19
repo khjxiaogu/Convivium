@@ -14,8 +14,8 @@
   "priority": 0,
   "relish": [
     {
-      "type": "contains_fluid",
-      "relish": "convivium:hot_chocolate"
+      "type": "only_major",
+      "relish": "fire"
     }
   ],
   "removeNBT": false,

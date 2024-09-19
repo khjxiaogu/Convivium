@@ -14,8 +14,8 @@
   "priority": 0,
   "relish": [
     {
-      "type": "contains_fluid",
-      "relish": "minecraft:water"
+      "type": "only_major",
+      "relish": "hearth"
     }
   ],
   "removeNBT": false,

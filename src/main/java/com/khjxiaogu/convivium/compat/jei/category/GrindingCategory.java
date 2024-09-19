@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.compat.jei.LoreCallback;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.teammoeg.caupona.compat.jei.category.BaseCallback;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
@@ -133,11 +134,12 @@ public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRe
 			if(i>=recipe.output.size())break;
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 6+18*i).addIngredient(VanillaTypes.ITEM_STACK, recipe.output.get(i));
 		}
-		if (!recipe.in.isEmpty())
+		if (recipe.in!=null)
 			builder.addSlot(RecipeIngredientRole.INPUT, 29, 14)
-					.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.in)
+					.addIngredients(NeoForgeTypes.FLUID_STACK,Arrays.asList(recipe.in.getFluids()))
 					.setFluidRenderer(1000, false, 16, 37)
-					.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density));
+					.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density))
+					.addRichTooltipCallback(new LoreCallback());
 		if(!recipe.out.isEmpty())
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 81, 14)
 			.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.out)

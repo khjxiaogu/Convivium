@@ -30,6 +30,8 @@ import com.khjxiaogu.convivium.blocks.camellia.CamelliaBlock;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlock;
 import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
+import com.khjxiaogu.convivium.blocks.foods.SorbetBlock;
+import com.khjxiaogu.convivium.blocks.foods.SorbetItem;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlock;
@@ -51,12 +53,13 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, CVMain.MODID);
-	public static final DeferredHolder<Block, BeverageBlock> BEVERAGE = baseblock("beverage", () -> new BeverageBlock(getBProps()), r -> new BeverageItem(r, CVItems.createProps(), false));
+	public static final DeferredHolder<Block, BeverageBlock> BEVERAGE = baseblock("beverage", () -> new BeverageBlock(getBProps()), r -> new BeverageItem(r,()->CVFluids.mixedf.get(), CVItems.createProps(), false));
 	public static final DeferredHolder<Block, CogCageBlock> cage = baseblock("cage_wheel", () -> new CogCageBlock(getKineticProps()));
 	public static final DeferredHolder<Block, CogCageBlock> cog = baseblock("cog", () -> new CogCageBlock(getKineticProps()));
 	public static final DeferredHolder<Block, AeolipileBlock> aeolipile = baseblock("aeolipile", () -> new AeolipileBlock(getKineticProps()));
@@ -79,11 +82,17 @@ public class CVBlocks {
 	public static final DeferredHolder<Block, BeverageVendingBlock> BEVERAGE_VENDING_MACHINE = baseblock("beverage_vending_machine",
 		() -> new BeverageVendingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
 			.strength(2.0F).noOcclusion().sound(SoundType.STONE)));
+	public static final DeferredHolder<Block, SorbetBlock> FLAT_BREAD = baseblock("flatbread",
+		() -> new SorbetBlock(getSProps()),t->new SorbetItem(t, null, CVItems.createProps(), true));
 	public static final List<Block> beverage = new ArrayList<>();
+	public static final List<Block> sorbets = new ArrayList<>();
 	static {
 		for (String s : new String[] { "felsic_tuff", "stone", "sandstone" }) {
 			aqueducts.add(baseblock(s + "_aqueduct", () -> new AqueductBlock(getKineticProps())));
 			aqueduct_mains.add(baseblock(s + "_aqueduct_wavemaker", () -> new AqueductControllerBlock(getKineticProps())));
+		}
+		for(String s:CVFluids.sorbets) {
+			baseblock(s+"_sorbet",() -> new SorbetBlock(getSProps()),t->new SorbetItem(t,Lazy.of(()->BuiltInRegistries.FLUID.get(CVMain.rl(s+"_sorbet"))), CVItems.createProps(), false));
 		}
 	}
 
@@ -117,7 +126,10 @@ public class CVBlocks {
 		return Block.Properties.of().sound(SoundType.GLASS)
 			.strength(3.5f, 10).noOcclusion().instabreak().isViewBlocking(CVBlocks::isntSolid);
 	}
-
+	private static Properties getSProps() {
+		return Block.Properties.of().sound(SoundType.WOOL)
+			.strength(3.5f, 10).noOcclusion().instabreak().isViewBlocking(CVBlocks::isntSolid);
+	}
 	@SuppressWarnings("unused")
 	private static boolean isntSolid(BlockState state, BlockGetter reader, BlockPos pos) {
 		return false;

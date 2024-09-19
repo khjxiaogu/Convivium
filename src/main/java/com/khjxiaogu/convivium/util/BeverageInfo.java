@@ -415,7 +415,7 @@ public class BeverageInfo implements IFoodInfo {
 		FoodProperties.Builder b = new FoodProperties.Builder();
 		for (MobEffectInstance eff : effects) {
 			if (eff != null) {
-				b.effect(eff, 1);
+				b.effect(()->new MobEffectInstance(eff), 1);
 			}
 		}
 		for (ChancedEffect ef : foodeffect) {

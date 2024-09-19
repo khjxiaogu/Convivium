@@ -47,6 +47,12 @@ public class CVItemModelProvider extends ItemModelProvider {
 		for (String mt : CVFluids.intern.keySet()) {
 			simpleTexture(mt, "beverages/");
 		}
+		for(String mt:CVFluids.sorbets) {
+			super.singleTexture(mt+"_sorbet", ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"), "layer0",
+				ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/sorbets/" + mt));
+
+		}
+		texture("flatbread");
 		potTexture("beverage", "alcohol_bottle", "beverages/");
 		texture("jug");
 	}

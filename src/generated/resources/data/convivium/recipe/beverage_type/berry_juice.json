@@ -14,8 +14,8 @@
   "priority": 0,
   "relish": [
     {
-      "type": "contains_fluid",
-      "relish": "convivium:berry_juice"
+      "type": "only_major",
+      "relish": "seasons"
     }
   ],
   "removeNBT": false,

@@ -14,8 +14,8 @@
   "priority": 0,
   "relish": [
     {
-      "type": "contains_fluid",
-      "relish": "convivium:pome_must"
+      "type": "only_major",
+      "relish": "wine"
     }
   ],
   "removeNBT": false,

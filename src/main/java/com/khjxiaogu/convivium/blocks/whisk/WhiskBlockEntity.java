@@ -115,7 +115,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public static final int MIXING = 2;
 	public static final int HEATING = 3;
 	public FluidTank tank = new FluidTank(1250,
-		e -> RelishFluidRecipe.recipes.containsKey(e.getFluid()) || e.getFluid() instanceof BeverageFluid);
+		e -> RelishFluidRecipe.recipes.containsKey(e.getFluid()) || e.has(CVComponents.BEVERAGE_INFO));
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
 	public static Codec<List<CurrentSwayInfo>> CSI_CODEC = Codec.list(CurrentSwayInfo.CODEC);
 	public static final int MAX_DENSE = 3;
@@ -555,14 +555,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			int filled = tank.fill(resource, action);
 			if (filled != 0) {// add same fluid
 				if (action.execute()) {
-					if (isEmpty) {// add new fluid: compute and cache sway hint
-						if (resource.getFluid() instanceof BeverageFluid) {
-							BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
-							if (info != null) {
-								BeveragePendingContext context = new BeveragePendingContext(info);
-								setSwayhint(context.getSwayHint());
+					if (isEmpty) {// add new fluid: compute and cache sway hint'
+						BeverageInfo info = resource.get(CVComponents.BEVERAGE_INFO);
+						if (info != null) {
+							BeveragePendingContext context = new BeveragePendingContext(info);
+							setSwayhint(context.getSwayHint());
 
-							}
 						}
 						temperature=0;
 					}
@@ -607,23 +605,21 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 						return 0;
 					Fluid actual = resource.getFluid();
 					int famt = Math.min(5 - amt, resource.getAmount() / 250);
-					if (actual instanceof BeverageFluid) {// mix two beverage
-						BeverageInfo other = resource.get(CVComponents.BEVERAGE_INFO);
-						if (other != null) {
-							if (other.equals(info)) {
-								if (action.execute()) {
-									info = info.copy();
-									info.merge(other, amt, famt);
-									Pair<List<CurrentSwayInfo>, Fluid> swi = info.adjustParts(amt, amt + famt);
-									setSwayhint(swi.getFirst());
-									FluidStack fsn = new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250);
-									fsn.applyComponents(tank.getFluid().getComponentsPatch());
-									fsn.set(CVComponents.BEVERAGE_INFO, info);
-									temperature = (temperature * amt) / (famt + amt);
-									tank.setFluid(fsn);
-								}
-								return famt * 250;
+					BeverageInfo other = resource.get(CVComponents.BEVERAGE_INFO);
+					if (other != null) {
+						if (other.equals(info)) {
+							if (action.execute()) {
+								info = info.copy();
+								info.merge(other, amt, famt);
+								Pair<List<CurrentSwayInfo>, Fluid> swi = info.adjustParts(amt, amt + famt);
+								setSwayhint(swi.getFirst());
+								FluidStack fsn = new FluidStack(swi.getSecond(), tank.getFluidAmount() + famt * 250);
+								fsn.applyComponents(tank.getFluid().getComponentsPatch());
+								fsn.set(CVComponents.BEVERAGE_INFO, info);
+								temperature = (temperature * amt) / (famt + amt);
+								tank.setFluid(fsn);
 							}
+							return famt * 250;
 						}
 					}
 					// System.out.print(3);

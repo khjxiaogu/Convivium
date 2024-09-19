@@ -21,33 +21,44 @@ package com.khjxiaogu.convivium.blocks.foods;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.util.BeverageInfo;
+import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
 import com.teammoeg.caupona.item.EdibleBlock;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
-public class BeverageItem extends EdibleBlock {
-	public static final FoodProperties fakefood = new FoodProperties.Builder().nutrition(0).saturationModifier(0f)
+public class SorbetItem extends EdibleBlock {
+	public static final FoodProperties fakefood = new FoodProperties.Builder().nutrition(5).saturationModifier(0.8f)
 			.build();
-	public final BeverageBlock bl;
+	public final Block bl;
 	public final boolean isSmpl;
 	Supplier<Fluid> fluid;
-	public BeverageItem(BeverageBlock block,Supplier<Fluid> fluid, Properties props,boolean isSmpl) {
-		super(block, props.food(fakefood).craftRemainder(Items.GLASS_BOTTLE).stacksTo(1));
+	public SorbetItem(Block block,Supplier<Fluid> fluid,Properties props,boolean isSmpl) {
+		super(block,props.food(fakefood).craftRemainder(CVBlocks.FLAT_BREAD.get().asItem()).stacksTo(1));
 		bl = block;
-		this.fluid=fluid;
 		this.isSmpl=isSmpl;
+		this.fluid=fluid;
+	}
+
+
+	@Override
+	public InteractionResult place(BlockPlaceContext context) {
+		return InteractionResult.PASS;
 	}
 
 
@@ -69,7 +80,7 @@ public class BeverageItem extends EdibleBlock {
 		if (helper.isType(CVMain.MAIN_TAB)) {
 			ItemStack is = new ItemStack(this);
 			if(fluid!=null)
-			Utils.writeItemFluid(is, fluid.get());
+			Utils.writeItemFluid(is,fluid.get());
 			addCreativeHints(is);
 			helper.accept(is,3);
 		}
@@ -83,13 +94,16 @@ public class BeverageItem extends EdibleBlock {
 
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		BeverageInfo info = BeverageItem.getInfo(stack);
+		BeverageInfo info = SorbetItem.getInfo(stack);
 		info.appendTooltip(tooltip);
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 	@Override
 	public FoodProperties getFoodProperties(ItemStack stack, LivingEntity entity) {
-		return getInfo(stack).getFood(0,0).usingConvertsTo(Items.GLASS_BOTTLE).build();
+		BeverageInfo info= stack.get(CVComponents.BEVERAGE_INFO);
+		if(info==null)
+			return fakefood;
+		return info.getFood(5,4).usingConvertsTo(Items.GLASS_BOTTLE).build();
 		
 	}
 

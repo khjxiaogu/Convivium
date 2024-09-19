@@ -20,7 +20,6 @@ package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
@@ -45,7 +44,6 @@ public class CVRecipes {
 	static {
 		TasteRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("taste", () -> new CPRecipeSerializer<>(TasteRecipe.CODEC));
 		GrindingRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("grinding", () -> new CPRecipeSerializer<>(GrindingRecipe.CODEC));
-		ContainingRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("containing", () -> new CPRecipeSerializer<>(ContainingRecipe.CODEC));
 		ConvertionRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("convertion", () -> new CPRecipeSerializer<>(ConvertionRecipe.CODEC));
 		RelishFluidRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("relish_fluid", () -> new CPRecipeSerializer<>(RelishFluidRecipe.CODEC));
 		RelishRecipe.SERIALIZER = RECIPE_SERIALIZERS.register("relish", () -> new CPRecipeSerializer<>(RelishRecipe.CODEC));
@@ -58,7 +56,6 @@ public class CVRecipes {
 	static {
 		TasteRecipe.TYPE = createType("taste");
 		GrindingRecipe.TYPE = createType("grinding");
-		ContainingRecipe.TYPE = createType("containing");
 		ConvertionRecipe.TYPE = createType("convertion");
 		RelishFluidRecipe.TYPE = createType("relish_fluid");
 		RelishRecipe.TYPE = createType("relish");

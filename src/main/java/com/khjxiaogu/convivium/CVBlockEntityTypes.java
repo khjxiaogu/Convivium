@@ -27,6 +27,7 @@ import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
 import com.khjxiaogu.convivium.blocks.basin.BasinBlockEntity;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
+import com.khjxiaogu.convivium.blocks.foods.SorbetBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.AeolipileBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
@@ -62,15 +63,23 @@ public class CVBlockEntityTypes {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WolfFountainBlockEntity>> WOLF_FOUNTAIN = REGISTER.register("wolf_fountain",
 		makeType(WolfFountainBlockEntity::new, () -> CVBlocks.wolf_fountain));
 	
+	
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageBlockEntity>> BEVERAGE = REGISTER.register("beverage", makeType(BeverageBlockEntity::new, () -> CVBlocks.BEVERAGE));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageVendingBlockEntity>> BEVERAGE_VENDING_MACHINE = REGISTER.register("beverage_vending_machine",
 		makeType(BeverageVendingBlockEntity::new, () -> CVBlocks.BEVERAGE_VENDING_MACHINE));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SorbetBlockEntity>> SORBET = REGISTER.register("sorbet",
+		makeTypes(SorbetBlockEntity::new, () -> CVBlocks.sorbets));
+	
+	
 
 	private static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntitySupplier<T> create,
 		Supplier<DeferredHolder<Block, ? extends Block>> valid) {
 		return () -> new BlockEntityType<>(create, ImmutableSet.of(valid.get().get()), null);
 	}
-
+	private static <T extends BlockEntity, E extends Block> Supplier<BlockEntityType<T>> makeTypes(BlockEntitySupplier<T> create,
+		Supplier<List<Block>> valid) {
+		return () -> new BlockEntityType<>(create, valid.get().stream().collect(Collectors.toSet()), null);
+	}
 	private static <T extends BlockEntity, E extends Block> Supplier<BlockEntityType<T>> makeTypes2(BlockEntitySupplier<T> create,
 		Supplier<List<DeferredHolder<Block, E>>> valid) {
 		return () -> new BlockEntityType<>(create, valid.get().stream().map(DeferredHolder<Block, E>::get).collect(Collectors.toSet()), null);

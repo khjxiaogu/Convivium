@@ -49,31 +49,7 @@ public class CVFluids {
 		public FluidType create(String n) {
 			
 			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
-				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n))/* {
-
-				@Override
-				public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-					consumer.accept(new IClientFluidTypeExtensions() {
-
-						@Override
-						public int getTintColor() {
-							return c;
-						}
-
-						@Override
-						public ResourceLocation getStillTexture() {
-							return texture;
-						}
-
-						@Override
-						public ResourceLocation getFlowingTexture() {
-							return texture;
-						}
-
-					});
-				}
-
-			}*/;
+				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n));
 			clientExtensiondata.put(ft, this.copy());
 			return ft;
 		}
@@ -85,12 +61,30 @@ public class CVFluids {
 			return ft;
 		}
 	}
-
+	public static final String[] sorbets=new String[] {
+		"cocoa_juice",
+		"cocoa_milk",
+		"cocoa_tea",
+		"cocoa_wine",
+		"cocoa",
+		"fallback",
+		"juice_milk",
+		"juice_tea",
+		"juice_wine",
+		"juice",
+		"milk_tea",
+		"milk_wine",
+		"milk",
+		"tea_wine",
+		"tea",
+		"wine"
+	};
 	private static final ResourceLocation STILL_WATER_TEXTURE = ResourceLocation.withDefaultNamespace("block/water_still");
 	private static final ResourceLocation STILL_MILK_TEXTURE = ResourceLocation.fromNamespaceAndPath("neoforge", "block/milk_still");
 	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
 	static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(BuiltInRegistries.FLUID, CVMain.MODID);
 	static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(Keys.FLUID_TYPES, CVMain.MODID);
+
 	// private static final Map<String, TextureColorPair> soupfluids = new
 	// HashMap<>();
 	public static final DeferredHolder<FluidType, FluidType> cocoa = FLUID_TYPES.register("hot_chocolate", () -> bvg(0xff734e3d).create("hot_chocolate"));
@@ -144,6 +138,11 @@ public class CVFluids {
 			DeferredHolder<FluidType, FluidType> type = FLUID_TYPES.register(ent.getKey(), () -> ent.getValue().create(ent.getKey()));
 			FLUIDS.register(ent.getKey(), () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,
 				null).slopeFindDistance(1).explosionResistance(100F)));
+		}
+		for(String s:sorbets) {
+			TextureColorPair tcp=new TextureColorPair(CVMain.rl("block/sorbets/"+s), 0xffffffff);
+			DeferredHolder<FluidType, FluidType> type=FLUID_TYPES.register(s+"_sorbet",t -> tcp.create(t.getPath()));
+			FLUIDS.register(s+"_sorbet", () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,null).slopeFindDistance(1).explosionResistance(100F)));
 		}
 	}
 

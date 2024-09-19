@@ -28,6 +28,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,7 +38,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -60,27 +60,40 @@ public class GrindingRecipe extends IDataRecipe {
 	public List<SizedOrCatalystIngredient> items;
 	public Fluid base;
 	public float density = 0;
-	public FluidStack in= FluidStack.EMPTY;
+	public SizedOrCatalystFluidIngredient in;
 	public FluidStack out= FluidStack.EMPTY;
 	public List<ItemStack> output;
 	public int processTime=200;
 	public boolean keepInfo = false;
+	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base, float density, SizedOrCatalystFluidIngredient in, FluidStack out, List<ItemStack> output, int processTime,
+		boolean keepInfo) {
+		super();
+		this.items = items;
+		this.base = base;
+		this.density = density;
+		this.in = in;
+		this.out = out;
+		this.output = output;
+		this.processTime = processTime;
+		this.keepInfo = keepInfo;
+	}
+
 	public static final MapCodec<GrindingRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		Codec.list(SizedOrCatalystIngredient.FLAT_CODEC).fieldOf("items").forGetter(o->o.items),
 		BuiltInRegistries.FLUID.byNameCodec().optionalFieldOf("base").forGetter(o->Optional.ofNullable(o.base)),
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density),
-		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidIn",FluidStack.EMPTY).forGetter(o->o.in),
+		SizedOrCatalystFluidIngredient.FLAT_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
 		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
 		Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(o->o.output),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("keepInfo").forGetter(o->o.keepInfo)
 		).apply(t, GrindingRecipe::new));
 	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Optional<Fluid> base,
-			float density, FluidStack in, FluidStack out, List<ItemStack> output, int processTime, boolean keepInfo) {
+			float density, Optional<SizedOrCatalystFluidIngredient> in, FluidStack out, List<ItemStack> output, int processTime, boolean keepInfo) {
 		this.items = items;
 		this.base = base.orElse(null);
 		this.density = density;
-		this.in = in;
+		this.in = in.orElse(null);
 		this.out = out;
 		this.output = output;
 		this.processTime = processTime;
@@ -148,11 +161,10 @@ public class GrindingRecipe extends IDataRecipe {
 			if (notEmpty < items.size())
 				return false;
 		}
-		if (in.getFluid().isSame(Fluids.EMPTY) && f.isEmpty()) {
-		} else if (!f.getFluid().isSame(in.getFluid()))
-			return false;
-		if (in.getAmount() > 0 && f.getAmount() < in.getAmount())
-			return false;
+		if(in!=null) {
+			if(!in.test(f))
+				return false;
+		}
 
 		if (density != 0 || base != null) {
 			IFoodInfo info = CauponaHooks.getInfo(f).orElse(null);
@@ -178,8 +190,8 @@ public class GrindingRecipe extends IDataRecipe {
 	}
 
 	private List<ItemStack> handle(FluidStack f) {
-		if(in.getAmount()>0)
-			f.shrink(in.getAmount());
+		if(in!=null)
+			f.shrink(in.amount());
 		List<ItemStack> fss=new ArrayList<>();
 		for(ItemStack is:output) {
 			ItemStack iss=is.copy();

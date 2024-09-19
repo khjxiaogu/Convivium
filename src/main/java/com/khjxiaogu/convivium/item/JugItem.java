@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
-import com.khjxiaogu.convivium.fluid.BeverageFluid;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.api.CauponaApi;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;

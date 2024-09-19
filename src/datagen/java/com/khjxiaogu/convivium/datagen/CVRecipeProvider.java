@@ -22,8 +22,11 @@ import static com.khjxiaogu.convivium.CVTags.Items.*;
 import static com.khjxiaogu.convivium.util.Constants.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVBlocks;
@@ -31,15 +34,15 @@ import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
-import com.khjxiaogu.convivium.data.recipes.ContainingRecipe;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
-import com.khjxiaogu.convivium.data.recipes.RelishItemRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.FloatSizedOrCatalystIngredient;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
 import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 import com.teammoeg.caupona.util.Utils;
@@ -59,6 +62,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 public class CVRecipeProvider extends RecipeProvider {
 	private final HashMap<String, Integer> PATH_COUNT = new HashMap<>();
@@ -121,15 +125,16 @@ public class CVRecipeProvider extends RecipeProvider {
 		relish(out, Constants.JUICE, "#aac35d", CVFluids.bjuicef.get(), CVFluids.djuicef.get(), CVFluids.pjuicef.get());
 		relish(out, Constants.WINE, "#ce6c71", CVFluids.bwinef.get(), CVFluids.dwinef.get(), CVFluids.pwinef.get());
 		relish(out, Constants.NONE, "#ffffff");
-		out.accept(rl("bottle/beverage"), new ContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get()), null);
+		out.accept(rl("bottle/beverage"), new BowlContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get(),Ingredient.of(Items.GLASS_BOTTLE)), null);
 		for (String s : CVItems.base_drinks) {
 			if (s.equals("milk")) {
-				out.accept(rl("bottle/" + s), new ContainingRecipe(cvitem(s), NeoForgeMod.MILK.get()), null);
+				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), NeoForgeMod.MILK.get(),Ingredient.of(Items.GLASS_BOTTLE)), null);
 			} else if (s.equals("water")) {
-				out.accept(rl("bottle/" + s), new ContainingRecipe(cvitem(s), Fluids.WATER), null);
+				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), Fluids.WATER,Ingredient.of(Items.GLASS_BOTTLE)), null);
 			} else
-				out.accept(rl("bottle/" + s), new ContainingRecipe(cvitem(s), cvfluid(s)), null);
+				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)), null);
 		}
+		
 		// taste(Items.APPLE).vars().astringency(2).end().end(out);
 		out.accept(rl("convertion/tea"),
 			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("powdered_tea"), 1f)), new FluidStack(Fluids.WATER, 250), cvfluid("tea", 250), 60, 200, false), null);
@@ -143,7 +148,32 @@ public class CVRecipeProvider extends RecipeProvider {
 		for (String s : List.of("pome", "drupe", "berry"))
 			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(List.of(), cvfluid(s + "_must", 250), cvfluid(s + "_juice", 250), 40, 200, false), null);
 		for (String s : CVFluids.intern.keySet())
-			out.accept(rl("bottle/" + s), new ContainingRecipe(cvitem(s), cvfluid(s)), null);
+			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)), null);
+		Map<String,String> relishnames=new HashMap<>();
+
+		relishnames.put("tea", Constants.TEA);
+		relishnames.put("milk", Constants.MILK);
+		relishnames.put("cocoa", Constants.COCOA);
+		relishnames.put("juice", Constants.JUICE);
+		relishnames.put("wine", Constants.WINE);
+		relishnames.put("water", Constants.WATER);
+		for(String s : CVFluids.sorbets) {
+			out.accept(rl("bottle/" + s+"_sorbet"), new BowlContainingRecipe(cvitem(s+"_sorbet"), cvfluid(s+"_sorbet"),Ingredient.of(CVBlocks.FLAT_BREAD.get())), null);
+			String[] relishes=s.split("_");
+			FluidIngredient input;
+			if(s.equals("fallback")) {
+				input=bingredient().only(Constants.WATER).build();
+			}else if(relishes.length==1) {
+				input=bingredient().major(relishnames.get(relishes[0])).allow(Constants.WATER).build();
+			}else if(relishes.length==2) {
+				input=bingredient().major(relishnames.get(relishes[0])).major(relishnames.get(relishes[1])).allow(Constants.WATER).build();
+			}else {
+				throw new RuntimeException("Illegal names");
+			}
+			out.accept(rl("grinding/"+s+"_sorbet"), new GrindingRecipe(Arrays.asList(SizedOrCatalystIngredient.of(Items.ICE, 1)),
+				null, 0,
+				new SizedOrCatalystFluidIngredient(input,250), new FluidStack(cvfluid(s+"_sorbet"),250),Arrays.asList(),200, true), null);
+		}
 		type("hot_chocolate").has(Constants.COCOA).canContains(SPICE).canContains(SWEET).time(200).end(out);
 		type("mulled_wine").has(WINE).allow(WATER).mustContains(SPICE).canContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
 		type("jaegertee").has(WINE).and().has(TEA).allow(WATER).mustContains(SPICE).canContains(SWEET).canContains(FRUIT).priority(100).time(200).end(out);
@@ -175,7 +205,9 @@ public class CVRecipeProvider extends RecipeProvider {
 	private SwayRecipeBuilder create(String name, String icon) {
 		return new SwayRecipeBuilder(rl("sway_effect/" + name), ResourceLocation.parse(icon));
 	}
-
+	private BeverageIngredientBuilder bingredient() {
+		return new BeverageIngredientBuilder();
+	}
 	private TypeRecipeBuilder type(String name) {
 		return new TypeRecipeBuilder(rl("beverage_type/" + name), cvfluid(name));
 	}
@@ -200,7 +232,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		out.accept(rl("relish/" + name), new RelishRecipe(name, ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "relish/" + name), clr), null);
 		for (Fluid f : fs) {
 			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(f, name), null);
-			type(Utils.getRegistryName(f)).has(f).canContains(SPICE).canContains(SWEET).time(200).end(out);
+			type(Utils.getRegistryName(f)).only(name).canContains(SPICE).canContains(SWEET).time(200).end(out);
 
 		}
 	}

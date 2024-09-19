@@ -64,6 +64,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		@Override
 		protected void onContentsChanged(int slot) {
 			// TODO Auto-generated method stub
+			recipeTested=false;
 			super.onContentsChanged(slot);
 			syncData();
 		}
@@ -119,10 +120,19 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		}
 		
 	});
-	public final FluidTank tankin = new FluidTank(1000);
+	public final FluidTank tankin = new FluidTank(1000) {
+
+		@Override
+		protected void onContentsChanged() {
+			recipeTested=false;
+			super.onContentsChanged();
+		}
+		
+	};
 	public final FluidTank tankout = new FluidTank(1000);
 	public int process;
 	public int processMax;
+	public boolean recipeTested=false;
 	public List<ItemStack> items=new ArrayList<>();
 	public FluidStack fout;
 	public PamBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
@@ -199,6 +209,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		if(processMax!=0) {
 			
 			if(process<=0) {
+
 				items.replaceAll(t->Utils.insertToOutput(inv,5,Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,t))));
 				items.removeIf(ItemStack::isEmpty);
 				fout.shrink(tankout.fill(fout, FluidAction.EXECUTE));
@@ -207,13 +218,20 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 				}
 			}else {
 				process-=getSpeed();
+				if(process<=0) {
+					GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
+					fout=recipe.out.copy();
+					if(recipe.keepInfo) {
+						fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
+					}
+					items=recipe.handle(tankin.getFluidInTank(0), inv);
+				}
 			}
 			this.syncData();
-		}else {
+		}else if(!recipeTested){
+			recipeTested=true;
 			GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
 			if(recipe!=null) {
-				items=recipe.handle(tankin.getFluidInTank(0), inv);
-				fout=recipe.out.copy();
 				process=processMax=recipe.processTime;
 				this.syncData();
 			}

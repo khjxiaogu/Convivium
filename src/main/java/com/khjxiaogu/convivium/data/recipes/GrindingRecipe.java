@@ -143,11 +143,11 @@ public class GrindingRecipe extends IDataRecipe {
 		return recipes.stream().map(t->t.value()).anyMatch(t -> t.items.stream().anyMatch(i -> i.test(stack)));
 	}
 
-	public static GrindingRecipe test(FluidStack f, ItemStackHandler inv) {
+	public static RecipeHolder<GrindingRecipe> test(FluidStack f, ItemStackHandler inv) {
 		ItemStack is0 = inv.getStackInSlot(0);
 		ItemStack is1 = inv.getStackInSlot(1);
 		ItemStack is2 = inv.getStackInSlot(2);
-		return recipes.stream().map(t->t.value()).filter(t -> t.test(f, is0, is1, is2)).findFirst().orElse(null);
+		return recipes.stream().filter(t -> t.value().test(f, is0, is1, is2)).findFirst().orElse(null);
 	}
 
 	public boolean test(FluidStack f, ItemStack... ss) {

@@ -20,6 +20,8 @@ package com.khjxiaogu.convivium.blocks.pestle_and_mortar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,11 +42,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -63,7 +67,6 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 
 		@Override
 		protected void onContentsChanged(int slot) {
-			// TODO Auto-generated method stub
 			recipeTested=false;
 			super.onContentsChanged(slot);
 			syncData();
@@ -135,6 +138,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	public boolean recipeTested=false;
 	public List<ItemStack> items=new ArrayList<>();
 	public FluidStack fout=FluidStack.EMPTY;
+	ResourceLocation lastRecipe;
 	public PamBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.PAM.get(), pWorldPosition, pBlockState);
 	}
@@ -148,11 +152,19 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		tankin.readFromNBT(ra,nbt.getCompound("in"));
 		tankout.readFromNBT(ra,nbt.getCompound("out"));
 		inv.deserializeNBT(ra,nbt.getCompound("inv"));
-		fout=FluidStack.parseOptional(ra,nbt.getCompound("fout"));
-		ListTag list=nbt.getList("outBuff",10);
-		items=new ArrayList<>();
-		for(int i=0;i<list.size();i++) {
-			items.add(ItemStack.parseOptional(ra,list.getCompound(i)));
+		
+		if(!isClient) {
+			fout=FluidStack.parseOptional(ra,nbt.getCompound("fout"));
+			ListTag list=nbt.getList("outBuff",10);
+			items=new ArrayList<>();
+			
+			for(int i=0;i<list.size();i++) {
+				items.add(ItemStack.parseOptional(ra,list.getCompound(i)));
+			}
+			if(nbt.contains("lastRecipe"))
+				lastRecipe=ResourceLocation.parse(nbt.getString("lastRecipe"));
+			else
+				lastRecipe=null;
 		}
 		
 	}
@@ -167,11 +179,14 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		nbt.put("out",tankout.writeToNBT(ra,new CompoundTag()));
 		nbt.put("inv", inv.serializeNBT(ra));
 		if(isClient)return;
+		
 		if(fout!=null)
 			nbt.put("fout", fout.saveOptional(ra));
 		ListTag tl=new ListTag();
 		items.forEach(t->tl.add(t.save(ra)));
 		nbt.put("outBuff", tl);
+		if(lastRecipe!=null)
+			nbt.putString("lastRecipe", lastRecipe.toString());
 	}
 
 	@Override
@@ -206,40 +221,44 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 				}
 			return;
 		}
-		if(!recipeTested&&items.isEmpty()&&fout.isEmpty()){
-			recipeTested=true;
-			GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
-			if(recipe!=null) 
-				process=processMax=recipe.processTime;
-			else
-				process=processMax=0;
-			this.syncData();
+		if(!items.isEmpty()||!fout.isEmpty()) {
+			items.replaceAll(t->Utils.insertToOutput(inv,5,Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,t))));
+			items.removeIf(ItemStack::isEmpty);
+			fout.shrink(tankout.fill(fout, FluidAction.EXECUTE));
+			return;
 		}
-		if(processMax!=0) {
-			
-			if(process<=0) {
-
-				items.replaceAll(t->Utils.insertToOutput(inv,5,Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,t))));
-				items.removeIf(ItemStack::isEmpty);
-				fout.shrink(tankout.fill(fout, FluidAction.EXECUTE));
-				if(items.isEmpty()&&fout.isEmpty()) {
-					processMax=0;
+		
+		
+		if(!recipeTested){
+			recipeTested=true;
+			RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.test(tankin.getFluid(), inv);
+			if(recipe!=null) {
+				if(!recipe.id().equals(lastRecipe)) {
+					process=processMax=recipe.value().processTime;
+					lastRecipe=recipe.id();
 				}
 			}else {
-				process-=getSpeed();
-				if(process<=0) {
-					GrindingRecipe recipe=GrindingRecipe.test(tankin.getFluid(), inv);
-					if(recipe!=null) {
-						fout=recipe.out.copy();
-						if(recipe.keepInfo) {
-							fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
-						}
-						items=recipe.handle(tankin.getFluidInTank(0), inv);
-					}else if(items.isEmpty()&&fout.isEmpty()){
-						process=processMax=0;
-					}
-				}
+				process=processMax=0;
+				lastRecipe=null;
 			}
+			this.syncData();
+		}else
+		if(processMax!=0) {
+			if(process<=0) {
+				RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.test(tankin.getFluid(), inv);
+				if(recipe!=null) {
+					fout=recipe.value().out.copy();
+					if(recipe.value().keepInfo) {
+						fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
+					}
+					items=recipe.value().handle(tankin.getFluidInTank(0), inv);
+				}else if(items.isEmpty()&&fout.isEmpty()){
+					process=processMax=0;
+				}
+				recipeTested=false;
+				lastRecipe=null;
+			}else process-=getSpeed();
+			
 			this.syncData();
 		}
 	}

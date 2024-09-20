@@ -10,7 +10,7 @@
 		},
 		{
 			"type": "patchouli:crafting",
-			"recipe": "convivium:crafting/basin",
+			"recipe": "convivium:smelting/basin",
 			"recipe2": "convivium:crafting/lead_basin"
 		},
 		{

@@ -9,7 +9,9 @@
 	],
 	"result": {
 		"item": "patchouli:guide_book",
-		"nbt": "{\"patchouli:book\":\"convivium:book\"}"
+		"nbt": {
+    		"patchouli:book": "convivium:book"
+		}
 	},
   "neoforge:conditions": [
     {

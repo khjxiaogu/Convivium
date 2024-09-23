@@ -11,7 +11,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "The liquid ingredients of a beverage, that is, the “bases” added to the {(mechanisms/whisk)whisk}, are bound to specific Relishes respectively. A beverage typically accept at most five portions of bases, and {u up to two} Relishe(s) that are most-presented in the bases become the Relishe(s) of the beverage."
+			"text": "The liquid ingredients of a beverage, that is, the “bases” added to the {(mechanisms/whisk)whisk}, are bound to specific Relishes respectively. A beverage typically accept at most five portions of bases, and {u up to two} Relishe(s) that are most-presented in the bases become the {b Relishe(s) of the beverage}."
 		},
 		{
 			"type": "patchouli:text",

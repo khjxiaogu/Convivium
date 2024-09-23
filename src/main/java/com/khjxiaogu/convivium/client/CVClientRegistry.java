@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -47,9 +47,7 @@ import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.khjxiaogu.convivium.client.renderer.WolfFountainProjectileRenderer;
 import com.khjxiaogu.convivium.client.renderer.WolfFountainRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.CPEntityTypes;
 import com.teammoeg.caupona.CPMain;
-import com.teammoeg.caupona.client.renderer.CPBoatRenderer;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;

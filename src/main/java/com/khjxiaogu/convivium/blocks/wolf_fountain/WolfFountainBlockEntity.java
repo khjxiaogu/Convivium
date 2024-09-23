@@ -1,7 +1,24 @@
+/*
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
+ *
+ * This file is part of Convivium.
+ *
+ * Convivium is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ * the Free Software Foundation, version 3.
+ *
+ * Convivium is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ * along with Convivium. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.khjxiaogu.convivium.blocks.wolf_fountain;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.joml.Vector2i;
@@ -12,7 +29,6 @@ import com.khjxiaogu.convivium.CVEntityTypes;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.Cog;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticConnected;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.client.CVParticles;
 import com.khjxiaogu.convivium.util.FoodPropertieHelper;
@@ -20,7 +36,6 @@ import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.util.ChancedEffect;
-import com.teammoeg.caupona.util.LazyTickWorker;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -30,11 +45,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.FoodProperties.Builder;
 import net.minecraft.world.item.ItemStack;
@@ -44,20 +55,19 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.wrappers.BucketPickupHandlerWrapper;
 
 public class WolfFountainBlockEntity extends KineticTransferBlockEntity implements Cog{
-	FluidTank fluid=new FluidTank(1000) {
+	public FluidTank fluid=new FluidTank(1000) {
 
 		@Override
 		protected void onContentsChanged() {
@@ -66,7 +76,7 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 		}
 
 	};
-	ItemStack item;
+	public ItemStack item;
 	FoodProperties appliedEffect;
 	int currentVersion;
 	public static final Vector2i[] spd1pos=new Vector2i[] {
@@ -215,7 +225,7 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 						FluidStack out=fluid.drain(50, FluidAction.SIMULATE);
 						if(ifh.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
 							FluidStack drained=fluid.drain(50, FluidAction.EXECUTE);
-							int filled=ifh.fill(drained, FluidAction.EXECUTE);
+							ifh.fill(drained, FluidAction.EXECUTE);
 						}
 					}
 					if(fluid.isEmpty())

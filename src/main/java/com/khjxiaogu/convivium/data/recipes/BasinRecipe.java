@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -28,6 +28,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.data.recipes.TimedRecipe;
 import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
@@ -41,7 +42,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-public class BasinRecipe extends IDataRecipe {
+public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 	public static List<RecipeHolder<BasinRecipe>> recipes;
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
@@ -91,8 +92,8 @@ public class BasinRecipe extends IDataRecipe {
 	}
 
 
-	public static BasinRecipe testAll(FluidStack f,ItemStack is,boolean isLead) {
-		return recipes.stream().map(t->t.value()).filter(t->!t.requireBasin||isLead).filter(t -> t.test(f)).filter(t->t.item==null||t.item.test(is)).findFirst().orElse(null);
+	public static RecipeHolder<BasinRecipe> testAll(FluidStack f,ItemStack is,boolean isLead) {
+		return recipes.stream().map(t->t).filter(t->!t.value().requireBasin||isLead).filter(t -> t.value().test(f)).filter(t->t.value().item==null||t.value().item.test(is)).findFirst().orElse(null);
 	}
 
 	public boolean test(FluidStack f) {
@@ -124,6 +125,11 @@ public class BasinRecipe extends IDataRecipe {
 
 	public static boolean testInput(ItemStack stack) {
 		return recipes.stream().map(t->t.value()).anyMatch(t->t.item.test(stack));
+	}
+
+	@Override
+	public int getTime() {
+		return processTime;
 	}
 
 }

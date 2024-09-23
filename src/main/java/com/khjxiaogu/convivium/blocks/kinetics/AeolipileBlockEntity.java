@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -191,6 +191,11 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 	@Override
 	public boolean setInfinity() {
 		return inf=!inf;
+	}
+
+	@Override
+	public boolean isInfinite() {
+		return inf;
 	}
 
 }

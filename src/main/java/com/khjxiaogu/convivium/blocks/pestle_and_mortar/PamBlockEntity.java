@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -20,8 +20,6 @@ package com.khjxiaogu.convivium.blocks.pestle_and_mortar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,10 +28,10 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
+import com.teammoeg.caupona.util.RecipeHandler;
 import com.teammoeg.caupona.util.SyncedFluidHandler;
 import com.teammoeg.caupona.util.Utils;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -54,6 +52,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RangedWrapper;
@@ -67,8 +67,8 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 
 		@Override
 		protected void onContentsChanged(int slot) {
-			recipeTested=false;
 			super.onContentsChanged(slot);
+			recipeHandler.onContainerChanged();
 			syncData();
 		}
 	};
@@ -127,18 +127,34 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 
 		@Override
 		protected void onContentsChanged() {
-			recipeTested=false;
 			super.onContentsChanged();
+			recipeHandler.onContainerChanged();
+			syncData();
 		}
 		
 	};
-	public final FluidTank tankout = new FluidTank(1000);
-	public int process;
-	public int processMax;
-	public boolean recipeTested=false;
+	public final FluidTank tankout = new FluidTank(1000){
+
+		@Override
+		protected void onContentsChanged() {
+			super.onContentsChanged();
+			syncData();
+		}
+		
+	};
 	public List<ItemStack> items=new ArrayList<>();
 	public FluidStack fout=FluidStack.EMPTY;
-	ResourceLocation lastRecipe;
+	public RecipeHandler<GrindingRecipe> recipeHandler=new RecipeHandler<>(()->{
+		RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.test(tankin.getFluid(), inv);
+		if(recipe!=null) {
+			fout=recipe.value().out.copy();
+			if(recipe.value().keepInfo) {
+				fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
+			}
+			items=recipe.value().handle(tankin.getFluidInTank(0), inv);
+		}
+	});
+
 	public PamBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.PAM.get(), pWorldPosition, pBlockState);
 	}
@@ -147,8 +163,6 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		// TODO Auto-generated method stub
 		super.readCustomNBT(nbt, isClient,ra);
-		process=nbt.getInt("process");
-		processMax=nbt.getInt("processMax");
 		tankin.readFromNBT(ra,nbt.getCompound("in"));
 		tankout.readFromNBT(ra,nbt.getCompound("out"));
 		inv.deserializeNBT(ra,nbt.getCompound("inv"));
@@ -161,10 +175,6 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			for(int i=0;i<list.size();i++) {
 				items.add(ItemStack.parseOptional(ra,list.getCompound(i)));
 			}
-			if(nbt.contains("lastRecipe"))
-				lastRecipe=ResourceLocation.parse(nbt.getString("lastRecipe"));
-			else
-				lastRecipe=null;
 		}
 		
 	}
@@ -173,8 +183,6 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
 		// TODO Auto-generated method stub
 		super.writeCustomNBT(nbt, isClient,ra);
-		nbt.putInt("process", process);
-		nbt.putInt("processMax", processMax);
 		nbt.put("in",tankin.writeToNBT(ra,new CompoundTag()));
 		nbt.put("out",tankout.writeToNBT(ra,new CompoundTag()));
 		nbt.put("inv", inv.serializeNBT(ra));
@@ -185,8 +193,6 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		ListTag tl=new ListTag();
 		items.forEach(t->tl.add(t.save(ra)));
 		nbt.put("outBuff", tl);
-		if(lastRecipe!=null)
-			nbt.putString("lastRecipe", lastRecipe.toString());
 	}
 
 	@Override
@@ -211,7 +217,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		// TODO Auto-generated method stub
 		super.tick();
 		if(level.isClientSide) {
-			if(process!=0)
+			if(recipeHandler.getProcess()!=0)
 				for(int i=0;i<3;i++) {
 					ItemStack stackInSlot = inv.getStackInSlot(i);
 					if (!stackInSlot.isEmpty()){
@@ -229,36 +235,15 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		}
 		
 		
-		if(!recipeTested){
-			recipeTested=true;
+		if(recipeHandler.shouldTestRecipe()){
 			RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.test(tankin.getFluid(), inv);
 			if(recipe!=null) {
-				if(!recipe.id().equals(lastRecipe)) {
-					process=processMax=recipe.value().processTime;
-					lastRecipe=recipe.id();
-				}
-			}else {
-				process=processMax=0;
-				lastRecipe=null;
+				recipeHandler.setRecipe(recipe);
 			}
 			this.syncData();
 		}else
-		if(processMax!=0) {
-			if(process<=0) {
-				RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.test(tankin.getFluid(), inv);
-				if(recipe!=null) {
-					fout=recipe.value().out.copy();
-					if(recipe.value().keepInfo) {
-						fout.applyComponents(tankin.getFluidInTank(0).getComponentsPatch());
-					}
-					items=recipe.value().handle(tankin.getFluidInTank(0), inv);
-				}else if(items.isEmpty()&&fout.isEmpty()){
-					process=processMax=0;
-				}
-				recipeTested=false;
-				lastRecipe=null;
-			}else process-=getSpeed();
-			
+		if(recipeHandler.getProcessMax()>0) {
+			recipeHandler.tickProcess(getSpeed());
 			this.syncData();
 		}
 	}

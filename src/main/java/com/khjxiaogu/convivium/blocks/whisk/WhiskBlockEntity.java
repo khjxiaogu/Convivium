@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -34,7 +34,6 @@ import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
-import com.khjxiaogu.convivium.fluid.BeverageFluid;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.khjxiaogu.convivium.util.CurrentSwayInfo;
@@ -743,5 +742,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public boolean setInfinity() {
 		return inf = !inf;
 	}
-
+	@Override
+	public boolean isInfinite() {
+		return inf;
+	}
 }

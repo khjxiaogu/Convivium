@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -59,6 +59,9 @@ public class BasinBlock extends CPHorizontalEntityBlock<BasinBlockEntity> {
 			if (worldIn.getBlockEntity(pos) instanceof BasinBlockEntity dish) {
 				for(int i=0;i<dish.inv.getSlots();i++) {
 					super.popResource(worldIn, pos, dish.inv.getStackInSlot(i));
+				}
+				for(int i=0;i<dish.items.size();i++) {
+					super.popResource(worldIn, pos, dish.items.get(i));
 				}
 			}
 			worldIn.removeBlockEntity(pos);

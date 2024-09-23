@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -85,5 +85,8 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 	public boolean accepts(int num, ItemStack is) {
 		return is.getItem() instanceof BeverageItem||is.is(Items.GLASS_BOTTLE)||is.is(Items.POTION);
 	}
-
+	@Override
+	public boolean isInfinite() {
+		return isInfinite;
+	}
 }

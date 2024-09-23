@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -18,20 +18,26 @@
 
 package com.khjxiaogu.convivium;
 
+import java.util.function.Function;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.khjxiaogu.convivium.client.CVParticles;
+import com.khjxiaogu.convivium.compat.top.TOPRegister;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.TabType;
 import com.teammoeg.caupona.util.Utils;
 
+import mcjty.theoneprobe.api.ITheOneProbe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -54,7 +60,7 @@ public class CVMain {
 
 	public CVMain(IEventBus mod) {
 		NeoForgeMod.enableMilkFluid();
-		// mod.addListener(this::enqueueIMC);
+		mod.addListener(this::enqueueIMC);
 		CVBlockEntityTypes.REGISTER.register(mod);
 		CVGui.CONTAINERS.register(mod);
 		CVParticles.REGISTER.register(mod);
@@ -78,4 +84,9 @@ public class CVMain {
 	 * event) { // InterModComms.sendTo("treechop", "getTreeChopAPI", () ->
 	 * (Consumer)TreechopCompat::new); }
 	 */
+	@SuppressWarnings("unused")
+	public void enqueueIMC(InterModEnqueueEvent event) {
+		InterModComms.sendTo("theoneprobe", "getTheOneProbe", ()->(Function<ITheOneProbe, ?>)TOPRegister::register);
+	   // InterModComms.sendTo("treechop", "getTreeChopAPI", () -> (Consumer)TreechopCompat::new);
+	}
 }

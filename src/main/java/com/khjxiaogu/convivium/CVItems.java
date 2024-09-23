@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -27,10 +27,8 @@ import com.khjxiaogu.convivium.blocks.foods.SorbetItem;
 import com.khjxiaogu.convivium.item.BeveragePotionFluid;
 import com.khjxiaogu.convivium.item.CVMaterialItem;
 import com.khjxiaogu.convivium.item.JugItem;
-import com.teammoeg.caupona.CPMain;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.level.material.Fluid;

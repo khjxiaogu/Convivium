@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -25,7 +25,6 @@ import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
 import com.teammoeg.caupona.item.EdibleBlock;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.Utils;

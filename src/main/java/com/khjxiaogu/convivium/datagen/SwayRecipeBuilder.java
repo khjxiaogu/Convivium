@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -34,6 +34,7 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.HasRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.MajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
+
 import net.minecraft.core.Holder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;

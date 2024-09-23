@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -52,19 +52,14 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity> {
 	@Override
 	public void render(BasinBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {
-		// TODO Auto-generated method stub
 		FluidStack fs=blockEntity.tankin.getFluid();
 		float tr=1;
-		if(fs.isEmpty()) {
-			fs=blockEntity.fs;
-			tr=0;
-		}
 		if(!fs.isEmpty()) {
 			matrixStack.pushPose();
 			
 			tr=fs.getAmount()/250+1;
-			if(blockEntity.processMax!=0)
-				tr+=blockEntity.process*1f/blockEntity.processMax;
+			if(blockEntity.recipeHandler.getProcessMax()!=0)
+				tr+=blockEntity.recipeHandler.getProcess()*1f/blockEntity.recipeHandler.getProcessMax();
 			else
 				tr+=1;
 			matrixStack.translate(0, tr/16f, 0);

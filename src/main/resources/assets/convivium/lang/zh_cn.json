@@ -155,6 +155,6 @@
 	"sway.minecraft.mob_effect/water_breathing.name": "海风之味",
 	"sway.minecraft.mob_effect/weakness.name": "陈化的滋味",
 	"sway.minecraft.mob_effect/whither.name": "酸败之味",
-	"recipe.convivium.relish_cond.major": "饮品的旨可包含：",
-	"recipe.convivium.relish_cond.only_major": "饮品的旨只能是："
+	"recipe.convivium.relish_cond.major": "饮品的生效旨可包含：",
+	"recipe.convivium.relish_cond.only_major": "饮品的生效旨只能是："
 }

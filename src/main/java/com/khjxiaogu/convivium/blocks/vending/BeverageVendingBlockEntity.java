@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -171,5 +171,8 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 			return handler;
 		return super.getCapability(cap, side);
 	}
-
+	@Override
+	public boolean isInfinite() {
+		return isInfinite;
+	}
 }

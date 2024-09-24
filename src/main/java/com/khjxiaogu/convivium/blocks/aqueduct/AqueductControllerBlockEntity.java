@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -22,7 +22,6 @@ import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.Cog;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticConnected;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.client.CVParticles;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.util.LazyTickWorker;
@@ -41,7 +40,6 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 		super(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), pWorldPosition, pBlockState);
 		tonxt=20;
 		process = KineticConnected.createKineticValidator(this);
-		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public int getSpeed() {
@@ -64,7 +62,6 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 
 	@Override
 	public void handleMessage(short type, int data) {
-		// TODO Auto-generated method stub
 
 	}
 

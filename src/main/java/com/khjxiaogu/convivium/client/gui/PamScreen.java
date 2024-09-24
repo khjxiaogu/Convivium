@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -93,8 +93,8 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 		if(getBlockEntity().getSpeed()>0) {
 			transform.blit(TEXTURE, leftPos+86, topPos+1, 176, 0, 24, 24);
 		}
-		if (getBlockEntity().processMax > 0) {
-			transform.blit(TEXTURE, leftPos + 108, topPos + 23, 176, 24, (int) (22*(getBlockEntity().processMax-getBlockEntity().process)*1f/getBlockEntity().processMax), 15);
+		if (getBlockEntity().recipeHandler.getProcessMax() > 0) {
+			transform.blit(TEXTURE, leftPos + 108, topPos + 23, 176, 24, (int) (22*(getBlockEntity().recipeHandler.getFinishedProgress())*1f/getBlockEntity().recipeHandler.getProcessMax()), 15);
 		}
 	}
 

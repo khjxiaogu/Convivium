@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.CPCapability;
-import com.teammoeg.caupona.CPItems;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.FluidItemWrapper;
@@ -66,6 +65,7 @@ public class CVCommonBootStrap {
 		return obj;
 	}
 
+	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public static void onCommonSetup(@SuppressWarnings("unused") FMLCommonSetupEvent event) {
 		registerDispensers();

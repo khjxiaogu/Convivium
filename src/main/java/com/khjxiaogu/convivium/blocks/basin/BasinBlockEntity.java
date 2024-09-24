@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -28,6 +28,7 @@ import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.blocks.stove.IStove;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
+import com.teammoeg.caupona.util.RecipeHandler;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -62,8 +64,9 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
-			isRecipeTested=false;
-			syncData();
+			if(slot<2)
+				recipeHandler.onContainerChanged();
+			setChanged();
 		}
 	};
 	public final FluidTank tankin = new FluidTank(1000) {
@@ -71,45 +74,46 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 		@Override
 		protected void onContentsChanged() {
 			super.onContentsChanged();
-			isRecipeTested=false;
+			recipeHandler.onContainerChanged();
+			syncData();
 		}
 		
 	};
-	public int process;
-	public int processMax;
+	public RecipeHandler<BasinRecipe> recipeHandler=new RecipeHandler<>(()->{
+		RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
+		if(recipe!=null) {
+			items=recipe.value().handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
+		}
+	});
 	public List<ItemStack> items=new ArrayList<>();
 	public boolean isLastHeating;
-	public FluidStack fs=FluidStack.EMPTY;
-	boolean isRecipeTested=false;
 	public BasinBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.BASIN.get(), pWorldPosition, pBlockState);
 	}
 
 	@Override
 	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		process=nbt.getInt("process");
-		processMax=nbt.getInt("processMax");
+		recipeHandler.readCustomNBT(nbt, isClient);
 		tankin.readFromNBT(ra,nbt.getCompound("in"));
-		inv.deserializeNBT(ra,nbt.getCompound("inv"));
-		ListTag list=nbt.getList("outBuff",10);
-		items=new ArrayList<>();
-		for(int i=0;i<list.size();i++) {
-			items.add(ItemStack.parse(ra,list.getCompound(i)).orElse(ItemStack.EMPTY));
+		if(!isClient) {
+			inv.deserializeNBT(ra,nbt.getCompound("inv"));
+			ListTag list=nbt.getList("outBuff",10);
+			items=new ArrayList<>();
+			for(int i=0;i<list.size();i++) {
+				items.add(ItemStack.parse(ra,list.getCompound(i)).orElse(ItemStack.EMPTY));
+			}
 		}
 		isLastHeating=nbt.getBoolean("heating");
-		fs=FluidStack.parseOptional(ra,nbt.getCompound("fluid"));
 	}
 
 	@Override
 	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		if(isClient) 
-			nbt.putBoolean("heating", isLastHeating);
-		nbt.putInt("process", process);
-		nbt.putInt("processMax", processMax);
+		nbt.putBoolean("heating", isLastHeating);
+		recipeHandler.writeCustomNBT(nbt, isClient);
 		nbt.put("in",tankin.writeToNBT(ra, new CompoundTag()));
-		nbt.put("inv", inv.serializeNBT(ra));
-		nbt.put("fluid", fs.saveOptional(ra));
+		
 		if(!isClient) {
+			nbt.put("inv", inv.serializeNBT(ra));
 			ListTag tl=new ListTag();
 			items.forEach(t->tl.add(t.save(ra)));
 			nbt.put("outBuff", tl);
@@ -134,35 +138,33 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 		if(level.isClientSide) {
 			return;
 		}
-		if(processMax!=0) {
-			
-			if(process<=0) {
-				fs=FluidStack.EMPTY;
-				isLastHeating = false;
-				items.replaceAll(t->Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,Utils.insertToOutput(inv,2,Utils.insertToOutput(inv,1,t)))));
-				items.removeIf(ItemStack::isEmpty);
-				isRecipeTested=false;
-				if(items.isEmpty()) {
-					processMax=0;
-				}
-			}else {
-				if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
-					process-= stove.requestHeat();
-					isLastHeating = true;
-				}else isLastHeating = false;
+		if(!items.isEmpty()) {
+			items.replaceAll(t->Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,Utils.insertToOutput(inv,2,Utils.insertToOutput(inv,1,t)))));
+			items.removeIf(ItemStack::isEmpty);
+			this.setChanged();
+		}
+		
+		if(recipeHandler.getProcessMax()>0) {
+			boolean preIsLastHeating=isLastHeating;
+			boolean ticked=false;
+			if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
+				ticked=recipeHandler.tickProcess(stove.requestHeat());
+				isLastHeating = true;
+			}else isLastHeating = false;
+			if(preIsLastHeating!=isLastHeating||ticked) {
+				this.syncData();
 			}
-			this.syncData();
-		}else if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
-			if(!isRecipeTested) {
+		}
+			
+		if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
+			if(recipeHandler.shouldTestRecipe()) {
 				isLastHeating = false;
-				BasinRecipe recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
+				
+				RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
 				if(recipe!=null) {
-					fs=tankin.getFluidInTank(0).copy();
-					items=recipe.handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
-					process=processMax=recipe.processTime;
+					recipeHandler.setRecipe(recipe);
 					this.syncData();
 				}
-				isRecipeTested=true;
 			}
 			
 		}

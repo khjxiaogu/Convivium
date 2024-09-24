@@ -1,14 +1,30 @@
+/*
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
+ *
+ * This file is part of Convivium.
+ *
+ * Convivium is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ * the Free Software Foundation, version 3.
+ *
+ * Convivium is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ * along with Convivium. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.khjxiaogu.convivium.blocks.wolf_fountain;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +44,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class WolfFountainBlock extends KineticBasedBlock<WolfFountainBlockEntity> implements SimpleWaterloggedBlock {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;

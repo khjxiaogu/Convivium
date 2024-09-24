@@ -1,22 +1,19 @@
 /*
- * Copyright (c) 2024 TeamMoeg
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
- * This file is part of Caupona.
+ * This file is part of Convivium.
  *
- * Caupona is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * Convivium is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
  * the Free Software Foundation, version 3.
  *
- * Caupona is distributed in the hope that it will be useful,
+ * Convivium is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU LESSER GENERAL PUBLIC LICENSE for more details.
  *
- * Specially, we allow this software to be used alongside with closed source software Minecraft(R) and Forge or other modloader.
- * Any mods or plugins can also use apis provided by forge or com.teammoeg.caupona.api without using GPL or open source.
- *
- * You should have received a copy of the GNU General Public License
- * along with Caupona. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ * along with Convivium. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.khjxiaogu.convivium.blocks.foods;
@@ -36,6 +33,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -133,8 +131,8 @@ public class SorbetBlock extends CPRegisteredEntityBlock<SorbetBlockEntity> {
 			dish.internal = pStack.copyWithCount(1);
 		}
 	}
-
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
+	@Override
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
 			Player player) {
 		if (level.getBlockEntity(pos) instanceof SorbetBlockEntity dish) {
 			if (dish.internal == null)

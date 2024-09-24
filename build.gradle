@@ -151,7 +151,8 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-
+    //for top
+    maven { url "https://maven.k-4u.nl" }
     //for patchouli books and jei
     maven { url 'https://maven.blamejared.com' }
     maven {
@@ -178,6 +179,7 @@ dependencies {
  	compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
   	// at runtime, use the full JEI jar for NeoForge
   	runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+  	
 	//compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.2.0.247")
 	//compileOnly "curse.maven:jei-238222:5071127"
 	
@@ -200,6 +202,7 @@ dependencies {
 	implementation "com.khjxiaogu:Caupona:${minecraft_version}-${caupona_version}"
     //compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE:api")
     compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
+	implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
 	//compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
 	//clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
     // FG5 requires 0.8.3

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -88,8 +88,8 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 		if(getBlockEntity().isLastHeating) {
 			transform.blit(TEXTURE, leftPos+37, topPos+28, 176, 0, 16, 29);
 		}
-		if (getBlockEntity().processMax > 0) {
-			transform.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().processMax-getBlockEntity().process)*1f/getBlockEntity().processMax), 43);
+		if (getBlockEntity().recipeHandler.getProcessMax() > 0) {
+			transform.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().recipeHandler.getProcessMax()-getBlockEntity().recipeHandler.getProcess())*1f/getBlockEntity().recipeHandler.getProcessMax()), 43);
 		}
 	}
 

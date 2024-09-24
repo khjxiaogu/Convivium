@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -28,6 +28,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.data.recipes.TimedRecipe;
 import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
@@ -42,7 +43,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-public class GrindingRecipe extends IDataRecipe {
+public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 	public static List<RecipeHolder<GrindingRecipe>> recipes;
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
@@ -245,4 +246,9 @@ public class GrindingRecipe extends IDataRecipe {
 		data.writeVarInt(processTime);
 	}
 */
+
+	@Override
+	public int getTime() {
+		return processTime;
+	}
 }

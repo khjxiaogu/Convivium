@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -164,6 +164,14 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			return true;
 		}
 		return false;
+	}
+
+	public int getProcess() {
+		return nxt;
+	}
+
+	public int getProcessMax() {
+		return tonxt;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 IEEM Trivium Society/khjxiaogu
+ * Copyright (c) 2024 IEEM Trivium Society/khjxiaogu
  *
  * This file is part of Convivium.
  *
@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import com.khjxiaogu.convivium.CVBlocks;

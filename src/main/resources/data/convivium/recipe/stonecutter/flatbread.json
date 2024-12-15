@@ -1,0 +1,10 @@
+{
+	"type": "stonecutting",
+	"ingredient": {
+		"item": "minecraft:bread"
+	},
+	"result": {
+		"id": "convivium:flatbread"
+	},
+	"count": 2
+}

@@ -202,6 +202,7 @@ dependencies {
 	implementation "com.khjxiaogu:Caupona:${minecraft_version}-${caupona_version}"
     //compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE:api")
     compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
+    runtimeOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}"
 	implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
 	//compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
 	//clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"

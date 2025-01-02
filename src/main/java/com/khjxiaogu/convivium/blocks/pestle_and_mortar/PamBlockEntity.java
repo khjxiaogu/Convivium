@@ -203,6 +203,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			if(process<=0) {
 				items.replaceAll(t->Utils.insertToOutput(inv,5,Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,t))));
 				items.removeIf(ItemStack::isEmpty);
+				if(!fout.isEmpty())
 				fout.shrink(tankout.fill(fout, FluidAction.EXECUTE));
 				if(items.isEmpty()&&fout.isEmpty()) {
 					processMax=0;

@@ -43,6 +43,7 @@ public class CVTags {
 		public static TagKey<Item> NUTS=create("nuts");
 		public static TagKey<Item> SWEET=create("sweeteners");
 		public static TagKey<Item> ASSES=create("asses");
+		public static TagKey<Item> CAMELLIA_SEED=create("camellia_seeds");
 		private static TagKey<Item> create(String s){
 			return ItemTags.create(new ResourceLocation(CVMain.MODID, s));
 		}

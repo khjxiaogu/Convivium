@@ -122,7 +122,7 @@ public class CVClientRegistry {
 			public ResourceLocation getFlowingTexture() {
 				return STILL_BEVERAGE_TEXTURE;
 			}
-		}, CVFluids.mixed);
+		}, CVFluids.mixed.get());
 		for(Entry<FluidType, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
 			TextureColorPair tcp=s.getValue();
 			event.registerFluidType(new IClientFluidTypeExtensions() {

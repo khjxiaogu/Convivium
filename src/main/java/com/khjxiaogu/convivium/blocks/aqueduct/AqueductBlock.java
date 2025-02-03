@@ -27,6 +27,7 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -111,8 +112,9 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 	 */
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
 			BlockPos pCurrentPos, BlockPos pFacingPos) {
-		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
+		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)&&pFacing.getAxis()!=Axis.Y) {
 			AqueductConnection c=pState.getValue(CONN).connects(pFacing);
+			
 			boolean canConnect=true;
 			if(pFacingState.getBlock() instanceof AqueductConnectable con) {
 				canConnect=con.canConnect(pFacingPos, pFacingState,pFacing.getOpposite());

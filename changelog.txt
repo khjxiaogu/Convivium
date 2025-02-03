@@ -1,3 +1,1 @@
-Change Caupona version to 0.4.9
-Fix translations
-Berverage bottle supports other containers 
+Fix a crash when installed with jei

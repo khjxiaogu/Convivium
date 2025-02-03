@@ -4,5 +4,75 @@
 	"name": "趣",
 	"sortnum": 70,
 	"pages": [
+		{
+			"type": "patchouli:text",
+			"title": "趣",
+			"text": "简单地说，{b 趣}就是有待激活的药水效果。通过调节饮品的属性，就有可能将一种或多种趣激活为饮品提供的药水效果。所有趣的列表{(beverages_basics/sway_list)详见此处}。"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "对旨的要求",
+			"text": "趣一般与特定的{(beverages_basics/relishes)旨}绑定。也就是说，只有在饮品的旨满足趣的要求时，才可激活此种趣。"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "对味的要求",
+			"text": "同时，趣的激活需要使饮品的{(beverages_basics/tastes)味}数值落在指定的范围内。一般而言，在满足条件的情况下，味{b 越强烈}，激活趣所产生的药水效果的等级越{b 高}、或持续时间越{b 长}。"
+		},
+		{
+			"type": "patchouli:text",
+			"title": "半味的组合",
+			"text": "趣对味的要求时常可以拆成对于其中两对{b 半味}的要求，分别描述能够激活趣的两对半味的值组成怎样的图案。"
+		},
+		{
+			"type": "patchouli:image",
+			"title": "调和之味",
+			"images": ["convivium:textures/gui/entries/pattern_blend.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "若一对半味组成{b 调和之味}，则要求至少一者足够强烈，才能激活趣。此外，若两者都强烈，则激活得到的药水效果会明显更强。"
+		},
+		{
+			"type": "patchouli:image",
+			"title": "制衡之味",
+			"images": ["convivium:textures/gui/entries/pattern_balance.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "若一对半味组成{b 制衡之味}，则要求两者的强度相近、且都足够强，才可激活趣。"
+		},
+		{
+			"type": "patchouli:image",
+			"title": "抵牾之味",
+			"images": ["convivium:textures/gui/entries/pattern_contra.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "若一对半味组成{b 抵牾之味}，则要求其中任一者尽量强烈、同时另一者尽量微弱（但并非完全不存在），才可激活趣。"
+		},
+		{
+			"type": "patchouli:image",
+			"title": "消长之味",
+			"images": ["convivium:textures/gui/entries/pattern_wanewax.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "若一对半味组成{b 消长之味}，则要求二者强弱分明，才可激活趣。强度差异越大，则激活得到的药水效果越强。"
+		},
+		{
+			"type": "patchouli:image",
+			"title": "杂陈之味",
+			"images": ["convivium:textures/gui/entries/pattern_mixture.png"],
+			"text": "颜色越深，效力越强。"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "若一对味（并非半味）组成{b 杂陈之味}，则这两种味的各种组合都有可能激活此趣，其中有众多可能。"
+		}
 	]
 }

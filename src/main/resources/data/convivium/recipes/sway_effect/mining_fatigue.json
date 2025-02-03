@@ -22,10 +22,10 @@
 	"icon": "minecraft:mob_effect/mining_fatigue",
 	"locals": {
 		"display": "pswpasbalance+nthppucontra",
-		"astringencyDelta": "if(astringency+2,if(10/0.95-max(pas,psw),10,(x-y)/(4*0.95)),10)",
+		"astringencyDelta": "if(astringency+2,if(10/0.95-max(pas,psw),10,(pas-psw)/(4*0.95)),10)",
 		"pungencyDelta": "if(pungency+0,if(ppu-nth,max(0,10/1.0-ppu),-ppu)/4,10)",
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness-2,if(10/0.95-max(psw,pas),10,(x-y)/(4*0.95)),10)",
+		"sweetnessDelta": "if(sweetness-2,if(10/0.95-max(psw,pas),10,(psw-pas)/(4*0.95)),10)",
 		"thicknessDelta": "if(-thickness+0,-if(nth-ppu,max(0,10/1.0-nth),-nth)/4,-10)",
 		"psw": "max(0,sweetness-2)",
 		"pas": "max(0,astringency+2)",

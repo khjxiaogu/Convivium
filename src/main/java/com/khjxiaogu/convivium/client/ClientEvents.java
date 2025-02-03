@@ -58,7 +58,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void addTooltip(ItemTooltipEvent ev)
 	{
-		if(ev.getEntity()!=null)
+		if(ev.getEntity()!=null&&TasteRecipe.recipes!=null)
 		for(TasteRecipe ti:TasteRecipe.recipes) {
 			if(ti.item.test(ev.getItemStack())) {
 				for(int i=0;i<Constants.TASTES.length;i++) {

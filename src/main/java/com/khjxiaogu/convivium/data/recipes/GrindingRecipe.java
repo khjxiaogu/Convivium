@@ -180,7 +180,8 @@ public class GrindingRecipe extends IDataRecipe {
 			StewInfo info = SoupFluid.getInfo(f);
 			SoupFluid.setInfo(out, info);
 		}
-		f.shrink(in.getAmount());
+		if(!f.isEmpty())
+			f.shrink(in.getAmount());
 		List<ItemStack> fss=new ArrayList<>();
 		for(ItemStack is:output)
 			fss.add(is.copy());

@@ -9,7 +9,7 @@
 			"item": "minecraft:copper_ingot"
 		},
 		"L": {
-			"item": "caupona:lead_ingot"
+			"tag": "forge:ingots/lead"
 		},
 		"X": {
 			"item": "minecraft:cut_copper"

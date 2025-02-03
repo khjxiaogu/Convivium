@@ -60,6 +60,7 @@ public class CVItemTagGenerator extends TagsProvider<Item> {
 		tag(CVTags.Items.NUTS).add(cp("walnut"));
 		tag(CVTags.Items.SWEET).add(rk(Items.SUGAR,Items.HONEYCOMB,Items.HONEY_BOTTLE));
 		tag(CVTags.Items.ASSES).add(cp("asses"));
+		tag(CVTags.Items.CAMELLIA_SEED).add(cv("camellia_seeds"));
 	}
 
 	private TagAppender<Item> tag(String s) {

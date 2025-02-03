@@ -15,7 +15,7 @@
 		},
 		{
 			"type": "patchouli:text",
-			"text": "例如，作为饮品基底的牛奶，旨为{cereal 谷}；茶基底的旨为{bath 荡}。如果调配饮品时往筅中加入两份牛奶和三份茶，则最终得到的饮品的旨是{bath 荡}。",
+			"text": "例如，作为饮品基底的牛奶，旨为{cereal 谷}；茶基底的旨为{bath 荡}。如果调配饮品时往筅中加入两份牛奶和三份茶，则最终得到的饮品的旨是{bath 荡}。"
 		},
 		{
 			"type": "patchouli:text",
@@ -47,7 +47,7 @@
 		{
 			"type": "convivium:relish_desc",
 			"name": "四时",
-			"desc": "{seasons 四时}，之{b 旨}代表推动时间流转、感官刺激的法则。",
+			"desc": "{seasons 四时}之{b 旨}代表推动时间流转、感官刺激的法则。",
 			"bases": "果汁。"
 		},
 		{

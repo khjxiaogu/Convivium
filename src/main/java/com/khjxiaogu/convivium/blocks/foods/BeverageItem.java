@@ -40,6 +40,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class BeverageItem extends EdibleBlock {
@@ -47,10 +48,12 @@ public class BeverageItem extends EdibleBlock {
 			.build();
 	public final BeverageBlock bl;
 	public final boolean isSmpl;
-	public BeverageItem(BeverageBlock block, Properties props,boolean isSmpl) {
+	public final Fluid containedFluid;
+	public BeverageItem(BeverageBlock block, Properties props,Fluid fluid,boolean isSmpl) {
 		super(block, props.food(fakefood).craftRemainder(Items.GLASS_BOTTLE).stacksTo(1));
 		bl = block;
 		this.isSmpl=isSmpl;
+		this.containedFluid=fluid;
 	}
 
 
@@ -71,7 +74,7 @@ public class BeverageItem extends EdibleBlock {
 	public void fillItemCategory(CreativeTabItemHelper helper) {
 		if (helper.isType(CVMain.MAIN_TAB)) {
 			ItemStack is = new ItemStack(this);
-			Utils.writeItemFluid(is, ContainingRecipe.reverseFluidType(this));
+			Utils.writeItemFluid(is, containedFluid);
 			addCreativeHints(is);
 			helper.accept(is,3);
 		}

@@ -40,10 +40,10 @@ public class CVItems {
 			item(s, createProps());
 		}
 		for(String s:base_drinks) {
-			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),true));
+			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),ForgeRegistries.FLUIDS.getValue(CVMain.rl(s)),true));
 		}
 		for(String s:CVFluids.intern.keySet()) {
-			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),false));
+			ITEMS.register(s,()->new BeverageItem(CVBlocks.BEVERAGE.get(),createProps(),ForgeRegistries.FLUIDS.getValue(CVMain.rl(s)),false));
 		}
 	}
 	public static RegistryObject<Item> item(String name,Properties props){

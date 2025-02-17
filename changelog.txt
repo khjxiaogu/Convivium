@@ -1,1 +1,1 @@
-Fix a crash with latest forge in multiplayer when open creative menu
+Fix a crash with jei in multiplayer when join

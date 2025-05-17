@@ -35,6 +35,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 @Mod.EventBusSubscriber(modid=CVMain.MODID)
 public class CVCommonEvents {
@@ -83,6 +84,10 @@ public class CVCommonEvents {
 			ForgeHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn,event.getHand(), event.getHitVec()));
 			if(replace.isEmpty())
 				is.shrink(1);
+			else if(!replace.is(CVItems.POTION.get())) {
+				is.shrink(1);
+				ItemHandlerHelper.giveItemToPlayer(playerIn, replace);
+			}
 			playerIn.setItemInHand(event.getHand(), is);
 		}
 		if(playerIn.isShiftKeyDown()&&event.getLevel().getBlockState(event.getPos()).is(CVBlocks.platter.get())) {

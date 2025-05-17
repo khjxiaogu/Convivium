@@ -1,1 +1,2 @@
 Fix a crash when using empty bottles
+Fix a dupe bug when using mods that modifies stack size.

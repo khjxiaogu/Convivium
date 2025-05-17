@@ -12,5 +12,8 @@ public class BeveragePotionFluid extends EdibleBlock {
 	@Override
 	public void fillItemCategory(CreativeTabItemHelper helper) {
 	}
-	
+	@Override
+	public boolean isEdible() {
+		return false;
+	}
 }

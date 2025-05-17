@@ -1,1 +1,1 @@
-Fix a crash with jei in multiplayer when join
+Fix a crash when using empty bottles

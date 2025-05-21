@@ -80,7 +80,7 @@ public class CVCommonEvents {
 		if (CVConfig.COMMON.canPlacePotion.get()&&is.is(Items.POTION)&&playerIn.isShiftKeyDown()) {
 			ItemStack replace=new ItemStack(CVItems.POTION.get(),1);
 			is.save(replace.getOrCreateTagElement("potion"));
-			playerIn.setItemInHand(event.getHand(), replace);
+			playerIn.setItemInHand(event.getHand(), replace.copyWithCount(1));
 			ForgeHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn,event.getHand(), event.getHitVec()));
 			if(replace.isEmpty())
 				is.shrink(1);

@@ -27,8 +27,10 @@ import com.teammoeg.caupona.client.util.ModelUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
 
 public abstract class RotationRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
 	/**
@@ -36,7 +38,7 @@ public abstract class RotationRenderer<T extends BlockEntity> implements BlockEn
 	 */
 	public RotationRenderer() {
 	}
-	public abstract DynamicBlockModelReference getMainRotor(BlockState bs,T be);
+	public abstract BakedModel getMainRotor(BlockState bs,T be,boolean isBlack,boolean isActive);
 
 	@SuppressWarnings({ "deprecation", "resource" })
 	@Override
@@ -45,22 +47,16 @@ public abstract class RotationRenderer<T extends BlockEntity> implements BlockEn
 		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
 			return;
 		BlockState state = blockEntity.getBlockState();
-		DynamicBlockModelReference model=getMainRotor(state,blockEntity);
-		if(model==null)return;
-		matrixStack.pushPose();
+		
+		
 		this.customRender(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
 		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
-		if(active) 
-			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
-		this.customRenderRotated(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
-		if(active) 
-			ModelUtils.tesellateModel(blockEntity,model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn);
-		matrixStack.popPose();
+		BakedModel model=getMainRotor(state,blockEntity,RotationUtils.isBlackGrid(blockEntity.getBlockPos()),active);
+		if(model==null)return;
+		ModelUtils.tesellate(blockEntity, state, model, buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn, ModelData.EMPTY);
+		
 	}
 	@SuppressWarnings("unused")
 	public void customRender(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {};
-	@SuppressWarnings("unused")
-	public void customRenderRotated(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {};
 }

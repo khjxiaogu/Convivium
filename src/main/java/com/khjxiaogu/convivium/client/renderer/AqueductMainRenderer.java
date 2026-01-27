@@ -26,9 +26,12 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
+import com.khjxiaogu.convivium.client.util.CachedBakedModel;
+import com.khjxiaogu.convivium.client.util.TransformedBakedModel;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.teammoeg.caupona.client.util.DisplayGroupProperty;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.client.util.ModelUtils;
@@ -45,11 +48,34 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 
 public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControllerBlockEntity> {
 	public static final DynamicBlockModelReference rotor=ModelUtils.getModel(CVMain.MODID,"aqueduct_wavemaker_rotor");
-
+	private final CachedBakedModel[] caches=new CachedBakedModel[] { new CachedBakedModel(facing->{
+		PoseStack matrixStack=new PoseStack();
+		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		matrixStack.rotateAround(RotationUtils.getRotation(0,0f,0f,1f,true),0.5f,0.5f,0.5f);
+		return new TransformedBakedModel(rotor.get(),matrixStack);
+	}),new CachedBakedModel(facing->{
+		PoseStack matrixStack=new PoseStack();
+		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		matrixStack.rotateAround(RotationUtils.getRotation(0,0f,0f,1f,false),0.5f,0.5f,0.5f);
+		return new TransformedBakedModel(rotor.get(),matrixStack);
+	}),new CachedBakedModel(facing->{
+		PoseStack matrixStack=new PoseStack();
+		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		matrixStack.rotateAround(RotationUtils.getRotation(0,0f,0f,1f,true),0.5f,0.5f,0.5f);
+		return new TransformedBakedModel(rotor.get(),matrixStack);
+	}),new CachedBakedModel(facing->{
+		PoseStack matrixStack=new PoseStack();
+		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
+		matrixStack.rotateAround(RotationUtils.getRotation(0,0f,0f,1f,false),0.5f,0.5f,0.5f);
+		return new TransformedBakedModel(rotor.get(),matrixStack);
+	})};
+	ModelData wheels=ModelData.builder().with(DisplayGroupProperty.PROPERTY,ImmutableSet.of("Wheels")).build();
+	ModelData cogs=ModelData.builder().with(DisplayGroupProperty.PROPERTY,ImmutableSet.of("Cogs")).build();
 	/**
 	 * @param rendererDispatcherIn  
 	 */
@@ -68,18 +94,15 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 
 		boolean isBlack=RotationUtils.isBlackGrid(blockEntity.getBlockPos());
 		
-		matrixStack.pushPose();
-		matrixStack.rotateAround(new Quaternionf(new AxisAngle4f((float) (facing.toYRot()*Math.PI/180f),0,-1,0)),0.5f,0.5f,0.5f);
 		boolean shouldApart=state.getValue(KineticBasedBlock.ACTIVE)&&state.getValue(KineticBasedBlock.LOCKED);
 		if(shouldApart)
-			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Wheels"),matrixStack, combinedLightIn, combinedOverlayIn);
-		if(state.getValue(KineticBasedBlock.ACTIVE))
-			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,0f,0f,1f,isBlack),0.5f,0.5f,0.5f);
+			ModelUtils.tesellate(blockEntity, state,caches[(isBlack?0:1)+2].getModel(facing), buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn, wheels);
+		if(state.getValue(KineticBasedBlock.ACTIVE)){
 		if(shouldApart)
-			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Cogs"),matrixStack, combinedLightIn, combinedOverlayIn);
+			ModelUtils.tesellate(blockEntity, state,caches[(isBlack?0:1)].getModel(facing,RotationUtils.getTicks()), buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn, cogs);
 		else
-			ModelUtils.renderModel(rotor,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
-		matrixStack.popPose();
+			ModelUtils.tesellate(blockEntity, state,caches[(isBlack?0:1)].getModel(facing,RotationUtils.getTicks()), buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn, ModelData.EMPTY);
+		}
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0, 15/16f, 0);

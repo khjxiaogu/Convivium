@@ -25,6 +25,9 @@ import org.joml.Vector3f;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamBlockEntity;
+import com.khjxiaogu.convivium.client.util.CachedBakedModel;
+import com.khjxiaogu.convivium.client.util.TransformedBakedModel;
+import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
@@ -38,6 +41,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -48,6 +53,15 @@ import net.minecraftforge.fluids.FluidStack;
 public class PamRenderer extends RotationRenderer<PamBlockEntity> {
 	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"pestle_and_mortar_rotor");
 	private final ItemRenderer render;
+	private final CachedBakedModel[] caches=new CachedBakedModel[] { new CachedBakedModel(facing->{
+		PoseStack matrixStack=new PoseStack();
+		matrixStack.rotateAround(RotationUtils.getYRotation(0,true),0.5f,0.5f,0.5f);
+		return new TransformedBakedModel(cog.get(),matrixStack);
+	}),new CachedBakedModel(facing->{
+		PoseStack matrixStack=new PoseStack();
+		matrixStack.rotateAround(RotationUtils.getYRotation(0,false),0.5f,0.5f,0.5f);
+		return new TransformedBakedModel(cog.get(),matrixStack);
+	})};
 	/**
 	 * @param rendererDispatcherIn  
 	 */
@@ -55,12 +69,6 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity> {
 		render=rendererDispatcherIn.getItemRenderer();
 	}
 
-	@Override
-	public DynamicBlockModelReference getMainRotor(BlockState state, PamBlockEntity be) {
-		if(state.is(CVBlocks.pam.get()))
-			return cog;
-		return null;
-	}
 
 	@Override
 	public void customRender(PamBlockEntity blockEntity, float partialTicks, PoseStack matrixStack,
@@ -111,6 +119,16 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity> {
 
 	private static Vector3f clr(int col) {
 		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
+	}
+
+	@Override
+	public BakedModel getMainRotor(BlockState state, PamBlockEntity be, boolean isBlack, boolean isActive) {
+		if(state.is(CVBlocks.pam.get())) {
+			if(isActive)
+				return caches[isBlack?0:1].getModel(Direction.NORTH, RotationUtils.getTicks());
+			return cog.get();
+		}
+		return null;
 	}
 
 }

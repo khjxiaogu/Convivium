@@ -20,11 +20,14 @@ package com.khjxiaogu.convivium.blocks.kinetics;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -77,15 +80,16 @@ public class CogCageBlock extends KineticBasedBlock<CogeCageBlockEntity> impleme
 
 	}
 
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
-		if (pState.getValue(WATERLOGGED)) {
-			pLevel.scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
-		}
-		return super.updateShape(pState, pFacing, pState, pLevel, pCurrentPos, pFacingPos);
-	}
-
 	public FluidState getFluidState(BlockState pState) {
 		return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+	}
+
+	@Override
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState,
+		RandomSource random) {
+		if (state.getValue(WATERLOGGED)) {
+			ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		}
+		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 	}
 }

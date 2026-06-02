@@ -25,7 +25,7 @@ import com.teammoeg.caupona.container.OutputSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class BasinContainer extends CPBaseContainer<BasinBlockEntity> {
 
@@ -35,11 +35,11 @@ public class BasinContainer extends CPBaseContainer<BasinBlockEntity> {
 
 	public BasinContainer(int id, Inventory inv, BasinBlockEntity blockEntity) {
 		super(CVGui.BASIN.get(),blockEntity , id,5);
-		this.addSlot(new SlotItemHandler(blockEntity.inv, 0,98, 13));
-		this.addSlot(new OutputSlot(blockEntity.inv, 1, 98, 39));
-		this.addSlot(new OutputSlot(blockEntity.inv, 2, 98, 57));
-		this.addSlot(new OutputSlot(blockEntity.inv, 3, 116, 39));
-		this.addSlot(new OutputSlot(blockEntity.inv, 4, 116, 57));
+		this.addSlot(new ResourceHandlerSlot(blockEntity.inv,blockEntity.inv::set, 0,98, 13));
+		this.addSlot(new OutputSlot(blockEntity.inv,blockEntity.inv::set, 1, 98, 39));
+		this.addSlot(new OutputSlot(blockEntity.inv,blockEntity.inv::set, 2, 98, 57));
+		this.addSlot(new OutputSlot(blockEntity.inv,blockEntity.inv::set, 3, 116, 39));
+		this.addSlot(new OutputSlot(blockEntity.inv,blockEntity.inv::set, 4, 116, 57));
 		super.addPlayerInventory(inv, 8, 84, 142);
 	}
 	@Override

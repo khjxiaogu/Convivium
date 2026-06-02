@@ -18,16 +18,26 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
+import java.util.function.BiFunction;
 import com.mojang.datafixers.Products.P2;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
 import com.teammoeg.caupona.data.TranslationProvider;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public abstract class LogicalRelishCondition implements RelishCondition {
 	protected RelishCondition r1;
 	protected RelishCondition r2;
 	public static <P extends LogicalRelishCondition> P2<Mu<P>,RelishCondition,RelishCondition>  codecStart(Instance<P> i) {
 		return i.group(RelishConditions.CODEC.fieldOf("cond1").forGetter(o->o.r1),RelishConditions.CODEC.fieldOf("cond2").forGetter(o->o.r2));
+	}
+	public static <T extends LogicalRelishCondition> StreamCodec<RegistryFriendlyByteBuf,T> createStreamCodec(BiFunction<RelishCondition,RelishCondition,T> factory) {
+		return StreamCodec.composite(
+			RelishConditions.STREAM_CODEC,o->o.r1,
+			RelishConditions.STREAM_CODEC,o->o.r2,
+			factory);
 	}
 	public LogicalRelishCondition(RelishCondition r1, RelishCondition r2) {
 		super();

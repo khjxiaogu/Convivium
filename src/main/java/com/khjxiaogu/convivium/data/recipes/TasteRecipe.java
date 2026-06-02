@@ -64,7 +64,7 @@ public class TasteRecipe extends IDataRecipe {
 	}
 
 	/*
-	public TasteRecipe(ResourceLocation id,FriendlyByteBuf pb) {
+	public TasteRecipe(Identifier id,FriendlyByteBuf pb) {
 		super(id);
 		item=Ingredient.fromNetwork(pb);
 		priority=pb.readVarInt();

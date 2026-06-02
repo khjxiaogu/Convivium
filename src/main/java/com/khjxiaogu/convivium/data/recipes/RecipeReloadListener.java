@@ -41,21 +41,14 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 @EventBusSubscriber
-public class RecipeReloadListener implements ResourceManagerReloadListener {
-	ReloadableServerResources data;
+public class RecipeReloadListener{
 	public static final Logger logger = LogManager.getLogger(CVMain.MODNAME + " recipe generator");
 
-	public RecipeReloadListener(ReloadableServerResources dpr) {
-		data = dpr;
+	private RecipeReloadListener() {
 	}
 
-	@Override
-	public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
-		buildRecipeLists(data.getRecipeManager());
-	}
 
 	RecipeManager clientRecipeManager;
 

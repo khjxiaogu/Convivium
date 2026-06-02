@@ -103,7 +103,7 @@ public class BeverageTypeRecipe extends IDataRecipe {
 		output=Fluids.EMPTY;
 	}
 /*
-	public BeverageTypeRecipe(ResourceLocation id, FriendlyByteBuf data) {
+	public BeverageTypeRecipe(Identifier id, FriendlyByteBuf data) {
 		super(id);
 		must = SerializeUtil.readList(data,Ingredient::fromNetwork);
 		optional = SerializeUtil.readList(data, Ingredient::fromNetwork);

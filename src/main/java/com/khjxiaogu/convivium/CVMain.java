@@ -18,24 +18,19 @@
 
 package com.khjxiaogu.convivium;
 
-import java.util.function.Function;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.khjxiaogu.convivium.client.CVParticles;
-import com.khjxiaogu.convivium.compat.top.TOPRegister;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.TabType;
 import com.teammoeg.caupona.util.Utils;
 
-import mcjty.theoneprobe.api.ITheOneProbe;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -54,8 +49,8 @@ public class CVMain {
 		.withTabsAfter(CPMain.foods.getKey()).icon(() -> new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
 	public static final TabType MAIN_TAB = new TabType(v -> main.getKey().equals(v));
 
-	public static ResourceLocation rl(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MODID, path);
+	public static Identifier rl(String path) {
+		return Identifier.fromNamespaceAndPath(MODID, path);
 	}
 
 	public CVMain(IEventBus mod) {
@@ -86,7 +81,7 @@ public class CVMain {
 	 */
 	@SuppressWarnings("unused")
 	public void enqueueIMC(InterModEnqueueEvent event) {
-		InterModComms.sendTo("theoneprobe", "getTheOneProbe", ()->(Function<ITheOneProbe, ?>)TOPRegister::register);
+		//InterModComms.sendTo("theoneprobe", "getTheOneProbe", ()->(Function<ITheOneProbe, ?>)TOPRegister::register);
 	   // InterModComms.sendTo("treechop", "getTreeChopAPI", () -> (Consumer)TreechopCompat::new);
 	}
 }

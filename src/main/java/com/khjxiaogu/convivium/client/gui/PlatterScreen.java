@@ -35,11 +35,11 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
-	static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/fruit_platter.png");
+	static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/fruit_platter.png");
 
 	PlatterBlockEntity blockEntity;
 

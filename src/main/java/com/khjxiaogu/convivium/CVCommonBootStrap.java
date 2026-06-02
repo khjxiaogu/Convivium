@@ -24,6 +24,8 @@ import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.CPCapability;
+import com.teammoeg.caupona.blocks.foods.IFoodContainer;
+import com.teammoeg.caupona.blocks.stove.IStove;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.FluidItemWrapper;
@@ -39,12 +41,11 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.ItemAccessFluidHandler;
 
-@EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = CVMain.MODID)
 public class CVCommonBootStrap {
 	public static final List<Pair<Supplier<? extends ItemLike>, Float>> compositables = new ArrayList<>();
 
@@ -72,9 +73,10 @@ public class CVCommonBootStrap {
 		compositables.forEach(p -> ComposterBlock.COMPOSTABLES.put(p.getFirst().get(), (float) p.getSecond()));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SubscribeEvent
 	public static void onCapabilityInject(RegisterCapabilitiesEvent event) {
-		event.registerItem(Capabilities.FluidHandler.ITEM, (stack, o) -> new FluidHandlerItemStack(CPCapability.SIMPLE_FLUID, stack, 1250), CVItems.JUG.get());
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new ItemAccessFluidHandler(o,CPCapability.SIMPLE_FLUID.get(), 1250), CVItems.JUG.get());
 		// event.registerItem(Capabilities.FluidHandler.ITEM,(stack,o)->new
 		// FluidHandlerItemStack(CPCapability.SIMPLE_FLUID,stack,1250),
 		// CPItems.situla.get());
@@ -82,14 +84,18 @@ public class CVCommonBootStrap {
 		// CPItems.stews.toArray(Item[]::new));
 		// event.registerItem(CPCapability.FOOD_INFO,(stack,o)->stack.get(CPCapability.SAUTEED_INFO.get()),
 		// CPItems.dish.toArray(Item[]::new));
-		CVBlockEntityTypes.REGISTER.getEntries().stream().map(t -> t.get()).forEach(be -> {
-
-			event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, (BlockEntityType<?>) be,
-				(block, ctx) -> (IItemHandler) ((CPBaseBlockEntity) block).getCapability(Capabilities.ItemHandler.BLOCK, ctx));
-			event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, (BlockEntityType<?>) be,
-				(block, ctx) -> (IFluidHandler) ((CPBaseBlockEntity) block).getCapability(Capabilities.FluidHandler.BLOCK, ctx));
+		CVBlockEntityTypes.REGISTER.getEntries().stream().map(t->t.get()).forEach(be->{
+			event.registerBlockEntity(Capabilities.Item.BLOCK, (BlockEntityType<?>)be,
+				(block,ctx)->(block instanceof CPBaseBlockEntity)?(ResourceHandler)((CPBaseBlockEntity)block).getCapability(Capabilities.Item.BLOCK, ctx):null);
+			event.registerBlockEntity(Capabilities.Fluid.BLOCK, (BlockEntityType<?>)be,
+				(block,ctx)->(block instanceof CPBaseBlockEntity)?(ResourceHandler)((CPBaseBlockEntity)block).getCapability(Capabilities.Fluid.BLOCK, ctx):null);
+			event.registerBlockEntity(CPCapability.HEAT_STOVE, (BlockEntityType<?>)be,
+					(block,ctx)->(block instanceof CPBaseBlockEntity)?(IStove)((CPBaseBlockEntity)block).getCapability(CPCapability.HEAT_STOVE, ctx):null);
+			event.registerBlockEntity(CPCapability.FOOD_CONTAINER, (BlockEntityType<?>)be,
+				(block,ctx)->(block instanceof CPBaseBlockEntity)?(IFoodContainer)((CPBaseBlockEntity)block).getCapability(CPCapability.FOOD_CONTAINER, ctx):null);
+	
 		});
-		event.registerItem(Capabilities.FluidHandler.ITEM, (stack, o) -> new FluidItemWrapper(stack), CVItems.beverages.stream().map(t->t.get()).toArray(Item[]::new));
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVItems.beverages.stream().map(t->t.get()).toArray(Item[]::new));
 	}
 
 	public static void registerDispensers() {

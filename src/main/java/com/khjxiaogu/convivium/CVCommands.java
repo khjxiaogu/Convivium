@@ -43,6 +43,7 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -78,7 +79,7 @@ public class CVCommands {
 			Commands.argument("expression", StringArgumentType.string()).then(
 				Commands.argument("pos1", BlockPosArgument.blockPos()).then(
 					createSub(0, false, ctx, Commands.argument("pos2", BlockPosArgument.blockPos())
-						.requires(e -> e.hasPermission(2))
+						.requires(e -> e.permissions().hasPermission(Permissions.COMMANDS_ADMIN))
 						.executes(e -> {
 							INumber expr = Expression.of(StringArgumentType.getString(e, "expression"));
 							BoundingBox bb = BoundingBox.fromCorners(BlockPosArgument.getBlockPos(e, "pos1"), BlockPosArgument.getBlockPos(e, "pos2"));
@@ -94,7 +95,7 @@ public class CVCommands {
 					Commands.argument("expression", StringArgumentType.string()).then(
 						Commands.argument("pos1", BlockPosArgument.blockPos()).then(
 							createSub(0, true, ctx, Commands.argument("pos2", BlockPosArgument.blockPos())
-								.requires(e -> e.hasPermission(2))
+								.requires(e -> e.permissions().hasPermission(Permissions.COMMANDS_ADMIN))
 								.executes(e -> {
 									INumber expr = Expression.of(StringArgumentType.getString(e, "expression"));
 									BoundingBox bb = BoundingBox.fromCorners(BlockPosArgument.getBlockPos(e, "pos1"), BlockPosArgument.getBlockPos(e, "pos2"));
@@ -111,7 +112,7 @@ public class CVCommands {
 		if (last >= 16)
 			return par;
 		RequiredArgumentBuilder<CommandSourceStack, ?> child = Commands.argument("block" + last, BlockStateArgument.block(ctx))
-			.requires(e -> e.hasPermission(2))
+			.requires(e -> e.permissions().hasPermission(Permissions.COMMANDS_ADMIN))
 			.executes(createPlotter(last + 1, rep));
 		par.then(createSub(last + 1, rep, ctx, child));
 		return par;
@@ -141,7 +142,8 @@ public class CVCommands {
 							if (res > i) {
 
 								BlockEntity blockentity = level.getBlockEntity(posx);
-								Clearable.tryClear(blockentity);
+								if(blockentity instanceof Clearable cl)
+									cl.clearContent();
 								if (ips[i].place(level, posx, 2)) {
 									poss.add(posx.immutable());
 								}
@@ -155,7 +157,7 @@ public class CVCommands {
 				}
 		for (BlockPos blockpos1 : poss) {
 			Block block = level.getBlockState(blockpos1).getBlock();
-			level.blockUpdated(blockpos1, block);
+			level.updateNeighborsAt(posx, block);
 		}
 	}
 

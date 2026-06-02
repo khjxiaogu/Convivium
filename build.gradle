@@ -1,6 +1,6 @@
 plugins {
     //id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'org.cadixdev.licenser' version '0.6.1'
+    //id 'org.cadixdev.licenser' version '0.6.1'
     id 'java-library'
     id 'eclipse'
     id 'idea'
@@ -27,7 +27,6 @@ tasks.withType(JavaCompile) {
 }
 group = 'com.khjxiaogu'
 version = "${minecraft_version}-${mod_version}"
-archivesBaseName = 'convivium'
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 eclipse {
@@ -50,14 +49,17 @@ jar {
         ])
     }
 }
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 sourceSets {
     main {
     	java {
     		srcDir 'src/generated/java'
     	}
         resources {
-            srcDir 'src/generated/resources'
+            srcDir 'src/generated/resources/client'
+            srcDir 'src/generated/resources/server'
+            exclude("src/generated/**/.cache") // datagen cache files
+		    exclude("src/generated/.cache") // datagen cache files
         }
     }
 	datagen {
@@ -112,7 +114,7 @@ runs {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
 
-    data {
+    clientData {
         // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
         // workingDirectory project.file('run-data')
 		//modSource project.sourceSets.datagen
@@ -120,7 +122,18 @@ runs {
         modSource project.sourceSets.datagen
         arguments.addAll '--mod', project.mod_id,
          '--all',
-         '--output', file('src/generated/resources/').getAbsolutePath(),
+         '--output', file('src/generated/resources/client').getAbsolutePath(),
+         '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+    serverData {
+        // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
+        // workingDirectory project.file('run-data')
+		//modSource project.sourceSets.datagen
+        // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+        modSource project.sourceSets.datagen
+        arguments.addAll '--mod', project.mod_id,
+         '--all',
+         '--output', file('src/generated/resources/server').getAbsolutePath(),
          '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
@@ -174,16 +187,17 @@ dependencies {
     //minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	implementation "net.neoforged:neoforge:${neo_version}"
     //implementation fg.deobf("curse.maven:diet-443570:3758891")
-	//compileOnly "curse.maven:jei-238222:5071127"
-	compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
- 	compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+	//compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.2.0.247")
+	//implementation "curse.maven:jei-238222:5665038"
+	compileOnly("mezz.jei:jei-26.1.2-common-api:${jei_version}")
+ 	compileOnly("mezz.jei:jei-26.1.2-neoforge-api:${jei_version}")
   	// at runtime, use the full JEI jar for NeoForge
-  	runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
-  	
+  	runtimeOnly("mezz.jei:jei-26.1.2-neoforge:${jei_version}")
+	
 	//compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.2.0.247")
 	//compileOnly "curse.maven:jei-238222:5071127"
 	
-	compileOnly "curse.maven:diet-443570:4813904"
+	//compileOnly "curse.maven:diet-443570:4813904"
 	//implementation fg.deobf("mezz.jei:jei-1.19.3-forge:12.3.0.21")
     
 	//implementation fg.deobf("curse.maven:kiwi-303657:3974084")
@@ -201,9 +215,7 @@ dependencies {
 	//implementation fg.deobf("curse.maven:simple-farming-327554:3400041")
 	implementation "com.khjxiaogu:Caupona:${minecraft_version}-${caupona_version}"
     //compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE:api")
-    compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
-    runtimeOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}"
-	implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
+	//implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
 	//compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
 	//clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
     // FG5 requires 0.8.3
@@ -237,12 +249,6 @@ String getChangelogText() {
 
 artifacts {
     archives sourcesJar
-}
-// Automatically apply a license header when running checkLicense / updateLicense
-license {
-    header = project.file('HEADER.txt')
-    ignoreFailures = true
-    include '**/*.java'
 }
 publish.finalizedBy('publishToMavenLocal')
 publishing {

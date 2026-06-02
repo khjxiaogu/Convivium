@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVConfig;
+import com.teammoeg.caupona.CPCapability;
 import com.teammoeg.caupona.blocks.CPHorizontalBlock;
 import com.teammoeg.caupona.blocks.pot.StewPotBlockEntity;
 import com.teammoeg.caupona.blocks.stove.IStove;
@@ -33,15 +34,15 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinitable{
 	LazyTickWorker process;
@@ -71,14 +72,14 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		speed = nbt.getInt("heatSpeed");
-		waterTick = nbt.getInt("water");
-		inf=nbt.getBoolean("inf");
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
+		speed = nbt.getIntOr("heatSpeed",0);
+		waterTick = nbt.getIntOr("water",0);
+		inf=nbt.getBooleanOr("inf",false);
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		nbt.putInt("heatSpeed", speed);
 		nbt.putInt("water", waterTick);
 		nbt.putBoolean("inf", inf);
@@ -146,39 +147,41 @@ public class AeolipileBlockEntity extends CPBaseBlockEntity implements IInfinita
 
 	@Override
 	public void tick() {
-		if (this.level.isClientSide)
+		if (this.level.isClientSide())
 			return;
 		process.tick();
-		if (level.getBlockEntity(worldPosition.below(2)) instanceof IStove stove&&level.getBlockEntity(worldPosition.below()) instanceof StewPotBlockEntity stew_pot&&stew_pot.canAddFluid()) {
-			FluidTank tank=stew_pot.getTank();
-			if(tank.getFluid().getFluid().isSame(Fluids.WATER)) {
-				if(waterTick==0) {
-					if(inf||!tank.drain(new FluidStack(Fluids.WATER,1),FluidAction.EXECUTE).isEmpty()) {
-						stew_pot.syncData();
-						waterTick=20;
-					}
-				}
-				if(waterTick>0) {
-					
-					int nh = stove.requestHeat();
-					if (speed != nh) {
-						if(speed==0) {
-							this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, true));
-						}else if(nh==0) {
-							process.enqueue();
-							this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE,false));
-							this.setChanged();
+		if (level.getCapability(CPCapability.HEAT_STOVE, worldPosition.below(2), Direction.UP) instanceof IStove stove&&level.getBlockEntity(worldPosition.below()) instanceof StewPotBlockEntity stew_pot&&stew_pot.canAddFluid()) {
+			ResourceHandler<FluidResource> tank=stew_pot.getTank();
+			if(tank.getResource(0).is(Fluids.WATER)) {
+				try(Transaction trans=Transaction.openRoot()){
+					if(waterTick==0) {
+						if(inf||tank.extract(tank.getResource(0),1,trans)>0) {
+							stew_pot.syncData();
+							waterTick=20;
 						}
-						process.enqueue();
-						speed = nh;
 					}
-					if(speed>0)
-						waterTick--;
-					this.setChanged();
-					return;
+					if(waterTick>0) {
+						
+						int nh = stove.requestHeat(2,trans);
+						if (speed != nh) {
+							if(speed==0) {
+								this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, true));
+							}else if(nh==0) {
+								process.enqueue();
+								this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE,false));
+								this.setChanged();
+							}
+							process.enqueue();
+							speed = nh;
+						}
+						if(speed>0)
+							waterTick--;
+						this.setChanged();
+						trans.commit();
+						return;
+					}
 				}
 			}
-			
 		}
 		if (speed != 0) {
 			process.enqueue();

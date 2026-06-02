@@ -22,7 +22,7 @@ import com.khjxiaogu.convivium.blocks.wolf_fountain.WolfFountainProjectile;
 
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class WolfFountainProjectileRenderer extends EntityRenderer<WolfFountainProjectile> {
 
@@ -31,7 +31,7 @@ public class WolfFountainProjectileRenderer extends EntityRenderer<WolfFountainP
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(WolfFountainProjectile entity) {
+	public Identifier getTextureLocation(WolfFountainProjectile entity) {
 		return null;
 	}
 

@@ -41,7 +41,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -53,7 +53,7 @@ public class BasinCategory implements IRecipeCategory<RecipeHolder<BasinRecipe>>
 
 	public BasinCategory(IGuiHelper guiHelper) {
 		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.lead_basin.get()));
-		ResourceLocation guiMain = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/jei/basin.png");
+		Identifier guiMain = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/jei/basin.png");
 		this.BACKGROUND = guiHelper.createDrawable(guiMain, 0, 0, 127, 63);
 	}
 

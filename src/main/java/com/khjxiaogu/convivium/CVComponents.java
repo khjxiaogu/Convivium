@@ -21,7 +21,6 @@ package com.khjxiaogu.convivium;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.khjxiaogu.convivium.util.PotionItemInfo;
 import com.teammoeg.caupona.CPMain;
-import com.teammoeg.caupona.util.SerializeUtil;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +34,7 @@ public class CVComponents {
 		() -> DataComponentType.<PotionItemInfo>builder().cacheEncoding().persistent(PotionItemInfo.CODEC).build());
 
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BeverageInfo>> BEVERAGE_INFO = REGISTRY.register("beverage_info",
-		() -> DataComponentType.<BeverageInfo>builder().cacheEncoding().persistent(BeverageInfo.CODEC).networkSynchronized(SerializeUtil.toStreamCodec(BeverageInfo.CODEC)).build());
+		() -> DataComponentType.<BeverageInfo>builder().cacheEncoding().persistent(BeverageInfo.CODEC).networkSynchronized(BeverageInfo.STREAM_CODEC).build());
 
 	public CVComponents() {
 	}

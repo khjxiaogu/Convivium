@@ -53,7 +53,7 @@ public class SUtils {
 
 	public static Map<String, Float> fromPacket(FriendlyByteBuf pb) {
 		Map<String, Float> variantData = new HashMap<>();
-		SerializeUtil.readList(pb, p -> Pair.of(pb.readUtf(), pb.readFloat())).forEach(p -> variantData.put(p.getFirst(), p.getSecond()));
+		SerializeUtil.readList(pb, p -> Pair.of(p.readUtf(), p.readFloat())).forEach(p -> variantData.put(p.getFirst(), p.getSecond()));
 		return variantData;
 	}
 

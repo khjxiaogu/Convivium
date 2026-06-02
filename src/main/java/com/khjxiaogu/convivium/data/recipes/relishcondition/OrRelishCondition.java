@@ -22,8 +22,12 @@ import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+
 public class OrRelishCondition extends LogicalRelishCondition {
 	public static final MapCodec<OrRelishCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).apply(t, OrRelishCondition::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,OrRelishCondition> STREAM_CODEC=LogicalRelishCondition.createStreamCodec(OrRelishCondition::new);
 	@Override
 	public String getType() {
 		return "or";

@@ -18,15 +18,31 @@
 
 package com.khjxiaogu.convivium.data.recipes.relishcondition;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 import com.mojang.datafixers.Products.P1;
+import com.mojang.datafixers.util.Function3;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public abstract class AbstractRelishCondition implements RelishCondition{
 	protected String relish;
 	public static <P extends AbstractRelishCondition> P1<Mu<P>,String>  codecStart(Instance<P> i) {
 		return i.group(Codec.STRING.fieldOf("relish").forGetter(o->o.relish));
+	}
+	public static <T extends AbstractRelishCondition> StreamCodec<RegistryFriendlyByteBuf,T> createStreamCodec(Function<String,T> factory) {
+		return StreamCodec.composite(ByteBufCodecs.STRING_UTF8,o->o.relish, factory);
+	}
+	public static <T extends AbstractRelishCondition,A> StreamCodec<RegistryFriendlyByteBuf,T> createStreamCodec(StreamCodec<? super RegistryFriendlyByteBuf,A> codec1,Function<T,A> func1,BiFunction<String,A,T> factory) {
+		return StreamCodec.composite(ByteBufCodecs.STRING_UTF8,o->o.relish,codec1,func1, factory);
+	}
+	public static <T extends AbstractRelishCondition,A,B> StreamCodec<RegistryFriendlyByteBuf,T> createStreamCodec(StreamCodec<? super RegistryFriendlyByteBuf,A> codec1,Function<T,A> func1,StreamCodec<? super RegistryFriendlyByteBuf,B> codec2,Function<T,B> func2,Function3<String,A,B,T> factory) {
+		return StreamCodec.composite(ByteBufCodecs.STRING_UTF8,o->o.relish,codec1,func1,codec2,func2, factory);
 	}
 	public AbstractRelishCondition(String relish) {
 		super();

@@ -18,13 +18,18 @@
 
 package com.khjxiaogu.convivium.util;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.joml.Vector3f;
 
@@ -36,32 +41,46 @@ import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.recipes.FoodValueRecipe;
 import com.teammoeg.caupona.util.ChancedEffect;
 import com.teammoeg.caupona.util.FloatemStack;
-import com.teammoeg.caupona.util.SerializeUtil;
 import com.teammoeg.caupona.util.Utils;
 
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.FoodProperties.Builder;
-import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-public class BeverageInfo implements IFoodInfo {
+public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public List<FloatemStack> stacks;
-	public List<MobEffectInstance> effects;
-	public List<MobEffectInstance> swayeffects;
+	public List<ChancedEffect> effects;
+	public List<ChancedEffect> swayeffects;
 	public List<ChancedEffect> foodeffect;
 	public Fluid[] relishes = new Fluid[5];
 	public String activeRelish1 = "";
@@ -77,36 +96,77 @@ public class BeverageInfo implements IFoodInfo {
 		foodeffect = new ArrayList<>();
 	}
 
-	public static Codec<BeverageInfo> CODEC = RecordCodecBuilder.create(t -> t.group(
+	public static final Codec<BeverageInfo> CODEC = RecordCodecBuilder.create(t -> t.group(
 		Codec.list(FloatemStack.CODEC).fieldOf("items").forGetter(o -> o.stacks),
-		Codec.list(SerializeUtil.fromRFBBStreamCodec(MobEffectInstance.STREAM_CODEC, MobEffectInstance.CODEC)).fieldOf("effects").forGetter(o -> o.effects),
-		Codec.list(SerializeUtil.fromRFBBStreamCodec(MobEffectInstance.STREAM_CODEC, MobEffectInstance.CODEC)).fieldOf("sway").forGetter(o -> o.swayeffects),
+		Codec.list(ChancedEffect.CODEC).fieldOf("effects").forGetter(o -> o.effects),
+		Codec.list(ChancedEffect.CODEC).fieldOf("sway").forGetter(o -> o.swayeffects),
 		Codec.list(ChancedEffect.CODEC).fieldOf("feffects").forGetter(o -> o.foodeffect),
-		Codec.list(SerializeUtil.idOrKey(BuiltInRegistries.FLUID)).fieldOf("relish").forGetter(o -> Arrays.stream(o.relishes).map(n->n==null?Fluids.EMPTY:n).collect(Collectors.toList())),
+		Codec.list(BuiltInRegistries.FLUID.byNameCodec().<Optional<Fluid>>xmap(o->o==Fluids.EMPTY?Optional.empty():Optional.of(o), o->o.orElse(Fluids.EMPTY))).fieldOf("relish").forGetter(o->o.getRelishList()),
 		Codec.STRING.fieldOf("activeRelish1").forGetter(o -> o.activeRelish1),
 		Codec.STRING.fieldOf("activeRelish2").forGetter(o -> o.activeRelish2),
 		Codec.INT.fieldOf("heal").forGetter(o -> o.healing),
 		Codec.FLOAT.fieldOf("sat").forGetter(o -> o.saturation),
 		Codec.INT.fieldOf("heat").forGetter(o -> o.heat)).apply(t, BeverageInfo::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageInfo> STREAM_CODEC = StreamCodec.composite(
+		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.stacks,
+		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.effects,
+		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.swayeffects,
+		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.foodeffect,
+		ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)).apply(ByteBufCodecs.list()),o->o.getRelishList(),
+		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish1,
+		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish2,
+		ByteBufCodecs.INT,o -> o.healing,
+		ByteBufCodecs.FLOAT,o -> o.saturation,
+		ByteBufCodecs.INT,o -> o.heat,
+		BeverageInfo::new);
+	private Lazy<Collection<MobEffectInstance>> potionEffectsCollectionView=Lazy.of(()->new AbstractCollection<MobEffectInstance>() {
+		@Override
+		public Iterator<MobEffectInstance> iterator() {
+			return Stream.concat(effects.stream(), swayeffects.stream()).map(t->t.effect).iterator();
+		}
+		@Override
+		public int size() {
+			return effects.size()+swayeffects.size();
+		}
+		@Override
+		public boolean isEmpty() {
+			return effects.isEmpty()&&swayeffects.isEmpty();
+		}
+		@Override
+		public Object[] toArray() {
+			return Stream.concat(effects.stream(), swayeffects.stream()).map(t->t.effect).toArray();
+		}
+		@Override
+		public boolean add(MobEffectInstance e) {
+			throw new UnsupportedOperationException();
+		}
 
-	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, List<Fluid> relishes, String activeRelish1,
-		String activeRelish2, int healing, float saturation, int heat) {
-		super();
-		
-		this.stacks = stacks;
-		this.effects = effects;
-		this.swayeffects = swayeffects;
-		this.foodeffect = foodeffect;
-		this.relishes = relishes.stream().map(t->t==Fluids.EMPTY?null:t).toArray(Fluid[]::new);
-		this.activeRelish1 = activeRelish1;
-		this.activeRelish2 = activeRelish2;
-		this.healing = healing;
-		this.saturation = saturation;
-		this.heat = heat;
-		
+		@Override
+		public boolean remove(Object o) {
+			throw new UnsupportedOperationException();
+		}
+		@Override
+		public boolean addAll(Collection<? extends MobEffectInstance> c) {
+			throw new UnsupportedOperationException();
+		}
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			throw new UnsupportedOperationException();
+		}
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			throw new UnsupportedOperationException();
+		}
+		@Override
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+	});
+	public Collection<MobEffectInstance> getPotionEffects() {
+		return potionEffectsCollectionView.get();
 	}
 
-	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, String activeRelish1,
+	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, String activeRelish1,
 		String activeRelish2, int healing, float saturation, int heat) {
 		super();
 		this.stacks = stacks;
@@ -121,23 +181,49 @@ public class BeverageInfo implements IFoodInfo {
 		this.heat = heat;
 	}
 
-	public BeverageInfo copy() {
-		return new BeverageInfo(stacks.stream().map(t->t.copy()).collect(Collectors.toList()),effects.stream().map(t->new MobEffectInstance(t)).collect(Collectors.toList()),new ArrayList<>(swayeffects),foodeffect.stream().map(t->t.copy()).collect(Collectors.toList()),Arrays.copyOf(relishes,5),activeRelish1,activeRelish2,healing,saturation,heat);
+	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, int healing,
+		float saturation, int heat) {
+		super();
+		this.stacks = stacks;
+		this.effects = effects;
+		this.swayeffects = swayeffects;
+		this.foodeffect = foodeffect;
+		this.relishes = relishes;
+		this.healing = healing;
+		this.saturation = saturation;
+		this.heat = heat;
 	}
-	public void appendTooltip(List<Component> tt) {
-		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish1);
-		RecipeHolder<RelishRecipe> r2 = RelishRecipe.recipes.get(activeRelish2);
-		if (!effects.isEmpty())
-			PotionContents.addPotionTooltip(effects, tt::add, 1, 20);
-
-		if (r1 != null) {
-			if (r2 != null) {
-				tt.add(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_2", r1.value().getText(), r2.value().getText()));
-			} else
-				tt.add(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_1", r1.value().getText()));
+	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, List<Optional<Fluid>> relishes, String activeRelish1,
+		String activeRelish2, int healing, float saturation, int heat) {
+		super();
+		this.stacks = stacks;
+		this.effects = effects;
+		this.swayeffects = swayeffects;
+		this.foodeffect = foodeffect;
+		int i=0;
+		for(Optional<Fluid> relish:relishes) {
+			this.relishes[i++]=relish.orElse(null);
 		}
+		this.activeRelish1 = activeRelish1;
+		this.activeRelish2 = activeRelish2;
+		this.healing = healing;
+		this.saturation = saturation;
+		this.heat = heat;
 	}
-
+	public BeverageInfo copy() {
+		return new BeverageInfo(stacks.stream().map(t->t.copy()).toList(),
+			effects.stream().map(t->t.copy()).toList(),
+			swayeffects.stream().map(t->t.copy()).toList(),
+			foodeffect.stream().map(t->t.copy()).toList(),
+			Arrays.copyOf(relishes,5),activeRelish1,activeRelish2,healing,saturation,heat);
+	}
+	public List<Optional<Fluid>> getRelishList(){
+		return List.of(Optional.ofNullable(relishes[0]),
+			Optional.ofNullable(relishes[1]),
+			Optional.ofNullable(relishes[2]),
+			Optional.ofNullable(relishes[3]),
+			Optional.ofNullable(relishes[4]));
+	}
 	public Vector3f getColor() {
 		return getColor(relishes);
 	}
@@ -152,17 +238,15 @@ public class BeverageInfo implements IFoodInfo {
 		for (int i = 0; i < 5; i++) {
 			Fluid f = relishes[i];
 			if (f != null) {
-				clr.add(tclr(IClientFluidTypeExtensions.of(f).getTintColor()));
+				FluidStack fs=new FluidStack(f,1000);
+				
+				clr.add(ARGB.vector3fFromRGB24(FluidRenderHelper.getFluidColor(FluidRenderHelper.getFluidModel(fs), fs)));
 				cnt++;
 			}
 		}
 		if (cnt == 0) cnt = 1;
 		clr = clr.div(cnt);
 		return clr;
-	}
-
-	private static Vector3f tclr(int col) {
-		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
 	}
 
 	public static int getIColor(Fluid[] relishes) {
@@ -188,11 +272,11 @@ public class BeverageInfo implements IFoodInfo {
 			fs.setCount(fs.getCount() * oparts / parts);
 		}
 
-		for (MobEffectInstance es : effects) {
-			es.duration = (int) (es.duration * oparts / parts);
+		for (ChancedEffect es : effects) {
+			es.adjustParts(oparts, parts);
 		}
 		for (ChancedEffect es : foodeffect) {
-			es.effect.duration = (int) (es.effect.duration * oparts / parts);
+			es.adjustParts(oparts, parts);
 		}
 		heat = (int) (heat * oparts / parts);
 
@@ -206,17 +290,15 @@ public class BeverageInfo implements IFoodInfo {
 	}
 
 	public void addEffect(MobEffectInstance eff, float parts) {
-		for (MobEffectInstance oes : effects) {
-			if (isEffectEquals(oes, eff)) {
-				oes.duration = Math.max(oes.duration,
-					(int) Math.min(oes.duration + eff.duration / parts, eff.duration * 2f));
+		for (ChancedEffect oes : effects) {
+			if (oes.add(eff, parts)) {
 				return;
 			}
 		}
 		if (effects.size() < 3) {
 			MobEffectInstance copy = new MobEffectInstance(eff);
 			copy.duration /= parts;
-			effects.add(copy);
+			effects.add(new ChancedEffect(copy,1f));
 		}
 	}
 
@@ -225,14 +307,16 @@ public class BeverageInfo implements IFoodInfo {
 		swayeffects.clear();
 		List<CurrentSwayInfo> swi = SwayRecipe.recipes.stream().map(t -> t.value()).map(ctx::handleSwayRecipe).flatMap(Optional::stream)
 			.map(t -> {
-				swayeffects.addAll(t.getFirst());
+				for(MobEffectInstance me:t.getFirst())
+					swayeffects.add(new ChancedEffect(me,1f));
 				return t.getSecond();
 			})
 			.flatMap(Optional::stream)
 			.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
 			.collect(Collectors.toList());
-		swayeffects.sort(Comparator.<MobEffectInstance, String>comparing(e -> e.getEffect().getRegisteredName())
-			.thenComparingInt(e -> e.getAmplifier()).thenComparingInt(e -> e.getDuration()));
+		swayeffects.sort(
+			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
+			.thenComparing(e -> e.chance));
 		recalculateHAS();
 		return Pair.of(swi,
 			BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).map(t -> t.output).findFirst()
@@ -247,19 +331,18 @@ public class BeverageInfo implements IFoodInfo {
 
 	public void merge(BeverageInfo f, float cparts, float oparts) {
 
-		for (MobEffectInstance es : f.effects) {
+		for (ChancedEffect es : f.effects) {
 			boolean added = false;
-			for (MobEffectInstance oes : effects) {
-				if (isEffectEquals(oes, es)) {
-					oes.duration += es.duration * oparts / cparts;
+			for (ChancedEffect oes : effects) {
+				if (oes.merge(es, cparts, oparts)) {
 					added = true;
 					break;
 				}
 			}
 			if (!added) {
 				if (effects.size() < 3) {
-					MobEffectInstance copy = new MobEffectInstance(es);
-					copy.duration = (int) (copy.duration * oparts / cparts);
+					ChancedEffect copy=es.copy();
+					copy.adjustParts(oparts, cparts);
 					effects.add(copy);
 				}
 			}
@@ -288,21 +371,10 @@ public class BeverageInfo implements IFoodInfo {
 
 
 	@Override
-	public List<PossibleEffect> getEffects() {
-		List<PossibleEffect> li = new ArrayList<>();
-		for (MobEffectInstance eff : effects) {
-			if (eff != null) {
-				li.add(new PossibleEffect(() -> new MobEffectInstance(eff), 1f));
-			}
-		}
-		for (ChancedEffect ef : foodeffect) {
-			li.add(new PossibleEffect(ef.effectSupplier(), ef.chance));
-		}
-		for (MobEffectInstance eff : swayeffects) {
-			if (eff != null) {
-				li.add(new PossibleEffect(() -> new MobEffectInstance(eff), 1f));
-			}
-		}
+	public List<ChancedEffect> getEffects() {
+		List<ChancedEffect> li = new ArrayList<>(effects);
+		li.addAll(foodeffect);
+		li.addAll(swayeffects);
 		return li;
 	}
 
@@ -313,8 +385,9 @@ public class BeverageInfo implements IFoodInfo {
 			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
 				.thenComparing(e -> e.chance));
 		effects.sort(
-			Comparator.<MobEffectInstance, String>comparing(e -> e.getEffect().getRegisteredName())
-				.thenComparingInt(e -> e.getAmplifier()).thenComparingInt(e -> e.getDuration()));
+			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
+			.thenComparing(e -> e.chance));
+		
 	}
 
 	public void recalculateHAS() {
@@ -327,14 +400,23 @@ public class BeverageInfo implements IFoodInfo {
 				nh += fvr.heal * fs.getCount();
 				ns += fvr.sat * fs.getCount() * fvr.heal;
 				if (fvr.effects != null)
-					fvr.effects.stream().map(ChancedEffect::new).forEach(foodeffect::add);
+					fvr.effects.forEach(foodeffect::add);
 				continue;
 			}
-			FoodProperties f = fs.getStack().getFoodProperties(null);
+			FoodProperties f = fs.getStack().getComponents().get(DataComponents.FOOD);
+			Consumable c = fs.getStack().getComponents().get(DataComponents.CONSUMABLE);
 			if (f != null) {
-				nh += fs.getCount() * f.nutrition();
-				ns += fs.getCount() * f.saturation();
-				f.effects().stream().map(ChancedEffect::new).forEach(foodeffect::add);
+				nh += fs.count * f.nutrition();
+				ns += fs.count * f.saturation();
+			}
+			if(c!=null) {
+				c.onConsumeEffects().stream().<ChancedEffect>flatMap(t->{
+					if(t instanceof ApplyStatusEffectsConsumeEffect eff) {
+						float chance=eff.probability();
+						return eff.effects().stream().map(o->new ChancedEffect(o,chance));
+					}
+					return Stream.empty();
+				}).forEach(foodeffect::add);
 			}
 		}
 		int conv = (int) (0.075 * nh);
@@ -372,19 +454,6 @@ public class BeverageInfo implements IFoodInfo {
 		return true;
 	}
 
-	public BeverageInfo(List<FloatemStack> stacks, List<MobEffectInstance> effects, List<MobEffectInstance> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, int healing,
-		float saturation, int heat) {
-		super();
-		this.stacks = stacks;
-		this.effects = effects;
-		this.swayeffects = swayeffects;
-		this.foodeffect = foodeffect;
-		this.relishes = relishes;
-		this.healing = healing;
-		this.saturation = saturation;
-		this.heat = heat;
-	}
-
 	@Override
 	public Fluid getBase() {
 		
@@ -413,32 +482,50 @@ public class BeverageInfo implements IFoodInfo {
 	@Override
 	public Builder getFood(int extraHealing, int extraSaturation) {
 		FoodProperties.Builder b = new FoodProperties.Builder();
-		for (MobEffectInstance eff : effects) {
-			if (eff != null) {
-				b.effect(()->new MobEffectInstance(eff), 1);
-			}
-		}
-		for (ChancedEffect ef : foodeffect) {
-			b.effect(ef.effectSupplier(), ef.chance);
-		}
-		for (MobEffectInstance ef : effects) {
-			b.effect(() -> new MobEffectInstance(ef), 1);
-		}
-		for (MobEffectInstance ef : swayeffects) {
-			b.effect(() -> new MobEffectInstance(ef), 1);
-		}
+		b.nutrition(healing+extraHealing);
 		float extraSat=0;
 		if(healing+extraHealing>0) {
 			extraSat=extraSaturation/(healing+extraHealing);
 		}
-		b.nutrition(healing+extraHealing);
-		if (Float.isNaN(saturation))
+		if(Float.isNaN(saturation))
 			b.saturationModifier(extraSat);
 		else
 			b.saturationModifier(saturation+extraSat);
 		b.alwaysEdible();
 		return b;
 	}
+	@Override
+	public Consumable.Builder getConsumable() {
+		Consumable.Builder b=Consumable.builder()
+		.consumeSeconds(1.6F)
+		.animation(ItemUseAnimation.DRINK)
+		.sound(SoundEvents.GENERIC_DRINK)
+		.hasConsumeParticles(true);
+		for (ChancedEffect eff : effects) {
+			eff.toPossibleEffects(b);
+		}
+		for (ChancedEffect eff : swayeffects) {
+			eff.toPossibleEffects(b);
+		}
+		for (ChancedEffect ef : foodeffect) {
+			ef.toPossibleEffects(b);
+		}
+		return b;
+	}
+	@Override
+	public void addToTooltip(TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag, DataComponentGetter components) {
+		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish1);
+		RecipeHolder<RelishRecipe> r2 = RelishRecipe.recipes.get(activeRelish2);
+		if (!effects.isEmpty())
+			PotionContents.addPotionTooltip(potionEffectsCollectionView.get(), tooltipAdder, 1, 20);
 
+		if (r1 != null) {
+			if (r2 != null) {
+				tooltipAdder.accept(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_2", r1.value().getText(), r2.value().getText()));
+			} else
+				tooltipAdder.accept(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_1", r1.value().getText()));
+		}
+		
+	}
 
 }

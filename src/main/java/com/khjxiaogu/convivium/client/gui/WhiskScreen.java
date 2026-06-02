@@ -44,14 +44,14 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
-	private ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/whisk.png");
+	private Identifier TEXTURE = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/whisk.png");
 
 	WhiskBlockEntity blockEntity;
 
@@ -212,7 +212,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 						RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f);
 						//System.out.println(f);
 						if(rr!=null) {
-							transform.blit(ResourceLocation.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.value().relish+".png")
+							transform.blit(Identifier.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.value().relish+".png")
 							, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
 							19, 11,32,32);
 						}

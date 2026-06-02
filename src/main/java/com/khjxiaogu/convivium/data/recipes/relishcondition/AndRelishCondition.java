@@ -22,8 +22,12 @@ import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+
 public class AndRelishCondition extends LogicalRelishCondition {
 	public static final MapCodec<AndRelishCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).apply(t, AndRelishCondition::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,AndRelishCondition> STREAM_CODEC=LogicalRelishCondition.createStreamCodec(AndRelishCondition::new);
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub

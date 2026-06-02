@@ -18,9 +18,9 @@
 
 package com.khjxiaogu.convivium;
 
-import com.khjxiaogu.convivium.data.recipes.RecipeReloadListener;
 import com.khjxiaogu.convivium.util.PotionItemInfo;
 
+import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -28,17 +28,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
 public class CVCommonEvents {
-
-	@SubscribeEvent
-	public static void addReloadListeners(AddReloadListenerEvent event) {
-		event.addListener(new RecipeReloadListener(event.getServerResources()));
-	}
 
 	/*@SubscribeEvent
 	public static void bowlContainerFood(ContanerContainFoodEvent ev) {

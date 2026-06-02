@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.client;
 
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
@@ -49,26 +50,32 @@ import com.khjxiaogu.convivium.client.renderer.WolfFountainRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.CPMain;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID)
 public class CVClientRegistry {
 
 	@SubscribeEvent
@@ -99,47 +106,47 @@ public class CVClientRegistry {
 		EntityRenderers.register(CVEntityTypes.WOLF_FOUNTAIN_DROP.get(),WolfFountainProjectileRenderer::new);
 		
 	}
-	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
+	private static final Identifier STILL_BEVERAGE_TEXTURE = Identifier.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
+
 	@SubscribeEvent
-	public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-		event.registerFluidType(new IClientFluidTypeExtensions() {
-			@Override
-			public int getTintColor(FluidStack stack) {
-				BeverageInfo cmp=stack.get(CVComponents.BEVERAGE_INFO);
-				if(cmp==null)
-					return 0xffee9999;
-				return cmp.getIColor();
-			}
-			@Override
-			public int getTintColor() {
-				return 0xffee9999;
-			}
-			@Override
-			public ResourceLocation getStillTexture() {
-				return STILL_BEVERAGE_TEXTURE;
-			}
-			@Override
-			public ResourceLocation getFlowingTexture() {
-				return STILL_BEVERAGE_TEXTURE;
-			}
-		}, CVFluids.mixed.get());
-		for(Entry<FluidType, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
-			TextureColorPair tcp=s.getValue();
-			event.registerFluidType(new IClientFluidTypeExtensions() {
+	public static void onRegisterFluidModels(RegisterFluidModelsEvent event) {
+		event.register(new FluidModel.Unbaked(
+			new Material(STILL_BEVERAGE_TEXTURE),
+            new Material(STILL_BEVERAGE_TEXTURE),
+            null,
+            new FluidTintSource() {
 
 				@Override
-				public int getTintColor() {
-					return tcp.c();
+				public int color(FluidState state) {
+					return 0xffee9999;
 				}
 				@Override
-				public ResourceLocation getStillTexture() {
-					return tcp.texture();
-				}
-				@Override
-				public ResourceLocation getFlowingTexture() {
-					return tcp.texture();
-				}
-			},s.getKey());
+				public int colorAsStack(FluidStack stack) {
+					BeverageInfo cmp=stack.get(CVComponents.BEVERAGE_INFO);
+					if(cmp==null)
+						return 0xffee9999;
+					return cmp.getIColor();
+			    }
+			},
+            null
+            ),CVFluids.mixedf.get());
+
+
+		for(Entry<Supplier<Fluid>, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
+			TextureColorPair tcp=s.getValue();
+			event.register(new FluidModel.Unbaked(
+				new Material(tcp.texture()),
+	            new Material(tcp.texture()),
+	            null,
+	            new FluidTintSource() {
+
+					@Override
+					public int color(FluidState state) {
+						return tcp.c();
+					}
+				},
+	            null
+	            ),s.getKey());
 		}
 	}
 
@@ -149,7 +156,7 @@ public class CVClientRegistry {
 		registerFruitModel(get(CPMain.MODID, "fig"), "fig", FruitModel.ModelType.ROUND);
 		registerFruitModel(Items.GLISTERING_MELON_SLICE, "glistering_melon", FruitModel.ModelType.SLICE);
 		registerFruitModel(Items.GLOW_BERRIES, "glow_berries", FruitModel.ModelType.MISC);
-		registerFruitModel(Items.ENCHANTED_GOLDEN_APPLE, "golden_apple", FruitModel.ModelType.ROUND, RenderType.glint(), RenderType.cutout());
+		registerFruitModelGlint(Items.ENCHANTED_GOLDEN_APPLE, "golden_apple", FruitModel.ModelType.ROUND);
 		registerFruitModel(Items.GOLDEN_APPLE, "golden_apple", FruitModel.ModelType.ROUND);
 		registerFruitModel(Items.MELON_SLICE, "melon", FruitModel.ModelType.SLICE);
 		registerFruitModel(Items.SWEET_BERRIES, "sweet_berries", FruitModel.ModelType.MISC);
@@ -158,16 +165,17 @@ public class CVClientRegistry {
 
 	}
 
-	public static void registerFruitModel(Item item, String name, FruitModel.ModelType type, RenderType rt1, RenderType rt2) {
-		FruitPlatterRenderer.models.put(item, new FruitModel(name, type, rt1, rt2));
+
+	public static void registerFruitModelGlint(Item item, String name, FruitModel.ModelType type) {
+		FruitPlatterRenderer.models.put(item, new FruitModel(name, type, RenderTypes.glint()));
 	}
 
 	public static void registerFruitModel(Item item, String name, FruitModel.ModelType type) {
-		FruitPlatterRenderer.models.put(item, new FruitModel(name, type));
+		FruitPlatterRenderer.models.put(item, new FruitModel(name, type, RenderTypes.translucentMovingBlock()));
 	}
 
 	private static Item get(String modid, String id) {
-		return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(modid, id));
+		return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(modid, id));
 	}
 
 	@SubscribeEvent
@@ -177,14 +185,8 @@ public class CVClientRegistry {
 	}
 
 	@SubscribeEvent
-	public static void onTint(RegisterColorHandlersEvent.Item ev) {
-		ev.register((a, idx) -> {
-			// System.out.println(idx);
-			BeverageInfo cmp=a.get(CVComponents.BEVERAGE_INFO);
-			if(cmp==null)
-				return -1;
-			return idx == 0 ? -1 : cmp.getIColor();
-
-		}, CVBlocks.BEVERAGE.get());
+	public static void registerItemTint(RegisterColorHandlersEvent.ItemTintSources ev) {
+		ev.register(CVMain.rl("beverage"), BeverageTint.MAP_CODEC);
+		
 	}
 }

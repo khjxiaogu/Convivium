@@ -24,7 +24,7 @@ import com.khjxiaogu.convivium.util.evaluator.VariantEnvironment;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class CurrentSwayInfo {
@@ -36,7 +36,7 @@ public class CurrentSwayInfo {
 		Codec.INT.fieldOf("soothingness").forGetter(i -> i.drousing),
 		Codec.DOUBLE.fieldOf("display").forGetter(i -> i.display),
 		Codec.INT.fieldOf("active").forGetter(i -> i.active),
-		ResourceLocation.CODEC.fieldOf("icon").forGetter(i -> i.icon)).apply(t, CurrentSwayInfo::new));
+		Identifier.CODEC.fieldOf("icon").forGetter(i -> i.icon)).apply(t, CurrentSwayInfo::new));
 	public int dsweet;
 	public int dastringent;
 	public int dpungent;
@@ -44,10 +44,10 @@ public class CurrentSwayInfo {
 	public int drousing;
 	public double display;
 	public int active;
-	public ResourceLocation icon;
-	public ResourceLocation image;
+	public Identifier icon;
+	public Identifier image;
 
-	public CurrentSwayInfo(ResourceLocation ic, VariantEnvironment env) {
+	public CurrentSwayInfo(Identifier ic, VariantEnvironment env) {
 		display = env.get(Constants.DISPLAY);
 		icon = ic;
 		if (display > 0) {
@@ -61,7 +61,7 @@ public class CurrentSwayInfo {
 	}
 
 	public CurrentSwayInfo(int dsweet, int dastringent, int dpungent, int dthick, int drousing, double display, int active,
-		ResourceLocation icon) {
+		Identifier icon) {
 		super();
 		this.dsweet = dsweet;
 		this.dastringent = dastringent;
@@ -71,7 +71,7 @@ public class CurrentSwayInfo {
 		this.display = display;
 		this.active = active;
 		this.icon = icon;
-		this.image = ResourceLocation.fromNamespaceAndPath(icon.getNamespace(), "textures/" + icon.getPath() + ".png");
+		this.image = Identifier.fromNamespaceAndPath(icon.getNamespace(), "textures/" + icon.getPath() + ".png");
 	}
 
 	public int getTasteDelta(String sw) {

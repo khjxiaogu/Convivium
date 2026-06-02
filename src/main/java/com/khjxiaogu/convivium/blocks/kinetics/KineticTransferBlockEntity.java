@@ -22,10 +22,10 @@ import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.LazyTickWorker;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity implements KineticConnected {
 	protected LazyTickWorker process;
@@ -61,20 +61,20 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity imple
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		speed = nbt.getInt("speed");
-		process.read(nbt,"kttic");
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
+		speed = nbt.getIntOr("speed",0);
+		process.read(nbt, "kttic");
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		nbt.putInt("speed", speed);
 		process.write(nbt,"kttic");
 	}
 
 	@Override
 	public void tick() {
-		if(level.isClientSide)return;
+		if(level.isClientSide())return;
 		isSpeedApplied=false;
 		if(process.tick()) {
 			this.syncData();

@@ -27,20 +27,18 @@ import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVIngredients;
-import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.teammoeg.caupona.api.GameTranslation;
 import com.teammoeg.caupona.util.FloatemTagStack;
-import com.teammoeg.caupona.util.Utils;
-
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredientType;
@@ -53,6 +51,13 @@ public class BeverageFluidIngredient extends FluidIngredient {
 		Codec.list(Codec.STRING).optionalFieldOf("allowedRelish",ImmutableList.of()).forGetter(o->o.allowedRelish),
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density)
 		).apply(t, BeverageFluidIngredient::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageFluidIngredient> STREAM_CODEC=StreamCodec.composite(
+		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.must,
+		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.optional,
+		RelishConditions.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.relish,
+		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),o->o.allowedRelish,
+		ByteBufCodecs.FLOAT,o->o.density,
+		BeverageFluidIngredient::new);
 	public List<Ingredient> must;
 	public List<Ingredient> optional;
 	public List<RelishCondition> relish;
@@ -101,17 +106,9 @@ public class BeverageFluidIngredient extends FluidIngredient {
 	}
 
 	@Override
-	protected Stream<FluidStack> generateStacks() {
-		FluidStack generated=new FluidStack(CVFluids.mixedf.get(),1000);
-		List<Component> components=new ArrayList<>();
-		if(relish!=null) 
-			for(RelishCondition rl:relish)
-				components.add(Utils.string(rl.getTranslation(GameTranslation.get())));
-		if(allowedRelish!=null) 
-			for(String s:allowedRelish)
-				components.add(RelishRecipe.recipes.get(s).value().getText());
-		generated.set(DataComponents.LORE, new ItemLore(components));
-		return Stream.of(generated);
+	protected Stream<Holder<Fluid>> generateFluids() {
+
+		return Stream.of(CVFluids.mixedf.getDelegate());
 	}
 
 	@Override
@@ -138,5 +135,6 @@ public class BeverageFluidIngredient extends FluidIngredient {
 		return Objects.equals(allowedRelish, other.allowedRelish) && Float.floatToIntBits(density) == Float.floatToIntBits(other.density) && Objects.equals(must, other.must)
 			&& Objects.equals(optional, other.optional) && Objects.equals(relish, other.relish);
 	}
+
 
 }

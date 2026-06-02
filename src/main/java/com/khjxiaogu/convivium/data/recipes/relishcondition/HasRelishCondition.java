@@ -24,9 +24,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+
 public class HasRelishCondition extends AbstractRelishCondition {
 	public static final MapCodec<HasRelishCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).apply(t, HasRelishCondition::new));
-
+	public static final StreamCodec<RegistryFriendlyByteBuf,HasRelishCondition> STREAM_CODEC=AbstractRelishCondition.createStreamCodec(HasRelishCondition::new);
+	
 	public HasRelishCondition(String relish) {
 		super(relish);
 	}

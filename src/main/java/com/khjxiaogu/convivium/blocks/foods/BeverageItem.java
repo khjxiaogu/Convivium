@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.blocks.foods;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.CVComponents;
@@ -28,23 +27,17 @@ import com.teammoeg.caupona.item.EdibleBlock;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.material.Fluid;
 
 public class BeverageItem extends EdibleBlock {
-	public static final FoodProperties fakefood = new FoodProperties.Builder().nutrition(0).saturationModifier(0f)
-			.build();
 	public final BeverageBlock bl;
 	public final boolean isSmpl;
 	Supplier<Fluid> fluid;
 	public BeverageItem(BeverageBlock block,Supplier<Fluid> fluid, Properties props,boolean isSmpl) {
-		super(block, props.food(fakefood).craftRemainder(Items.GLASS_BOTTLE).stacksTo(1));
+		super(block, props.craftRemainder(Items.GLASS_BOTTLE).stacksTo(1));
 		bl = block;
 		this.fluid=fluid;
 		this.isSmpl=isSmpl;
@@ -59,10 +52,6 @@ public class BeverageItem extends EdibleBlock {
 	@Override
 	public int getUseDuration(ItemStack stack,LivingEntity entity) {
 		return 16;
-	}
-
-	public UseAnim getUseAnimation(ItemStack stack) {
-		return UseAnim.DRINK;
 	}
 	@Override
 	public void fillItemCategory(CreativeTabItemHelper helper) {
@@ -79,18 +68,6 @@ public class BeverageItem extends EdibleBlock {
 		if(info==null)
 			return new BeverageInfo();
 		return info;
-	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		BeverageInfo info = BeverageItem.getInfo(stack);
-		info.appendTooltip(tooltip);
-		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-	}
-	@Override
-	public FoodProperties getFoodProperties(ItemStack stack, LivingEntity entity) {
-		return getInfo(stack).getFood(0,0).usingConvertsTo(Items.GLASS_BOTTLE).build();
-		
 	}
 
 }

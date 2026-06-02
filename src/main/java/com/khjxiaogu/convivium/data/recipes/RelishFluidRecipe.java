@@ -60,7 +60,7 @@ public class RelishFluidRecipe extends IDataRecipe {
 		this.relish = relish;
 		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
 	}
-/*	public RelishFluidRecipe(ResourceLocation id,FriendlyByteBuf pb) {
+/*	public RelishFluidRecipe(Identifier id,FriendlyByteBuf pb) {
 		super(id);
 		fluid=pb.readRegistryIdUnsafe(ForgeRegistries.FLUIDS);
 		relish=pb.readUtf();

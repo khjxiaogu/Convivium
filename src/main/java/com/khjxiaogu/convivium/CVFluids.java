@@ -21,12 +21,13 @@ package com.khjxiaogu.convivium;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.fluid.BaseFluid;
 import com.khjxiaogu.convivium.fluid.BeverageFluid;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -36,12 +37,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries.Keys;
 
 public class CVFluids {
-	public static Map<FluidType,TextureColorPair> clientExtensiondata=new HashMap<>();
-	public static record TextureColorPair (ResourceLocation texture, int c) {
+	public static Map<Supplier<Fluid>,TextureColorPair> clientExtensiondata=new HashMap<>();
+	public static record TextureColorPair (Identifier texture, int c) {
 		public TextureColorPair copy() {
 			return new TextureColorPair(texture,c);
 		}
-		public ResourceLocation texture() {
+		public Identifier texture() {
 			return texture;
 		}
 		public int c() {
@@ -51,14 +52,7 @@ public class CVFluids {
 			
 			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
 				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n));
-			clientExtensiondata.put(ft, this.copy());
-			return ft;
-		}
-
-		public FluidType createBVG(String n) {
-			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
-				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n));
-
+			
 			return ft;
 		}
 	}
@@ -80,9 +74,9 @@ public class CVFluids {
 		"tea",
 		"wine"
 	};
-	private static final ResourceLocation STILL_WATER_TEXTURE = ResourceLocation.withDefaultNamespace("block/water_still");
-	private static final ResourceLocation STILL_MILK_TEXTURE = ResourceLocation.fromNamespaceAndPath("neoforge", "block/milk_still");
-	private static final ResourceLocation STILL_BEVERAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
+	private static final Identifier STILL_WATER_TEXTURE = Identifier.withDefaultNamespace("block/water_still");
+	private static final Identifier STILL_MILK_TEXTURE = Identifier.fromNamespaceAndPath("neoforge", "block/milk_still");
+	private static final Identifier STILL_BEVERAGE_TEXTURE = Identifier.fromNamespaceAndPath(CVMain.MODID, "block/beverage_fluid");
 	static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(BuiltInRegistries.FLUID, CVMain.MODID);
 	static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(Keys.FLUID_TYPES, CVMain.MODID);
 
@@ -96,7 +90,7 @@ public class CVFluids {
 	public static final DeferredHolder<FluidType, FluidType> b_wine = FLUID_TYPES.register("berry_must", () -> bvg(0xffcc6d57).create("berry_must"));
 	public static final DeferredHolder<FluidType, FluidType> d_wine = FLUID_TYPES.register("drupe_must", () -> bvg(0xffd48e2d).create("drupe_must"));
 	public static final DeferredHolder<FluidType, FluidType> p_wine = FLUID_TYPES.register("pome_must", () -> bvg(0xffe3c25e).create("pome_must"));
-	public static final DeferredHolder<FluidType, FluidType> mixed = FLUID_TYPES.register("mixed", () -> bvg(0xffee9999).createBVG("beverage"));
+	public static final DeferredHolder<FluidType, FluidType> mixed = FLUID_TYPES.register("mixed", () -> bvg(0xffee9999).create("beverage"));
 
 	public static final DeferredHolder<Fluid, BaseFluid> cocoaf = FLUIDS.register("hot_chocolate", () -> new BaseFluid(new BaseFlowingFluid.Properties(cocoa, null,
 		null).slopeFindDistance(1).explosionResistance(100F)));
@@ -137,13 +131,17 @@ public class CVFluids {
 		intern.put("chocolate_milk", bvg(0xffc69f8f));
 		for (Entry<String, TextureColorPair> ent : intern.entrySet()) {
 			DeferredHolder<FluidType, FluidType> type = FLUID_TYPES.register(ent.getKey(), () -> ent.getValue().create(ent.getKey()));
+			clientExtensiondata.put(
 			FLUIDS.register(ent.getKey(), () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,
-				null).slopeFindDistance(1).explosionResistance(100F)));
+				null).slopeFindDistance(1).explosionResistance(100F)))
+			, ent.getValue());
 		}
 		for(String s:sorbets) {
 			TextureColorPair tcp=new TextureColorPair(CVMain.rl("block/sorbets/"+s), 0xffffffff);
 			DeferredHolder<FluidType, FluidType> type=FLUID_TYPES.register(s+"_sorbet",t -> tcp.create(t.getPath()));
-			FLUIDS.register(s+"_sorbet", () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,null).slopeFindDistance(1).explosionResistance(100F)));
+			clientExtensiondata.put(
+			FLUIDS.register(s+"_sorbet", () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,null).slopeFindDistance(1).explosionResistance(100F)))
+			, tcp);
 		}
 	}
 

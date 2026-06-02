@@ -90,7 +90,7 @@ public class ConvertionRecipe extends IDataRecipe {
 		this.consumeExtra = consumeExtra;
 	}
 /*
-	public ConvertionRecipe(ResourceLocation id, FriendlyByteBuf data) {
+	public ConvertionRecipe(Identifier id, FriendlyByteBuf data) {
 		super(id);
 		
 		items = SerializeUtil.readList(data, d -> Pair.of(Ingredient.fromNetwork(d), d.readFloat()));

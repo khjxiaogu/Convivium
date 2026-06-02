@@ -20,16 +20,18 @@ package com.khjxiaogu.convivium.datagen;
 
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class TasteRecipeBuilder{
 	private int priority;
 	private Ingredient item;
-	private ResourceLocation rl;
+	private Identifier rl;
 	VariantDataBuilder<TasteRecipeBuilder> vars=new VariantDataBuilder<TasteRecipeBuilder>(this);
-	public TasteRecipeBuilder(ResourceLocation rl) {
+	public TasteRecipeBuilder(Identifier rl) {
 		this.rl = rl;
 	}
 	public VariantDataBuilder<TasteRecipeBuilder> vars(){
@@ -44,6 +46,6 @@ public class TasteRecipeBuilder{
 		return this;
 	}
 	public void end(RecipeOutput out) {
-		out.accept(rl,new TasteRecipe(vars.variantData, priority, item),null);
+		out.accept(ResourceKey.create(Registries.RECIPE, rl),new TasteRecipe(vars.variantData, priority, item),null);
 	}
 }

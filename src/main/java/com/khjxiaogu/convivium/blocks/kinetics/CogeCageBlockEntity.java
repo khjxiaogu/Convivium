@@ -23,9 +23,9 @@ import com.khjxiaogu.convivium.CVBlocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class CogeCageBlockEntity extends KineticTransferBlockEntity implements Cog{
 
@@ -40,7 +40,7 @@ public class CogeCageBlockEntity extends KineticTransferBlockEntity implements C
 
 	@Override
 	public void tick() {
-		if (this.level.isClientSide)
+		if (this.level.isClientSide())
 			return;
 		super.tick();
 
@@ -51,12 +51,12 @@ public class CogeCageBlockEntity extends KineticTransferBlockEntity implements C
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient, Provider registries) {
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
 		
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient, Provider registries) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		
 	}
 	@Override

@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.mojang.serialization.Codec;
@@ -33,7 +34,9 @@ import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -43,7 +46,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class BasinRecipe extends IDataRecipe implements TimedRecipe{
-	public static List<RecipeHolder<BasinRecipe>> recipes;
+	public static Map<Identifier,RecipeHolder<BasinRecipe>> recipes;
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 
@@ -59,15 +62,15 @@ public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 	public Fluid base;
 	public float density = 0;
 	public SizedOrCatalystFluidIngredient in;
-	public List<ItemStack> output;
+	public List<ItemStackTemplate> output;
 	public SizedOrCatalystIngredient item;
 	public int processTime=200;
 	public boolean requireBasin;
 	public static final MapCodec<BasinRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		BuiltInRegistries.FLUID.byNameCodec().optionalFieldOf("base").forGetter(o->Optional.ofNullable(o.base)),
 		Codec.FLOAT.optionalFieldOf("density", 0f).forGetter(o->o.density),
-		SizedOrCatalystFluidIngredient.FLAT_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
-		SizedOrCatalystIngredient.FLAT_CODEC.optionalFieldOf("item").forGetter(o->Optional.ofNullable(o.item)),
+		SizedOrCatalystFluidIngredient.NESTED_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
+		SizedOrCatalystIngredient.NESTED_CODEC.optionalFieldOf("item").forGetter(o->Optional.ofNullable(o.item)),
 		Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(o->o.output),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("leadBasin").forGetter(o->o.requireBasin)
@@ -93,9 +96,19 @@ public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 
 
 	public static RecipeHolder<BasinRecipe> testAll(FluidStack f,ItemStack is,boolean isLead) {
-		return recipes.stream().map(t->t).filter(t->!t.value().requireBasin||isLead).filter(t -> t.value().test(f)).filter(t->t.value().item==null||t.value().item.test(is)).findFirst().orElse(null);
+		return recipes.values().stream().filter(t->!t.value().requireBasin||isLead).filter(t -> t.value().test(f)).filter(t->t.value().item==null||t.value().item.test(is)).findFirst().orElse(null);
 	}
-
+	public static RecipeHolder<BasinRecipe> testAll(Identifier id,FluidStack f,ItemStack is,boolean isLead) {
+		RecipeHolder<BasinRecipe> rcp=recipes.get(id);
+		if(rcp==null)
+			return null;
+		if(!rcp.value().requireBasin||isLead) {
+			if(rcp.value().test(f)&&rcp.value().item==null||rcp.value().item.test(is))
+				return rcp;
+		}
+		return null;
+		
+	}
 	public boolean test(FluidStack f) {
 		if(!in.test(f))
 			return false;
@@ -112,19 +125,11 @@ public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 		return true;
 	}
 
-	public List<ItemStack> handle(FluidStack f,ItemStack isi) {
-		f.shrink(in.amount());
-		isi.shrink(item.count());
-		List<ItemStack> fss=new ArrayList<>();
-		for(ItemStack is:output)
-			fss.add(is.copy());
-		return fss;
-	}
 
 
 
 	public static boolean testInput(ItemStack stack) {
-		return recipes.stream().map(t->t.value()).anyMatch(t->t.item.test(stack));
+		return recipes.values().stream().map(t->t.value()).anyMatch(t->t.item.test(stack));
 	}
 
 	@Override

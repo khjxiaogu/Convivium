@@ -36,7 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CamelliaBlock extends BushBlock implements BonemealableBlock {
-    public static final MapCodec<CamelliaBlock> CODEC = simpleCodec(CamelliaBlock::new);
+    public static final MapCodec<BushBlock> CODEC = simpleCodec(CamelliaBlock::new);
 	public CamelliaBlock(Properties pProperties) {
 		super(pProperties);
 		// TODO Auto-generated constructor stub
@@ -98,7 +98,7 @@ public class CamelliaBlock extends BushBlock implements BonemealableBlock {
 	}
 
 	@Override
-	protected MapCodec<? extends BushBlock> codec() {
+	public MapCodec<BushBlock> codec() {
 		return CODEC;
 	}
 

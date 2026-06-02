@@ -24,6 +24,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
 
 public class HasFluidCondition implements RelishCondition {
@@ -31,7 +35,10 @@ public class HasFluidCondition implements RelishCondition {
 		BuiltInRegistries.FLUID.byNameCodec().fieldOf("relish").forGetter(o->o.f))
 		.apply(t, HasFluidCondition::new));
 	Fluid f;
-
+	public static final StreamCodec<RegistryFriendlyByteBuf,HasFluidCondition> STREAM_CODEC=StreamCodec.composite(
+			ByteBufCodecs.registry(Registries.FLUID),o->o.f,
+			HasFluidCondition::new);
+	
 
 	public HasFluidCondition(Fluid relish) {
 		this.f=relish;

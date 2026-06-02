@@ -65,13 +65,13 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 			MultiBufferSource pBufferSource, int combinedLightIn, int combinedOverlayIn) {
 		TextureAtlasSprite sprite;
 		Vector3f clr;
-		if(pBlockEntity.internal.is(Items.POTION)) {
+		if(pBlockEntity.getInternal().is(Items.POTION)) {
 			IClientFluidTypeExtensions attr=IClientFluidTypeExtensions.of(Fluids.WATER);
 			sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
 					.getSprite(attr.getStillTexture());
-			clr=clr(PotionContents.getColor(pBlockEntity.internal.get(DataComponents.POTION_CONTENTS).getAllEffects()));
+			clr=clr(PotionContents.getColor(pBlockEntity.getInternal().get(DataComponents.POTION_CONTENTS).getAllEffects()));
 		}else {
-			FluidStack fs = Utils.extractFluid(pBlockEntity.internal);
+			FluidStack fs = Utils.extractFluid(pBlockEntity.getInternal());
 
 			if(fs.isEmpty())return;
 			IClientFluidTypeExtensions attr=IClientFluidTypeExtensions.of(fs.getFluid());

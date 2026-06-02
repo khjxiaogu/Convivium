@@ -27,10 +27,20 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+
 public class RelishCompareCondition extends AbstractRelishCondition {
 	public static final MapCodec<RelishCompareCondition> CODEC=RecordCodecBuilder.mapCodec(t->codecStart(t).and(t.group(
 		Compares.CODEC.fieldOf("compare").forGetter(o->o.comp),
 		Codec.FLOAT.fieldOf("num").forGetter(o->o.num))).apply(t, RelishCompareCondition::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,RelishCompareCondition> STREAM_CODEC=
+		AbstractRelishCondition.createStreamCodec(
+			Compares.STREAM_CODEC,o->o.comp,
+			ByteBufCodecs.FLOAT,o->o.num,
+			RelishCompareCondition::new);
+
 	Compare comp;
 	float num;
 

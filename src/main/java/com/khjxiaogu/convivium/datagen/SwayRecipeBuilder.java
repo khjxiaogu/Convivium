@@ -36,8 +36,10 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondi
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffect;
 
 public class SwayRecipeBuilder {
@@ -73,12 +75,12 @@ public class SwayRecipeBuilder {
 	private int priority;
 	private Map<String,INumber> locals=new LinkedHashMap<>();
 	private List<SwayEffect> effects=new ArrayList<>();
-	private ResourceLocation id;
-	private ResourceLocation icon;
+	private Identifier id;
+	private Identifier icon;
 	
 	public static List<SwayRecipe> recipes=new ArrayList<>();
 
-	public SwayRecipeBuilder(ResourceLocation id, ResourceLocation icon) {
+	public SwayRecipeBuilder(Identifier id, Identifier icon) {
 		super();
 		this.id = id;
 		this.icon = icon;
@@ -117,6 +119,6 @@ public class SwayRecipeBuilder {
 		},me);
 	}
 	public void end(RecipeOutput out) {
-		out.accept(id,new SwayRecipe(relish, priority, locals, effects, icon),null);
+		out.accept(ResourceKey.create(Registries.RECIPE, id),new SwayRecipe(relish, priority, locals, effects, icon),null);
 	}
 }

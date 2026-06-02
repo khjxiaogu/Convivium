@@ -111,14 +111,14 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 		this.keepInfo = keepInfo;
 	}
 /*
-	public GrindingRecipe(ResourceLocation id, JsonObject jo) {
+	public GrindingRecipe(Identifier id, JsonObject jo) {
 		super(id);
 		if (jo.has("items"))
 			items = SerializeUtil.parseJsonList(jo.get("items"),
 					j -> Pair.of(Ingredient.fromJson(j.get("item")), (j.has("count") ? j.get("count").getAsInt() : 1)));
 
 		if (jo.has("base"))
-			base = new ResourceLocation(jo.get("base").getAsString());
+			base = new Identifier(jo.get("base").getAsString());
 		if (jo.has("fluidIn"))
 			in=SerializeUtil.readFluidStack(jo.get("fluidIn"));
 		if (jo.has("fluidOut"))
@@ -217,11 +217,11 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 		return handle(f);
 	}
 /*
-	public GrindingRecipe(ResourceLocation id, FriendlyByteBuf data) {
+	public GrindingRecipe(Identifier id, FriendlyByteBuf data) {
 		super(id);
 		
 		items = SerializeUtil.readList(data, d -> Pair.of(Ingredient.fromNetwork(d), d.readVarInt()));
-		base = SerializeUtil.readOptional(data, FriendlyByteBuf::readResourceLocation).orElse(null);
+		base = SerializeUtil.readOptional(data, FriendlyByteBuf::readIdentifier).orElse(null);
 		this.in = SerializeUtil.readFluidStack(data);
 		this.out = SerializeUtil.readFluidStack(data);
 		density = data.readFloat();
@@ -237,7 +237,7 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 			r.getFirst().toNetwork(data);
 			data.writeVarInt(r.getSecond());
 		});
-		SerializeUtil.writeOptional2(data, base, FriendlyByteBuf::writeResourceLocation);
+		SerializeUtil.writeOptional2(data, base, FriendlyByteBuf::writeIdentifier);
 		SerializeUtil.writeFluidStack(data,in);
 		SerializeUtil.writeFluidStack(data,out);
 		data.writeFloat(density);

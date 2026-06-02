@@ -137,7 +137,7 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 				}else {
 					moving=dir.getCounterClockWise();
 				}
-				Vec3i v3=moving.getNormal();
+				Vec3i v3=moving.getUnitVec3i();
 				if(pLevel.getBlockEntity(pPos) instanceof KineticConnected ent) {
 					pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0225*ent.getSpeed()));
 				}

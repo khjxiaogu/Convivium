@@ -18,9 +18,13 @@
 
 package com.khjxiaogu.convivium.util;
 
+import java.util.stream.Stream;
+
 import com.teammoeg.caupona.util.ChancedEffect;
 
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 
 public class FoodPropertieHelper {
 
@@ -33,11 +37,26 @@ public class FoodPropertieHelper {
         	fpb.saturationModifier(cur.saturation()/cur.nutrition()/2/parts);
         if(cur.canAlwaysEat())
         	fpb.alwaysEdible();
-        cur.usingConvertsTo().ifPresent(t->fpb.usingConvertsTo(t.getItem()));
-        cur.effects().stream().map(ChancedEffect::new).forEach(t->{
-        	t.adjustParts(parts,1);
-        	t.toPossibleEffects(fpb);
-        });
+		return fpb.build();
+		
+	}
+	public static Consumable copyWithPart(Consumable cur,int parts) {
+		Consumable.Builder fpb=Consumable.builder();
+		fpb.animation(cur.animation());
+		fpb.consumeSeconds(cur.consumeSeconds());
+		fpb.hasConsumeParticles(cur.hasConsumeParticles());
+		fpb.sound(cur.sound());
+		fpb.soundAfterConsume(cur.sound());
+		cur.onConsumeEffects().stream().<ChancedEffect>flatMap(t->{
+			if(t instanceof ApplyStatusEffectsConsumeEffect eff) {
+				float chance=eff.probability();
+				return eff.effects().stream().map(o->new ChancedEffect(o,chance));
+			}
+			return Stream.empty();
+		}).forEach(eff->{
+			eff.adjustParts(parts,1);
+			eff.toPossibleEffects(fpb);
+		});
 		return fpb.build();
 		
 	}

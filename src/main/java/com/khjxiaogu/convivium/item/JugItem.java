@@ -18,8 +18,7 @@
 
 package com.khjxiaogu.convivium.item;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -27,21 +26,23 @@ import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.api.CauponaApi;
+import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.ICreativeModeTabItem;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
@@ -50,106 +51,117 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidActionResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class JugItem extends Item  implements ICreativeModeTabItem{
     public JugItem(Properties props) {
         super(props);
     }
 
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		@Nullable IFluidHandlerItem e=stack.getCapability(Capabilities.FluidHandler.ITEM);
-		if(e!=null){
-			FluidStack f=e.getFluidInTank(0);
-			if(!f.isEmpty()) {
-				tooltip.add(f.getHoverName());
-				BeverageInfo info = f.get(CVComponents.BEVERAGE_INFO);
-				if(info!=null){
-				PotionContents.addPotionTooltip(info.effects, tooltip::add, 1,20);
-				info.appendTooltip(tooltip);
-				}
-				tooltip.add(Utils.string(f.getAmount()+"/1250 mB"));
-				
-			}
-		}
-		
-		
-		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-	}
-
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand pUsedHand) {
+	public InteractionResult use(Level worldIn, Player playerIn, InteractionHand pUsedHand) {
 		BlockHitResult ray = Item.getPlayerPOVHitResult(worldIn, playerIn, Fluid.SOURCE_ONLY);
 		ItemStack cur=playerIn.getItemInHand(pUsedHand);
+		ItemAccess ia=ItemAccess.forPlayerInteraction(playerIn, pUsedHand);
 		if (ray.getType() == Type.BLOCK) {
 			BlockPos blockpos = ray.getBlockPos();
 			FluidState state = worldIn.getFluidState(blockpos);
 			BlockState blk=worldIn.getBlockState(blockpos);
-			
+			ResourceHandler<FluidResource> handler=cur.getCapability(Capabilities.Fluid.ITEM,ia);
 			if(blk.getBlock() instanceof BucketPickup bucket) {
-				IFluidHandlerItem handler=cur.getCapability(Capabilities.FluidHandler.ITEM);
-				if(handler!=null) {
-					FluidStack fluid=handler.getFluidInTank(0);
-					if(!fluid.isEmpty()&&fluid.getAmount()<handler.getTankCapacity(0)&&fluid.getFluid().isSame(state.getType())) {
-						int amt=handler.fill(new FluidStack(state.getType(),FluidType.BUCKET_VOLUME),FluidAction.EXECUTE);
+				try(Transaction trans=Transaction.openRoot()){
+					if(handler!=null) {
+						int amt=handler.insert(FluidResource.of(state.getType()),FluidType.BUCKET_VOLUME,trans);
 						if(amt>0) {
-							bucket.pickupBlock(playerIn, worldIn, blockpos, blk);
-							return InteractionResultHolder.sidedSuccess(cur,worldIn.isClientSide);
+							bucket.pickupBlock(playerIn,worldIn, blockpos, blk);
+							trans.commit();
+							return InteractionResult.SUCCESS;
 						}
+						
 					}
 				}
 			}
-			if(worldIn.getBlockEntity(blockpos) instanceof BeverageBlockEntity be&&be.internal.is(Items.GLASS_BOTTLE)) {
-				IFluidHandlerItem handler=cur.getCapability(Capabilities.FluidHandler.ITEM);
+			if(worldIn.getBlockEntity(blockpos) instanceof BeverageBlockEntity be) {
+				ItemResource ir=be.getInternal().getResource(0);
+				if(ir.is(Items.GLASS_BOTTLE)&&handler!=null) {
+					FluidResource rs=handler.getResource(0);
+					if(!rs.isEmpty()) {
+						if(!worldIn.isClientSide()) {
+							try(Transaction ctx=Transaction.openRoot()){
+								int amt = handler.extract(rs,250, ctx);
+								ContanerContainFoodEvent ev=Utils.contain(ir,rs,amt);
+								if (ev.isAllowed()) {
+									if(be.exchangeInternal(ev.getOutput(),ctx).is(Items.GLASS_BOTTLE)) {
+										ctx.commit();
+										be.syncData();
+									}
+								}
+							}
+						}
+
+						return InteractionResult.SUCCESS_SERVER;
+					}
+				}
+			}
+			try(Transaction trans=Transaction.openRoot()){
 				if(handler!=null) {
-					Optional<ItemStack> is=CauponaApi.getFilledItemStack(handler,be.internal);
-					if(is.isPresent()) {
-						if(!worldIn.isClientSide) {
-							be.internal=is.get();
-							be.syncData();
-						}
-						return InteractionResultHolder.sidedSuccess(cur,worldIn.isClientSide);
+					FluidStack res=FluidUtil.tryPickupFluid(handler, playerIn, worldIn, blockpos,ray.getDirection());
+					if(!res.isEmpty()) {
+						trans.commit();
+						return InteractionResult.SUCCESS;
 					}
+					
 				}
-			}
-			
-			FluidActionResult res=FluidUtil.tryPickUpFluid(cur, playerIn, worldIn, blockpos,ray.getDirection());
-			if(res.isSuccess()) {
-				
-				return InteractionResultHolder.sidedSuccess(res.getResult(),worldIn.isClientSide);
 			}
 		}else if(ray.getType() == Type.MISS) {
 			if(playerIn.isShiftKeyDown()) {
-				IFluidHandlerItem handler=cur.getCapability(Capabilities.FluidHandler.ITEM);
+				ResourceHandler<FluidResource> handler=cur.getCapability(Capabilities.Fluid.ITEM,ia);
 				if(handler!=null) {
-					FluidStack fluid=handler.getFluidInTank(0);
-					if(!fluid.isEmpty()) {
-						if(handler.drain(1250, FluidAction.EXECUTE).getAmount()>0) {
-							return InteractionResultHolder.sidedSuccess(cur,worldIn.isClientSide);
-						}
+					try(Transaction trans=Transaction.openRoot()){
+						if(handler.extract(handler.getResource(0), handler.getAmountAsInt(0), trans)>0)
+							trans.commit();
 					}
 				}
 			}
 		}
-		return InteractionResultHolder.pass(cur);
+		return super.use(worldIn, playerIn, pUsedHand);
 	}
 
 	@Override
 	public void fillItemCategory(CreativeTabItemHelper helper) {
 		if(helper.isType(CVMain.MAIN_TAB))
 			helper.accept(this,1);
+	}
+
+	@Override
+	public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+		return false;
+	}
+
+
+	@Override
+	public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+		@Nullable @org.jspecify.annotations.Nullable ResourceHandler<FluidResource> e=itemStack.getCapability(Capabilities.Fluid.ITEM,ItemAccess.forStack(itemStack));
+		if(e!=null){
+			FluidResource f=e.getResource(0);
+			if(!f.isEmpty()) {
+				builder.accept(f.getHoverName());
+				BeverageInfo info = f.get(CVComponents.BEVERAGE_INFO);
+				if(info!=null){
+					info.addToTooltip(context, builder, tooltipFlag, f);
+				}
+				builder.accept(Utils.string(e.getAmountAsInt(0)+"/1250 mB"));
+				
+			}
+		}
 	}
 
 }

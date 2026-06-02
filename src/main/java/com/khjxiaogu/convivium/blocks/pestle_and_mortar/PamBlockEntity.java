@@ -29,7 +29,6 @@ import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.teammoeg.caupona.util.RecipeHandler;
-import com.teammoeg.caupona.util.SyncedFluidHandler;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
@@ -40,7 +39,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -52,96 +51,36 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.RangedWrapper;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class PamBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
-	public ItemStackHandler inv = new ItemStackHandler(6) {
+	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(6) {
 		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			return slot < 3&&GrindingRecipe.testInput(stack);
+		public boolean isValid(int slot, ItemResource stack) {
+			return slot >3||GrindingRecipe.testInput(stack.toStack());
 		}
 
 		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
+		protected void onContentsChanged(int slot,ItemStack stack) {
+			super.onContentsChanged(slot,stack);
 			recipeHandler.onContainerChanged();
 			syncData();
 		}
 	};
-	public final IFluidHandler tanks=new SyncedFluidHandler(this,new IFluidHandler() {
+	public final FluidStacksResourceHandler tanks=new FluidStacksResourceHandler(2,1000) {
 
 		@Override
-		public int getTanks() {
-			return 2;
-		}
-
-		@Override
-		public @NotNull FluidStack getFluidInTank(int tank) {
-			// TODO Auto-generated method stub
-			return tank==0?tankout.getFluidInTank(0):tankin.getFluidInTank(1);
-		}
-
-		@Override
-		public int getTankCapacity(int tank) {
-			// TODO Auto-generated method stub
-			return 1000;
-		}
-
-		@Override
-		public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-			// TODO Auto-generated method stub
-			if(tank==0)return false;
-			return tankin.isFluidValid(0,stack);
-		}
-
-		@Override
-		public int fill(FluidStack resource, FluidAction action) {
-			// TODO Auto-generated method stub
-			return tankin.fill(resource, action);
-		}
-
-		@Override
-		public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-			// TODO Auto-generated method stub
-			FluidStack out=tankout.drain(resource, action);
-			if(!out.isEmpty())
-				return out;
-			return tankin.drain(resource, action);
-		}
-
-		@Override
-		public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-			// TODO Auto-generated method stub
-			FluidStack out=tankout.drain(maxDrain, action);
-			if(!out.isEmpty())
-				return out;
-			return tankin.drain(maxDrain, action);
-		}
-		
-	});
-	public final FluidTank tankin = new FluidTank(1000) {
-
-		@Override
-		protected void onContentsChanged() {
-			super.onContentsChanged();
-			recipeHandler.onContainerChanged();
+		protected void onContentsChanged(int index, FluidStack previousContents) {
+			super.onContentsChanged(index, previousContents);
+			if(index==0)
+				recipeHandler.onContainerChanged();
 			syncData();
 		}
 		
 	};
-	public final FluidTank tankout = new FluidTank(1000){
 
-		@Override
-		protected void onContentsChanged() {
-			super.onContentsChanged();
-			syncData();
-		}
-		
-	};
 	public List<ItemStack> items=new ArrayList<>();
 	public FluidStack fout=FluidStack.EMPTY;
 	public RecipeHandler<GrindingRecipe> recipeHandler=new RecipeHandler<>(()->{

@@ -36,7 +36,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -48,7 +48,7 @@ public class SwayRecipe  extends IDataRecipe{
 
 
 	public SwayRecipe(List<RelishCondition> relish, int priority, Map<String, INumber> locals,
-			List<SwayEffect> effects, ResourceLocation icon) {
+			List<SwayEffect> effects, Identifier icon) {
 		this.relish = relish;
 		this.priority = priority;
 		this.locals = locals;
@@ -60,7 +60,7 @@ public class SwayRecipe  extends IDataRecipe{
 	public int priority;
 	public Map<String,INumber> locals;
 	public List<SwayEffect> effects;
-	public ResourceLocation icon;
+	public Identifier icon;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static List<RecipeHolder<SwayRecipe>> recipes;
@@ -69,10 +69,10 @@ public class SwayRecipe  extends IDataRecipe{
 		Codec.INT.fieldOf("priority").forGetter(o->o.priority),
 		Codec.compoundList(Codec.STRING, INumber.CODEC).optionalFieldOf("locals",List.of()).forGetter(o->o.locals.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList())),
 		Codec.list(SwayEffect.CODEC).fieldOf("effects").forGetter(o->o.effects),
-		ResourceLocation.CODEC.fieldOf("icon").forGetter(o->o.icon)
+		Identifier.CODEC.fieldOf("icon").forGetter(o->o.icon)
 		).apply(t, SwayRecipe::new));
 	
-	public SwayRecipe(List<RelishCondition> relish, int priority, List<Pair<String, INumber>> locals, List<SwayEffect> effects, ResourceLocation icon) {
+	public SwayRecipe(List<RelishCondition> relish, int priority, List<Pair<String, INumber>> locals, List<SwayEffect> effects, Identifier icon) {
 		super();
 		this.relish = relish;
 		this.priority = priority;
@@ -93,14 +93,14 @@ public class SwayRecipe  extends IDataRecipe{
 	}
 
 	/*
-	public SwayRecipe(ResourceLocation id,FriendlyByteBuf jo) {
+	public SwayRecipe(Identifier id,FriendlyByteBuf jo) {
 		super(id);
 		relish=SerializeUtil.readList(jo, RelishConditions::of);
 		priority=jo.readVarInt();
 		locals=new LinkedHashMap<>();
 		SerializeUtil.readList(jo,b->Pair.of(b.readUtf(),Expression.of(b))).forEach(d->locals.put(d.getFirst(), d.getSecond()));
 		effects=SerializeUtil.readList(jo,SwayEffect::new);
-		icon=jo.readResourceLocation();
+		icon=jo.readIdentifier();
 		
 	}*/
 /*
@@ -109,7 +109,7 @@ public class SwayRecipe  extends IDataRecipe{
 		pb.writeVarInt(priority);
 		SerializeUtil.writeList(pb, locals.entrySet(),(t,b)->{b.writeUtf(t.getKey());t.getValue().write(b);});
 		SerializeUtil.writeList(pb,effects,Writeable::write);
-		pb.writeResourceLocation(icon);
+		pb.writeIdentifier(icon);
 	}*/
 	public IEnvironment createChildEnv(IEnvironment par) {
 		return new VariantEnvironment(par,locals);

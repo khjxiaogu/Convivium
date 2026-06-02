@@ -25,12 +25,13 @@ import com.teammoeg.caupona.network.CPBaseBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 public class AqueductBlockEntity extends CPBaseBlockEntity {
@@ -54,20 +55,19 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		if(nbt.contains("from"))
-			from=Direction.values()[nbt.getInt("from")];
-		tonxt=nbt.getInt("processMax");
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
+		from=nbt.read("from", Direction.CODEC).orElse(null);
+		tonxt=nbt.getIntOr("processMax",0);
 		if(!isClient) {
 			
-			nxt=nbt.getInt("process");
+			nxt=nbt.getIntOr("process",0);
 		}
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		if(from!=null)
-			nbt.putInt("from", from.ordinal());
+			nbt.store("from", Direction.CODEC,from);
 		nbt.putInt("processMax", tonxt);
 		if(!isClient) {
 			
@@ -86,7 +86,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 	}
 	@Override
 	public void tick() {
-		if(this.level.isClientSide) {
+		if(this.level.isClientSide()) {
 			if(tonxt>0) {
 				if(from!=null) {
 					Vec3 center=this.getBlockPos().getCenter();
@@ -125,7 +125,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			if(nxt<=0) {
 				Direction[] dirs=this.getBlockState().getValue(AqueductBlock.CONN).getNext(from);
 				if(dirs.length>0) {
-					Direction moving=dirs[this.level.random.nextInt(dirs.length)];
+					Direction moving=dirs[this.level.getRandom().nextInt(dirs.length)];
 					move(moving);
 					tonxt=0;
 					nxt=0;
@@ -156,7 +156,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
 				this.level.removeBlockEntity(src);
 				this.level.setBlock(dest, bs, 1|2);
-				this.level.getBlockEntity(dest).loadWithComponents(nbt, this.getLevel().registryAccess());
+				this.level.setBlockEntity(BlockEntity.loadStatic(dest, bs, nbt, level.registryAccess()));
 			}else {
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
 				this.level.setBlock(dest, bs, 1|2);

@@ -37,6 +37,7 @@ import com.khjxiaogu.convivium.util.evaluator.ConstantEnvironment;
 import com.khjxiaogu.convivium.util.evaluator.VariantEnvironment;
 import com.mojang.datafixers.util.Pair;
 import com.teammoeg.caupona.data.recipes.IPendingContext;
+import com.teammoeg.caupona.util.ChancedEffect;
 import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.FloatemTagStack;
 import com.teammoeg.caupona.util.ResultCachingMap;
@@ -130,16 +131,18 @@ public class BeveragePendingContext extends IPendingContext {
 
 	public List<CurrentSwayInfo> handleSway(BeverageInfo info) {
 		info.swayeffects.clear();
-		List<CurrentSwayInfo> swi = SwayRecipe.recipes.stream().map(RecipeHolder::value).map(this::handleSwayRecipe).flatMap(Optional::stream)
+		List<CurrentSwayInfo> swi = SwayRecipe.recipes.stream().map(t -> t.value()).map(this::handleSwayRecipe).flatMap(Optional::stream)
 			.map(t -> {
-				info.swayeffects.addAll(t.getFirst());
+				for(MobEffectInstance me:t.getFirst())
+					info.swayeffects.add(new ChancedEffect(me,1f));
 				return t.getSecond();
 			})
 			.flatMap(Optional::stream)
 			.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
 			.collect(Collectors.toList());
-		info.swayeffects.sort(Comparator.<MobEffectInstance, String>comparing(e -> e.getEffect().getRegisteredName())
-			.thenComparingInt(e -> e.getAmplifier()).thenComparingInt(e -> e.getDuration()));
+		info.swayeffects.sort(
+			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
+			.thenComparing(e -> e.chance));
 		info.recalculateHAS();
 		return swi;
 	}

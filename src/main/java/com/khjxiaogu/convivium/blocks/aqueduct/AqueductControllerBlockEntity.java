@@ -28,9 +28,9 @@ import com.teammoeg.caupona.util.LazyTickWorker;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 public class AqueductControllerBlockEntity extends AqueductBlockEntity implements KineticConnected,Cog{
@@ -66,15 +66,15 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		speed = nbt.getInt("speed");
-		process.read(nbt,"kttic");
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
+		speed = nbt.getIntOr("speed",0);
+		process.read(nbt.childOrEmpty("kttic"));
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		nbt.putInt("speed", speed);
-		process.write(nbt,"kttic");
+		process.write(nbt.child("kttic"));
 	}
 
 	
@@ -82,7 +82,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 	@Override
 	public void tick() {
 		BlockState state=this.getBlockState();
-		if(this.level.isClientSide) {
+		if(this.level.isClientSide()) {
 			if(state.getValue(KineticBasedBlock.ACTIVE)&&!state.getValue(KineticBasedBlock.LOCKED)) {
 				Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
 				Direction moving;

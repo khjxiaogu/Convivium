@@ -36,7 +36,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -44,12 +44,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class RelishRecipe extends IDataRecipe {
-	public ResourceLocation tag;
+	public Identifier tag;
 	public String relishName;
 	public Map<String,Float> variantData=new HashMap<>();
 	public TextColor color;
 	public static Map<String, RecipeHolder<RelishRecipe>> recipes;
-	public RelishRecipe(String name, ResourceLocation tag, String color) {
+	public RelishRecipe(String name, Identifier tag, String color) {
 		this.relishName=name;
 		this.tag = tag;
 		this.color = TextColor.parseColor(color).getOrThrow();
@@ -57,7 +57,7 @@ public class RelishRecipe extends IDataRecipe {
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
 	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
 	public static final MapCodec<RelishRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-		ResourceLocation.CODEC.fieldOf("tag").forGetter(o->o.tag),
+		Identifier.CODEC.fieldOf("tag").forGetter(o->o.tag),
 		Codec.STRING.fieldOf("relish").forGetter(o->o.relishName),
 		Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()))),
 		TextColor.CODEC.optionalFieldOf("color",TextColor.fromLegacyFormat(ChatFormatting.WHITE)).forGetter(o->o.color)
@@ -65,7 +65,7 @@ public class RelishRecipe extends IDataRecipe {
 	public RelishRecipe() {
 	}
 
-	public RelishRecipe(ResourceLocation tag, String relishName, Optional<List<Pair<String, Float>>> variantData,TextColor color) {
+	public RelishRecipe(Identifier tag, String relishName, Optional<List<Pair<String, Float>>> variantData,TextColor color) {
 		super();
 		this.tag = tag;
 		this.relishName = relishName;
@@ -73,10 +73,10 @@ public class RelishRecipe extends IDataRecipe {
 		this.color = color;
 	}
 /*
-	public RelishRecipe(ResourceLocation id,FriendlyByteBuf pb) {
+	public RelishRecipe(Identifier id,FriendlyByteBuf pb) {
 		super(id);
 		relishName=pb.readUtf();
-		tag=pb.readResourceLocation();
+		tag=pb.readIdentifier();
 		color=pb.readUtf();
 		variantData=SUtils.fromPacket(pb);
 	}*/
@@ -97,7 +97,7 @@ public class RelishRecipe extends IDataRecipe {
 /*
 	public void write(FriendlyByteBuf pb) {
 		pb.writeUtf(relishName);
-		pb.writeResourceLocation(tag);
+		pb.writeIdentifier(tag);
 		pb.writeUtf(color);
 		SUtils.toPacket(pb, variantData);
 	}*/

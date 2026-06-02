@@ -30,11 +30,11 @@ import com.teammoeg.caupona.client.util.GuiUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class PamScreen extends AbstractContainerScreen<PamContainer> {
-	private ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/gui/pestle_and_mortar.png");
+	private Identifier TEXTURE = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/pestle_and_mortar.png");
 
 	PamBlockEntity blockEntity;
 

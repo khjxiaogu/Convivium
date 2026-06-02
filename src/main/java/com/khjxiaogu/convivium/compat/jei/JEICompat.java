@@ -43,14 +43,14 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
 	@Override
-	public ResourceLocation getPluginUid() {
-		return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "jei_plugin");
+	public Identifier getPluginUid() {
+		return Identifier.fromNamespaceAndPath(CVMain.MODID, "jei_plugin");
 	}
 
 	@Override

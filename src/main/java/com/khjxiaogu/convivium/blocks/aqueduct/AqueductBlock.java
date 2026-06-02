@@ -147,8 +147,8 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 				if(aq.tonxt>0&&aq.from!=null) {
 					Direction[] dirs=pState.getValue(AqueductBlock.CONN).getNext(aq.from);
 					if(dirs.length>0) {
-						Vec3i v3=dirs[pLevel.random.nextInt(dirs.length)].getNormal();
-						Vec3i vd=v3.offset(aq.from.getOpposite().getNormal());
+						Vec3i v3=dirs[pLevel.getRandom().nextInt(dirs.length)].getUnitVec3i();
+						Vec3i vd=v3.offset(aq.from.getOpposite().getUnitVec3i());
 						//System.out.println(v3);
 						float spd=40f/aq.tonxt;
 						pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0125).add(Vec3.atLowerCornerOf(vd).scale(0.0125)).scale(spd*0.5));

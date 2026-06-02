@@ -20,65 +20,59 @@ package com.khjxiaogu.convivium.client;
 
 import java.util.List;
 
+import com.khjxiaogu.convivium.CVComponents;
+import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.mojang.datafixers.util.Either;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class FountainSplashParticle extends TextureSheetParticle {
+public class FountainSplashParticle extends SingleQuadParticle {
+	Layer layer;
 	FountainSplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet, Either<ItemStack, FluidStack> stacks) {
-		super(pLevel, pX, pY, pZ);
+		super(pLevel, pX, pY, pZ,spriteSet.first());
 		this.setSize(0.01F, 0.01F);
 		this.lifetime = 20;
 		this.setColor(0.3F, 0.5F, 1.0F);
 		stacks.ifLeft(stack -> {
-			//tint
-			int tint = 0xfffffff;
-			int tclr = Minecraft.getInstance().getItemColors().getColor(stack, 0);
-			if(tclr!=-1)
-				tint=tclr;
-			//System.out.println(Integer.toHexString(tint));
-			//sprite
-			
-			this.setColor(FastColor.ARGB32.red(tint) / 255f, FastColor.ARGB32.green(tint) / 255f, FastColor.ARGB32.blue(tint) / 255f);
-			float alpha = FastColor.ARGB32.alpha(tint) / 255F;
-			//System.out.println("i"+alpha);
-			
-			this.setAlpha(alpha == 0 ? 1 : alpha);
 			this.setSpriteFromAge(spriteSet);
-			this.pickSprite(spriteSet);
-			renderType=ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+			BeverageInfo cmp=stack.get(CVComponents.BEVERAGE_INFO);
+			if(cmp!=null) {
+				int tint=cmp.getIColor();
+				this.setColor(ARGB.redFloat(tint), ARGB.greenFloat(tint), ARGB.blueFloat(tint));
+				float alpha = ARGB.alphaFloat(tint);
+				this.setAlpha(alpha == 0 ? 1 : alpha);
+			}
+			
+			layer=Layer.TRANSLUCENT;
 		});
 		
 		stacks.ifRight(stack -> {
 			//System.out.println("right");
-			IClientFluidTypeExtensions attr = IClientFluidTypeExtensions.of(stack.getFluid());
-			TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
-				.getSprite(attr.getStillTexture(stack));
-			int tint = attr.getTintColor(stack);
+			FluidModel model=FluidRenderHelper.getFluidModel(stack);
+			int tint = FluidRenderHelper.getFluidColor(model, stack);
 			
-			this.setColor(FastColor.ARGB32.red(tint) / 255f, FastColor.ARGB32.green(tint) / 255f, FastColor.ARGB32.blue(tint) / 255f);
-			float alpha = FastColor.ARGB32.alpha(tint) / 255F;
+			this.setColor(ARGB.redFloat(tint), ARGB.greenFloat(tint), ARGB.blueFloat(tint));
+			float alpha = ARGB.alphaFloat(tint);
 			this.setAlpha(alpha == 0 ? 1 : alpha);
 			//System.out.println("f"+alpha);
 			this.setSprite(sprite);
 			v1=(v1-v0)/8+v0;
 			u1=(u1-u0)/8+u0;
-			renderType=ParticleRenderType.TERRAIN_SHEET;
+			layer=Layer.TRANSLUCENT;
 			this.quadSize/=8;
 		});
 
@@ -128,11 +122,6 @@ public class FountainSplashParticle extends TextureSheetParticle {
 	protected float getV1() {
 		return v1;
 	}
-	ParticleRenderType renderType;
-	@Override
-    public ParticleRenderType getRenderType() {
-        return renderType;
-    }
 
 	private boolean stoppedByCollision;
 	private boolean isSplashed;
@@ -195,9 +184,14 @@ public class FountainSplashParticle extends TextureSheetParticle {
 			this.sprites = pSprites;
 		}
 
-		public Particle createParticle(InputParticleOption pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+		public Particle createParticle(InputParticleOption pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, RandomSource random) {
 			return new FountainSplashParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.sprites, pType.getStack());
 		}
+	}
+
+	@Override
+	protected Layer getLayer() {
+		return layer;
 	}
 
 }

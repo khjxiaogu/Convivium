@@ -18,105 +18,124 @@
 
 package com.khjxiaogu.convivium.blocks.basin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.khjxiaogu.convivium.util.RotationUtils;
+import com.teammoeg.caupona.CPCapability;
 import com.teammoeg.caupona.blocks.stove.IStove;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
+import com.teammoeg.caupona.util.RecipeHandleStatus;
 import com.teammoeg.caupona.util.RecipeHandler;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.RangedWrapper;
+import net.neoforged.neoforge.transfer.RangedResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider {
-	public ItemStackHandler inv = new ItemStackHandler(5) {
-		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			return slot < 1&&BasinRecipe.testInput(stack);
-		}
+	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(5) {
 
 		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
-			if(slot<2)
+		protected void onContentsChanged(int index, ItemStack previousContents) {
+			super.onContentsChanged(index, previousContents);
+			if(index<1)
 				recipeHandler.onContainerChanged();
 			setChanged();
 		}
-	};
-	public final FluidTank tankin = new FluidTank(1000) {
-
 		@Override
-		protected void onContentsChanged() {
-			super.onContentsChanged();
+		public boolean isValid(int index, ItemResource resource) {
+			return index > 0||BasinRecipe.testInput(resource.toStack());
+		}
+	};
+	public final FluidStacksResourceHandler tankin = new FluidStacksResourceHandler(1,1000) {
+		@Override
+		protected void onContentsChanged(int index, FluidStack previousContents) {
+			super.onContentsChanged(index, previousContents);
 			recipeHandler.onContainerChanged();
 			syncData();
 		}
 		
 	};
-	public RecipeHandler<BasinRecipe> recipeHandler=new RecipeHandler<>(()->{
-		RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
+	public RecipeHandler<BasinRecipe> recipeHandler=new RecipeHandler<>(id->{
+		FluidResource fr=tankin.getResource(0);
+		int fluidCount=tankin.getAmountAsInt(0);
+		FluidStack fluid=fr.toStack(fluidCount);
+		ItemResource ir=inv.getResource(0);
+		int itemCount=inv.getAmountAsInt(0);
+		ItemStack is=ir.toStack(itemCount);
+		RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(id,fluid,is,this.getBlockState().is(CVBlocks.lead_basin.get()));
 		if(recipe!=null) {
-			items=recipe.value().handle(tankin.getFluidInTank(0),inv.getStackInSlot(0));
+			int itemIn=recipe.value().item.count();
+			int fluidIn=recipe.value().in.amount();
+			try(Transaction trans=Transaction.openRoot()){
+				if(tankin.extract(0, fr, fluidIn, trans)==fluidIn) {
+					if(inv.extract(0, ir, itemIn, trans)==itemIn) {
+						for(ItemStackTemplate ist:recipe.value().output) {
+							ItemResource iro=ItemResource.of(ist);
+							int amt=ist.count();
+							for(int i=1;i<5;i++) {
+								amt-=inv.insert(0, iro, amt, trans);
+								if(amt<=0)
+									break;
+							}
+							if(amt>0)
+								return RecipeHandleStatus.BLOCKED;
+						}
+						return RecipeHandleStatus.SUCCEED;
+					}
+				}
+			
+			}
 		}
+		return RecipeHandleStatus.FAILED;
 	});
-	public List<ItemStack> items=new ArrayList<>();
 	public boolean isLastHeating;
 	public BasinBlockEntity( BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.BASIN.get(), pWorldPosition, pBlockState);
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
 		recipeHandler.readCustomNBT(nbt, isClient);
-		tankin.readFromNBT(ra,nbt.getCompound("in"));
+		nbt.readChild("tank", tankin);
 		if(!isClient) {
-			inv.deserializeNBT(ra,nbt.getCompound("inv"));
-			ListTag list=nbt.getList("outBuff",10);
-			items=new ArrayList<>();
-			for(int i=0;i<list.size();i++) {
-				items.add(ItemStack.parse(ra,list.getCompound(i)).orElse(ItemStack.EMPTY));
-			}
+			nbt.readChild("inv", inv);
 		}
-		isLastHeating=nbt.getBoolean("heating");
+		isLastHeating=nbt.getBooleanOr("heating",false);
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		nbt.putBoolean("heating", isLastHeating);
 		recipeHandler.writeCustomNBT(nbt, isClient);
-		nbt.put("in",tankin.writeToNBT(ra, new CompoundTag()));
+		nbt.putChild("tank", tankin);
 		
 		if(!isClient) {
-			nbt.put("inv", inv.serializeNBT(ra));
-			ListTag tl=new ListTag();
-			items.forEach(t->tl.add(t.save(ra)));
-			nbt.put("outBuff", tl);
+			nbt.putChild("inv", inv);
 		}
 	}
 
@@ -126,29 +145,30 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 	}
 	public void spawnParticleFor(ItemStack is) {
 		if(is.isEmpty())return;
-		ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, is);
+		ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(is));
 		Vec3 rot=new Vec3(0,0,1).yRot((float) RotationUtils.getRotationAngle(0,this.getBlockPos())).scale(0.3f);
 		Vec3 center = Vec3.atCenterOf(this.getBlockPos()).add(rot);
-		Vec3 target=Vec3.ZERO.offsetRandom(this.level.random,0.2f).multiply(1,0,1).add(0, 0.2, 0);
+		Vec3 target=Vec3.ZERO.offsetRandom(this.level.getRandom(),0.2f).multiply(1,0,1).add(0, 0.2, 0);
 		level.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
 	}
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
-		if(level.isClientSide) {
+		if(level.isClientSide()) {
 			return;
-		}
-		if(!items.isEmpty()) {
-			items.replaceAll(t->Utils.insertToOutput(inv,4,Utils.insertToOutput(inv,3,Utils.insertToOutput(inv,2,Utils.insertToOutput(inv,1,t)))));
-			items.removeIf(ItemStack::isEmpty);
-			this.setChanged();
 		}
 		
 		if(recipeHandler.getProcessMax()>0) {
 			boolean preIsLastHeating=isLastHeating;
 			boolean ticked=false;
-			if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
-				ticked=recipeHandler.tickProcess(stove.requestHeat());
+			if (level.getCapability(CPCapability.HEAT_STOVE, worldPosition.below(), Direction.UP) instanceof IStove stove && stove.canEmitHeat()) {
+				try(Transaction trans=Transaction.openRoot()){
+					ticked=recipeHandler.tickProcess(stove.requestHeat(2,trans));
+					if(ticked) {
+						trans.commit();
+						this.setChanged();
+					}
+				}
 				isLastHeating = true;
 			}else isLastHeating = false;
 			if(preIsLastHeating!=isLastHeating||ticked) {
@@ -156,13 +176,14 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 			}
 		}
 			
-		if (level.getBlockEntity(worldPosition.below()) instanceof IStove stove && stove.canEmitHeat()) {
+		if (level.getCapability(CPCapability.HEAT_STOVE, worldPosition.below(), Direction.UP) instanceof IStove stove && stove.canEmitHeat()) {
 			if(recipeHandler.shouldTestRecipe()) {
 				isLastHeating = false;
-				
-				RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(tankin.getFluid(),inv.getStackInSlot(0),this.getBlockState().is(CVBlocks.lead_basin.get()));
+				FluidStack fluid=tankin.getResource(0).toStack(tankin.getAmountAsInt(0));
+				ItemStack is=inv.getResource(0).toStack(inv.getAmountAsInt(0));
+				RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(fluid,is,this.getBlockState().is(CVBlocks.lead_basin.get()));
 				if(recipe!=null) {
-					recipeHandler.setRecipe(recipe);
+					recipeHandler.setRecipe(recipe,recipe.value().getTime());
 					this.syncData();
 				}
 			}
@@ -184,12 +205,12 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 	@Override
 	public Object getCapability(BlockCapability<?, Direction> type, Direction d) {
 
-		if(type==Capabilities.FluidHandler.BLOCK)
+		if(type==Capabilities.Fluid.BLOCK)
 			return tankin;
-		if(type==Capabilities.ItemHandler.BLOCK) {
+		if(type==Capabilities.Item.BLOCK) {
 			if (d == Direction.DOWN)
-				return new RangedWrapper(inv, 3, 6);
-			return new RangedWrapper(inv, 0, 3);
+				return RangedResourceHandler.of(inv, 1, 5);
+			return RangedResourceHandler.of(inv, 0, 1);
 		}
 		return super.getCapability(type, d);
 	}

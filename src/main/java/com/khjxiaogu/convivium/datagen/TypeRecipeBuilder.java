@@ -30,8 +30,11 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondi
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -40,8 +43,8 @@ import net.minecraft.world.level.material.Fluid;
 
 public class TypeRecipeBuilder {
 	private BeverageTypeRecipe recipe;
-	ResourceLocation rl;
-	public TypeRecipeBuilder(ResourceLocation rl,Fluid out) {
+	Identifier rl;
+	public TypeRecipeBuilder(Identifier rl,Fluid out) {
 		recipe=new BeverageTypeRecipe();
 		recipe.output=out;
 		this.rl=rl;
@@ -51,26 +54,26 @@ public class TypeRecipeBuilder {
 		return this;
 	}
 	public TypeRecipeBuilder mustContains(ItemStack igd) {
-		return mustContains(Ingredient.of(igd));
+		return mustContains(Ingredient.of(igd.getItem()));
 	}
 	public TypeRecipeBuilder mustContains(Item igd) {
 		return mustContains(Ingredient.of(igd));
 	}
 	public TypeRecipeBuilder mustContains(TagKey<Item> igd) {
-		return mustContains(Ingredient.of(igd));
+		return mustContains(Ingredient.of(BuiltInRegistries.ITEM.get(igd).get()));
 	}
 	public TypeRecipeBuilder canContains(Ingredient igd) {
 		recipe.optional.add(igd);
 		return this;
 	}
 	public TypeRecipeBuilder canContains(ItemStack igd) {
-		return canContains(Ingredient.of(igd));
+		return canContains(Ingredient.of(igd.getItem()));
 	}
 	public TypeRecipeBuilder canContains(Item igd) {
 		return canContains(Ingredient.of(igd));
 	}
 	public TypeRecipeBuilder canContains(TagKey<Item> igd) {
-		return canContains(Ingredient.of(igd));
+		return canContains(Ingredient.of(BuiltInRegistries.ITEM.get(igd).get()));
 	}
 	private RelishCondition temp;
 	private BiFunction<RelishCondition,RelishCondition,LogicalRelishCondition> condition;
@@ -135,6 +138,6 @@ public class TypeRecipeBuilder {
 		if(temp!=null) {
 			recipe.relish.add(temp);
 		}
-		out.accept(rl,recipe,null);
+		out.accept(ResourceKey.create(Registries.RECIPE, rl),recipe,null);
 	}
 }

@@ -18,7 +18,7 @@
 
 package com.khjxiaogu.convivium;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
@@ -33,7 +33,7 @@ public class CVTags {
 		public static TagKey<Block> AQUEDUCT_MOVE = create("aqueduct_movable");
 
 		private static TagKey<Block> create(String s) {
-			return BlockTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
+			return BlockTags.create(Identifier.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 
 	}
@@ -47,7 +47,7 @@ public class CVTags {
 		public static TagKey<Item> ASSES = create("asses");
 
 		private static TagKey<Item> create(String s) {
-			return ItemTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
+			return ItemTags.create(Identifier.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 	}
 
@@ -55,7 +55,7 @@ public class CVTags {
 		public static TagKey<Fluid> MENDABLE = create("mending_machine_fluid");
 
 		private static TagKey<Fluid> create(String s) {
-			return FluidTags.create(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s));
+			return FluidTags.create(Identifier.fromNamespaceAndPath(CVMain.MODID, s));
 		}
 
 	}

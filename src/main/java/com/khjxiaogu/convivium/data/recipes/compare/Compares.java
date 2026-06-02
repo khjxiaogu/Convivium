@@ -21,8 +21,14 @@ package com.khjxiaogu.convivium.data.recipes.compare;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.khjxiaogu.convivium.data.recipes.relishcondition.AbstractRelishCondition;
+import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
 import com.mojang.serialization.Codec;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.StringRepresentable.StringRepresentableCodec;
 
@@ -52,6 +58,6 @@ public class Compares {
 		
 	}
 	public static final Codec<Compare> CODEC=new StringRepresentableCodec<>(Comparators.values(), Comparators::valueOf,Comparators::ordinal).xmap(v->v.comp, map::get);
-
-
+	public static final StreamCodec<ByteBuf,Compare> STREAM_CODEC=ByteBufCodecs.VAR_INT.map(i->Comparators.values()[i].comp, i->map.get(i).ordinal());
+		
 }

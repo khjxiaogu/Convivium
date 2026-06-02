@@ -82,7 +82,7 @@ public class CamelliaFlowerBlock extends CropBlock {
 	}
 
 	protected int getBonemealAgeIncrease(Level pLevel) {
-		return Mth.nextInt(pLevel.random, 1, 2);
+		return Mth.nextInt(pLevel.getRandom(), 1, 2);
 	}
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {

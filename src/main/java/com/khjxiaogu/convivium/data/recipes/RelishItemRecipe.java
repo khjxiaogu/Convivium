@@ -62,7 +62,7 @@ public class RelishItemRecipe extends IDataRecipe {
 	}
 
 	/*
-	public RelishItemRecipe(ResourceLocation id,FriendlyByteBuf pb) {
+	public RelishItemRecipe(Identifier id,FriendlyByteBuf pb) {
 		super(id);
 		item=Ingredient.fromNetwork(pb);
 		relish=pb.readUtf();

@@ -19,7 +19,6 @@
 package com.khjxiaogu.convivium.util;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +27,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.util.FloatemStack;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -36,15 +36,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 
 public final class FloatSizedOrCatalystIngredient {
 	public static final Codec<Float> NON_NEGATIVE_FLOAT=Codec.FLOAT.validate(t->t>=0?DataResult.success(t):DataResult.error(()->("Value must be non-negative: "+t)));
-	public static final Codec<FloatSizedOrCatalystIngredient> FLAT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		Ingredient.MAP_CODEC_NONEMPTY.forGetter(FloatSizedOrCatalystIngredient::ingredient),
-		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(NON_NEGATIVE_FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))
-		.apply(instance, FloatSizedOrCatalystIngredient::new));
 
 	/**
 	 * The "nested" codec for {@link SizedIngredient}.
@@ -63,7 +58,7 @@ public final class FloatSizedOrCatalystIngredient {
 	 * }</pre>
 	 */
 	public static final Codec<FloatSizedOrCatalystIngredient> NESTED_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(FloatSizedOrCatalystIngredient::ingredient),
+		Ingredient.CODEC.fieldOf("ingredient").forGetter(FloatSizedOrCatalystIngredient::ingredient),
 		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(NON_NEGATIVE_FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))
 		.apply(instance, FloatSizedOrCatalystIngredient::new));
 
@@ -86,7 +81,7 @@ public final class FloatSizedOrCatalystIngredient {
 	 * tag.
 	 */
 	public static FloatSizedOrCatalystIngredient of(TagKey<Item> tag, int count) {
-		return new FloatSizedOrCatalystIngredient(Ingredient.of(tag), count);
+		return new FloatSizedOrCatalystIngredient(Ingredient.of(BuiltInRegistries.ITEM.get(tag).get()), count);
 	}
 
 	private final Ingredient ingredient;
@@ -126,10 +121,11 @@ public final class FloatSizedOrCatalystIngredient {
 	 * @implNote the array is cached and should not be modified, just like
 	 *           {@link Ingredient#getItems()}.
 	 */
+	@SuppressWarnings("deprecation")
 	public FloatemStack[] getItems() {
 		if (cachedStacks == null) {
-			cachedStacks = Stream.of(ingredient.getItems())
-				.map(s -> new FloatemStack(s, count))
+			cachedStacks = ingredient.items()
+				.map(s -> new FloatemStack(new ItemStack(s.value()), count))
 				.toArray(FloatemStack[]::new);
 		}
 		return cachedStacks;

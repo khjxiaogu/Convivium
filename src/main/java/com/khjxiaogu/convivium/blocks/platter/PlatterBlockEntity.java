@@ -18,8 +18,6 @@
 
 package com.khjxiaogu.convivium.blocks.platter;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
@@ -27,8 +25,6 @@ import com.teammoeg.caupona.util.IInfinitable;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,23 +32,25 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitable,MenuProvider {
-	public ItemStackHandler storage=new ItemStackHandler(4) {
+	public ItemStacksResourceHandler storage=new ItemStacksResourceHandler(4) {
+
 		@Override
-		public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-			return super.isItemValid(slot, stack);
-		}
-		@Override
-		public int getSlotLimit(int slot) {
+		protected int getCapacity(int index, ItemResource resource) {
 			return 1;
 		}
+
 		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
+		protected void onContentsChanged(int index, ItemStack previousContents) {
+			super.onContentsChanged(index, previousContents);
 			syncData();
 		}
+
 	};
 	boolean isInfinite = false;
 	public GlobalConfig config=GlobalConfig.PILED;
@@ -74,19 +72,19 @@ public class PlatterBlockEntity extends CPBaseBlockEntity implements IInfinitabl
 		this.syncData();
 	}
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		storage.deserializeNBT(ra,nbt.getCompound("storage"));
-		config=GlobalConfig.values()[nbt.getInt("config")];
-		int[] its=nbt.getIntArray("slot_config");
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
+		nbt.readChild("storage", storage);
+		config=GlobalConfig.values()[nbt.getIntOr("config",0)];
+		int[] its=nbt.getIntArray("slot_config").orElseGet(()->new int[4]);
 		for(int i=0;i<4;i++) {
 			slotconfig[i]=SlotConfig.values()[its[i]];
 		}
-		isInfinite = nbt.getBoolean("inf");
+		isInfinite = nbt.getBooleanOr("inf",false);
 		renderingContext=null;
 	}
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
-		nbt.put("storage",storage.serializeNBT(ra));
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
+		nbt.putChild("storage",storage);
 		nbt.putInt("config", config.ordinal());
 		int[] its=new int[4];
 		for(int i=0;i<4;i++) {

@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.joml.Vector2i;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.include.com.google.common.base.Objects;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
@@ -51,33 +52,34 @@ import net.minecraft.world.food.FoodProperties.Builder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.fluids.capability.wrappers.BucketPickupHandlerWrapper;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+
 
 public class WolfFountainBlockEntity extends KineticTransferBlockEntity implements Cog{
-	public FluidTank fluid=new FluidTank(1000) {
-
+	public FluidStacksResourceHandler fluid=new FluidStacksResourceHandler(1,1000) {
 		@Override
-		protected void onContentsChanged() {
+		protected void onContentsChanged(int index, FluidStack previousContents) {
+			// TODO Auto-generated method stub
+			super.onContentsChanged(index, previousContents);
 			syncData();
-			super.onContentsChanged();
 		}
-
 	};
 	public ItemStack item;
-	FoodProperties appliedEffect;
+	FoodProperties appliedFood;
+	Consumable appliedConsumable;
 	int currentVersion;
 	public static final Vector2i[] spd1pos=new Vector2i[] {
 		new Vector2i(1,0),
@@ -121,10 +123,11 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 	public void resetContent() {
 		workProcess=0;
 		lasthit=null;
-		appliedEffect=null;
-		fluid.setFluid(FluidStack.EMPTY);
+		appliedFood=null;
+		appliedConsumable=null;
+		fluid.set(0, FluidResource.EMPTY, 0);
 		item=null;
-		if(!this.level.isClientSide) {
+		if(!this.level.isClientSide()) {
 			do {
 				int nxtrnd=this.level.getRandom().nextInt();
 				if(nxtrnd!=currentVersion) {
@@ -137,53 +140,47 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 		
 	}
 	@Override
-	public void readCustomNBT(CompoundTag tag, boolean arg1, Provider arg2) {
-		super.readCustomNBT(tag, arg1, arg2);
-		fluid.readFromNBT(arg2, tag.getCompound("fluid"));
-		if(tag.contains("item"))
-			item=ItemStack.parse(arg2, tag.getCompound("item")).orElse(null);
-		else
-			item=null;
+	public void readCustomNBT(ValueInput tag, boolean arg1) {
+		super.readCustomNBT(tag, arg1);
+		tag.readChild("fluid", fluid);
+		item=tag.read("item", ItemStack.CODEC).orElse(null);
 		if(!arg1) {
-			if(tag.contains("food"))
-				appliedEffect=FoodProperties.DIRECT_CODEC.decode(NbtOps.INSTANCE,tag.get("food")).resultOrPartial(CVMain.logger::error).map(t->t.getFirst()).orElse(null);
-			else
-				appliedEffect=null;
-			workProcess=tag.getInt("process");
-			if(tag.contains("lasthit"))
-				lasthit=BlockPos.CODEC.decode(NbtOps.INSTANCE, tag.get("lasthit")).resultOrPartial(CVMain.logger::error).map(t->t.getFirst()).orElse(null);
-			else
-				lasthit=null;
-			currentVersion=tag.getInt("version");
-			throwProcess= tag.getInt("emitProcess");
+			appliedFood=tag.read("food",FoodProperties.DIRECT_CODEC).orElse(null);
+			appliedConsumable=tag.read("consumable",Consumable.CODEC).orElse(null);
+			workProcess=tag.getIntOr("process",0);
+			lasthit=tag.read("lasthit", BlockPos.CODEC).orElse(null);
+			currentVersion=tag.getIntOr("version",0);
+			throwProcess= tag.getIntOr("emitProcess",0);
 		}
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag tag, boolean arg1, Provider arg2) {
-		super.writeCustomNBT(tag, arg1, arg2);
-		tag.put("fluid", fluid.writeToNBT(arg2, new CompoundTag()));
+	public void writeCustomNBT(ValueOutput tag, boolean arg1) {
+		super.writeCustomNBT(tag, arg1);
+		tag.putChild("fluid", fluid);
 		if(item!=null)
-			tag.put("item", item.save(arg2));
+			tag.store("item",ItemStack.CODEC,item);
 		if(!arg1) {
-			if(appliedEffect!=null)
-				FoodProperties.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, appliedEffect).resultOrPartial(CVMain.logger::error).ifPresent(t->tag.put("food", t));
+			if(appliedFood!=null)
+				tag.store("food",FoodProperties.DIRECT_CODEC, appliedFood);
+			if(appliedConsumable!=null)
+				tag.store("consumable",Consumable.CODEC, appliedConsumable);
 			tag.putInt("process", workProcess);
 			if(lasthit!=null)
-				BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, lasthit).resultOrPartial(CVMain.logger::error).ifPresent(t->tag.put("food", t));
+				tag.store("lasthit", BlockPos.CODEC, lasthit);
 			tag.putInt("version", currentVersion);
 			tag.putInt("emitProcess", throwProcess);
 		}
 	}
-	public void applyEffectTo(int currentVersion,BlockPos pos,Direction dir) {
-		if(this.level.isClientSide)return;
+	public void applyEffectTo(int currentVersion,BlockPos pos) {
+		if(this.level.isClientSide())return;
 		if(currentVersion==this.currentVersion) {
-			if(item!=null&&appliedEffect!=null) {//potion portion applied
+			if(item!=null&&appliedConsumable!=null) {//potion portion applied
 				return;
 			}
 			if(Objects.equal(pos, lasthit)) {
 				BlockEntity be=this.level.getBlockEntity(pos);
-				if(be instanceof IFoodContainer cont&&(item!=null||fluid.getFluidAmount()>=250)) {//transfer target
+				if(be instanceof IFoodContainer cont&&(item!=null||fluid.getAmountAsInt(0)>=250)) {//transfer target
 					workProcess++;
 					if(workProcess>=5) {
 						workProcess=0;
@@ -238,48 +235,55 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 			}
 		}
 	}
-	static final FoodProperties EMPTY=new FoodProperties.Builder().build();
+	static final Consumable EMPTY=Consumable.builder().build();
 	public void applyEffectTo(int currentVersion,LivingEntity entity) {
-		if(this.level.isClientSide)return;
+		if(this.level.isClientSide())return;
 		if(currentVersion==this.currentVersion) {
-			if(appliedEffect==null) {
+			if(appliedConsumable==null) {
 				if(item!=null) {
 					PotionContents potc=item.get(DataComponents.POTION_CONTENTS);
 					if(potc!=null) {
-						Builder fp=new FoodProperties.Builder();
+						Consumable.Builder fp = Consumable.builder();
 						StreamSupport.stream(potc.getAllEffects().spliterator(), false).map(t->ChancedEffect.createByParts(t,5)).forEach(t->t.toPossibleEffects(fp));
-						appliedEffect=fp.build();
+						appliedConsumable=fp.build();
 					}
-				}else if(!fluid.isEmpty()) {
-					CauponaHooks.getInfo(fluid.getFluid()).ifPresent(t->{
-						appliedEffect=FoodPropertieHelper.copyWithPart(t.getFood(), 5);
-					});
-					if(appliedEffect==null)
-						appliedEffect=EMPTY;
+				}else if(fluid.getAmountAsInt(0)>0) {
+					Consumable cons=fluid.getResource(0).get(DataComponents.CONSUMABLE);
+					FoodProperties food=fluid.getResource(0).get(DataComponents.FOOD);
+					appliedFood=FoodPropertieHelper.copyWithPart(food, 5);
+					appliedConsumable=FoodPropertieHelper.copyWithPart(cons, 5);
+					if(appliedConsumable==null)
+						appliedConsumable=EMPTY;
 				}
 			}
-			if(appliedEffect!=null) {
+			if(appliedConsumable!=null) {
 				ItemStack fake=new ItemStack(CVItems.POTION.get());
 				if(item!=null) { 
 					workProcess++;
-					entity.eat(getLevel(), fake,appliedEffect);
+					appliedConsumable.onConsume(level, entity, fake);
+					if(appliedFood!=null)
+						appliedFood.onConsume(level, entity, fake, appliedConsumable);
 					if(workProcess==5) {
 						resetContent();
 					}
-				} else if(!fluid.isEmpty()){
-					FluidStack drained=fluid.drain(50, FluidAction.EXECUTE);
-					if(!drained.isEmpty()) {
-						
-						entity.eat(getLevel(), fake,appliedEffect);
-						if(drained.getFluidType().getTemperature()>270) {
-					        if (!entity.fireImmune()) {
-					            entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
-					            if (entity.getRemainingFireTicks() == 0) {
-					                entity.igniteForSeconds(8.0F);
-					            }
-					        }
-							if(drained.getFluidType().getTemperature()>1000)
-								entity.lavaHurt();
+				} else if(fluid.getAmountAsInt(0)>0){
+					try(Transaction trans=Transaction.openRoot()){
+						FluidResource fr=fluid.getResource(0);
+						int drained=fluid.extract(fr, 50, trans);
+						if(drained>=50) {
+							appliedConsumable.onConsume(level, entity, fake);
+							if(appliedFood!=null)
+								appliedFood.onConsume(level, entity, fake, appliedConsumable);
+							if(fr.getFluidType().getTemperature()>270) {
+						        if (!entity.fireImmune()) {
+						            entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
+						            if (entity.getRemainingFireTicks() == 0) {
+						                entity.igniteForSeconds(8.0F);
+						            }
+						        }
+								if(fr.getFluidType().getTemperature()>1000)
+									entity.lavaHurt();
+							}
 						}
 					}
 				}
@@ -289,16 +293,16 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 	@Override
 	public void tick() {
 		super.tick();
-		if(this.level.isClientSide) {
+		if(this.level.isClientSide()) {
 			if(getSpeed()>0) {
-				if(!fluid.isEmpty()) {
+				if(fluid.getAmountAsInt(0)>0) {
 				//if(this.level.getGameTime()%20==0) {
-					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
+					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getUnitVec3i();
 					Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
 					
-					this.level.addParticle(CVParticles.SPLASH.get().with(fluid.getFluid()),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
+					this.level.addParticle(CVParticles.SPLASH.get().with(fluid.getResource(0).toStack(250)),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());
 				}else if(item!=null) {
-					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
+					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getUnitVec3i();
 					
 					Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
 					this.level.addParticle(CVParticles.SPLASH.get().with(item),center.x,center.y,center.z,vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());

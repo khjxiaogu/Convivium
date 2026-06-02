@@ -24,7 +24,7 @@ import com.teammoeg.caupona.container.CPBaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class PlatterContainer extends CPBaseContainer<PlatterBlockEntity> {
 
@@ -34,10 +34,10 @@ public class PlatterContainer extends CPBaseContainer<PlatterBlockEntity> {
 
 	public PlatterContainer(int id, Inventory inv, PlatterBlockEntity blockEntity) {
 		super(CVGui.PLATTER.get(),blockEntity , id,4);
-		this.addSlot(new SlotItemHandler(blockEntity.storage, 0, 80, 22));
-		this.addSlot(new SlotItemHandler(blockEntity.storage, 1, 98, 30));
-		this.addSlot(new SlotItemHandler(blockEntity.storage, 2, 80, 38));
-		this.addSlot(new SlotItemHandler(blockEntity.storage, 3, 62, 30));
+		this.addSlot(new ResourceHandlerSlot(blockEntity.storage, blockEntity.storage::set, 0, 80, 22));
+		this.addSlot(new ResourceHandlerSlot(blockEntity.storage, blockEntity.storage::set, 1, 98, 30));
+		this.addSlot(new ResourceHandlerSlot(blockEntity.storage, blockEntity.storage::set, 2, 80, 38));
+		this.addSlot(new ResourceHandlerSlot(blockEntity.storage, blockEntity.storage::set, 3, 62, 30));
 		super.addPlayerInventory(inv, 8, 82, 140);
 	}
 	@Override

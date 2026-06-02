@@ -18,6 +18,8 @@
 
 package com.khjxiaogu.convivium.blocks.platter;
 
+import java.util.List;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
 
@@ -25,17 +27,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams.Builder;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 
@@ -58,25 +63,15 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 	public boolean useShapeForLightOcclusion(BlockState state) {
 		return true;
 	}
-
 	@Override
-	public boolean propagatesSkylightDown(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-		return true;
-	}
-
-
-
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(newState.getBlock() instanceof PlatterBlock)) {
-			if (worldIn.getBlockEntity(pos) instanceof PlatterBlockEntity dish) {
-				for(int i=0;i<dish.storage.getSlots();i++) {
-					super.popResource(worldIn, pos, dish.storage.getStackInSlot(i));
-				}
+	protected List<ItemStack> getDrops(BlockState p_state, Builder p_params) {
+		List<ItemStack> list= super.getDrops(p_state, p_params);
+		if (p_params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof PlatterBlockEntity dish) {
+			for(int i=0;i<dish.storage.size();i++) {
+				list.add(dish.storage.getResource(i).toStack(dish.storage.getAmountAsInt(i)));
 			}
-			worldIn.removeBlockEntity(pos);
 		}
-
+		return list;
 	}
 
 	public int getSlot(boolean dx,boolean dz) {
@@ -97,13 +92,13 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 	public boolean hasAnalogOutputSignal(BlockState pState) {
 		return true;
 	}
-
+	
 	@Override
-	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos,Direction dir) {
 		if (pLevel.getBlockEntity(pPos) instanceof PlatterBlockEntity dish) {
 			int sign=0;
-			for(int i=0;i<dish.storage.getSlots();i++) {
-				if(!dish.storage.getStackInSlot(i).isEmpty()) {
+			for(int i=0;i<dish.storage.size();i++) {
+				if(!dish.storage.getResource(i).isEmpty()) {
 					sign|=1<<i;
 				}
 			}
@@ -128,20 +123,20 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 		if (p.consumesAction())
 			return p;
 		if (level.getBlockEntity(pos) instanceof PlatterBlockEntity blockEntity) {
-			if (!level.isClientSide&&!blockEntity.isInfinite) {
+			if (!level.isClientSide()&&!blockEntity.isInfinite) {
 				player.openMenu(blockEntity, blockEntity.getBlockPos());
 			}
-			return InteractionResult.sidedSuccess(level.isClientSide);
+			return InteractionResult.SUCCESS_SERVER;
 		}
 		return p;
 	}
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		ItemInteractionResult p =super.useItemOn(held, state, level, pos, player, hand, hitResult);
+	protected InteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		InteractionResult p =super.useItemOn(held, state, level, pos, player, hand, hitResult);
 		if (p.consumesAction())
 			return p;
 		if (level.getBlockEntity(pos) instanceof PlatterBlockEntity blockEntity) {
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				if(blockEntity.isInfinite||player.isShiftKeyDown()) {
 					double dx=hitResult.getLocation().x-pos.getX();
 					double dz=hitResult.getLocation().z-pos.getZ();
@@ -150,33 +145,47 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 					if(blockEntity.config==GlobalConfig.PILED) {
 						if(!held.isEmpty()&&!blockEntity.isInfinite) {
 							for(int i=0;i<4;i++) {
-								if(blockEntity.storage.getStackInSlot(i).isEmpty()) {
-									blockEntity.storage.setStackInSlot(i,held.split(1));
+								if(blockEntity.storage.getResource(i).isEmpty()) {
+									blockEntity.storage.set(i,ItemResource.of(held.split(1)),1);
 									player.setItemInHand(hand, held);
 									break;
 								}
 							}
 						}else
 							for(int i=3;i>=0;i--) {
-								ItemStack ret=blockEntity.storage.getStackInSlot(i);
+								ItemResource ret=blockEntity.storage.getResource(i);
 								if(!ret.isEmpty()) {
-									ItemHandlerHelper.giveItemToPlayer(player, ret.copy());
-									if(!blockEntity.isInfinite)
-										blockEntity.storage.setStackInSlot(i,ItemStack.EMPTY);
+									try(Transaction trans=Transaction.openRoot()){
+										int amt=blockEntity.storage.extract(i, ret, 1, trans);
+										if(amt>0)
+											player.getInventory().placeItemBackInInventory(ret.toStack(amt));
+										if(!blockEntity.isInfinite)
+											trans.commit();
+									}
 									break;
 								}
 							}
 					}else {
 						int slot=getSlot(ddx,ddz);
-						ItemStack orig=blockEntity.storage.getStackInSlot(slot);
-						if(!orig.isEmpty()) {
-							ItemHandlerHelper.giveItemToPlayer(player, orig.copy());
-							orig=ItemStack.EMPTY;
-						}else if(!blockEntity.isInfinite){
-							orig=held.split(1);
+						ItemResource orig=blockEntity.storage.getResource(slot);
+						try(Transaction trans=Transaction.openRoot()){
+							if(!orig.isEmpty()) {
+
+								int amt=blockEntity.storage.extract(slot, orig, 1, trans);
+								player.getInventory().placeItemBackInInventory(orig.toStack(amt));
+								if(!blockEntity.isInfinite)
+									trans.commit();
+							}else if(!blockEntity.isInfinite){
+								ItemAccess ia=ItemAccess.forPlayerInteraction(player, hand);
+								ItemResource hld=ia.getResource();
+								int amt=ia.extract(hld, 1, trans);
+								if(amt>0) {
+									blockEntity.storage.insert(slot, hld, amt, trans);
+									trans.commit();
+								}
+							}
+							
 						}
-						if(!blockEntity.isInfinite)
-							blockEntity.storage.setStackInSlot(slot,orig);
 					}
 				}else
 					player.openMenu( blockEntity, blockEntity.getBlockPos());
@@ -184,4 +193,5 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 		}
 		return p;
 	}
+
 }

@@ -18,49 +18,66 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
+import org.jspecify.annotations.Nullable;
+
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import com.teammoeg.caupona.client.util.ModelUtils;
 
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
-public abstract class RotationRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+public abstract class RotationRenderer<T extends BlockEntity,S extends RotationRenderState> implements BlockEntityRenderer<T,S> {
+	private final QuadInstance quadInstance = new QuadInstance();
 	/**
 	 * @param rendererDispatcherIn  
 	 */
-	public RotationRenderer() {
+	public RotationRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 	}
 	public abstract DynamicBlockModelReference getMainRotor(BlockState bs,T be);
 
-	@SuppressWarnings({ "deprecation", "resource" })
+	@SuppressWarnings("unused")
+	public void customRender(S state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, QuadInstance instance) {};
+	@SuppressWarnings("unused")
+	public void customRenderRotated(S state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, QuadInstance instance) {}
 	@Override
-	public void render(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {
-		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
-			return;
-		BlockState state = blockEntity.getBlockState();
-		DynamicBlockModelReference model=getMainRotor(state,blockEntity);
-		if(model==null)return;
-		matrixStack.pushPose();
-		this.customRender(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
-		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
-		if(active) 
-			matrixStack.rotateAround(RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos()),0.5f,0.5f,0.5f);
-		this.customRenderRotated(blockEntity, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
-		if(active) 
-			ModelUtils.tesellateModel(blockEntity,model,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedOverlayIn);
-		matrixStack.popPose();
+	public void extractRenderState(T blockEntity, S state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+		state.rotation=RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos());
+		BlockState blockState=blockEntity.getBlockState();
+		state.rotor=getMainRotor(blockState,blockEntity);
+		if(blockState.hasProperty(KineticBasedBlock.ACTIVE))
+			state.active=blockState.getValue(KineticBasedBlock.ACTIVE);
 	}
-	@SuppressWarnings("unused")
-	public void customRender(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {};
-	@SuppressWarnings("unused")
-	public void customRenderRotated(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {};
+	@Override
+	public void submit(S state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		if(state.rotor==null)return;
+		quadInstance.setLightCoords(state.lightCoords);
+		quadInstance.setOverlayCoords(OverlayTexture.NO_OVERLAY);
+		poseStack.pushPose();
+		this.customRender(state, poseStack, submitNodeCollector, camera, quadInstance);
+		if(state.active) 
+			poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
+		this.customRenderRotated(state, poseStack, submitNodeCollector, camera, quadInstance);
+		if(state.active) {
+			submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose,buffer)->{
+				for(BakedQuad quad:state.rotor.get().getAll()) {
+					buffer.putBakedQuad(pose, quad, quadInstance);
+				}
+			});
+			
+		}
+		poseStack.popPose();
+	};
 }

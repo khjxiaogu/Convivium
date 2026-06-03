@@ -18,51 +18,59 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
+
 import org.joml.Quaternionf;
 
-import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.teammoeg.caupona.blocks.CPHorizontalBlock;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 
-public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlockEntity> {
+public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlockEntity,VendingRenderState> {
 	static final Quaternionf rotation= new Quaternionf().rotateAxis((float) Math.PI,0,0,1);
-	@SuppressWarnings({ "deprecation", "resource" })
+	/**
+	 * @param rendererDispatcherIn  
+	 */
+	public VendingRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+	}
 	@Override
-	public void render(BeverageVendingBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {
-		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
-			return;
-		BlockState state = blockEntity.getBlockState();
-		if(!state.is(CVBlocks.BEVERAGE_VENDING_MACHINE.get()))return;
-		Direction dir=state.getValue(CPHorizontalBlock.FACING);
-		matrixStack.pushPose();
-		matrixStack.rotateAround(new Quaternionf().rotateAxis(-(float)(dir.toYRot()/180*Math.PI),0,1,0),0.5f,0.5f,0.5f);
-		matrixStack.scale(1/38f,1/38f, 1);
-		matrixStack.mulPose(rotation);
-		matrixStack.translate(0,0,3/128f);
+	public VendingRenderState createRenderState() {
+		return new VendingRenderState();
+	}
+	@Override
+	public void submit(VendingRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		Direction dir=state.rotation;
+		poseStack.pushPose();
+		poseStack.rotateAround(new Quaternionf().rotateAxis(-(float)(dir.toYRot()/180*Math.PI),0,1,0),0.5f,0.5f,0.5f);
+		poseStack.scale(1/38f,1/38f, 1);
+		poseStack.mulPose(rotation);
+		poseStack.translate(0,0,3/128f);
+		
+		
+		submitNodeCollector.submitText(poseStack, -14, -8, state.num, false, Font.DisplayMode.NORMAL, state.lightCoords,0xffffffff, Integer.MIN_VALUE, 0);
+		poseStack.popPose();
+		
+	}
+	@Override
+	public void extractRenderState(BeverageVendingBlockEntity blockEntity, VendingRenderState state, float partialTicks, Vec3 cameraPosition, CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 		String todraw;
 		if(blockEntity.amt<10)
 			todraw=" "+blockEntity.amt;
 		else
 			todraw=""+blockEntity.amt;
-		font.drawInBatch(todraw,-14,-8,0xffffff,false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL,0, 15728880);
-		matrixStack.popPose();
-	}
-
-	private final Font font;
-	/**
-	 * @param rendererDispatcherIn  
-	 */
-	public VendingRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-		font=rendererDispatcherIn.getFont();
+		state.num=Component.literal(todraw).getVisualOrderText();
+		
+		state.rotation=blockEntity.getBlockState().getValue(CPHorizontalBlock.FACING);
 	}
 	
 }

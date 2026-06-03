@@ -22,27 +22,29 @@ import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.CogeCageBlockEntity;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import com.teammoeg.caupona.client.util.ModelUtils;
-
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CogRenderer extends RotationRenderer<CogeCageBlockEntity> {
-	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"cog");
-	public static final DynamicBlockModelReference cage=ModelUtils.getModel(CVMain.MODID,"cage_wheel");
+public class CogRenderer extends RotationRenderer<CogeCageBlockEntity,RotationRenderState> {
 	/**
 	 * @param rendererDispatcherIn  
 	 */
 	public CogRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+		super(rendererDispatcherIn);
 	}
 
 	@Override
 	public DynamicBlockModelReference getMainRotor(BlockState state, CogeCageBlockEntity be) {
 		if(state.is(CVBlocks.cage.get()))
-			return cage;
+			return DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/cog"));
 		if(state.is(CVBlocks.cog.get()))
-			return cog;
+			return DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/cage_wheel"));
 		return null;
+	}
+
+	@Override
+	public RotationRenderState createRenderState() {
+		return new RotationRenderState();
 	}
 
 

@@ -30,13 +30,16 @@ import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.SlotConfig;
 import com.khjxiaogu.convivium.client.renderer.FruitModel.ModelType;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import com.teammoeg.caupona.client.util.GuiUtils;
 import com.teammoeg.caupona.client.util.ModelUtils;
+import com.teammoeg.caupona.client.util.RenderHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -130,7 +133,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			matrixStack.translate(0.375, 3/16f, 0.5f);
 			matrixStack.scale(1.5f,1, 1.5f);
 			matrixStack.mulPose(piled_rotations[position-1]);
-			matrixStack.mulPose(GuiUtils.rotate90);
+			matrixStack.mulPose(FluidRenderHelper.rotate90);
 			matrixStack.translate(0,0,-(position-1)/32f);
 			render.render(is, ItemDisplayContext.GROUND, false,
 					matrixStack, buffer,combinedLightIn, OverlayTexture.NO_OVERLAY,render.getModel(is, blockEntity.getLevel(),null,(int) blockEntity.getBlockPos().asLong()));
@@ -152,12 +155,12 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 		
 
 	}
-	private final ItemRenderer render;
+	private final ItemModelResolver render;
 	/**
 	 * @param rendererDispatcherIn
 	 */
 	public FruitPlatterRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-		render=rendererDispatcherIn.getItemRenderer();
+		render=rendererDispatcherIn.itemModelResolver();
 	}
 
 

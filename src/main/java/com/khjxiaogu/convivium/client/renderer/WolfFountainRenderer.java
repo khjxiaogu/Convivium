@@ -21,22 +21,25 @@ package com.khjxiaogu.convivium.client.renderer;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.wolf_fountain.WolfFountainBlockEntity;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import com.teammoeg.caupona.client.util.ModelUtils;
-
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class WolfFountainRenderer extends RotationRenderer<WolfFountainBlockEntity> {
-	public static final DynamicBlockModelReference cage=ModelUtils.getModel(CVMain.MODID,"wolf_fountain_rotor");
+public class WolfFountainRenderer extends RotationRenderer<WolfFountainBlockEntity,RotationRenderState> {
 	/**
 	 * @param rendererDispatcherIn  
 	 */
 	public WolfFountainRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+		super(rendererDispatcherIn);
 	}
 
 	@Override
 	public DynamicBlockModelReference getMainRotor(BlockState state, WolfFountainBlockEntity be) {
-		return cage;
+		return DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/wolf_fountain_rotor"));
+	}
+
+	@Override
+	public RotationRenderState createRenderState() {
+		return new RotationRenderState();
 	}
 
 

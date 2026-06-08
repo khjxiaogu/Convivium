@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.khjxiaogu.convivium.data.recipes.compare.CompareCondition;
+import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
 import com.khjxiaogu.convivium.data.recipes.numbers.INumber;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
@@ -35,43 +38,103 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.util.SerializeUtil;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class SwayRecipe  extends IDataRecipe{
+	public static class SwayEffect{
+		public static final Codec<SwayEffect> CODEC=RecordCodecBuilder.create(t->t.group(
+			BuiltInRegistries.MOB_EFFECT.holderByNameCodec().fieldOf("effect").forGetter(o->o.effect),
+			INumber.CODEC.optionalFieldOf("level", Expression.ZERO).forGetter(o->o.amplifier),
+			INumber.CODEC.optionalFieldOf("time", Expression.ONE).forGetter(o->o.duration),
+			Codec.list(CompareCondition.CODEC).fieldOf("condition").forGetter(o->o.compare)
+		).apply(t, SwayEffect::new));
+		public static final StreamCodec<RegistryFriendlyByteBuf,SwayEffect> STREAM_CODEC=StreamCodec.composite(
+			ByteBufCodecs.holderRegistry(Registries.MOB_EFFECT),o->o.effect,
+			INumber.STREAM_CODEC,o->o.amplifier,
+			INumber.STREAM_CODEC,o->o.duration,
+			CompareCondition.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.compare,
+		SwayEffect::new);
+		Holder<MobEffect> effect;
+		INumber amplifier;
+		INumber duration;
+		List<CompareCondition> compare;
+		
+		public SwayEffect(Holder<MobEffect> effect, INumber amplifier, INumber duration, List<CompareCondition> compare) {
+			super();
+			this.effect = effect;
+			this.amplifier = amplifier;
+			this.duration = duration;
+			this.compare = compare;
+		}
+		public Optional<MobEffectInstance> getEffectNoChecck(IEnvironment env) {
+			if(effect!=null) 
+				return Optional.of(new MobEffectInstance(effect,(int)duration.applyAsDouble(env),(int)amplifier.applyAsDouble(env)));
+			return Optional.empty();
+		}
+		public Optional<MobEffectInstance> getEffect(IEnvironment env) {
+			if(effect!=null&&compare.stream().allMatch(t->t.test(env))) {
+				return Optional.of(new MobEffectInstance(effect,(int)duration.applyAsDouble(env),(int)amplifier.applyAsDouble(env)));
+			}
+			return Optional.empty();
+		}
+		public boolean hasEffect(IEnvironment env) {
+			if(compare.stream().allMatch(t->t.test(env))) {
+				return true;
+			}
+			return false;
+		}
 
-
-	public SwayRecipe(List<RelishCondition> relish, int priority, Map<String, INumber> locals,
-			List<SwayEffect> effects, Identifier icon) {
-		this.relish = relish;
-		this.priority = priority;
-		this.locals = locals;
-		this.effects = effects;
-		this.icon = icon;
 	}
+
+
 
 	public List<RelishCondition> relish;
 	public int priority;
 	public Map<String,INumber> locals;
 	public List<SwayEffect> effects;
 	public Identifier icon;
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<SwayRecipe>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<SwayRecipe>> TYPE;
 	public static List<RecipeHolder<SwayRecipe>> recipes;
-	public static MapCodec<SwayRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
+	public static final MapCodec<SwayRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		Codec.list(RelishConditions.CODEC).optionalFieldOf("relish",List.of()).forGetter(o->o.relish),
 		Codec.INT.fieldOf("priority").forGetter(o->o.priority),
-		Codec.compoundList(Codec.STRING, INumber.CODEC).optionalFieldOf("locals",List.of()).forGetter(o->o.locals.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList())),
+		Codec.compoundList(Codec.STRING, INumber.CODEC).optionalFieldOf("locals",List.of())
+		.forGetter(o->o.locals.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList())),
 		Codec.list(SwayEffect.CODEC).fieldOf("effects").forGetter(o->o.effects),
 		Identifier.CODEC.fieldOf("icon").forGetter(o->o.icon)
 		).apply(t, SwayRecipe::new));
-	
+	public static final StreamCodec<RegistryFriendlyByteBuf,SwayRecipe> STREAM_CODEC=StreamCodec.composite(
+		RelishConditions.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.relish,
+		ByteBufCodecs.VAR_INT,o->o.priority,
+		SerializeUtil.pair(ByteBufCodecs.STRING_UTF8, INumber.STREAM_CODEC).apply(ByteBufCodecs.list()),
+		o->o.locals.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()),
+		SwayEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.effects,
+		Identifier.STREAM_CODEC,o->o.icon,
+		SwayRecipe::new
+		);
+	public SwayRecipe(List<RelishCondition> relish, int priority, Map<String, INumber> locals,
+			List<SwayEffect> effects2, Identifier icon) {
+		this.relish = relish;
+		this.priority = priority;
+		this.locals = locals;
+		this.effects = effects2;
+		this.icon = icon;
+	}
 	public SwayRecipe(List<RelishCondition> relish, int priority, List<Pair<String, INumber>> locals, List<SwayEffect> effects, Identifier icon) {
 		super();
 		this.relish = relish;
@@ -82,12 +145,12 @@ public class SwayRecipe  extends IDataRecipe{
 		this.icon = icon;
 	}
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<SwayRecipe> getSerializer() {
 		// TODO Auto-generated method stub
 		return SERIALIZER.get();
 	}
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<SwayRecipe> getType() {
 		// TODO Auto-generated method stub
 		return TYPE.get();
 	}

@@ -30,14 +30,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.util.SerializeUtil;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -54,15 +57,30 @@ public class RelishRecipe extends IDataRecipe {
 		this.tag = tag;
 		this.color = TextColor.parseColor(color).getOrThrow();
 	}
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<RelishRecipe>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<RelishRecipe>> TYPE;
 	public static final MapCodec<RelishRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		Identifier.CODEC.fieldOf("tag").forGetter(o->o.tag),
 		Codec.STRING.fieldOf("relish").forGetter(o->o.relishName),
 		Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()))),
 		TextColor.CODEC.optionalFieldOf("color",TextColor.fromLegacyFormat(ChatFormatting.WHITE)).forGetter(o->o.color)
 		).apply(t, RelishRecipe::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,RelishRecipe> STREAM_CODEC=StreamCodec.composite(
+		Identifier.STREAM_CODEC,o->o.tag,
+		ByteBufCodecs.STRING_UTF8,o->o.relishName,
+		SerializeUtil.pair(ByteBufCodecs.STRING_UTF8, ByteBufCodecs.FLOAT).apply(ByteBufCodecs.list()), o->o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()),
+		ByteBufCodecs.INT.map(TextColor::fromRgb, t->t.getValue()),o->o.color,
+		RelishRecipe::new
+		);
 	public RelishRecipe() {
+	}
+
+	public RelishRecipe(Identifier tag, String relishName, List<Pair<String, Float>> variantData, TextColor color) {
+		super();
+		this.tag = tag;
+		this.relishName = relishName;
+		variantData.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond()));
+		this.color = color;
 	}
 
 	public RelishRecipe(Identifier tag, String relishName, Optional<List<Pair<String, Float>>> variantData,TextColor color) {
@@ -81,7 +99,7 @@ public class RelishRecipe extends IDataRecipe {
 		variantData=SUtils.fromPacket(pb);
 	}*/
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<RelishRecipe> getSerializer() {
 		return SERIALIZER.get();
 	}
 	public MutableComponent getText() {
@@ -91,7 +109,7 @@ public class RelishRecipe extends IDataRecipe {
 		return Utils.translate("gui." + CVMain.MODID +".relish."+relishName+".name").setStyle(Style.EMPTY.withColor(color2));
 	}
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<RelishRecipe> getType() {
 		return TYPE.get();
 	}
 /*

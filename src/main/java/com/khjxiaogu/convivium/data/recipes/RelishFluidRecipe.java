@@ -29,9 +29,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
+import com.teammoeg.caupona.util.SerializeUtil;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -42,17 +46,28 @@ public class RelishFluidRecipe extends IDataRecipe {
 	public Fluid fluid;
 	public String relish;
 	public Map<String,Float> variantData=new HashMap<>();
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<RelishFluidRecipe>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<RelishFluidRecipe>> TYPE;
 	public static Map<Fluid, RecipeHolder<RelishFluidRecipe>> recipes;
 	public static final MapCodec<RelishFluidRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 			BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(o->o.fluid),
 			Codec.STRING.fieldOf("relish").forGetter(o->o.relish),
 			Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList())))
 		).apply(t, RelishFluidRecipe::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,RelishFluidRecipe> STREAM_CODEC=StreamCodec.composite(
+		ByteBufCodecs.registry(Registries.FLUID),o->o.fluid,
+		ByteBufCodecs.STRING_UTF8,o->o.relish,
+		SerializeUtil.pair(ByteBufCodecs.STRING_UTF8, ByteBufCodecs.FLOAT).apply(ByteBufCodecs.list()), o->o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()),
+	RelishFluidRecipe::new);
 	public RelishFluidRecipe(Fluid fluid, String relish) {
 		this.fluid = fluid;
 		this.relish = relish;
+	}
+	public RelishFluidRecipe(Fluid fluid, String relish,List<Pair<String, Float>> variantData) {
+		super();
+		this.fluid = fluid;
+		this.relish = relish;
+		variantData.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond()));
 	}
 	public RelishFluidRecipe(Fluid fluid, String relish,Optional<List<Pair<String, Float>>> variantData) {
 		super();
@@ -68,11 +83,11 @@ public class RelishFluidRecipe extends IDataRecipe {
 	}
 */
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<RelishFluidRecipe> getSerializer() {
 		return SERIALIZER.get();
 	}
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<RelishFluidRecipe> getType() {
 		return TYPE.get();
 	}
 

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.IInfinitable;
 import com.teammoeg.caupona.util.Utils;
@@ -37,6 +38,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -44,10 +46,32 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IInfinitable,MenuProvider {
-	public ItemStackHandler storage=new ItemStackHandler(6);
-	public FluidTank tank=new FluidTank(2500);
+	public ItemStacksResourceHandler storage = new ItemStacksResourceHandler(6) {
+		@Override
+		protected void onContentsChanged(int slot,ItemStack stack) {
+			super.onContentsChanged(slot,stack);
+			syncData();
+		}
+	};
+	public final FluidStacksResourceHandler tank=new FluidStacksResourceHandler(1,2500) {
+
+		@Override
+		protected void onContentsChanged(int index, FluidStack previousContents) {
+			super.onContentsChanged(index, previousContents);
+			syncData();
+		}
+		
+	};
 	public UUID owner;
 	boolean isInfinite = false;
 	public int amt;
@@ -57,47 +81,41 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	public void setAmount(int cnt) {
 		amt=Math.max(Math.min(64, cnt),0);
 	}
-	public IFluidHandler handler=new IFluidHandler() {
+	public ResourceHandler<FluidResource> handler=new DelegatingResourceHandler<>(tank) {
+
 		@Override
-		public int getTanks() {return 1;}
-		@Override
-		public @NotNull FluidStack getFluidInTank(int n) {return tank.getFluid();}
-		@Override
-		public int getTankCapacity(int tank) {return 2500;}
-		@Override
-		public boolean isFluidValid(int tank, @NotNull FluidStack stack) {return false;}
-		@Override
-		public int fill(FluidStack resource, FluidAction action) {return 0;}
-		@Override
-		public @NotNull FluidStack drain(FluidStack resource, FluidAction oaction) {
-			if(getBlockState().getValue(BeverageVendingBlock.ACTIVE)&&resource.getAmount()>=250) {
-				if(resource.getAmount()!=250)
-					resource=resource.copyWithAmount(250);
-				FluidAction action=oaction;
-				if(isInfinite)
-					action=FluidAction.SIMULATE;
-				FluidStack fs=tank.drain(resource, action);
-				if(amt>0&&oaction.execute()&&!fs.isEmpty()) {
-					level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BeverageVendingBlock.ACTIVE,false));
-				}
-				return fs;
-			}
-			return FluidStack.EMPTY;
+		public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+			return 0;
 		}
 
 		@Override
-		public @NotNull FluidStack drain(int maxDrain, FluidAction oaction) {
-			if(getBlockState().getValue(BeverageVendingBlock.ACTIVE)&&maxDrain>=250) {
-				FluidAction action=oaction;
-				if(isInfinite)
-					action=FluidAction.SIMULATE;
-				FluidStack fs=tank.drain(250, action);
-				if(amt>0&&oaction.execute()&&!fs.isEmpty()) {
-					level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BeverageVendingBlock.ACTIVE,false));
+		public int insert(FluidResource resource, int amount, TransactionContext transaction) {
+			return 0;
+		}
+
+		@Override
+		public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+			if(getBlockState().getValue(BeverageVendingBlock.ACTIVE)&&amount>=250) {
+				int extracted;
+				try(Transaction trans=Transaction.open(transaction)){
+					extracted=super.extract(index, resource, 250, trans);
+					if(isInfinite) {
+						trans.commit();
+					}
 				}
-				return fs;
+				if(extracted>=250) {
+					BlockStateSnapshotJournal journal=new BlockStateSnapshotJournal(BeverageVendingBlockEntity.this,getBlockState().setValue(BeverageVendingBlock.ACTIVE,false));
+					journal.updateSnapshots(transaction);
+				}
+				return extracted;
 			}
-			return FluidStack.EMPTY;
+			return 0;
+		}
+
+		@Override
+		public int extract(FluidResource resource, int amount, TransactionContext transaction) {
+			// TODO Auto-generated method stub
+			return super.extract(resource, amount, transaction);
 		}
 		
 	};

@@ -23,6 +23,9 @@ import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+
 public class CompareCondition {
 	Compare compare;
 	INumber expr1;
@@ -32,7 +35,11 @@ public class CompareCondition {
 		INumber.CODEC.fieldOf("left").forGetter(o->o.expr1),
 		INumber.CODEC.fieldOf("right").forGetter(o->o.expr2)
 		).apply(t, CompareCondition::new));
-
+	public static final StreamCodec<RegistryFriendlyByteBuf,CompareCondition> STREAM_CODEC=StreamCodec.composite(
+		Compares.STREAM_CODEC,o->o.compare,
+		INumber.STREAM_CODEC,o->o.expr1,
+		INumber.STREAM_CODEC,o->o.expr2,
+		CompareCondition::new);
 	public CompareCondition(Compare compare, INumber expr1, INumber expr2) {
 		super();
 		this.compare = compare;

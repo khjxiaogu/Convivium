@@ -183,7 +183,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 				ItemStack is=inv.getResource(0).toStack(inv.getAmountAsInt(0));
 				RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(fluid,is,this.getBlockState().is(CVBlocks.lead_basin.get()));
 				if(recipe!=null) {
-					recipeHandler.setRecipe(recipe,recipe.value().getTime());
+					recipeHandler.setRecipe(recipe,recipe.value().processTime);
 					this.syncData();
 				}
 			}

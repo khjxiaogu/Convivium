@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,15 +28,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.components.IFoodInfo;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.data.recipes.TimedRecipe;
 import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -45,18 +46,18 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-public class BasinRecipe extends IDataRecipe implements TimedRecipe{
+public class BasinRecipe extends IDataRecipe{
 	public static Map<Identifier,RecipeHolder<BasinRecipe>> recipes;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<BasinRecipe>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<BasinRecipe>> SERIALIZER;
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<BasinRecipe> getSerializer() {
 		return SERIALIZER.get();
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<BasinRecipe> getType() {
 		return TYPE.get();
 	}
 	public Fluid base;
@@ -71,11 +72,21 @@ public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 		Codec.FLOAT.optionalFieldOf("density", 0f).forGetter(o->o.density),
 		SizedOrCatalystFluidIngredient.NESTED_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
 		SizedOrCatalystIngredient.NESTED_CODEC.optionalFieldOf("item").forGetter(o->Optional.ofNullable(o.item)),
-		Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(o->o.output),
+		Codec.list(ItemStackTemplate.CODEC).fieldOf("outputs").forGetter(o->o.output),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("leadBasin").forGetter(o->o.requireBasin)
 		).apply(t, BasinRecipe::new));
-	public BasinRecipe( SizedOrCatalystFluidIngredient in,SizedOrCatalystIngredient item, List<ItemStack> output, int inputCount, int processTime,boolean requireBasin) {
+	
+	public static final StreamCodec<RegistryFriendlyByteBuf,BasinRecipe> STREAM_CODEC=StreamCodec.composite(
+		ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)),o->Optional.ofNullable(o.base),
+		ByteBufCodecs.FLOAT,o->o.density,
+		ByteBufCodecs.optional(SizedOrCatalystFluidIngredient.STREAM_CODEC),o->Optional.ofNullable(o.in),
+		ByteBufCodecs.optional(SizedOrCatalystIngredient.STREAM_CODEC),o->Optional.ofNullable(o.item),
+		ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.output,
+		ByteBufCodecs.VAR_INT,o->o.processTime,
+		ByteBufCodecs.BOOL,o->o.requireBasin,
+		BasinRecipe::new);
+	public BasinRecipe( SizedOrCatalystFluidIngredient in,SizedOrCatalystIngredient item, List<ItemStackTemplate> output, int inputCount, int processTime,boolean requireBasin) {
 		this.in = in;
 		this.output = output;
 		this.item = item;
@@ -84,7 +95,7 @@ public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 
 	}
 	public BasinRecipe(Optional<Fluid> base, float density, Optional<SizedOrCatalystFluidIngredient> in, 
-		Optional<SizedOrCatalystIngredient> item,List<ItemStack> output, int processTime,boolean requireBasin) {
+		Optional<SizedOrCatalystIngredient> item,List<ItemStackTemplate> output, int processTime,boolean requireBasin) {
 		this.base = base.orElse(null);
 		this.density = density;
 		this.in = in.orElse(null);
@@ -132,9 +143,5 @@ public class BasinRecipe extends IDataRecipe implements TimedRecipe{
 		return recipes.values().stream().map(t->t.value()).anyMatch(t->t.item.test(stack));
 	}
 
-	@Override
-	public int getTime() {
-		return processTime;
-	}
 
 }

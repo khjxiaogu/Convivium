@@ -35,8 +35,11 @@ import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.util.FloatemTagStack;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -46,17 +49,17 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class BeverageTypeRecipe extends IDataRecipe {
 	public static List<RecipeHolder<BeverageTypeRecipe>> sorted;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<BeverageTypeRecipe>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<BeverageTypeRecipe>> SERIALIZER;
 
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<BeverageTypeRecipe> getSerializer() {
 		return SERIALIZER.get();
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<BeverageTypeRecipe> getType() {
 		return TYPE.get();
 	}
 
@@ -81,13 +84,37 @@ public class BeverageTypeRecipe extends IDataRecipe {
 		BuiltInRegistries.FLUID.byNameCodec().validate(n->n==Fluids.EMPTY?DataResult.error(()->"Output fluid can not be empty"):DataResult.success(n)).fieldOf("output").forGetter(o->o.output),
 		Codec.BOOL.fieldOf("removeNBT").forGetter(o->o.removeNBT)
 		).apply(t, BeverageTypeRecipe::new));
-		
+	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageTypeRecipe> STREAM_CODEC=StreamCodec.composite(
+		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.must,
+		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.optional,
+		RelishConditions.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.relish,
+		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),o->o.allowedRelish,
+		ByteBufCodecs.VAR_INT,o->o.priority,
+		ByteBufCodecs.VAR_INT,o->o.time,
+		ByteBufCodecs.FLOAT,o->o.density,
+		ByteBufCodecs.registry(Registries.FLUID),o->o.output,
+		ByteBufCodecs.BOOL,o->o.removeNBT,
+		BeverageTypeRecipe::new);
 	public BeverageTypeRecipe(Optional<List<Ingredient>> must, Optional<List<Ingredient>> optional, Optional<List<RelishCondition>> relish, Optional<List<String>> allowedRelish, int priority, int time, float density, Fluid output,
 		boolean removeNBT) {
 		this.must = must.orElse(Arrays.asList());
 		this.optional = optional.orElse(Arrays.asList());
 		this.relish = relish.orElse(Arrays.asList());
 		this.allowedRelish = allowedRelish.orElse(Arrays.asList());
+		this.priority = priority;
+		this.time = time;
+		this.density = density;
+		this.output = output;
+		this.removeNBT = removeNBT;
+	}
+
+	public BeverageTypeRecipe(List<Ingredient> must, List<Ingredient> optional, List<RelishCondition> relish, List<String> allowedRelish, int priority, int time, float density, Fluid output,
+		boolean removeNBT) {
+		super();
+		this.must = must;
+		this.optional = optional;
+		this.relish = relish;
+		this.allowedRelish = allowedRelish;
 		this.priority = priority;
 		this.time = time;
 		this.density = density;

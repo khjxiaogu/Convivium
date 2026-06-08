@@ -18,8 +18,8 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.mojang.serialization.Codec;
@@ -33,28 +33,35 @@ import com.teammoeg.caupona.util.SizedOrCatalystFluidIngredient;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
-	public static List<RecipeHolder<GrindingRecipe>> recipes;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static Map<Identifier,RecipeHolder<GrindingRecipe>> recipes;
+	public static DeferredHolder<RecipeType<?>,RecipeType<GrindingRecipe>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<GrindingRecipe>> SERIALIZER;
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<GrindingRecipe> getSerializer() {
 		return SERIALIZER.get();
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<GrindingRecipe> getType() {
 		return TYPE.get();
 	}
 
@@ -63,10 +70,10 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 	public float density = 0;
 	public SizedOrCatalystFluidIngredient in;
 	public FluidStack out= FluidStack.EMPTY;
-	public List<ItemStack> output;
+	public List<ItemStackTemplate> output;
 	public int processTime=200;
 	public boolean keepInfo = false;
-	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base, float density, SizedOrCatalystFluidIngredient in, FluidStack out, List<ItemStack> output, int processTime,
+	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base, float density, SizedOrCatalystFluidIngredient in, FluidStack out, List<ItemStackTemplate> output, int processTime,
 		boolean keepInfo) {
 		super();
 		this.items = items;
@@ -80,17 +87,27 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 	}
 
 	public static final MapCodec<GrindingRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-		Codec.list(SizedOrCatalystIngredient.FLAT_CODEC).fieldOf("items").forGetter(o->o.items),
+		Codec.list(SizedOrCatalystIngredient.NESTED_CODEC).fieldOf("items").forGetter(o->o.items),
 		BuiltInRegistries.FLUID.byNameCodec().optionalFieldOf("base").forGetter(o->Optional.ofNullable(o.base)),
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density),
-		SizedOrCatalystFluidIngredient.FLAT_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
+		SizedOrCatalystFluidIngredient.NESTED_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
 		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
-		Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(o->o.output),
+		Codec.list(ItemStackTemplate.CODEC).fieldOf("outputs").forGetter(o->o.output),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("keepInfo").forGetter(o->o.keepInfo)
 		).apply(t, GrindingRecipe::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,GrindingRecipe> STREAM_CODEC=StreamCodec.composite(
+		SizedOrCatalystIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.items,
+		ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)),o->Optional.ofNullable(o.base),
+		ByteBufCodecs.FLOAT,o->o.density,
+		ByteBufCodecs.optional(SizedOrCatalystFluidIngredient.STREAM_CODEC),o->Optional.ofNullable(o.in),
+		FluidStack.OPTIONAL_STREAM_CODEC,o->o.out,
+		ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.output,
+		ByteBufCodecs.INT,o->o.processTime,
+		ByteBufCodecs.BOOL,o->o.keepInfo,
+		GrindingRecipe::new);
 	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Optional<Fluid> base,
-			float density, Optional<SizedOrCatalystFluidIngredient> in, FluidStack out, List<ItemStack> output, int processTime, boolean keepInfo) {
+			float density, Optional<SizedOrCatalystFluidIngredient> in, FluidStack out, List<ItemStackTemplate> output, int processTime, boolean keepInfo) {
 		this.items = items;
 		this.base = base.orElse(null);
 		this.density = density;
@@ -102,7 +119,7 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 	}
 
 	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base,
-			float density, List<ItemStack> output, int processTime,boolean keepInfo) {
+			float density, List<ItemStackTemplate> output, int processTime,boolean keepInfo) {
 		this.items = items;
 		this.base = base;
 		this.density = density;
@@ -141,14 +158,15 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 */
 
 	public static boolean testInput(ItemStack stack) {
-		return recipes.stream().map(t->t.value()).anyMatch(t -> t.items.stream().anyMatch(i -> i.test(stack)));
+		return recipes.values().stream().map(t->t.value()).anyMatch(t -> t.items.stream().anyMatch(i -> i.test(stack)));
 	}
 
-	public static RecipeHolder<GrindingRecipe> test(FluidStack f, ItemStackHandler inv) {
-		ItemStack is0 = inv.getStackInSlot(0);
-		ItemStack is1 = inv.getStackInSlot(1);
-		ItemStack is2 = inv.getStackInSlot(2);
-		return recipes.stream().filter(t -> t.value().test(f, is0, is1, is2)).findFirst().orElse(null);
+	public static RecipeHolder<GrindingRecipe> test(ResourceHandler<FluidResource> f, ResourceHandler<ItemResource> inv) {
+		ItemStack is0 = inv.getResource(0).toStack(inv.getAmountAsInt(0));
+		ItemStack is1 = inv.getResource(1).toStack(inv.getAmountAsInt(1));
+		ItemStack is2 = inv.getResource(2).toStack(inv.getAmountAsInt(2));
+		FluidStack fs=f.getResource(0).toStack(f.getAmountAsInt(0));
+		return recipes.values().stream().filter(t -> t.value().test(fs, is0, is1, is2)).findFirst().orElse(null);
 	}
 
 	public boolean test(FluidStack f, ItemStack... ss) {
@@ -190,32 +208,8 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 		return true;
 	}
 
-	private List<ItemStack> handle(FluidStack f) {
-		if(in!=null)
-			f.shrink(in.amount());
-		List<ItemStack> fss=new ArrayList<>();
-		for(ItemStack is:output) {
-			ItemStack iss=is.copy();
-			iss.applyComponents(f.getComponentsPatch());
-			fss.add(iss);
-		}
-		return fss;
-	}
 
-	public List<ItemStack> handle(FluidStack f, ItemStackHandler inv) {
-		for (SizedOrCatalystIngredient igd : items) {
-			if (igd.count() == 0)
-				continue;
-			for (int i = 0; i < 3; i++) {
-				ItemStack is = inv.getStackInSlot(i);
-				if (igd.test(is)) {
-					is.shrink(igd.count());
-					break;
-				}
-			}
-		}
-		return handle(f);
-	}
+
 /*
 	public GrindingRecipe(Identifier id, FriendlyByteBuf data) {
 		super(id);

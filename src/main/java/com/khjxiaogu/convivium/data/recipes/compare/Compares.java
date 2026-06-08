@@ -21,12 +21,9 @@ package com.khjxiaogu.convivium.data.recipes.compare;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.khjxiaogu.convivium.data.recipes.relishcondition.AbstractRelishCondition;
-import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondition;
 import com.mojang.serialization.Codec;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;

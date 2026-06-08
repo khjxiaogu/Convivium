@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
-import com.khjxiaogu.convivium.data.recipes.RelishItemRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
@@ -81,15 +80,6 @@ public class BeveragePendingContext extends IPendingContext {
 		}
 		outer: for (FloatemStack fs : info.stacks) {
 			Map<String,Double> lvar=new HashMap<>();
-			for (RecipeHolder<RelishItemRecipe> isr : RelishItemRecipe.recipes) {
-				if (isr.value().item.test(fs.getStack())) {
-					relishes.merge(isr.value().relish, 1, (a,b)->a+b);
-					isr.value().variantData.forEach((e, d) -> {
-						lvar.merge(e,d.doubleValue(),SUtils.SUM);
-					});
-					continue outer;
-				}
-			}
 			items.add(new FloatemTagStack(fs));
 			for (RecipeHolder<TasteRecipe> recipe : TasteRecipe.recipes) {
 				if (recipe.value().item.test(fs.getStack())) {

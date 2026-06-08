@@ -29,25 +29,30 @@ public class FruitModel {
 		SLICE,
 		MISC
 	}
-	private DynamicBlockModelReference grid;
-	private DynamicBlockModelReference[] piled;
+	private DynamicBlockModelReference grid[];
+	private DynamicBlockModelReference[][] piled;
 	private ModelType type;
 	private RenderType rtype;
 	public FruitModel(String name,ModelType type,RenderType rtype) {
 		super();
 		this.type = type;
-		grid=DynamicBlockModelReference.getModel(CVMain.rl(name+"_components"));
-		piled=new DynamicBlockModelReference[4];
 		for(int i=1;i<=4;i++) {
-			piled[i-1]=DynamicBlockModelReference.getModel(CVMain.rl(name+"_center_"+i));
+			grid[i-1]=DynamicBlockModelReference.getModel(CVMain.rl(name+"_components_"+i));
+		}
+		piled=new DynamicBlockModelReference[4][];
+		for(int i=1;i<=4;i++) {
+			piled[i-1]=new DynamicBlockModelReference[i];
+			for(int j=1;j<=i;j++) {
+				piled[i-1][j-1]=DynamicBlockModelReference.getModel(CVMain.rl(name+"_center_"+i+"_"+j));
+			}
 		}
 		this.rtype=rtype;
 	}
-	public DynamicBlockModelReference getGrid() {
-		return grid;
+	public DynamicBlockModelReference getGrid(int i) {
+		return grid[i];
 	}
-	public DynamicBlockModelReference getPiled(int i) {
-		return piled[i];
+	public DynamicBlockModelReference getPiled(int i,int j) {
+		return piled[i][j];
 	}
 	public ModelType getType() {
 		return type;

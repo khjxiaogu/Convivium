@@ -30,7 +30,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.util.FloatemStack;
 
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -40,20 +42,20 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 public class ConvertionRecipe extends IDataRecipe {
 	public static List<RecipeHolder<ConvertionRecipe>> recipes;
 	public static Set<Integer> activeLevel;
-	public static DeferredHolder<RecipeType<?>,RecipeType<Recipe<?>>> TYPE;
-	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<?>> SERIALIZER;
+	public static DeferredHolder<RecipeType<?>,RecipeType<ConvertionRecipe>> TYPE;
+	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<ConvertionRecipe>> SERIALIZER;
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<ConvertionRecipe> getSerializer() {
 		return SERIALIZER.get();
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<ConvertionRecipe> getType() {
 		return TYPE.get();
 	}
 	public static final MapCodec<ConvertionRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-		Codec.list(FloatSizedOrCatalystIngredient.FLAT_CODEC).optionalFieldOf("items",ImmutableList.of()).forGetter(o->o.items),
+		Codec.list(FloatSizedOrCatalystIngredient.NESTED_CODEC).optionalFieldOf("items",ImmutableList.of()).forGetter(o->o.items),
 		Codec.list(FloatemStack.CODEC).optionalFieldOf("outputs",ImmutableList.of()).forGetter(o->o.output),
 		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidIn",FluidStack.EMPTY).forGetter(o->o.in),
 		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
@@ -61,6 +63,15 @@ public class ConvertionRecipe extends IDataRecipe {
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("consumeAll").forGetter(o->o.consumeExtra)
 		).apply(t, ConvertionRecipe::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf,ConvertionRecipe> STREAM_CODEC=StreamCodec.composite(
+		FloatSizedOrCatalystIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.items,
+		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.output,
+		FluidStack.OPTIONAL_STREAM_CODEC,o->o.in,
+		FluidStack.OPTIONAL_STREAM_CODEC,o->o.out,
+		ByteBufCodecs.VAR_INT,o->o.temperature,
+		ByteBufCodecs.VAR_INT,o->o.processTime,
+		ByteBufCodecs.BOOL,o->o.consumeExtra,
+		ConvertionRecipe::new);
 	public List<FloatSizedOrCatalystIngredient> items;
 	public List<FloatemStack> output=new ArrayList<>();
 	public FluidStack in= FluidStack.EMPTY;

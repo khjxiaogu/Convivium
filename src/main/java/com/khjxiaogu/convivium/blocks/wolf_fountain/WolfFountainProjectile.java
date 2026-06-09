@@ -19,10 +19,6 @@
 package com.khjxiaogu.convivium.blocks.wolf_fountain;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.SynchedEntityData.Builder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +26,8 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -62,7 +60,7 @@ public class WolfFountainProjectile extends Projectile {
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (!this.noPhysics) {
             this.hitTargetOrDeflectSelf(hitresult);
-            this.hasImpulse = true;
+            this.needsSync = true;
         }
 
         this.updateRotation();
@@ -73,25 +71,21 @@ public class WolfFountainProjectile extends Projectile {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag compound) {
+	protected void readAdditionalSaveData(ValueInput compound) {
 		super.readAdditionalSaveData(compound);
-		age = compound.getInt("age");
-		verid = compound.getInt("version");
-		ListTag listtag = compound.getList("SourceBE", Tag.TAG_INT);
-		source = new BlockPos(listtag.getInt(0),listtag.getInt(1),listtag.getInt(2));
+		age = compound.getIntOr("age",0);
+		verid = compound.getIntOr("version",0);
+		source = compound.read("SourceBE", BlockPos.CODEC).orElse(null);
 		
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag compound) {
+	protected void addAdditionalSaveData(ValueOutput compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putInt("age", age);
 		compound.putInt("version",verid);
-		ListTag tag=new ListTag();
-		tag.add(IntTag.valueOf(source.getX()));
-		tag.add(IntTag.valueOf(source.getY()));
-		tag.add(IntTag.valueOf(source.getZ()));
-		compound.put("SourceBE", tag);
+		if(source!=null)
+			compound.store("SourceBE", BlockPos.CODEC, source);
 		
 	}
 
@@ -110,7 +104,7 @@ public class WolfFountainProjectile extends Projectile {
 		//System.out.println("hit block");
 		if(source!=null)
 			if(this.level().getBlockEntity(source) instanceof WolfFountainBlockEntity wf) {
-				wf.applyEffectTo(verid, result.getBlockPos(),result.getDirection());
+				wf.applyEffectTo(verid, result.getBlockPos());
 			}
 		this.remove(RemovalReason.DISCARDED);
 	}

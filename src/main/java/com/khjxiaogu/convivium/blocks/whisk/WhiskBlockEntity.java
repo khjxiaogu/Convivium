@@ -42,6 +42,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.teammoeg.caupona.CPConfig;
 import com.teammoeg.caupona.api.CauponaApi;
+import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.blocks.stove.IStove;
 import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.IInfinitable;
@@ -67,54 +68,49 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidActionResult;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.RangedWrapper;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInfinitable, MenuProvider {
-	public ItemStackHandler inv = new ItemStackHandler(6) {
+	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(6) {
 		@Override
-		public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-			if (slot < 4)
-				return isValidInput(stack);
-			if (slot == 4)
-				return stack.getItem() == Items.GLASS_BOTTLE || Utils.getFluidType(stack) != Fluids.EMPTY
-					|| (stack.getItem() == Items.POTION && Optional.ofNullable(stack.get(DataComponents.POTION_CONTENTS)).flatMap(t -> t.potion()).filter(t -> t == Potions.WATER).isPresent())
-					|| stack.is(Items.WATER_BUCKET) || stack.getCapability(Capabilities.FluidHandler.ITEM) != null;
-			return false;
+		public boolean isValid(int index, ItemResource resource) {
+			if (index < 4)
+				return isValidInput(resource.toStack());
+			return super.isValid(index, resource);
 		}
-
 		@Override
-		protected void onContentsChanged(int slot) {
-			super.onContentsChanged(slot);
+		protected void onContentsChanged(int slot,ItemStack stack) {
+			super.onContentsChanged(slot,stack);
 			if (slot < 4) {
 				resetAdding();
-				
 			}
 			syncData();
-
 		}
-
 		@Override
-		public int getSlotLimit(int slot) {
-			if (slot < 4)
+		public long getCapacityAsLong(int index, ItemResource resource) {
+			if (index < 4)
 				return 1;
-			return super.getSlotLimit(slot);
+			return super.getCapacityAsLong(index, resource);
 		}
 	};
 	public static final int IDLE = 0;
 	public static final int ADDING_INGREDIENT = 1;
 	public static final int MIXING = 2;
 	public static final int HEATING = 3;
-	public FluidTank tank = new FluidTank(1250,
-		e -> RelishFluidRecipe.recipes.containsKey(e.getFluid()) || e.has(CVComponents.BEVERAGE_INFO));
+	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1,1250) {
+		@Override
+		public boolean isValid(int index, FluidResource resource) {
+			return RelishFluidRecipe.recipes.containsKey(resource.getFluid()) || resource.has(CVComponents.BEVERAGE_INFO);
+		}
+	};
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
 	public static Codec<List<CurrentSwayInfo>> CSI_CODEC = Codec.list(CurrentSwayInfo.CODEC);
 	public static final int MAX_DENSE = 3;
@@ -135,16 +131,9 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public WhiskBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.WHISK.get(), pWorldPosition, pBlockState);
 		contain = new LazyTickWorker(CPConfig.SERVER.containerTick.get(), () -> {
-			if (inf) {
-				FluidStack fs = tank.getFluid().copy();
-				if (processMax == 0)
-					tryContianFluid();
-				tank.setFluid(fs);
-			} else {
-				if (processMax == 0) {
-					if (tryContianFluid())
-						return true;
-				}
+			if (processMax == 0) {
+				if (tryContianFluid())
+					return true;
 			}
 			return false;
 		});
@@ -164,8 +153,8 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient, HolderLookup.Provider ra) {
-		super.readCustomNBT(nbt, isClient, ra);
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
+		super.readCustomNBT(nbt, isClient);
 		swayhint = new ArrayList<>(
 			CSI_CODEC.decode(NbtOps.INSTANCE, nbt.get("hint")).result().map(Pair::getFirst).orElse(List.of()));
 		process = nbt.getInt("process");
@@ -227,41 +216,25 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	}
 
 	private boolean tryContianFluid() {
-		ItemStack is = inv.getStackInSlot(4);
-		if (!is.isEmpty() && inv.getStackInSlot(5).isEmpty()) {
-			Optional<ItemStack> recipe = CauponaApi.getFilledItemStack(accessabletank, is);
-			if (recipe.isPresent()) {
-				is.shrink(1);
-				inv.setStackInSlot(5, recipe.get());
-				return true;
-			}
-
-			if (is.getItem() == Items.POTION && Optional.ofNullable(is.get(DataComponents.POTION_CONTENTS)).flatMap(t -> t.potion()).filter(t -> t == Potions.WATER).isPresent()) {
-				FluidStack water = new FluidStack(Fluids.WATER, 250);
-				if (accessabletank.fill(water, FluidAction.SIMULATE) == 250) {
-					ItemStack remain = new ItemStack(Items.GLASS_BOTTLE);
-					is.shrink(1);
-					this.accessabletank.fill(water, FluidAction.EXECUTE);
-					inv.setStackInSlot(5, remain);
-					return true;
+		try(Transaction trans=Transaction.openRoot()){
+			if(tank.getAmountAsInt(0)>=250) {
+				ItemResource container=inv.getResource(4);
+				FluidResource rs=tank.getResource(0);
+				int itemCount=inv.extract(9, container, 1, trans);
+				int fluidAmount;
+				try(Transaction sub=Transaction.open(trans)){
+					fluidAmount=tank.extract(rs, 250, sub);
+					if(!inf)
+						sub.commit();
 				}
-			}
-
-			FluidStack out = Utils.extractFluid(is);
-			if (!out.isEmpty()) {
-				if (this.tank.getFluidAmount() <= 1000 && this.accessabletank.fill(out, FluidAction.EXECUTE) != 0) {
-					ItemStack ret = is.getCraftingRemainingItem();
-					is.shrink(1);
-					inv.setStackInSlot(5, ret);
-					return true;
-				}
-				return false;
-			}
-			FluidActionResult far = FluidUtil.tryFillContainer(is, this.accessabletank, 1250, null, true);
-			if (far.isSuccess()) {
-				is.shrink(1);
-				if (far.getResult() != null) {
-					inv.setStackInSlot(5, far.getResult());
+				if(itemCount>0&&fluidAmount>=250) {
+					ContanerContainFoodEvent result=Utils.contain(container,rs,fluidAmount);
+					if(result.isAllowed()) {
+						if(inv.insert(5,result.getOutput(), 1, trans)==1) {
+							trans.commit();
+							return true;
+						}
+					}
 				}
 			}
 		}

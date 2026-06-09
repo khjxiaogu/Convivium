@@ -87,7 +87,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public String activeRelish2 = "";
 	public int healing;
 	public float saturation;
-	private int heat;
 
 	public BeverageInfo() {
 		effects = new ArrayList<>();
@@ -105,8 +104,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		Codec.STRING.fieldOf("activeRelish1").forGetter(o -> o.activeRelish1),
 		Codec.STRING.fieldOf("activeRelish2").forGetter(o -> o.activeRelish2),
 		Codec.INT.fieldOf("heal").forGetter(o -> o.healing),
-		Codec.FLOAT.fieldOf("sat").forGetter(o -> o.saturation),
-		Codec.INT.fieldOf("heat").forGetter(o -> o.heat)).apply(t, BeverageInfo::new));
+		Codec.FLOAT.fieldOf("sat").forGetter(o -> o.saturation)).apply(t, BeverageInfo::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageInfo> STREAM_CODEC = StreamCodec.composite(
 		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.stacks,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.effects,
@@ -117,7 +115,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish2,
 		ByteBufCodecs.INT,o -> o.healing,
 		ByteBufCodecs.FLOAT,o -> o.saturation,
-		ByteBufCodecs.INT,o -> o.heat,
 		BeverageInfo::new);
 	private Lazy<Collection<MobEffectInstance>> potionEffectsCollectionView=Lazy.of(()->new AbstractCollection<MobEffectInstance>() {
 		@Override
@@ -167,7 +164,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	}
 
 	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, String activeRelish1,
-		String activeRelish2, int healing, float saturation, int heat) {
+		String activeRelish2, int healing, float saturation) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
@@ -178,11 +175,10 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		this.activeRelish2 = activeRelish2;
 		this.healing = healing;
 		this.saturation = saturation;
-		this.heat = heat;
 	}
 
 	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, int healing,
-		float saturation, int heat) {
+		float saturation) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
@@ -191,10 +187,9 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		this.relishes = relishes;
 		this.healing = healing;
 		this.saturation = saturation;
-		this.heat = heat;
 	}
 	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, List<Optional<Fluid>> relishes, String activeRelish1,
-		String activeRelish2, int healing, float saturation, int heat) {
+		String activeRelish2, int healing, float saturation) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
@@ -208,14 +203,13 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		this.activeRelish2 = activeRelish2;
 		this.healing = healing;
 		this.saturation = saturation;
-		this.heat = heat;
 	}
 	public BeverageInfo copy() {
 		return new BeverageInfo(stacks.stream().map(t->t.copy()).toList(),
 			effects.stream().map(t->t.copy()).toList(),
 			swayeffects.stream().map(t->t.copy()).toList(),
 			foodeffect.stream().map(t->t.copy()).toList(),
-			Arrays.copyOf(relishes,5),activeRelish1,activeRelish2,healing,saturation,heat);
+			Arrays.copyOf(relishes,5),activeRelish1,activeRelish2,healing,saturation);
 	}
 	public List<Optional<Fluid>> getRelishList(){
 		return List.of(Optional.ofNullable(relishes[0]),
@@ -278,7 +272,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		for (ChancedEffect es : foodeffect) {
 			es.adjustParts(oparts, parts);
 		}
-		heat = (int) (heat * oparts / parts);
 
 		completeData();
 		recalculateHAS();
@@ -350,7 +343,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		for (FloatemStack fs : f.stacks) {
 			this.addItem(new FloatemStack(fs.getStack(), fs.getCount() * oparts / cparts));
 		}
-		heat += f.heat * oparts / cparts;
 
 	}
 
@@ -465,7 +457,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(relishes);
-		result = prime * result + Objects.hash(effects, foodeffect, healing, heat, saturation, stacks, swayeffects);
+		result = prime * result + Objects.hash(effects, foodeffect, healing, saturation, stacks, swayeffects);
 		return result;
 	}
 
@@ -475,7 +467,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		BeverageInfo other = (BeverageInfo) obj;
-		return Objects.equals(effects, other.effects) && Objects.equals(foodeffect, other.foodeffect) && healing == other.healing && heat == other.heat && Arrays.equals(relishes, other.relishes)
+		return Objects.equals(effects, other.effects) && Objects.equals(foodeffect, other.foodeffect) && healing == other.healing && Arrays.equals(relishes, other.relishes)
 			&& Float.floatToIntBits(saturation) == Float.floatToIntBits(other.saturation) && Objects.equals(stacks, other.stacks) && Objects.equals(swayeffects, other.swayeffects);
 	}
 

@@ -24,7 +24,7 @@ import com.teammoeg.caupona.container.CPBaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class BeverageVendingContainer extends CPBaseContainer<BeverageVendingBlockEntity> {
 
@@ -35,7 +35,7 @@ public class BeverageVendingContainer extends CPBaseContainer<BeverageVendingBlo
 	public BeverageVendingContainer(int id, Inventory inv, BeverageVendingBlockEntity blockEntity) {
 		super(CVGui.VENDING.get(),blockEntity , id,6);
 		for(int i=0;i<6;i++)
-			this.addSlot(new SlotItemHandler(blockEntity.storage, i, 64+17*(i%3), 38+17*(i/3)));
+			this.addSlot(new ResourceHandlerSlot(blockEntity.storage,blockEntity.storage::set , i, 64+17*(i%3), 38+17*(i/3)));
 		super.addPlayerInventory(inv, 8, 82, 140);
 	}
 	@Override

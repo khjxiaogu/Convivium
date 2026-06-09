@@ -20,19 +20,15 @@ package com.khjxiaogu.convivium.blocks.vending;
 
 import java.util.UUID;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.IInfinitable;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,17 +36,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
@@ -137,31 +131,25 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	}
 
 	@Override
-	public void readCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void readCustomNBT(ValueInput nbt, boolean isClient) {
 		if(!isClient) {
-			storage.deserializeNBT(ra,nbt.getCompound("storage"));
-			
-			
-			
+			nbt.readChild("storage", storage);
+			nbt.readChild("tank", tank);
 		}
-		isInfinite = nbt.getBoolean("inf");
-		if(nbt.contains("owner"))
-			owner=nbt.getUUID("owner");
-		tank.readFromNBT(ra,nbt.getCompound("tank"));
-		amt=nbt.getInt("amount");
+		isInfinite = nbt.getBooleanOr("inf", false);
+		owner=nbt.read("owner", UUIDUtil.CODEC).orElse(null);
+		amt=nbt.getIntOr("amount", 0);
 	}
 
 	@Override
-	public void writeCustomNBT(CompoundTag nbt, boolean isClient,HolderLookup.Provider ra) {
+	public void writeCustomNBT(ValueOutput nbt, boolean isClient) {
 		if(!isClient) {
-			nbt.put("storage",storage.serializeNBT(ra));
-			
-			
-			
+			nbt.putChild("storage", storage);
+			nbt.putChild("tank", tank);
+			nbt.putBoolean("inf", isInfinite);
 		}
-		nbt.putBoolean("inf", isInfinite);
-		nbt.putUUID("owner", owner);
-		nbt.put("tank", tank.writeToNBT(ra,new CompoundTag()));
+		if(owner!=null)
+			nbt.store("owner", UUIDUtil.CODEC, owner);
 		nbt.putInt("amount", amt);
 	}
 
@@ -185,7 +173,7 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	}
 	@Override
 	public Object getCapability(BlockCapability<?, Direction> cap, Direction side) {
-		if (cap == Capabilities.FluidHandler.BLOCK)
+		if (cap == Capabilities.Fluid.BLOCK)
 			return handler;
 		return super.getCapability(cap, side);
 	}

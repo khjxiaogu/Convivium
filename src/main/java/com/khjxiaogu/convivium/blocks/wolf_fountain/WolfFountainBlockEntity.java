@@ -180,55 +180,57 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 			}
 			if(Objects.equal(pos, lasthit)) {
 				BlockEntity be=this.level.getBlockEntity(pos);
-				if(be instanceof IFoodContainer cont&&(item!=null||fluid.getAmountAsInt(0)>=250)) {//transfer target
-					workProcess++;
-					if(workProcess>=5) {
-						workProcess=0;
-						FluidStack fs=fluid.drain(250, FluidAction.SIMULATE);
-						for(int i=0;i<cont.getSlots();i++) {
-							ItemStack its=cont.getInternal(i);
-
-							if(!its.isEmpty()&&Utils.isExtractAllowed(its)) {
-								if(item!=null) {
-									if(Utils.isExchangeAllowed(its, item)&&cont.accepts(i, item)) {
-										cont.setInternal(i, item);
-										resetContent();
-									}
-									break;
-								}else if(!fs.isEmpty()){
-									ContanerContainFoodEvent ev=Utils.contain(its, fs,true);
-									if(ev.isAllowed()) {
-										if(cont.accepts(i, ev.out)) {
-											fs=fluid.drain(ev.drainAmount, FluidAction.EXECUTE);
-											if(fs.getAmount()==ev.drainAmount) {
-												ev=Utils.contain(its, fs,false);
-												cont.setInternal(i,ev.out);
-												break;
-											}
+				try(Transaction trans=Transaction.openRoot()){
+					if(be instanceof IFoodContainer cont&&(item!=null||fluid.getAmountAsInt(0)>=250)) {//transfer target
+						workProcess++;
+						if(workProcess>=5) {
+							workProcess=0;
+							FluidResource fs=fluid.getResource(0);
+							for(int i=0;i<cont.getSlots();i++) {
+								ItemStack its=cont.exchangeInternal(null, trans);
+	
+								if(!its.isEmpty()&&Utils.isExtractAllowed(its)) {
+									if(item!=null) {
+										if(Utils.isExchangeAllowed(its, item)&&cont.accepts(i, item)) {
+											cont.setInternal(i, item);
+											resetContent();
 										}
-										
+										break;
+									}else if(!fs.isEmpty()){
+										ContanerContainFoodEvent ev=Utils.contain(its, fs,true);
+										if(ev.isAllowed()) {
+											if(cont.accepts(i, ev.out)) {
+												fs=fluid.drain(ev.drainAmount, FluidAction.EXECUTE);
+												if(fs.getAmount()==ev.drainAmount) {
+													ev=Utils.contain(its, fs,false);
+													cont.setInternal(i,ev.out);
+													break;
+												}
+											}
+											
+										}
+										if(fluid.isEmpty())
+											this.resetContent();
 									}
-									if(fluid.isEmpty())
-										this.resetContent();
 								}
+								
 							}
 							
 						}
-						
-					}
-				}else if(!fluid.isEmpty()){
-					IFluidHandler ifh=FluidHandler.BLOCK.getCapability(level, pos,null, be, dir);
-					if(ifh!=null) {
-						FluidStack out=fluid.drain(50, FluidAction.SIMULATE);
-						if(ifh.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-							FluidStack drained=fluid.drain(50, FluidAction.EXECUTE);
-							ifh.fill(drained, FluidAction.EXECUTE);
+					}else if(!fluid.isEmpty()){
+						IFluidHandler ifh=FluidHandler.BLOCK.getCapability(level, pos,null, be, dir);
+						if(ifh!=null) {
+							FluidStack out=fluid.drain(50, FluidAction.SIMULATE);
+							if(ifh.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
+								FluidStack drained=fluid.drain(50, FluidAction.EXECUTE);
+								ifh.fill(drained, FluidAction.EXECUTE);
+							}
 						}
+						if(fluid.isEmpty())
+							this.resetContent();
 					}
-					if(fluid.isEmpty())
-						this.resetContent();
+					
 				}
-				
 				
 			}else {
 				lasthit=pos;

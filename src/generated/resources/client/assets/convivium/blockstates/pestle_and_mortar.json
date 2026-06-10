@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "convivium:block/dynamic/pestle_and_mortar_rotor"
+      },
+      "when": {
+        "active": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "convivium:block/pestle_and_mortar_stator"
+      },
+      "when": {
+        "active": "true"
+      }
+    }
+  ]
+}

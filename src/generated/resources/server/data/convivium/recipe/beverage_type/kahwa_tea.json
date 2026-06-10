@@ -1,0 +1,23 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "bath",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [],
+  "output": "convivium:kahwa_tea",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "bath"
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    "#convivium:nuts",
+    "#convivium:spice"
+  ],
+  "time": 200
+}

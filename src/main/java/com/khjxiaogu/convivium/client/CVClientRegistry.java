@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
-import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVEntityTypes;
 import com.khjxiaogu.convivium.CVFluids;
@@ -69,11 +68,8 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = CVMain.MODID)
 public class CVClientRegistry {
@@ -97,7 +93,7 @@ public class CVClientRegistry {
 		BlockEntityRenderers.register(CVBlockEntityTypes.PLATTER.get(), FruitPlatterRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.WHISK.get(), WhiskRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.PAM.get(), PamRenderer::new);
-		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT.get(), AqueductRenderer::new);
+		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT.get(), AqueductRenderer.Aqueduct::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.AQUEDUCT_MAIN.get(), AqueductMainRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE.get(), BeverageRenderer::new);
 		BlockEntityRenderers.register(CVBlockEntityTypes.BEVERAGE_VENDING_MACHINE.get(), VendingRenderer::new);

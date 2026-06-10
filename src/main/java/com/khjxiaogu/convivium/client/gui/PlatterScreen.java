@@ -18,18 +18,14 @@
 
 package com.khjxiaogu.convivium.client.gui;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.PlatterContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -57,7 +53,6 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 	public static MutableComponent cnorth = Utils.translate("gui." + CVMain.MODID + ".fruit_platter.north");
 	public static MutableComponent cmodel = Utils.translate("gui." + CVMain.MODID + ".fruit_platter.model");
 	public static MutableComponent citem = Utils.translate("gui." + CVMain.MODID + ".fruit_platter.item");
-	private ArrayList<Component> tooltip = new ArrayList<>(2);
 	ImageButton btn1;
 	ImageButton btn2;
 	ImageButton btnsl1;
@@ -69,31 +64,34 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 		super.init();
 		this.clearWidgets();
 		this.addRenderableWidget(btn1 = new ImageButton(
-				Button.builder(cpile, btn -> 
+				Button.builder(cpile, _ -> 
 			blockEntity.sendMessage((short) 0,(2-btn1.state+1)%3)).pos(leftPos + 154, topPos + 2).size(20, 20)
 				, 176, 0, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(cpile) :(btn1.state==1 ? Tooltip.create(cgrid):Tooltip.create(csep))));
 		this.addRenderableWidget(btnsl1 = new ImageButton(
-				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 2,btnsl1.state%2)).pos(leftPos + 82, topPos + 9).size(12, 12)
+				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 2,btnsl1.state%2)).pos(leftPos + 82, topPos + 9).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl1.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 		this.addRenderableWidget(btnsl2 = new ImageButton(
-				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 3,btnsl2.state%2)).pos(leftPos + 115, topPos + 32).size(12, 12)
+				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 3,btnsl2.state%2)).pos(leftPos + 115, topPos + 32).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl2.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 		this.addRenderableWidget(btnsl3 = new ImageButton(
-				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 4,btnsl3.state%2)).pos(leftPos + 82, topPos + 55).size(12, 12)
+				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 4,btnsl3.state%2)).pos(leftPos + 82, topPos + 55).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl3.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 		this.addRenderableWidget(btnsl4 = new ImageButton(
-				Button.builder(cmodel, btn -> blockEntity.sendMessage((short) 5,btnsl4.state%2)).pos(leftPos + 49, topPos + 32).size(12, 12)
+				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 5,btnsl4.state%2)).pos(leftPos + 49, topPos + 32).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl4.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 	}
 
+	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
+		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	}
+
 	@Override
-	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
-		tooltip.clear();
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		btn1.state=2-blockEntity.config.ordinal();
 		if(blockEntity.config==GlobalConfig.SEPERATE) {
 			btnsl1.visible=btnsl2.visible=btnsl3.visible=btnsl4.visible=true;
@@ -104,31 +102,21 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 		btnsl2.state=blockEntity.slotconfig[1].ordinal()+1;
 		btnsl3.state=blockEntity.slotconfig[2].ordinal()+1;
 		btnsl4.state=blockEntity.slotconfig[3].ordinal()+1;
-		super.render(transform, mouseX, mouseY, partial);
-		if (!tooltip.isEmpty())
-			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);
-		else
-			super.renderTooltip(transform, mouseX, mouseY);
-
-	}
-
-	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
-		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-
-		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+		super.extractRenderState(graphics, mouseX, mouseY, a);
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+		graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 
-		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
+		Component name = this.playerInventoryTitle;
+		graphics.text(this.font, name, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
 	}
 
-	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
-		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	@Override
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractBackground(graphics, mouseX, mouseY, a);
+		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 	}
 
 }

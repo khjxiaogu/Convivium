@@ -1,0 +1,34 @@
+{
+  "type": "convivium:grinding",
+  "density": 0.0,
+  "fluidIn": {
+    "amount": 250,
+    "ingredient": {
+      "neoforge:ingredient_type": "convivium:beverage",
+      "allowedRelish": [
+        "bath",
+        "hearth"
+      ],
+      "density": 0.0,
+      "relish": [
+        {
+          "type": "major",
+          "relish": "bath"
+        }
+      ]
+    }
+  },
+  "fluidOut": {
+    "amount": 250,
+    "id": "convivium:tea_sorbet"
+  },
+  "items": [
+    {
+      "count": 1,
+      "ingredient": "minecraft:ice"
+    }
+  ],
+  "keepInfo": true,
+  "outputs": [],
+  "time": 200
+}

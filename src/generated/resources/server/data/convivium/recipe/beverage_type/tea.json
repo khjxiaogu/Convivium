@@ -1,0 +1,22 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "bath"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:spice",
+    "#convivium:sweeteners"
+  ],
+  "output": "convivium:tea",
+  "priority": 0,
+  "relish": [
+    {
+      "type": "only_major",
+      "relish": "bath"
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

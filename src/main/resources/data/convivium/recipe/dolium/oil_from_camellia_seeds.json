@@ -1,9 +1,7 @@
 {
 	"type": "caupona:dolium",
 	"amount": 0,
-	"container": {
-		"item": "caupona:gravy_boat"
-	},
+	"container": "caupona:gravy_boat",
 	"density": 0.0,
 	"items": [
 		{

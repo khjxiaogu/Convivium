@@ -1,0 +1,30 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "seasons",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:fruits",
+    "#convivium:sweeteners"
+  ],
+  "output": "convivium:ade",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "seasons"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "hearth"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

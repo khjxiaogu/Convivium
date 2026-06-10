@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "convivium:block/dynamic/whisk_rotor"
+      },
+      "when": {
+        "active": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "convivium:block/whisk_stator"
+      },
+      "when": {
+        "active": "true"
+      }
+    }
+  ]
+}

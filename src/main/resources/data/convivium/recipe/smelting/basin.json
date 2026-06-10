@@ -1,8 +1,6 @@
 {
 	"type": "minecraft:smelting",
-	"ingredient": {
-		"item": "convivium:clay_basin"
-	},
+	"ingredient": "convivium:clay_basin",
 	"result":{
 		"id":"convivium:basin"
 	},

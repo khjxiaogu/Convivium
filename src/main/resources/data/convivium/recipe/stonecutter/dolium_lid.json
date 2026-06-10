@@ -1,8 +1,6 @@
 {
 	"type": "stonecutting",
-	"ingredient": {
-		"item": "minecraft:shield"
-	},
+	"ingredient": "minecraft:shield",
 	"result": {
 		"id": "convivium:dolium_lid"
 	},

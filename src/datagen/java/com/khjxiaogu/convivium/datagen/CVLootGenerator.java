@@ -28,14 +28,14 @@ import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
 
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.data.loot.packs.VanillaLootTableProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -106,12 +106,13 @@ public class CVLootGenerator extends LootTableProvider {
 			}
 		}
 
+		@SuppressWarnings("unused")
 		private Block cp(String name) {
-			return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name));
+			return BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath(CVMain.MODID, name));
 		}
 
 		private Item cpi(String name) {
-			return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name));
+			return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(CVMain.MODID, name));
 		}
 
 		ArrayList<Block> added = new ArrayList<>();

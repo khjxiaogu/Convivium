@@ -28,15 +28,13 @@ import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import com.teammoeg.caupona.client.util.GuiUtils;
-import com.teammoeg.caupona.client.util.ModelUtils;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -46,17 +44,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
-	public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"whisk_rotor");
-	ItemRenderer render;
+public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity,WhiskRenderState> {
+	//public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"whisk_rotor");
+	ItemModelResolver render;
 	/**
 	 * @param rendererDispatcherIn  
 	 */
 	
 	public WhiskRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-		render=rendererDispatcherIn.getItemRenderer();
+		render=rendererDispatcherIn.itemModelResolver();
 	}
-	@SuppressWarnings({ "deprecation", "resource" })
+	/*@SuppressWarnings({ "deprecation", "resource" })
 	@Override
 	public void render(WhiskBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLightIn, int combinedOverlayIn) {
@@ -123,11 +121,16 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity> {
 		}
 	}
 
+*/
 
 
-
-	private static Vector3f clr(int col) {
-		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
+	@Override
+	public WhiskRenderState createRenderState() {
+		return new WhiskRenderState();
+	}
+	@Override
+	public void submit(WhiskRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		
 	}
 
 }

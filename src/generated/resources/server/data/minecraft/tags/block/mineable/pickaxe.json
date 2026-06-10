@@ -1,0 +1,16 @@
+{
+  "values": [
+    "convivium:whisk",
+    "convivium:aeolipile",
+    "convivium:pestle_and_mortar",
+    "convivium:basin",
+    "convivium:lead_basin",
+    "convivium:beverage_vending_machine",
+    "convivium:felsic_tuff_aqueduct",
+    "convivium:stone_aqueduct",
+    "convivium:sandstone_aqueduct",
+    "convivium:felsic_tuff_aqueduct_wavemaker",
+    "convivium:stone_aqueduct_wavemaker",
+    "convivium:sandstone_aqueduct_wavemaker"
+  ]
+}

@@ -65,11 +65,6 @@ sourceSets {
 	datagen {
         compileClasspath += main.compileClasspath
         compileClasspath += main.output
-       /* resources {
-            srcDirs = [
-                    "$rootDir/src/datagen/resources",
-            ]
-        }*/
     }
     client {}
 }

@@ -23,6 +23,7 @@ import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
 import com.teammoeg.caupona.compat.jei.category.BaseCallback;
+import com.teammoeg.caupona.compat.jei.category.CPCategory;
 import com.teammoeg.caupona.util.Utils;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -36,18 +37,17 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class BasinCategory implements IRecipeCategory<RecipeHolder<BasinRecipe>> {
+public class BasinCategory implements CPCategory<RecipeHolder<BasinRecipe>> {
 	@SuppressWarnings("rawtypes")
-	public static RecipeType<RecipeHolder> TYPE=RecipeType.create(CVMain.MODID, "basin",RecipeHolder.class);
+	public static IRecipeType<RecipeHolder> TYPE=IRecipeType.create(CVMain.MODID, "basin",RecipeHolder.class);
 	private IDrawable BACKGROUND;
 	private IDrawable ICON;
 
@@ -64,10 +64,10 @@ public class BasinCategory implements IRecipeCategory<RecipeHolder<BasinRecipe>>
 
 	@SuppressWarnings("resource")
 	@Override
-	public void draw(RecipeHolder<BasinRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX,
+	public void draw(RecipeHolder<BasinRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor stack, double mouseX,
 			double mouseY) {
 		String burnTime = String.valueOf(recipe.value().processTime / 20f) + "s";
-		stack.drawString(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
+		stack.text(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class BasinCategory implements IRecipeCategory<RecipeHolder<BasinRecipe>>
 	}
 
 	private static RecipeIngredientRole type(BasinRecipe ps) {
-		return ps.in.amount() == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
+		return ps.in.amount() == 0 ? RecipeIngredientRole.CRAFTING_STATION : RecipeIngredientRole.INPUT;
 	}
 
 	private static class CatalistCallback implements IRecipeSlotRichTooltipCallback {
@@ -117,21 +117,22 @@ public class BasinCategory implements IRecipeCategory<RecipeHolder<BasinRecipe>>
 		.setFluidRenderer(1000, false, 16, 37)
 		.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density));
 		if(recipe.requireBasin) {
-			builder.addSlot(RecipeIngredientRole.CATALYST , 3, 22)
+			builder.addSlot(RecipeIngredientRole.CRAFTING_STATION , 3, 22)
 			.addIngredients(VanillaTypes.ITEM_STACK,Arrays.asList(new ItemStack(CVBlocks.lead_basin.get())));
 		}
 		
 		for(int i=0;i<4;i++) {
 			if(i>=recipe.output.size())break;
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 18*(i%2)+73, i>1?33:15).addIngredient(VanillaTypes.ITEM_STACK, recipe.output.get(i));
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 18*(i%2)+73, i>1?33:15)
+			.add(recipe.output.get(i));
 		}
 
 	}
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public RecipeType<RecipeHolder<BasinRecipe>> getRecipeType() {
-		return (RecipeType)TYPE;
+	public IRecipeType<RecipeHolder<BasinRecipe>> getRecipeType() {
+		return (IRecipeType)TYPE;
 	}
 
 

@@ -1,0 +1,22 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "seasons"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:spice",
+    "#convivium:sweeteners"
+  ],
+  "output": "convivium:berry_juice",
+  "priority": 0,
+  "relish": [
+    {
+      "type": "only_major",
+      "relish": "seasons"
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

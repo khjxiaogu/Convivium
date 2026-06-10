@@ -45,6 +45,7 @@ import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
@@ -55,15 +56,15 @@ public class JEICompat implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addRecipeCatalyst(new ItemStack(CVBlocks.pam.get()), GrindingCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(CVBlocks.basin.get()), BasinCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(CVBlocks.lead_basin.get()), BasinCategory.TYPE);
+		registration.addCraftingStation(GrindingCategory.TYPE,new ItemStack(CVBlocks.pam.get()));
+		registration.addCraftingStation(BasinCategory.TYPE,new ItemStack(CVBlocks.basin.get()));
+		registration.addCraftingStation(BasinCategory.TYPE,new ItemStack(CVBlocks.lead_basin.get()));
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		registration.addRecipes(GrindingCategory.TYPE,new ArrayList<>(GrindingRecipe.recipes));
-		registration.addRecipes(BasinCategory.TYPE,new ArrayList<>(BasinRecipe.recipes));
+		registration.addRecipes(GrindingCategory.TYPE,new ArrayList<>(GrindingRecipe.recipes.values()));
+		registration.addRecipes(BasinCategory.TYPE,new ArrayList<>(BasinRecipe.recipes.values()));
 	}
 
 	@Override
@@ -86,16 +87,16 @@ public class JEICompat implements IModPlugin {
 		IIngredientManager manager=registry.getJeiHelpers().getIngredientManager();
 		registry.addRecipeClickArea(PamScreen.class, 108, 23,22, 15, GrindingCategory.TYPE);
 		registry.addRecipeClickArea(BasinScreen.class, 82, 19,16, 43, BasinCategory.TYPE);
-
+		
 		registry.addGuiContainerHandler(PamScreen.class, new GuiTankHandler<PamScreen>(manager)
-			.addTank(42, 19, 16, 37, t->t.getBlockEntity().tankin.getFluid())
-			.addTank(133, 34, 16, 37, t->t.getBlockEntity().tankout.getFluid()));
+			.addTank(42, 19, 16, 37, t->FluidUtil.getStack(t.getBlockEntity().tanks, 0))
+			.addTank(133, 34, 16, 37, t->FluidUtil.getStack(t.getBlockEntity().tanks, 1)));
 		registry.addGuiContainerHandler(BasinScreen.class, new GuiTankHandler<BasinScreen>(manager)
-			.addTank(62, 24, 16, 37, t->t.getBlockEntity().tankin.getFluid()));
+			.addTank(62, 24, 16, 37, t->FluidUtil.getStack(t.getBlockEntity().tankin, 0)));
 		registry.addGuiContainerHandler(WhiskScreen.class, new GuiTankHandler<WhiskScreen>(manager)
-			.addTank(132, 45, 16, 46, t->t.getBlockEntity().tank.getFluid()));
+			.addTank(132, 45, 16, 46, t->FluidUtil.getStack(t.getBlockEntity().tank, 0)));
 		registry.addGuiContainerHandler(BeverageVendingScreen.class, new GuiTankHandler<BeverageVendingScreen>(manager)
-			.addTank(123, 25, 32, 46, t->t.getBlockEntity().tank.getFluid()));
+			.addTank(123, 25, 32, 46, t->FluidUtil.getStack(t.getBlockEntity().tank, 0)));
 		
 	}
 

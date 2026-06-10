@@ -1,8 +1,6 @@
 {
 	"type": "convivium:taste",
-	"item": {
-		"item": "convivium:neroli"
-	},
+	"item": "convivium:neroli",
 	"priority": 0,
 	"variants": {
 		"soothingness": 3,

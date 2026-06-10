@@ -19,15 +19,12 @@
 package com.khjxiaogu.convivium.client.gui;
 
 import java.util.ArrayList;
-import java.util.Optional;
-
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.basin.BasinBlockEntity;
 import com.khjxiaogu.convivium.blocks.basin.BasinContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.teammoeg.caupona.client.util.GuiUtils;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -55,43 +52,8 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 		super.init();
 	}
 
-	@Override
-	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
-		tooltip.clear();
-		super.render(transform, mouseX, mouseY, partial);
-		if(!getBlockEntity().tankin.isEmpty()) {
-			if (isMouseIn(mouseX, mouseY, 62, 24, 16, 37)) {
-				tooltip.add(getBlockEntity().tankin.getFluid().getHoverName());
-			}
-			GuiUtils.handleGuiTank(transform, getBlockEntity().tankin, leftPos + 62, topPos + 24, 16, 37);
-		}
 
-		if (!tooltip.isEmpty())
-			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);
-		else
-			super.renderTooltip(transform, mouseX, mouseY);
 
-	}
-
-	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
-		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY,4210752, false);
-
-		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX, this.inventoryLabelY,4210752, false);
-	}
-
-	@Override
-	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-		if(getBlockEntity().isLastHeating) {
-			transform.blit(TEXTURE, leftPos+37, topPos+28, 176, 0, 16, 29);
-		}
-		if (getBlockEntity().recipeHandler.getProcessMax() > 0) {
-			transform.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().recipeHandler.getProcessMax()-getBlockEntity().recipeHandler.getProcess())*1f/getBlockEntity().recipeHandler.getProcessMax()), 43);
-		}
-	}
 
 	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
@@ -99,6 +61,36 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 
 	public BasinBlockEntity getBlockEntity() {
 		return blockEntity;
+	}
+
+	@Override
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		tooltip.clear();
+		super.extractRenderState(graphics, mouseX, mouseY, a);
+		FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tankin, leftPos + 62, topPos + 24, 16, 37, mouseX, mouseY, tooltip::add);
+		if (!tooltip.isEmpty()) {
+			graphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
+		}
+	}
+
+	@Override
+	protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+		graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY,4210752, false);
+
+		Component name = this.playerInventoryTitle;
+		graphics.text(this.font, name, this.inventoryLabelX, this.inventoryLabelY,4210752, false);
+	}
+
+	@Override
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractBackground(graphics, mouseX, mouseY, a);
+		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+		if(getBlockEntity().isLastHeating) {
+			graphics.blit(TEXTURE, leftPos+37, topPos+28, 176, 0, 16, 29,256,256);
+		}
+		if (getBlockEntity().recipeHandler.getProcessMax() > 0) {
+			graphics.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().recipeHandler.getProcessMax()-getBlockEntity().recipeHandler.getProcess())*1f/getBlockEntity().recipeHandler.getProcessMax()), 43,256,256);
+		}
 	}
 
 }

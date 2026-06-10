@@ -18,52 +18,47 @@
 
 package com.khjxiaogu.convivium.blocks.wolf_fountain;
 
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.joml.Vector2i;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.include.com.google.common.base.Objects;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVEntityTypes;
 import com.khjxiaogu.convivium.CVItems;
-import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.kinetics.Cog;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
 import com.khjxiaogu.convivium.client.CVParticles;
 import com.khjxiaogu.convivium.util.FoodPropertieHelper;
-import com.teammoeg.caupona.api.CauponaHooks;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.util.ChancedEffect;
+import com.teammoeg.caupona.util.MutableStackItemAccess;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.food.FoodProperties.Builder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumable;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -72,7 +67,6 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 	public FluidStacksResourceHandler fluid=new FluidStacksResourceHandler(1,1000) {
 		@Override
 		protected void onContentsChanged(int index, FluidStack previousContents) {
-			// TODO Auto-generated method stub
 			super.onContentsChanged(index, previousContents);
 			syncData();
 		}
@@ -172,7 +166,7 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 			tag.putInt("emitProcess", throwProcess);
 		}
 	}
-	public void applyEffectTo(int currentVersion,BlockPos pos) {
+	public void applyEffectTo(int currentVersion,BlockPos pos,Direction dir) {
 		if(this.level.isClientSide())return;
 		if(currentVersion==this.currentVersion) {
 			if(item!=null&&appliedConsumable!=null) {//potion portion applied
@@ -181,57 +175,65 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 			if(Objects.equal(pos, lasthit)) {
 				BlockEntity be=this.level.getBlockEntity(pos);
 				try(Transaction trans=Transaction.openRoot()){
-					if(be instanceof IFoodContainer cont&&(item!=null||fluid.getAmountAsInt(0)>=250)) {//transfer target
+					
 						workProcess++;
 						if(workProcess>=5) {
 							workProcess=0;
+							if(be instanceof IFoodContainer cont) {//transfer target
 							FluidResource fs=fluid.getResource(0);
-							for(int i=0;i<cont.getSlots();i++) {
-								ItemStack its=cont.exchangeInternal(null, trans);
-	
-								if(!its.isEmpty()&&Utils.isExtractAllowed(its)) {
-									if(item!=null) {
-										if(Utils.isExchangeAllowed(its, item)&&cont.accepts(i, item)) {
-											cont.setInternal(i, item);
-											resetContent();
-										}
-										break;
-									}else if(!fs.isEmpty()){
-										ContanerContainFoodEvent ev=Utils.contain(its, fs,true);
-										if(ev.isAllowed()) {
-											if(cont.accepts(i, ev.out)) {
-												fs=fluid.drain(ev.drainAmount, FluidAction.EXECUTE);
-												if(fs.getAmount()==ev.drainAmount) {
-													ev=Utils.contain(its, fs,false);
-													cont.setInternal(i,ev.out);
-													break;
+							if(fluid.getAmountAsInt(0)>=0) {
+								for(int i=0;i<cont.getSlots();i++) {
+									try(Transaction child=Transaction.open(trans)){
+										ItemResource container=cont.getValidContainer(0);
+										ItemResource its=cont.exchangeInternal(container, child);
+										if(container!=its) {
+											int amt=fluid.getAmountAsInt(0);
+											if(amt>0) {
+												ContanerContainFoodEvent event=Utils.contain(its, fs, amt);
+												if(event.isAllowed()) {
+													ItemResource nits=cont.exchangeInternal(0, event.getOutput(), child);
+													if(nits.equals(container)&&fluid.extract(0, fs, event.drainAmount, child)>=event.drainAmount) {
+														child.commit();
+														trans.commit();
+														if(fluid.getAmountAsInt(0)==0) {
+															resetContent();
+														}
+														return;
+													}
 												}
 											}
-											
 										}
-										if(fluid.isEmpty())
-											this.resetContent();
 									}
 								}
-								
+							}else if(item!=null&&item.count()==1) {
+								ItemResource in=ItemResource.of(item);
+								ItemResource its=cont.exchangeInternal(in, trans);
+								if(in!=its) {
+									if(its.isEmpty()) {
+										item.shrink(1);
+										trans.commit();
+										resetContent();
+										return;
+									}
+								}
+									
 							}
-							
 						}
-					}else if(!fluid.isEmpty()){
-						IFluidHandler ifh=FluidHandler.BLOCK.getCapability(level, pos,null, be, dir);
-						if(ifh!=null) {
-							FluidStack out=fluid.drain(50, FluidAction.SIMULATE);
-							if(ifh.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-								FluidStack drained=fluid.drain(50, FluidAction.EXECUTE);
-								ifh.fill(drained, FluidAction.EXECUTE);
-							}
 						}
-						if(fluid.isEmpty())
+					}
+				
+				if(fluid.getAmountAsInt(0)>=0){
+					try(Transaction trans=Transaction.openRoot()){
+						ResourceHandler<FluidResource> ifh=Capabilities.Fluid.BLOCK.getCapability(level, pos,null, be, dir);
+						
+						if(ResourceHandlerUtil.move(fluid, ifh, _->true, 50, trans)>0) {
+							trans.commit();
+						}
+						
+						if(fluid.getAmountAsInt(0)==0)
 							this.resetContent();
 					}
-					
 				}
-				
 			}else {
 				lasthit=pos;
 			}
@@ -316,57 +318,55 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 		int speed=getSpeed();
 		if(speed>0) {
 			Direction face=this.getBlockState().getValue(WolfFountainBlock.FACING);
-			if(fluid.isEmpty()&&item==null) {
+			if(fluid.getAmountAsInt(0)<=0&&item==null) {
 				
 				Direction backFace=face.getOpposite();
 				BlockPos back=this.getBlockPos().relative(backFace);
-				Block backBlock=this.getLevel().getBlockState(back).getBlock();
 
-				Optional<IFluidHandler> blockSource = FluidUtil.getFluidHandler(this.getLevel(), back,face);
-				if (blockSource.isPresent()) {
-					FluidUtil.tryFluidTransfer(fluid, blockSource.orElse(null), 250, true);
-					if(!fluid.isEmpty())
-						this.syncData();
-				} else if (backBlock instanceof BucketPickup bpu) {
-					FluidUtil.tryFluidTransfer(fluid,
-							new BucketPickupHandlerWrapper(null,bpu,this.getLevel(),back), FluidType.BUCKET_VOLUME,
-							true);
-					if(!fluid.isEmpty())
-						this.syncData();
-				}else if(this.getLevel().getBlockEntity(back) instanceof IFoodContainer cont) {
+				ResourceHandler<FluidResource> blockSource = this.getLevel().getCapability(Capabilities.Fluid.BLOCK, back, face);
+				if (blockSource!=null) {
+					try(Transaction trans=Transaction.openRoot()){
+						if(ResourceHandlerUtil.move(fluid, blockSource, _->true, 250, trans)>0) {
+							trans.commit();
+						}
+						
+					}
+				} else if(this.getLevel().getBlockEntity(back) instanceof IFoodContainer cont) {
 					for(int i=0;i<cont.getSlots();i++) {
-						ItemStack its=cont.getInternal(i);
-						IFluidHandlerItem ifhi=FluidHandler.ITEM.getCapability(its, null);
-						if(ifhi!=null) {
-							FluidStack fs=ifhi.drain(1000, FluidAction.SIMULATE);
-							if(!fs.isEmpty()) {
-								if(fluid.fill(fs, FluidAction.SIMULATE)==fs.getAmount()) {
-									fs=ifhi.drain(1000, FluidAction.EXECUTE);
-									fluid.fill(fs, FluidAction.EXECUTE);
-									cont.setInternal(i,ifhi.getContainer());
+						try(Transaction trans=Transaction.openRoot()){
+							ItemResource ir=cont.getValidContainer(0);
+							ItemResource its=cont.exchangeInternal(0, ir, trans);
+							if(ir!=its) {
+								MutableStackItemAccess stack=new MutableStackItemAccess(its,1);
+								if(ResourceHandlerUtil.move(Capabilities.Fluid.ITEM.getCapability(item, stack), fluid, _->true,1000, trans)>0) {
+									
+									ItemResource nits=cont.exchangeInternal(0, stack.getResource(), trans);
+									if(nits.equals(ir)) {
+										trans.commit();
+									}
+								}else if(its.is(Items.POTION)) {
+									item=its.toStack();
+									trans.commit();
 									this.syncData();
 									break;
 								}
 							}
-
-						}else if(its.is(Items.POTION)) {
-							item=its;
-							cont.setInternal(i,new ItemStack(Items.GLASS_BOTTLE));
-							this.syncData();
-							break;
+							
 						}
 
 					}
 					
-				}
+				}else {
+					FluidUtil.tryPickupFluid(fluid, null, level, back, backFace);
+				} 
 			}
-			if(!fluid.isEmpty()||item!=null) {
+			if(fluid.getAmountAsInt(0)>0||item!=null) {
 				if(++throwProcess>=10) {
 					throwProcess=0;
-					WolfFountainProjectile wfp=CVEntityTypes.WOLF_FOUNTAIN_DROP.get().create(this.level);
+					WolfFountainProjectile wfp=CVEntityTypes.WOLF_FOUNTAIN_DROP.get().create(this.level, EntitySpawnReason.DISPENSER);
 					wfp.source=this.getBlockPos();
 					wfp.verid=this.currentVersion;
-					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getNormal();
+					Vec3i vec=this.getBlockState().getValue(WolfFountainBlock.FACING).getUnitVec3i();
 					Vec3 center=this.getBlockPos().getCenter().add(vec.getX()*0.75,0.1815,vec.getZ()*0.75);
 					wfp.setPos(center);
 					wfp.setDeltaMovement(vec.getX()*0.1*getSpeed(), 0,vec.getZ()*0.1*getSpeed());

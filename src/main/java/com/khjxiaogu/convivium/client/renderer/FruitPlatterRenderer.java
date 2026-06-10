@@ -34,7 +34,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,12 +42,12 @@ import net.minecraft.world.phys.Vec3;
 public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEntity,FruitPlatterRenderState> {
 	public static final Map<Item,FruitModel> models=new HashMap<>();
 	
-	private final ItemModelResolver render;
+	private final BlockEntityRendererProvider.Context render;
 	/**
 	 * @param rendererDispatcherIn
 	 */
 	public FruitPlatterRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-		render=rendererDispatcherIn.itemModelResolver();
+		render=rendererDispatcherIn;
 	}
 
 
@@ -109,7 +108,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 			for(int i=1;i<=4;i++) {
 				ItemStack is=blockEntity.storage.getResource(i-1).toStack(blockEntity.storage.getAmountAsInt(i-1));
 				if(is.isEmpty())continue;
-				ctx.setPart(i,render,blockEntity.getLevel(), is, false);
+				ctx.setPart(i, is, false);
 			}
 			return;
 		}
@@ -120,7 +119,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 				if(model[i-1]!=null) {
 					ctx.setPart(i,model[i-1],true);
 				}else {
-					ctx.setPart(i,render,blockEntity.getLevel(), is, true);
+					ctx.setPart(i, is, true);
 				}
 			}
 		}
@@ -158,6 +157,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 	@Override
 	public void extractRenderState(PlatterBlockEntity blockEntity, FruitPlatterRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
 		state.ctx=getOrCreateContext(blockEntity);
+		state.ctx.extractRenderState(render, blockEntity);
 	}
 
 }

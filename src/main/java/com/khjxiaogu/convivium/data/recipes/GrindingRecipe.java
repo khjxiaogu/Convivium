@@ -45,6 +45,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -69,11 +70,11 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 	public Fluid base;
 	public float density = 0;
 	public SizedOrCatalystFluidIngredient in;
-	public FluidStack out= FluidStack.EMPTY;
+	public Optional<FluidStackTemplate> out;
 	public List<ItemStackTemplate> output;
 	public int processTime=200;
 	public boolean keepInfo = false;
-	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base, float density, SizedOrCatalystFluidIngredient in, FluidStack out, List<ItemStackTemplate> output, int processTime,
+	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Fluid base, float density, SizedOrCatalystFluidIngredient in, Optional<FluidStackTemplate> out, List<ItemStackTemplate> output, int processTime,
 		boolean keepInfo) {
 		super();
 		this.items = items;
@@ -91,7 +92,7 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 		BuiltInRegistries.FLUID.byNameCodec().optionalFieldOf("base").forGetter(o->Optional.ofNullable(o.base)),
 		Codec.FLOAT.fieldOf("density").forGetter(o->o.density),
 		SizedOrCatalystFluidIngredient.NESTED_CODEC.optionalFieldOf("fluidIn").forGetter(o->Optional.ofNullable(o.in)),
-		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
+		FluidStackTemplate.CODEC.optionalFieldOf("fluidOut").forGetter(o->o.out),
 		Codec.list(ItemStackTemplate.CODEC).fieldOf("outputs").forGetter(o->o.output),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("keepInfo").forGetter(o->o.keepInfo)
@@ -101,13 +102,13 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 		ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)),o->Optional.ofNullable(o.base),
 		ByteBufCodecs.FLOAT,o->o.density,
 		ByteBufCodecs.optional(SizedOrCatalystFluidIngredient.STREAM_CODEC),o->Optional.ofNullable(o.in),
-		FluidStack.OPTIONAL_STREAM_CODEC,o->o.out,
+		ByteBufCodecs.optional(FluidStackTemplate.STREAM_CODEC),o->o.out,
 		ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.output,
 		ByteBufCodecs.INT,o->o.processTime,
 		ByteBufCodecs.BOOL,o->o.keepInfo,
 		GrindingRecipe::new);
 	public GrindingRecipe(List<SizedOrCatalystIngredient> items, Optional<Fluid> base,
-			float density, Optional<SizedOrCatalystFluidIngredient> in, FluidStack out, List<ItemStackTemplate> output, int processTime, boolean keepInfo) {
+			float density, Optional<SizedOrCatalystFluidIngredient> in, Optional<FluidStackTemplate> out, List<ItemStackTemplate> output, int processTime, boolean keepInfo) {
 		this.items = items;
 		this.base = base.orElse(null);
 		this.density = density;
@@ -126,6 +127,7 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 		this.output = output;
 		this.processTime = processTime;
 		this.keepInfo = keepInfo;
+		this.out=Optional.empty();
 	}
 /*
 	public GrindingRecipe(Identifier id, JsonObject jo) {

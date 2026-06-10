@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=east": {
+      "model": "convivium:block/beverage_vending_machine",
+      "y": 90
+    },
+    "active=false,facing=north": {
+      "model": "convivium:block/beverage_vending_machine"
+    },
+    "active=false,facing=south": {
+      "model": "convivium:block/beverage_vending_machine",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "convivium:block/beverage_vending_machine",
+      "y": 270
+    },
+    "active=true,facing=east": {
+      "model": "convivium:block/beverage_vending_machine_active",
+      "y": 90
+    },
+    "active=true,facing=north": {
+      "model": "convivium:block/beverage_vending_machine_active"
+    },
+    "active=true,facing=south": {
+      "model": "convivium:block/beverage_vending_machine_active",
+      "y": 180
+    },
+    "active=true,facing=west": {
+      "model": "convivium:block/beverage_vending_machine_active",
+      "y": 270
+    }
+  }
+}

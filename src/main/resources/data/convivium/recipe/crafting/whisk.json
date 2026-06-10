@@ -6,15 +6,9 @@
 		"PCP"
 	],
 	"key": {
-		"I": {
-			"item": "minecraft:iron_ingot"
-		},
-		"C": {
-			"item": "minecraft:light_gray_concrete"
-		},
-		"P": {
-			"tag": "minecraft:planks"
-		}
+		"I": "minecraft:iron_ingot",
+		"C": "minecraft:light_gray_concrete",
+		"P": "#minecraft:planks"
 	},
 	"result": {
 		"id": "convivium:whisk"

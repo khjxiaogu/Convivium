@@ -1,0 +1,28 @@
+{
+  "values": [
+    {
+      "id": "#convivium:fruits/berries/small",
+      "required": false
+    },
+    {
+      "id": "#convivium:fruits/berries/large",
+      "required": false
+    },
+    {
+      "id": "#convivium:fruits/pomes/small",
+      "required": false
+    },
+    {
+      "id": "#convivium:fruits/pomes/large",
+      "required": false
+    },
+    {
+      "id": "#convivium:fruits/drupes/small",
+      "required": false
+    },
+    {
+      "id": "#convivium:fruits/drupes/large",
+      "required": false
+    }
+  ]
+}

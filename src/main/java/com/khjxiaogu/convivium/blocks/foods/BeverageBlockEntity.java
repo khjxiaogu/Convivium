@@ -116,4 +116,9 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 		return internal;
 	}
 
+	@Override
+	public ItemResource getValidContainer(int slot) {
+		return ItemResource.of(Items.GLASS_BOTTLE);
+	}
+
 }

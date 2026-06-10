@@ -5,15 +5,9 @@
 		"PIP"
 	],
 	"key": {
-		"I": {
-			"item": "minecraft:iron_ingot"
-		},
-		"S": {
-			"item": "minecraft:stick"
-		},
-		"P": {
-			"tag": "minecraft:planks"
-		}
+		"I": "minecraft:iron_ingot",
+		"S": "minecraft:stick",
+		"P": "#minecraft:planks"
 	},
 	"result": {
 		"id": "convivium:cog"

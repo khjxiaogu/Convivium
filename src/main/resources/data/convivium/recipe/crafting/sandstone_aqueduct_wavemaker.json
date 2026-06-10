@@ -6,18 +6,10 @@
 		"B B"
 	],
 	"key": {
-		"S": {
-			"item": "minecraft:cut_sandstone_slab"
-		},
-		"B": {
-			"item": "minecraft:cut_sandstone"
-		},
-		"C": {
-			"item": "convivium:cog"
-		},
-		"L": {
-			"item": "caupona:lateres"
-		}
+		"S": "minecraft:cut_sandstone_slab",
+		"B": "minecraft:cut_sandstone",
+		"C": "convivium:cog",
+		"L": "caupona:lateres"
 	},
 	"result": {
 		"id": "convivium:sandstone_aqueduct_wavemaker"

@@ -104,7 +104,7 @@ public class WolfFountainProjectile extends Projectile {
 		//System.out.println("hit block");
 		if(source!=null)
 			if(this.level().getBlockEntity(source) instanceof WolfFountainBlockEntity wf) {
-				wf.applyEffectTo(verid, result.getBlockPos());
+				wf.applyEffectTo(verid, result.getBlockPos(),result.getDirection());
 			}
 		this.remove(RemovalReason.DISCARDED);
 	}

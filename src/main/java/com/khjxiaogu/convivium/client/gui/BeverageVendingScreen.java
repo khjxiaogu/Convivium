@@ -19,17 +19,14 @@
 package com.khjxiaogu.convivium.client.gui;
 
 import java.util.ArrayList;
-import java.util.Optional;
-
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlockEntity;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.teammoeg.caupona.client.gui.ImageButton;
-import com.teammoeg.caupona.client.util.GuiUtils;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import com.teammoeg.caupona.util.Utils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -65,55 +62,24 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 		super.init();
 		this.clearWidgets();
 		this.addRenderableWidget(btnsl1 = new ImageButton(
-				Button.builder(p8, btn -> getBlockEntity().sendMessage((short) 0,0)).pos(leftPos + 101, topPos + 16).size(14, 14)
+				Button.builder(p8, _ -> getBlockEntity().sendMessage((short) 0,0)).pos(leftPos + 101, topPos + 16).size(14, 14)
 				, 176, 14, 256, 256, TEXTURE,
 				() -> Tooltip.create(p8)));
 		this.addRenderableWidget(btnsl2 = new ImageButton(
-				Button.builder(p1, btn -> getBlockEntity().sendMessage((short) 1,0)).pos(leftPos + 86, topPos + 16).size(14, 14)
+				Button.builder(p1, _ -> getBlockEntity().sendMessage((short) 1,0)).pos(leftPos + 86, topPos + 16).size(14, 14)
 				, 176, 0, 256, 256, TEXTURE,
 				() -> Tooltip.create(p1)));
 		this.addRenderableWidget(btnsl3 = new ImageButton(
-				Button.builder(m1, btn -> getBlockEntity().sendMessage((short) 2,0)).pos(leftPos + 27, topPos + 16).size(14, 14)
+				Button.builder(m1, _ -> getBlockEntity().sendMessage((short) 2,0)).pos(leftPos + 27, topPos + 16).size(14, 14)
 				, 176, 28, 256, 256, TEXTURE,
 				() -> Tooltip.create(m1)));
 		this.addRenderableWidget(btnsl4 = new ImageButton(
-				Button.builder(m8, btn -> getBlockEntity().sendMessage((short) 3,0)).pos(leftPos + 12, topPos + 16).size(14, 14)
+				Button.builder(m8, _ -> getBlockEntity().sendMessage((short) 3,0)).pos(leftPos + 12, topPos + 16).size(14, 14)
 				, 176, 42, 256, 256, TEXTURE,
 				() -> Tooltip.create(m8)));
 	}
 
-	@Override
-	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
-		tooltip.clear();
-		super.render(transform, mouseX, mouseY, partial);
-		transform.drawCenteredString(this.font,""+getBlockEntity().amt,leftPos + 57,topPos + 19, 0xffffff);
-		if(!getBlockEntity().tank.isEmpty()) {
-			if (isMouseIn(mouseX, mouseY, 123, 25, 32, 46)) {
-				tooltip.add(getBlockEntity().tank.getFluid().getHoverName());
-			}
-			GuiUtils.handleGuiTank(transform, getBlockEntity().tank, leftPos + 123, topPos + 25, 32, 46);
-		}
-		if (!tooltip.isEmpty())
-			transform.renderTooltip(this.font,tooltip,Optional.empty(), mouseX, mouseY);
-		else
-			super.renderTooltip(transform, mouseX, mouseY);
 
-	}
-
-	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
-		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-
-		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
-	}
-
-	@Override
-	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		
-		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
-	}
 
 	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
@@ -121,6 +87,34 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 
 	public BeverageVendingBlockEntity getBlockEntity() {
 		return blockEntity;
+	}
+
+	@Override
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		tooltip.clear();
+
+		graphics.centeredText(this.font,""+getBlockEntity().amt,leftPos + 57,topPos + 19, 0xffffff);
+		FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tank, leftPos + 123, topPos + 25, 32, 46,mouseX,mouseY,tooltip::add);
+		
+		super.extractRenderState(graphics, mouseX, mouseY, a);
+		
+		if (!tooltip.isEmpty()) {
+			graphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
+		}
+	}
+
+	@Override
+	protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+		graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
+
+		Component name = this.playerInventoryTitle;
+		graphics.text(this.font, name, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+	}
+
+	@Override
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractBackground(graphics, mouseX, mouseY, a);
+		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight,256,256);
 	}
 
 }

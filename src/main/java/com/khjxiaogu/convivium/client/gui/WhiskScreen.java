@@ -19,8 +19,6 @@
 package com.khjxiaogu.convivium.client.gui;
 
 import java.util.ArrayList;
-import java.util.Optional;
-
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
@@ -31,13 +29,12 @@ import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.khjxiaogu.convivium.util.Constants;
 import com.khjxiaogu.convivium.util.CurrentSwayInfo;
 import com.khjxiaogu.convivium.util.RotationUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.teammoeg.caupona.client.gui.ImageButton;
-import com.teammoeg.caupona.client.util.GuiUtils;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -46,9 +43,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	private Identifier TEXTURE = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/whisk.png");
@@ -56,14 +56,13 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	WhiskBlockEntity blockEntity;
 
 	public WhiskScreen(WhiskContainer container, Inventory inv, Component titleIn) {
-		super(container, inv, titleIn);
+		super(container, inv, titleIn, 176, 222);
 
 		this.titleLabelY = 4;
 		this.titleLabelX = 5;
 		this.inventoryLabelX = 6;
 		blockEntity = container.getBlock();
 
-		this.imageHeight = 222;
 		this.inventoryLabelY = this.imageHeight - 91;
 	}
 
@@ -79,27 +78,62 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	public void init() {
 		super.init();
 		this.addRenderableWidget(btn1 = new ImageButton(
-				Button.builder(hon, btn -> {if(btn1.state!=2)
+				Button.builder(hon, _ -> {if(btn1.state!=2)
 			getBlockEntity().sendMessage((short) 1,btn1.state);}).pos(leftPos + 119, topPos + 117).size(20, 20)
 				, 176, 72, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(hrs) :(btn1.state==1 ? Tooltip.create(hoff):Tooltip.create(hon))));
 		
 		this.addRenderableWidget(btn2 = new ImageButton(
-				Button.builder(hon, btn -> {
+				Button.builder(hon, _ -> {
 			getBlockEntity().sendMessage((short) 0,btn2.state);}).pos(leftPos + 141, topPos + 117).size(20, 20)
 				, 176, 132, 256, 256, TEXTURE,
 				() -> (btn2.state==0 ? Tooltip.create(rs):Tooltip.create(nors))));
 	}
 
+	public void drawActiveSway(GuiGraphicsExtractor transform,int x,int y,CurrentSwayInfo info) {
+		transform.blit(info.image, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
+	}
+	public void drawSway(GuiGraphicsExtractor transform,int x,int y,CurrentSwayInfo info) {
+		transform.blit(info.image, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
+		
+		drawDistMarker(transform,leftPos+x-3,topPos+y+21,info.dsweet);
+		drawDistMarker(transform,leftPos+x+5,topPos+y+21,info.dpungent);
+		drawDistMarker(transform,leftPos+x+13,topPos+y+21,info.drousing);
+		drawDistMarker(transform,leftPos+x+1,topPos+y+29,info.dastringent);
+		drawDistMarker(transform,leftPos+x+9,topPos+y+29,info.dthick);
+	}
+	//-3,21 5,21 13,21
+	//  1,29   9,29
+	public void drawDistMarker(GuiGraphicsExtractor transform,int x,int y,int num) {
+		int n=7;
+		switch(num) {
+		case 0:n=6;break;
+		case 1:n=0;break;
+		case 2:n=1;break;
+		case 3:n=2;break;
+		case -1:n=3;break;
+		case -2:n=4;break;
+		case -3:n=5;break;
+		}
+		transform.blit(TEXTURE, x, y, 176+n*8, 56, 8, 8,256,256);
+	}
+	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
+		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
+	}
+
+	public WhiskBlockEntity getBlockEntity() {
+		return blockEntity;
+	}
+
 	@Override
-	public void render(GuiGraphics transform, int mouseX, int mouseY, float partial) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		tooltip.clear();
 		btn2.state=getBlockEntity().rs?0:1;
 		btn1.state=btn2.state==0?2:(getBlockEntity().isHeating?0:1);
-		super.render(transform, mouseX, mouseY, partial);
+		super.extractRenderState(graphics, mouseX, mouseY, a);
 		if (getBlockEntity().processMax == 0) {
-			if (!getBlockEntity().tank.isEmpty()) {
-				FluidStack fluid = getBlockEntity().tank.getFluid();
+			if (getBlockEntity().tank.getAmountAsInt(0)>0) {
+				FluidStack fluid = FluidUtil.getStack(getBlockEntity().tank, 0);
 				BeverageInfo info=null;
 				if(getBlockEntity().target!=null)
 					info=getBlockEntity().target.get(CVComponents.BEVERAGE_INFO);
@@ -115,12 +149,11 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					}
 				}
 				if (isMouseIn(mouseX, mouseY, 132, 45, 16, 46)) {
-					tooltip.add(getBlockEntity().tank.getFluid().getHoverName());
-					
 					if(info!=null)
-						info.appendTooltip(tooltip);
+						info.addToTooltip(TooltipContext.EMPTY,tooltip::add, TooltipFlag.NORMAL, fluid);
+
 				}
-				GuiUtils.handleGuiTank(transform, getBlockEntity().tank, leftPos + 132, topPos + 45, 16, 46);
+				FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tank, leftPos + 132, topPos + 45, 16, 46, mouseX, mouseY, tooltip::add);
 				for(int i=4;i>=0;i--) {
 					Fluid f=info.relishes[i];
 					if(f!=null) {
@@ -157,42 +190,40 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 				}
 			}
 		}
-		if (!tooltip.isEmpty())
-			transform.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
-		else
-			super.renderTooltip(transform, mouseX, mouseY);
-
-	}
-
-	protected void renderLabels(GuiGraphics matrixStack, int x, int y) {
-		matrixStack.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-
-		Component name = this.playerInventoryTitle;
-		matrixStack.drawString(this.font, name, this.inventoryLabelX , this.inventoryLabelY, 4210752, false);
+		if (!tooltip.isEmpty()) {
+			graphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
+		}
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics transform, float partial, int x, int y) {
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+		graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 
-		transform.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+		Component name = this.playerInventoryTitle;
+		graphics.text(this.font, name, this.inventoryLabelX , this.inventoryLabelY, 4210752, false);
+	}
+
+	@Override
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractBackground(graphics, mouseX, mouseY, a);
+		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 		if (getBlockEntity().getSpeed() > 0) {
-			transform.blit(TEXTURE, leftPos + 128, topPos + 8, 176, 0, 24, 24);
+			graphics.blit(TEXTURE, leftPos + 128, topPos + 8, 176, 0, 24, 24, 256, 256);
 		}
 		if (getBlockEntity().isLastHeating) {
-			transform.blit(TEXTURE, leftPos + 130, topPos + 96, 176, 24, 19, 19);
+			graphics.blit(TEXTURE, leftPos + 130, topPos + 96, 176, 24, 19, 19, 256, 256);
 		}
 		if (getBlockEntity().processMax > 0) {
-			transform.blit(TEXTURE, leftPos + 111, topPos + 42, 176, 43,
-					(int) (17 * (getBlockEntity().processMax - getBlockEntity().process) * 1f / getBlockEntity().processMax), 13);
+			graphics.blit(TEXTURE, leftPos + 111, topPos + 42, 176, 43,
+					(int) (17 * (getBlockEntity().processMax - getBlockEntity().process) * 1f / getBlockEntity().processMax), 13, 256, 256);
 			int idx=0;
 			if(getBlockEntity().getSpeed()>0)
 				idx=(RotationUtils.getTicks()/5)%4;
-			transform.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52);
+			graphics.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52, 256, 256);
 		}else {
-			if(!getBlockEntity().tank.isEmpty()) {
+			if(getBlockEntity().tank.getAmountAsInt(0)>0) {
 				BeverageInfo info=null;
-				FluidStack fluid = getBlockEntity().tank.getFluid();
+				FluidStack fluid = FluidUtil.getStack(getBlockEntity().tank, 0);
 				if(getBlockEntity().target!=null)
 					info=getBlockEntity().target.get(CVComponents.BEVERAGE_INFO);
 				if(info==null)
@@ -212,7 +243,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 						RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f);
 						//System.out.println(f);
 						if(rr!=null) {
-							transform.blit(Identifier.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.value().relish+".png")
+							graphics.blit(Identifier.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.value().relish+".png")
 							, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
 							19, 11,32,32);
 						}
@@ -224,47 +255,13 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 				int n2=0;
 				for(CurrentSwayInfo swh:getBlockEntity().swayhint) {
 					if(swh.active>0) {
-						drawActiveSway(transform,18+20*(n2++),65,swh);
+						drawActiveSway(graphics,18+20*(n2++),65,swh);
 					}else {
-						drawSway(transform,12+26*(n1++),92,swh);
+						drawSway(graphics,12+26*(n1++),92,swh);
 					}
 				}
 			}
 		}
-	}
-	public void drawActiveSway(GuiGraphics transform,int x,int y,CurrentSwayInfo info) {
-		transform.blit(info.image, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
-	}
-	public void drawSway(GuiGraphics transform,int x,int y,CurrentSwayInfo info) {
-		transform.blit(info.image, leftPos + x, topPos + y, 0, 0, 18, 18,18,18);
-		
-		drawDistMarker(transform,leftPos+x-3,topPos+y+21,info.dsweet);
-		drawDistMarker(transform,leftPos+x+5,topPos+y+21,info.dpungent);
-		drawDistMarker(transform,leftPos+x+13,topPos+y+21,info.drousing);
-		drawDistMarker(transform,leftPos+x+1,topPos+y+29,info.dastringent);
-		drawDistMarker(transform,leftPos+x+9,topPos+y+29,info.dthick);
-	}
-	//-3,21 5,21 13,21
-	//  1,29   9,29
-	public void drawDistMarker(GuiGraphics transform,int x,int y,int num) {
-		int n=7;
-		switch(num) {
-		case 0:n=6;break;
-		case 1:n=0;break;
-		case 2:n=1;break;
-		case 3:n=2;break;
-		case -1:n=3;break;
-		case -2:n=4;break;
-		case -3:n=5;break;
-		}
-		transform.blit(TEXTURE, x, y, 176+n*8, 56, 8, 8);
-	}
-	public boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {
-		return mouseX >= leftPos + x && mouseY >= topPos + y && mouseX < leftPos + x + w && mouseY < topPos + y + h;
-	}
-
-	public WhiskBlockEntity getBlockEntity() {
-		return blockEntity;
 	}
 
 }

@@ -18,6 +18,7 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
@@ -30,11 +31,9 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondi
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,8 +58,8 @@ public class TypeRecipeBuilder {
 	public TypeRecipeBuilder mustContains(Item igd) {
 		return mustContains(Ingredient.of(igd));
 	}
-	public TypeRecipeBuilder mustContains(TagKey<Item> igd) {
-		return mustContains(Ingredient.of(BuiltInRegistries.ITEM.get(igd).get()));
+	public TypeRecipeBuilder mustContains(HolderSet<Item> igd) {
+		return mustContains(Ingredient.of(igd));
 	}
 	public TypeRecipeBuilder canContains(Ingredient igd) {
 		recipe.optional.add(igd);
@@ -72,8 +71,8 @@ public class TypeRecipeBuilder {
 	public TypeRecipeBuilder canContains(Item igd) {
 		return canContains(Ingredient.of(igd));
 	}
-	public TypeRecipeBuilder canContains(TagKey<Item> igd) {
-		return canContains(Ingredient.of(BuiltInRegistries.ITEM.get(igd).get()));
+	public TypeRecipeBuilder canContains(HolderSet<Item> igd) {
+		return canContains(Ingredient.of(igd));
 	}
 	private RelishCondition temp;
 	private BiFunction<RelishCondition,RelishCondition,LogicalRelishCondition> condition;
@@ -134,10 +133,10 @@ public class TypeRecipeBuilder {
 		recipe.removeNBT=true;
 		return this;
 	}
-	public void end(RecipeOutput out) {
+	public void end(BiConsumer<Identifier,? super BeverageTypeRecipe> out) {
 		if(temp!=null) {
 			recipe.relish.add(temp);
 		}
-		out.accept(ResourceKey.create(Registries.RECIPE, rl),recipe,null);
+		out.accept(rl,recipe);
 	}
 }

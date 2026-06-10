@@ -22,41 +22,39 @@ import java.util.concurrent.CompletableFuture;
 
 import com.khjxiaogu.convivium.CVMain;
 
-import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.metadata.PackMetadataGenerator;
 import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.util.Util;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-@EventBusSubscriber(modid = CVMain.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = CVMain.MODID)
 public class CVDataGenerator {
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event) {
+	public static void gatherData(GatherDataEvent.Server event) {
+		System.out.println("Gather server data");
 		DataGenerator gen = event.getGenerator();
-		ExistingFileHelper exHelper = event.getExistingFileHelper();
 
+		
 		CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
-		gen.addProvider(event.includeClient(), new CVItemModelProvider(gen, CVMain.MODID, exHelper));
-		gen.addProvider(event.includeServer(), new CVRecipeProvider(gen, completablefuture));
-		gen.addProvider(event.includeServer(), new CVItemTagGenerator(gen, CVMain.MODID, exHelper, event.getLookupProvider()));
-		gen.addProvider(event.includeServer(), new CVBlockTagGenerator(gen, CVMain.MODID, exHelper, event.getLookupProvider()));
-		gen.addProvider(event.includeServer(), new CVFluidTagGenerator(gen, CVMain.MODID, exHelper, event.getLookupProvider()));
-		gen.addProvider(event.includeServer(), new CVLootGenerator(gen, completablefuture));
-		gen.addProvider(event.includeClient() || event.includeServer(), new CVStatesProvider(gen, CVMain.MODID, exHelper));
-		gen.addProvider(event.includeServer(), new CVBookGenerator(gen.getPackOutput(), exHelper));
-		gen.addProvider(event.includeServer() || event.includeClient(), new PackMetadataGenerator(gen.getPackOutput()).add(PackMetadataSection.TYPE,
-			new PackMetadataSection(MutableComponent.create(new TranslatableContents("pack.convivium.title", CVMain.MODNAME + " Data", new Object[0])), 15)));
-		gen.addProvider(event.includeServer(), new CVRegistryGenerator(gen.getPackOutput(), completablefuture));
-		// gen.addProvider(event.includeClient(),new
-		// FluidAnimationGenerator(gen.getPackOutput(),exHelper));
-		// gen.addProvider(event.includeClient()||event.includeServer(), new
-		// RegistryJavaGenerator(gen.getPackOutput(),exHelper));
+		gen.addProvider(true,new CVItemTagGenerator(gen, CVMain.MODID,event.getLookupProvider()));
+		gen.addProvider(true,new CVBlockTagGenerator(gen, CVMain.MODID,event.getLookupProvider()));
+		gen.addProvider(true,new CVFluidTagGenerator(gen, CVMain.MODID,event.getLookupProvider()));
+		gen.addProvider(true,new CVLootGenerator(gen,completablefuture));
+		gen.addProvider(true,new CVRegistryGenerator(gen.getPackOutput(),completablefuture));
+		gen.addProvider(true, new CVRecipeProvider.Runner(gen.getPackOutput(),event.getLookupProvider()));
+		
+	}
+	@SubscribeEvent
+	public static void gatherData(GatherDataEvent.Client event) {
+		System.out.println("Gather client data");
+		DataGenerator gen = event.getGenerator();
+		@SuppressWarnings("unused")
+		CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
+		gen.addProvider(true,new CVModelProvider(gen.getPackOutput(), CVMain.MODID,event.getResourceManager(PackType.CLIENT_RESOURCES)));
+		gen.addProvider(true,new CVBookGenerator(gen.getPackOutput(), event.getResourceManager(PackType.CLIENT_RESOURCES)));
 	}
 }

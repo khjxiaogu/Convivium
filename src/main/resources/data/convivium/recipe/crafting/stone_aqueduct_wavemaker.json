@@ -6,18 +6,10 @@
 		"B B"
 	],
 	"key": {
-		"S": {
-			"item": "minecraft:stone_slab"
-		},
-		"B": {
-			"item": "minecraft:stone_bricks"
-		},
-		"C": {
-			"item": "convivium:cog"
-		},
-		"L": {
-			"item": "caupona:lateres"
-		}
+		"S": "minecraft:stone_slab",
+		"B": "minecraft:stone_bricks",
+		"C": "convivium:cog",
+		"L": "caupona:lateres"
 	},
 	"result": {
 		"id": "convivium:stone_aqueduct_wavemaker"

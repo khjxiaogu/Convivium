@@ -35,12 +35,12 @@ public class WhiskContainer extends CPBaseContainer<WhiskBlockEntity> {
 
 	public WhiskContainer(int id, Inventory inv, WhiskBlockEntity blockEntity) {
 		super(CVGui.WHISK.get(),blockEntity , id,6);
-		this.addSlot(new SlotItemHandler(blockEntity.inv, 0, 107, 24));
+		/*this.addSlot(new SlotItemHandler(blockEntity.inv, 0, 107, 24));
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 1, 91, 32));
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 2, 91, 48));
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 3, 107, 56));
 		this.addSlot(new SlotItemHandler(blockEntity.inv, 4, 92, 76));
-		this.addSlot(new OutputSlot(blockEntity.inv, 5, 94, 96));
+		this.addSlot(new OutputSlot(blockEntity.inv, 5, 94, 96));*/
 		super.addPlayerInventory(inv, 8, 140, 140+58);
 	}
 	@Override

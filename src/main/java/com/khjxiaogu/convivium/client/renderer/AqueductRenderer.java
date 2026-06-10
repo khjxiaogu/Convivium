@@ -18,52 +18,59 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import com.khjxiaogu.convivium.CVTags;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.teammoeg.caupona.client.util.GuiUtils;
+import org.jspecify.annotations.Nullable;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlockEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 
-public class AqueductRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+public abstract class AqueductRenderer<T extends BlockEntity,S extends AqueductRenderState> implements BlockEntityRenderer<T,S> {
+	public static class Aqueduct extends AqueductRenderer<AqueductBlockEntity,AqueductRenderState>{
+		public Aqueduct(Context rendererDispatcherIn) {
+			super(rendererDispatcherIn);
+		}
+
+		@Override
+		public AqueductRenderState createRenderState() {
+			return new AqueductRenderState();
+		}
+		
+	}
 	/**
 	 * @param rendererDispatcherIn  
 	 */
 	public AqueductRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 	}
-	private FluidStack water=new FluidStack(Fluids.WATER,1000);
-	@SuppressWarnings({ "deprecation", "resource" })
 	@Override
-	public void render(T blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {
-		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
-			return;
-		BlockState state = blockEntity.getBlockState();
-		if(!state.is(CVTags.Blocks.AQUEDUCT))
-			return;
-		matrixStack.pushPose();
-		matrixStack.translate(0, 15/16f, 0);
-		matrixStack.mulPose(GuiUtils.rotate90);
-		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
-		IClientFluidTypeExtensions attr0 = IClientFluidTypeExtensions.of(Fluids.WATER);
-		TextureAtlas atlas = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite sprite = atlas.getSprite(attr0.getStillTexture(water));
-		int col = attr0.getTintColor(water);
-		float alp = 1f;
-		GuiUtils.drawTexturedColoredRect(builder, matrixStack, 0, 0, 1, 1,(col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f, alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,combinedOverlayIn);
-		matrixStack.popPose();
+	public void submit(S state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		// TODO Auto-generated method stub
+		poseStack.pushPose();
+		poseStack.translate(0, 15/16f, 0);
+		poseStack.mulPose(FluidRenderHelper.rotate90);
+		FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite,
+			0, 0, 1, 1,
+			state.color, state.lightCoords, OverlayTexture.NO_OVERLAY);
+		poseStack.popPose();
+	}
+	@Override
+	public void extractRenderState(T blockEntity, S state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+		FluidStack fs=new FluidStack(Fluids.WATER,1000);
+		FluidModel model=FluidRenderHelper.getFluidModel(fs);
+		state.spite=model.stillMaterial().sprite();
+		state.color=FluidRenderHelper.getFluidColor(model, fs);
 	}
 }

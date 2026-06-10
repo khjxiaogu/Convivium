@@ -1,8 +1,6 @@
 {
 	"type": "convivium:taste",
-	"item": {
-		"item": "minecraft:sugar"
-	},
+	"item": "minecraft:sugar",
 	"priority": 0,
 	"variants": {
 		"thickness": 2,

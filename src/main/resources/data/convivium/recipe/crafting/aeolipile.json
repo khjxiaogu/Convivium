@@ -5,18 +5,10 @@
 		" CC"
 	],
 	"key": {
-		"C": {
-			"item": "minecraft:copper_ingot"
-		},
-		"L": {
-			"tag": "c:ingots/lead"
-		},
-		"X": {
-			"item": "minecraft:cut_copper"
-		},
-		"%": {
-			"item": "convivium:cog"
-		}
+		"C": "minecraft:copper_ingot",
+		"L": "#c:ingots/lead",
+		"X": "minecraft:cut_copper",
+		"%": "convivium:cog"
 	},
 	"result": {
 		"id": "convivium:aeolipile"

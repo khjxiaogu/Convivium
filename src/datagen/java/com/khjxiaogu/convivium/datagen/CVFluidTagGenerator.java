@@ -28,12 +28,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class CVFluidTagGenerator extends TagsProvider<Fluid> {
 
-	public CVFluidTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper, CompletableFuture<HolderLookup.Provider> provider) {
-		super(dataGenerator.getPackOutput(), Registries.FLUID, provider, modId, existingFileHelper);
+	public CVFluidTagGenerator(DataGenerator dataGenerator, String modId, CompletableFuture<HolderLookup.Provider> provider) {
+		super(dataGenerator.getPackOutput(), Registries.FLUID, provider, modId);
 	}
 
 	@Override

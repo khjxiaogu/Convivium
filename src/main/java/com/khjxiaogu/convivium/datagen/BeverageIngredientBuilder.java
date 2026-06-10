@@ -32,6 +32,7 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.util.BeverageFluidIngredient;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -57,8 +58,8 @@ public class BeverageIngredientBuilder {
 	public BeverageIngredientBuilder mustContains(Item igd) {
 		return mustContains(Ingredient.of(igd));
 	}
-	public BeverageIngredientBuilder mustContains(TagKey<Item> igd) {
-		return mustContains(Ingredient.of(BuiltInRegistries.ITEM.get(igd).get()));
+	public BeverageIngredientBuilder mustContains(HolderSet<Item> igd) {
+		return mustContains(Ingredient.of(igd));
 	}
 	public BeverageIngredientBuilder canContains(Ingredient igd) {
 		optional.add(igd);
@@ -70,8 +71,8 @@ public class BeverageIngredientBuilder {
 	public BeverageIngredientBuilder canContains(Item igd) {
 		return canContains(Ingredient.of(igd));
 	}
-	public BeverageIngredientBuilder canContains(TagKey<Item> igd) {
-		return canContains(Ingredient.of(BuiltInRegistries.ITEM.get(igd).get()));
+	public BeverageIngredientBuilder canContains(HolderSet<Item> igd) {
+		return canContains(Ingredient.of(igd));
 	}
 	private RelishCondition temp;
 	private BiFunction<RelishCondition,RelishCondition,LogicalRelishCondition> condition;

@@ -18,7 +18,10 @@
 
 package com.khjxiaogu.convivium.blocks.whisk;
 
+import java.util.List;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.blocks.basin.BasinBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.teammoeg.caupona.util.Utils;
 
@@ -37,11 +40,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.loot.LootParams.Builder;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 
@@ -58,15 +64,14 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(newState.getBlock() instanceof WhiskBlock)) {
-			if (worldIn.getBlockEntity(pos) instanceof WhiskBlockEntity dish) {
-				for (int i = 0; i < dish.inv.getSlots(); i++) {
-					super.popResource(worldIn, pos, dish.inv.getStackInSlot(i));
-				}
+	protected List<ItemStack> getDrops(BlockState p_state, Builder p_params) {
+		List<ItemStack> list=super.getDrops(p_state, p_params);
+		if (p_params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof WhiskBlockEntity dish) {
+			for(int i=0;i<dish.inv.size();i++) {
+				list.add(dish.inv.getResource(i).toStack(dish.inv.getAmountAsInt(i)));
 			}
-			worldIn.removeBlockEntity(pos);
 		}
+		return list;
 	}
 
 	@Override
@@ -76,39 +81,39 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 			return p;
 		BlockEntity be = level.getBlockEntity(pos);
 		if (be instanceof WhiskBlockEntity pam) {
-			if (!level.isClientSide)
+			if (!level.isClientSide())
 				player.openMenu(pam, pam.getBlockPos());
-			return InteractionResult.sidedSuccess(level.isClientSide);
+			return InteractionResult.SUCCESS;
 		}
 
 		return p;
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		ItemInteractionResult p = super.useItemOn(held, state, level, pos, player, hand, hitResult);
+	protected InteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		InteractionResult p = super.useItemOn(held, state, level, pos, player, hand, hitResult);
 		if (p.consumesAction())
 			return p;
 		BlockEntity be=level.getBlockEntity(pos);
 		if (be instanceof WhiskBlockEntity pam) {
 			if (held.isEmpty() && player.isShiftKeyDown()) {
-				pam.accessabletank.drain(1250, FluidAction.EXECUTE);
-				return ItemInteractionResult.SUCCESS;
+				pam.tank.set(0, FluidResource.EMPTY, 0);
+				return InteractionResult.SUCCESS;
 			}
 			if(held.getItem()==Items.POTION) {
 				PotionContents potc=held.get(DataComponents.POTION_CONTENTS);
 				if(potc.potion().filter(o->o==Potions.WATER).isPresent()) {
 					FluidStack water=new FluidStack(Fluids.WATER,250);
-					if(pam.accessabletank.fill(water,FluidAction.SIMULATE)==250) {
+					/*if(pam.accessabletank.fill(water,FluidAction.SIMULATE)==250) {
 						ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
 						held.shrink(1);
 						pam.accessabletank.fill(water, FluidAction.EXECUTE);
 						ItemHandlerHelper.giveItemToPlayer(player, remain);
 						return ItemInteractionResult.SUCCESS;
-					}
+					}*/
 				}
 			}
-
+/*
 			FluidStack out=Utils.extractFluid(held);
 			if (!out.isEmpty()) {
 				if(pam.accessabletank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
@@ -120,7 +125,7 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 				}
 			}
 			if (FluidUtil.interactWithFluidHandler(player, hand, pam.accessabletank))
-				return ItemInteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;*/
 		}
 		
 		return p;

@@ -1,8 +1,6 @@
 {
 	"type": "stonecutting",
-	"ingredient": {
-		"item": "minecraft:bread"
-	},
+	"ingredient": "minecraft:bread",
 	"result": {
 		"id": "convivium:flatbread"
 	},

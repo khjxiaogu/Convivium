@@ -1,0 +1,24 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "bath",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:fruits"
+  ],
+  "output": "convivium:sweet_tea",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "bath"
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    "#convivium:sweeteners"
+  ],
+  "time": 200
+}

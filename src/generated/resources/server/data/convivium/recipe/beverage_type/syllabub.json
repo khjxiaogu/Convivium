@@ -1,0 +1,31 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "cereal",
+    "seasons",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:spice",
+    "#convivium:sweeteners"
+  ],
+  "output": "convivium:syllabub",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "cereal"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "seasons"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

@@ -17,41 +17,23 @@ file="META-INF/accesstransformer.cfg"
 config="convivium.mixins.json"
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.convivium]] #optional
-    # the modid of the dependency
     modId="neoforge" #mandatory
-    # The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
-    # 'required' requires the mod to exist, 'optional' does not
-    # 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
     type="required" #mandatory
-    # Optional field describing why the dependency is required or why it is incompatible
-    # reason="..."
-    # The version range of the dependency
-    versionRange="[21.0,)" #mandatory
-    # An ordering relationship for the dependency.
-    # BEFORE - This mod is loaded BEFORE the dependency
-    # AFTER - This mod is loaded AFTER the dependency
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT, or SERVER
+    versionRange="[26.1.2,)" #mandatory
+    ordering="AFTER"
     side="BOTH"
 # Here's another dependency
 [[dependencies.convivium]]
     modId="minecraft"
     type="required"
     # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[1.21,1.22)"
-    ordering="NONE"
-    side="BOTH"
- [[dependencies.convivium]]
-    modId="neoforge"
-    type="required"
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[21.0,)"
+    versionRange="[26.1.2,26.2)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.convivium]]
     modId="caupona"
     type="required"
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[0.5.2,)"
+    # This version range declares a minimum of the current version up to but not including the next major version
+    versionRange="[6.0.2,)"
     ordering="NONE"
     side="BOTH"

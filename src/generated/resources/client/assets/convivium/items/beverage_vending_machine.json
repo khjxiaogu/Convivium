@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "convivium:block/beverage_vending_machine"
+  }
+}

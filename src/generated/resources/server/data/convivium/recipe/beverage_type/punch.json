@@ -1,0 +1,32 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth",
+    "seasons",
+    "wine"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:spice"
+  ],
+  "output": "convivium:punch",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "hearth"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "seasons"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    "#convivium:sweeteners"
+  ],
+  "time": 200
+}

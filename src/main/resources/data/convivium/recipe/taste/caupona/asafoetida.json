@@ -1,8 +1,6 @@
 {
 	"type": "convivium:taste",
-	"item": {
-		"item": "caupona:asafoetida"
-	},
+	"item": "caupona:asafoetida",
 	"priority": 0,
 	"variants": {
 		"soothingness": -4

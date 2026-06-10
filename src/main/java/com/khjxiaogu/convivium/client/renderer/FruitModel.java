@@ -29,13 +29,14 @@ public class FruitModel {
 		SLICE,
 		MISC
 	}
-	private DynamicBlockModelReference grid[];
+	private DynamicBlockModelReference[] grid;
 	private DynamicBlockModelReference[][] piled;
 	private ModelType type;
 	private RenderType rtype;
 	public FruitModel(String name,ModelType type,RenderType rtype) {
 		super();
 		this.type = type;
+		this.grid=new DynamicBlockModelReference[4];
 		for(int i=1;i<=4;i++) {
 			grid[i-1]=DynamicBlockModelReference.getModel(CVMain.rl(name+"_components_"+i));
 		}

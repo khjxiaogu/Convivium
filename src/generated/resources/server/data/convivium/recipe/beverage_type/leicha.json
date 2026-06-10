@@ -1,0 +1,22 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "bath",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [],
+  "output": "convivium:leicha",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "bath"
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    "#convivium:nuts"
+  ],
+  "time": 200
+}

@@ -1,0 +1,33 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "wine",
+    "bath",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:sweeteners",
+    "#convivium:fruits"
+  ],
+  "output": "convivium:jaegertee",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "wine"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "bath"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    "#convivium:spice"
+  ],
+  "time": 200
+}

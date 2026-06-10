@@ -92,7 +92,7 @@ public class CVBlocks {
 			aqueduct_mains.add(baseblock(s + "_aqueduct_wavemaker", b -> new AqueductControllerBlock(getKineticProps(b))));
 		}
 		for(String s:CVFluids.sorbets) {
-			baseblock(s+"_sorbet",b -> new SorbetBlock(getSProps(b)),(b,t)->new SorbetItem(t,Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s+"_sorbet"))), b, false));
+			baseblock(s+"_sorbet",b -> new SorbetBlock(getSProps(b)),(b,t)->new SorbetItem(t,Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s+"_sorbet"))), b.craftRemainder(CVBlocks.FLAT_BREAD.get().asItem()), false));
 		}
 	}
 

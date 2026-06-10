@@ -33,24 +33,24 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.TagAppender;
 import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class CVBlockTagGenerator extends TagsProvider<Block> {
 
-	public CVBlockTagGenerator(DataGenerator dataGenerator, String modId, ExistingFileHelper existingFileHelper, CompletableFuture<HolderLookup.Provider> provider) {
-		super(dataGenerator.getPackOutput(), Registries.BLOCK, provider, modId, existingFileHelper);
+
+	public CVBlockTagGenerator(DataGenerator dataGenerator, String modId,CompletableFuture<HolderLookup.Provider> provider) {
+		super(dataGenerator.getPackOutput(), Registries.BLOCK,provider,modId);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void addTags(Provider pProvider) {
 		for (String s : new String[] { "felsic_tuff", "stone", "sandstone" }) {
@@ -74,72 +74,70 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@SafeVarargs
-	private void adds(TagAppender<Block> ta, ResourceKey<? extends Block>... keys) {
-		ResourceKey[] rk = keys;
-		ta.add(rk);
+	private void adds(TagAppender<ResourceKey<Block>, Block> ta,ResourceKey<? extends Block>... keys) {
+		for(ResourceKey<? extends Block> blk:keys)
+		ta.add((ResourceKey<Block>) blk);
 	}
-
-	private TagAppender<Block> tag(String s) {
+	@SuppressWarnings("unused")
+	private TagAppender<ResourceKey<Block>, Block> tag(String s) {
 		return this.tag(BlockTags.create(mrl(s)));
 	}
-
-	private ResourceKey<Block> cpn(String s) {
-		return ResourceKey.create(Registries.BLOCK, cpmrl(s));
+	private TagAppender<ResourceKey<Block>, Block> tag(TagKey<Block> s) {
+		return TagAppender.forBuilder(super.getOrCreateRawBuilder(s)) ;
 	}
-
+	@SuppressWarnings("unused")
+	private TagAppender<ResourceKey<Block>, Block> tag(Identifier s) {
+		return tag(BlockTags.create(s)) ;
+	}
 	private ResourceKey<Block> cv(String s) {
-		return ResourceKey.create(Registries.BLOCK, mrl(s));
+		return ResourceKey.create(Registries.BLOCK,mrl(s));
+	}
+	private ResourceKey<Block> cpn(String s) {
+		return ResourceKey.create(Registries.BLOCK,CPMain.rl(s));
+	}
+	@SuppressWarnings("unused")
+	private ResourceKey<Block> rk(Block  b) {
+		return BuiltInRegistries.BLOCK.getResourceKey(b).get();
 	}
 
-	private ResourceKey<Block> rk(Block b) {
-		return BuiltInRegistries.BLOCK.getResourceKey(b).orElseGet(() -> b.builtInRegistryHolder().key());
-	}
-
-	private TagAppender<Block> tag(ResourceLocation s) {
-		return this.tag(BlockTags.create(s));
-	}
-
-	private ResourceLocation rl(DeferredHolder<Item, Item> it) {
+	@SuppressWarnings("unused")
+	private Identifier rl(DeferredHolder<Item,Item> it) {
 		return it.getId();
 	}
 
-	private ResourceLocation rl(String r) {
-		return ResourceLocation.parse(r);
+	@SuppressWarnings("unused")
+	private Identifier rl(String r) {
+		return Identifier.parse(r);
 	}
 
+	@SuppressWarnings("unused")
 	private TagKey<Block> otag(String s) {
 		return BlockTags.create(mrl(s));
 	}
 
-	private TagKey<Item> atag(ResourceLocation s) {
+	@SuppressWarnings("unused")
+	private TagKey<Item> atag(Identifier s) {
 		return ItemTags.create(s);
 	}
 
-	private ResourceLocation cpmrl(String s) {
-		return ResourceLocation.fromNamespaceAndPath(CPMain.MODID, s);
+	private Identifier mrl(String s) {
+		return Identifier.fromNamespaceAndPath(CVMain.MODID, s);
 	}
 
-	private ResourceLocation mrl(String s) {
-		return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s);
+	@SuppressWarnings("unused")
+	private Identifier frl(String s) {
+		return Identifier.fromNamespaceAndPath("c", s);
 	}
 
-	private ResourceLocation frl(String s) {
-		return ResourceLocation.fromNamespaceAndPath("c", s);
-	}
-
-	private ResourceLocation mcrl(String s) {
-		return ResourceLocation.withDefaultNamespace(s);
+	@SuppressWarnings("unused")
+	private Identifier mcrl(String s) {
+		return Identifier.withDefaultNamespace(s);
 	}
 
 	@Override
 	public String getName() {
 		return CVMain.MODID + " block tags";
 	}
-
-	/*
-	 * @Override protected Path getPath(ResourceLocation id) { return
-	 * super.pathProvider.json("data/" + id.getNamespace() + "/tags/blocks/" +
-	 * id.getPath() + ".json"); }
-	 */
 }

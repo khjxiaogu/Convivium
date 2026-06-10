@@ -6,18 +6,10 @@
 		"B B"
 	],
 	"key": {
-		"S": {
-			"item": "caupona:felsic_tuff_bricks_slab"
-		},
-		"B": {
-			"item": "caupona:felsic_tuff_bricks"
-		},
-		"C": {
-			"item": "convivium:cog"
-		},
-		"L": {
-			"item": "caupona:lateres"
-		}
+		"S": "caupona:felsic_tuff_bricks_slab",
+		"B": "caupona:felsic_tuff_bricks",
+		"C": "convivium:cog",
+		"L": "caupona:lateres"
 	},
 	"result": {
 		"id": "convivium:felsic_tuff_aqueduct_wavemaker"

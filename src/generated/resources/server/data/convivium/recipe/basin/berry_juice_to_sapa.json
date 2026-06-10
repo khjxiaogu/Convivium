@@ -1,0 +1,18 @@
+{
+  "type": "convivium:basin",
+  "fluidIn": {
+    "amount": 250,
+    "ingredient": "convivium:berry_juice"
+  },
+  "item": {
+    "count": 1,
+    "ingredient": "minecraft:flower_pot"
+  },
+  "leadBasin": true,
+  "outputs": [
+    {
+      "id": "caupona:sapa_spice_jar"
+    }
+  ],
+  "time": 200
+}

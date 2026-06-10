@@ -23,55 +23,85 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVBlocks;
+import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
+import com.khjxiaogu.convivium.blocks.aqueduct.AqueductMainConnection;
 import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
+import com.khjxiaogu.convivium.blocks.foods.SorbetBlock;
+import com.khjxiaogu.convivium.blocks.foods.SorbetItem;
 import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlock;
+import com.mojang.math.Quadrant;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.util.Utils;
 
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelOutput;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.ConditionBuilder;
+import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator.Empty;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelInstance;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.ExistingFileHelper.ResourceType;
+import net.neoforged.neoforge.common.util.Lazy;
 
-public class CVStatesProvider extends BlockStateProvider {
+public class CVStatesProvider extends BlockModelGenerators {
 	protected static final List<Vec3i> COLUMN_THREE = ImmutableList.of(BlockPos.ZERO, BlockPos.ZERO.above(),
 		BlockPos.ZERO.above(2));
-	protected static final ResourceType MODEL = new ResourceType(PackType.CLIENT_RESOURCES, ".json", "models");
-	protected static final Map<ResourceLocation, String> generatedParticleTextures = new HashMap<>();
-	protected final ExistingFileHelper existingFileHelper;
+	protected static final Map<Identifier, String> generatedParticleTextures = new HashMap<>();
 	String modid;
+	ResourceManager input;
 
-	public CVStatesProvider(DataGenerator gen, String modid, ExistingFileHelper exFileHelper) {
-		super(gen.getPackOutput(), modid, exFileHelper);
+	public CVStatesProvider(ResourceManager input, Consumer<BlockModelDefinitionGenerator> blockStateOutput, ItemModelOutput itemModelOutput, BiConsumer<Identifier, ModelInstance> modelOutput,
+		String modid) {
+		super(blockStateOutput, itemModelOutput, modelOutput);
 		this.modid = modid;
-		this.existingFileHelper = exFileHelper;
+		this.input = input;
 	}
-
+	public void horizontalBlock(Block block,MultiVariant model) {
+		this.blockStateOutput.accept(
+			this.getVariantBuilder(block,model).with(ROTATION_HORIZONTAL_FACING)
+			);
+	}
+	public void horizontalBlock(Block block,PropertyDispatch<MultiVariant> model) {
+		this.blockStateOutput.accept(
+			this.getVariantBuilder(block)
+			.with(model)
+			.with(ROTATION_HORIZONTAL_FACING)
+			);
+	}
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void registerStatesAndModels() {
+	public void run() {
 		kineticBlockModel("cog");
 		kineticBlockModel("cage_wheel");
 		kineticDirectionalBlockModel("aeolipile", "aeolipile_stator");
@@ -83,73 +113,69 @@ public class CVStatesProvider extends BlockStateProvider {
 		horizontalBlock(CVBlocks.lead_basin.get(), bmf("lead_basin"));
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("beverage"), bmf("beverage"));
-		simpleBlock(cvblock("fruit_platter"), obmf(CPMain.MODID, "dish"));
-		simpleBlockItem(cvblock("camellia_plant"), bmf("camellia_plant"));
-		itemModel(CVBlocks.CAMELLIA_FLOWER.get(), bmf("camellia_product_stage_c"));
-		this.horizontalBlock(CVBlocks.wolf_fountain.get(), bs->bs.getValue(KineticBasedBlock.ACTIVE)?bmf("wolf_fountain_2"):bmf("wolf_fountain_1"));
+		simpleBlock(cvblock("fruit_platter"), bmf(CPMain.rl("dish")));
+		simpleBlockItem(cvblock("camellia_plant"), CVMain.rl("camellia_plant"));
+		blockItemModel(CVBlocks.CAMELLIA_FLOWER.get(), CVMain.rl("camellia_product_stage_c"));
+		this.horizontalBlock(CVBlocks.wolf_fountain.get(), PropertyDispatch.initial(KineticBasedBlock.ACTIVE).generate(bs->bs?bmf("wolf_fountain_2"):bmf("wolf_fountain_1")));
 		blockItemModel("wolf_fountain","_1");
-		this.getVariantBuilder(CVBlocks.CAMELLIA_FLOWER.get())
-			.partialState().with(CamelliaFlowerBlock.AGE, 0).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_1"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 1).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_2b"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 2).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_2a"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 3).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 4).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 5).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 6).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"), 0, false))
-			.partialState().with(CamelliaFlowerBlock.AGE, 7).addModels(ConfiguredModel.allYRotations(bmf("camellia_product_stage_c"), 0, false));
+		this.blockStateOutput.accept(this.getVariantBuilder(CVBlocks.CAMELLIA_FLOWER.get())
+		.with(PropertyDispatch.initial(CamelliaFlowerBlock.AGE)
+			.generate(t->switch(t) {
+			case 0->createRotatedVariants(bmfs("camellia_product_stage_1"));
+			case 1->createRotatedVariants(bmfs("camellia_product_stage_2b"));
+			case 2->createRotatedVariants(bmfs("camellia_product_stage_2a"));
+			default->createRotatedVariants(bmfs("camellia_product_stage_c"));
+			}
+			)));
 		blockItemModel("beverage_vending_machine");
-		this.horizontalBlock(CVBlocks.BEVERAGE_VENDING_MACHINE.get(), s -> s.getValue(BeverageVendingBlock.ACTIVE) ? bmf("beverage_vending_machine_active") : bmf("beverage_vending_machine"));
+		this.horizontalBlock(CVBlocks.BEVERAGE_VENDING_MACHINE.get(), PropertyDispatch.initial(BeverageVendingBlock.ACTIVE).generate(bs->bs? bmf("beverage_vending_machine_active") : bmf("beverage_vending_machine")));
 		for (String s : new String[] { "felsic_tuff", "stone", "sandstone" }) {
+			this.blockStateOutput.accept(
+			this.getVariantBuilder(cvblock(s + "_aqueduct")).with(PropertyDispatch.initial(AqueductBlock.CONN)
+				.select(AqueductConnection.X,bmf(s + "_aqueduct_straight"))
+				.select(AqueductConnection.Z,bmf(s + "_aqueduct_straight").with(Y_ROT_90))
+				.select(AqueductConnection.N,bmf(s + "_aqueduct_end").with(Y_ROT_90))
+				.select(AqueductConnection.E,bmf(s + "_aqueduct_end").with(Y_ROT_180))
+				.select(AqueductConnection.S,bmf(s + "_aqueduct_end").with(Y_ROT_270))
+				.select(AqueductConnection.W,bmf(s + "_aqueduct_end"))
+				.select(AqueductConnection.NE,bmf(s + "_aqueduct_corner").with(Y_ROT_90))
+				.select(AqueductConnection.NW,bmf(s + "_aqueduct_corner"))//
+				.select(AqueductConnection.SW,bmf(s + "_aqueduct_corner").with(Y_ROT_270))
+				.select(AqueductConnection.SE,bmf(s + "_aqueduct_corner").with(Y_ROT_180))
+				.select(AqueductConnection.A,bmf(s + "_aqueduct_isolated"))
+				));
+			this.blockStateOutput.accept(
+				this.getVariantBuilder(cvblock(s + "_aqueduct_wavemaker"))
+				.with(PropertyDispatch.initial(AqueductControllerBlock.CONN,BlockStateProperties.HORIZONTAL_FACING)
+				.generate((conn,dir)->{
+					
+					MultiVariant model=switch (conn) {
+					case N->bmf(s + "_aqueduct_wavemaker_stator_isolated");
+					case L->bmf(s + "_aqueduct_wavemaker_stator_end");
+					case R->bmf(s + "_aqueduct_wavemaker_stator_end");
+					case A->bmf(s + "_aqueduct_wavemaker_stator");
+					};
+					boolean rev = conn==AqueductMainConnection.L;
+					return model.with(VariantMutator.Y_ROT.withValue(Quadrant.parseJson((int) dir.toYRot() + (rev ? 0 : 180))));
 
-			this.getVariantBuilder(cvblock(s + "_aqueduct"))
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.X).modelForState().modelFile(bmf(s + "_aqueduct_straight")).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.Z).modelForState().modelFile(bmf(s + "_aqueduct_straight")).rotationY(90).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.N).modelForState().modelFile(bmf(s + "_aqueduct_end")).rotationY(90).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.E).modelForState().modelFile(bmf(s + "_aqueduct_end")).rotationY(180).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.S).modelForState().modelFile(bmf(s + "_aqueduct_end")).rotationY(270).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.W).modelForState().modelFile(bmf(s + "_aqueduct_end")).rotationY(0).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.NE).modelForState().modelFile(bmf(s + "_aqueduct_corner")).rotationY(90).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.NW).modelForState().modelFile(bmf(s + "_aqueduct_corner")).rotationY(0).addModel()//
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.SW).modelForState().modelFile(bmf(s + "_aqueduct_corner")).rotationY(270).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.SE).modelForState().modelFile(bmf(s + "_aqueduct_corner")).rotationY(180).addModel()
-				.partialState().with(AqueductBlock.CONN, AqueductConnection.A).modelForState().modelFile(bmf(s + "_aqueduct_isolated")).addModel();
-			getVariantBuilder(cvblock(s + "_aqueduct_wavemaker"))
-				.forAllStatesExcept(state -> {
-					var builder = ConfiguredModel.builder();
-					boolean rev = false;
-					switch (state.getValue(AqueductControllerBlock.CONN)) {
-					case N:
-						builder.modelFile(bmf(s + "_aqueduct_wavemaker_stator_isolated"));
-						break;
-					case L:
-						builder.modelFile(bmf(s + "_aqueduct_wavemaker_stator_end"));
-						rev = true;
-						break;
-					case R:
-						builder.modelFile(bmf(s + "_aqueduct_wavemaker_stator_end"));
-						break;
-					case A:
-						builder.modelFile(bmf(s + "_aqueduct_wavemaker_stator"));
-						break;
-					}
+				})));
 
-					return builder
-						.rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + (rev ? 0 : 180)) % 360)
-						.build();
-				}, KineticBasedBlock.LOCKED, KineticBasedBlock.ACTIVE);
+			this.blockItemModel(cvblock(s + "_aqueduct"), CVMain.rl(s + "_aqueduct_straight"));
 
-			this.itemModel(cvblock(s + "_aqueduct"), bmf(s + "_aqueduct_straight"));
-
-			this.itemModel(cvblock(s + "_aqueduct_wavemaker"), bmf(s + "_aqueduct_wavemaker_stator"));
+			this.blockItemModel(cvblock(s + "_aqueduct_wavemaker"), CVMain.rl(s + "_aqueduct_wavemaker_stator"));
+		}
+		empty(CVBlocks.FLAT_BREAD.get());
+		for(String s:CVFluids.sorbets) {
+			empty(s+"_sorbet");
 		}
 	}
 
 	private Block cvblock(String name) {
-		return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(this.modid, name));
+		return BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath(this.modid, name));
 	}
 
 	protected void kineticDirectionalBlockModel(String name, String stator) {
-		horizontalMultipart(this.getMultipartBuilder(cvblock(name)), bmf(stator), c -> c);
+		this.blockStateOutput.accept(horizontalMultipart(this.getMultipartBuilder(cvblock(name)), bmf(stator), c -> c));
 		blockItemModel(name);
 
 	}
@@ -159,86 +185,177 @@ public class CVStatesProvider extends BlockStateProvider {
 		 * this.getVariantBuilder(cvblock(name)).partialState().modelForState().
 		 * modelFile(bmf(stator)).addModel(); blockItemModel(name);
 		 */
+		this.blockStateOutput.accept(
 		this.getMultipartBuilder(cvblock(name))
-			.part().modelFile(bmf("dynamic/" + rotor)).addModel().condition(CogCageBlock.ACTIVE, false).end()
-			.part().modelFile(bmf(stator)).addModel().end();
+		.with(condition(CogCageBlock.ACTIVE, false), bmf("dynamic/" + rotor))
+		.with(condition(CogCageBlock.ACTIVE, true), bmf(stator))
+		);
 		blockItemModel(name);
 
 	}
+	protected void empty(Block name) {
+		this.blockStateOutput.accept(
+		this.getVariantBuilder(name,bmf(Identifier.withDefaultNamespace("block")))
+		);
 
+	}
+	protected void empty(String name) {
+		empty(cvblock(name));
+
+	}
 	protected void kineticBlockModel(String name) {
-
-		this.getMultipartBuilder(cvblock(name)).part().modelFile(bmf("dynamic/" + name)).addModel().condition(CogCageBlock.ACTIVE, false).end();
+		this.blockStateOutput.accept(
+		this.getMultipartBuilder(cvblock(name))
+		.with(condition(CogCageBlock.ACTIVE, false), bmf("dynamic/" + name))
+		);
 
 		blockItemModel(name);
+	}
+
+	protected Empty getVariantBuilder(Block blk) {
+		return MultiVariantGenerator.dispatch(blk);
+	}
+
+	protected MultiVariantGenerator getVariantBuilder(Block blk,MultiVariant model) {
+		return MultiVariantGenerator.dispatch(blk,model);
+	}
+
+	private Block cpblock(String name) {
+		return BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath(this.modid, name));
 	}
 
 	protected void blockItemModel(String n) {
 		blockItemModel(n, "");
 	}
+	public void simpleTexture(String name, String par) {
+		this.itemModelOutput.accept(BuiltInRegistries.ITEM.getValue(CVMain.rl(name)),
+		ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(CVMain.rl("item/" + name),new TextureMapping().put(TextureSlot.LAYER0, new Material(CVMain.rl("item/" + par + name),false)), this.modelOutput))
+		);
+
+	}
+	public void simpleTexture(Item item) {
+		this.itemModelOutput.accept(item,
+		ItemModelUtils.plainModel(this.createFlatItemModel(item))
+		);
+	}
+	public void texture(String name) {
+		texture(name, name);
+	}
+	public void texture(Item name, String par) {
+		this.itemModelOutput.accept(name,
+			ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(name), TextureMapping.layer0(new Material(Identifier.fromNamespaceAndPath(CVMain.MODID, "item/"+par))), this.modelOutput)
+				));
+	}
+	public void texture(String name, String par) {
+		texture(BuiltInRegistries.ITEM.getValue(CVMain.rl(name)),par);
+	}
 
 	protected void blockItemModel(String n, String p) {
-		if (this.existingFileHelper.exists(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "textures/item/" + n + p + ".png"),
-			PackType.CLIENT_RESOURCES)) {
-			itemModels().basicItem(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, n));
+		if (input.getResource(Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/item/" + n + p + ".png")).isPresent()) {
+
+			texture(n, n + p);
 		} else {
-			itemModels().getBuilder(n).parent(bmf(n + p));
+			blockItemModel(cpblock(n), CVMain.rl(n + p));
 		}
 	}
 
-	public ModelFile obmf(String modid, String name) {
-		ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(modid, "block/" + name);
-		return new ModelFile.UncheckedModelFile(rl);
-	}
+	protected void blockItemModel(Block n, Identifier p) {
+		Identifier blockModelId=p.withPrefix("block/");
+		String name=p.getPath();
+		if(existsModel(blockModelId)) {
 
-	public ModelFile bmf(String modid, String name) {
-		ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(modid, "block/" + name);
-		if (!existingFileHelper.exists(rl, MODEL)) {// not exists, let's guess
+			this.itemModelOutput.accept(n.asItem(), ItemModelUtils.plainModel(blockModelId));
+		}else {
 			List<String> rn = Arrays.asList(name.split("_"));
 			for (int i = rn.size(); i >= 0; i--) {
 				List<String> rrn = new ArrayList<>(rn);
 				rrn.add(i, "0");
-				rl = ResourceLocation.fromNamespaceAndPath(modid, "block/" + String.join("_", rrn));
-				if (existingFileHelper.exists(rl, MODEL))
-					break;
+				blockModelId = Identifier.fromNamespaceAndPath(this.modid, "block/" + String.join("_", rrn));
+				if (existsModel(blockModelId)) {
+					this.itemModelOutput.accept(n.asItem(), ItemModelUtils.plainModel(blockModelId));
+					return;
+				}
+			}
+			
+
+			throw new IllegalArgumentException("model does not exists: "+p);
+		}
+	}
+
+	public void stove(Block block) {
+		this.blockStateOutput.accept(
+		
+			horizontalMultipart(this.getMultipartBuilder(block),
+				bmf(Utils.getRegistryName(block).getPath())));
+		blockItemModel(block, Utils.getRegistryName(block));
+
+	}
+
+	public boolean existsModel(Identifier id) {
+		return input.getResource(id.withPrefix("models/").withSuffix(".json")).isPresent();
+
+	}
+
+	public MultiVariant bmf(String name) {
+		return super.variant(bmfs(name));
+	}
+	
+	public Variant bmfs(String name) {
+		Identifier orl = Identifier.fromNamespaceAndPath(this.modid, "block/" + name);
+		Identifier rl = orl;
+
+		if (!existsModel(rl)) {// not exists, let's guess
+			List<String> rn = Arrays.asList(name.split("_"));
+			for (int i = rn.size(); i >= 0; i--) {
+				List<String> rrn = new ArrayList<>(rn);
+				rrn.add(i, "0");
+				rl = Identifier.fromNamespaceAndPath(this.modid, "block/" + String.join("_", rrn));
+				if (existsModel(rl))
+					return super.plainModel(rl);
 			}
 
 		}
-		return new ModelFile.ExistingModelFile(rl, existingFileHelper);
+		CVMain.logger.warn("Model file " + orl + " not exists, using unchecked");
+		return super.plainModel(rl);
 	}
 
-	public ModelFile bmf(String name) {
-		return bmf(this.modid, name);
+	public MultiVariant bmf(Identifier name) {
+		return super.variant(bmfs(name));
 	}
 
-	public void simpleBlockItem(Block b, ModelFile model) {
-		simpleBlockItem(b, new ConfiguredModel(model));
+	public Variant bmfs(Identifier orl) {
+		return super.plainModel(orl);
 	}
 
-	protected void simpleBlockItem(Block b, ConfiguredModel model) {
-		simpleBlock(b, model);
-		itemModel(b, model.model);
+	protected void simpleBlockItem(Block b, Identifier model) {
+		this.blockStateOutput.accept(createSimpleBlock(b, bmf(model.withPrefix("block/"))));
+		blockItemModel(b, model);
+	}
+	protected void simpleBlock(Block b, MultiVariant model) {
+		this.blockStateOutput.accept(createSimpleBlock(b, model));
+	}
+	public void horizontalAxisBlock(Block block, MultiVariant mf) {
+
+		this.blockStateOutput
+			.accept(getVariantBuilder(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_AXIS)
+				.select(Axis.Z, mf)
+				.select(Axis.X, mf.with(Y_ROT_90))));
+
 	}
 
-	public void horizontalAxisBlock(Block block, ModelFile mf) {
-		getVariantBuilder(block).partialState().with(BlockStateProperties.HORIZONTAL_AXIS, Axis.Z).modelForState()
-			.modelFile(mf).addModel().partialState().with(BlockStateProperties.HORIZONTAL_AXIS, Axis.X)
-			.modelForState().modelFile(mf).rotationY(90).addModel();
+	public MultiPartGenerator horizontalMultipart(MultiPartGenerator generator, MultiVariant variant) {
+		forEachHorizontalDirection((direction, rotation) -> generator.with(condition(BlockStateProperties.HORIZONTAL_FACING, direction), variant.with(rotation)));
+		return generator;
 	}
 
-	public MultiPartBlockStateBuilder horizontalMultipart(MultiPartBlockStateBuilder block, ModelFile mf) {
-		return horizontalMultipart(block, mf, UnaryOperator.identity());
+	public MultiPartGenerator horizontalMultipart(MultiPartGenerator generator, MultiVariant variant,
+		UnaryOperator<ConditionBuilder> act) {
+		forEachHorizontalDirection((direction, rotation) -> generator.with(act.apply(condition(BlockStateProperties.HORIZONTAL_FACING, direction)), variant.with(rotation)));
+
+		return generator;
 	}
 
-	public MultiPartBlockStateBuilder horizontalMultipart(MultiPartBlockStateBuilder block, ModelFile mf,
-		UnaryOperator<PartBuilder> act) {
-		for (Direction d : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues())
-			block = act.apply(block.part().modelFile(mf).rotationY(((int) d.toYRot()) % 360).addModel()
-				.condition(BlockStateProperties.HORIZONTAL_FACING, d)).end();
-		return block;
-	}
-
-	protected void itemModel(Block block, ModelFile model) {
-		itemModels().getBuilder(Utils.getRegistryName(block).getPath()).parent(model);
+	protected MultiPartGenerator getMultipartBuilder(Block block) {
+		return MultiPartGenerator.multiPart(block);
 	}
 }

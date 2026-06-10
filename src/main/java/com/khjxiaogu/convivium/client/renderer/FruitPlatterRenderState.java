@@ -2,14 +2,13 @@ package com.khjxiaogu.convivium.client.renderer;
 
 import org.joml.Quaternionf;
 
-import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -17,7 +16,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class FruitPlatterRenderState extends BlockEntityRenderState {
 	public static class FruitPlatterRenderingContext{
@@ -33,18 +32,11 @@ public class FruitPlatterRenderState extends BlockEntityRenderState {
 			new Quaternionf().rotateXYZ((float) ((90-15)/180f*Math.PI),-(float) (15/180f*Math.PI),+(float) (15/180f*Math.PI)),
 			new Quaternionf().rotateXYZ((float) ((90-15)/180f*Math.PI),+(float) (15/180f*Math.PI),+(float) (15/180f*Math.PI))
 		};
-		@SuppressWarnings("unchecked")
-		private static final ImmutableSet<String>[] model_names=new ImmutableSet[] {
-			ImmutableSet.of("FruitUnit1"),
-			ImmutableSet.of("FruitUnit2"),
-			ImmutableSet.of("FruitUnit3"),
-			ImmutableSet.of("FruitUnit4")
-		}; 
 		public static class FruitPlatterRenderingPart{
 			int type;
 			int modelIndex;
 			FruitModel model;
-			ItemStackRenderState stack=new ItemStackRenderState();
+			ItemStack stack;
 			public FruitPlatterRenderingPart(FruitModel model,boolean isGrided) {
 				super();
 				type=isGrided?5:1;
@@ -56,10 +48,10 @@ public class FruitPlatterRenderState extends BlockEntityRenderState {
 				this.modelIndex = modelIndex;
 				this.model = model;
 			}
-			public FruitPlatterRenderingPart(ItemModelResolver ir,Level level,ItemStack stack,boolean isGrided) {
+			public FruitPlatterRenderingPart(ItemStack stack,boolean isGrided) {
 				super();
 				type=isGrided?4:3;
-				ir.appendItemLayers(this.stack, stack,ItemDisplayContext.GROUND,level, null, 7+type);
+				
 
 			}
 		}
@@ -69,10 +61,26 @@ public class FruitPlatterRenderState extends BlockEntityRenderState {
 		public void setPart(int position,int modelIndex, FruitModel model) {
 			parts[position-1]=new FruitPlatterRenderingPart(modelIndex,model);
 		}
-		public void setPart(int position,ItemModelResolver ir,Level level,ItemStack stack,boolean isGrided) {
-			parts[position-1]=new FruitPlatterRenderingPart(ir, level, stack,isGrided);
+		public void setPart(int position,ItemStack stack,boolean isGrided) {
+			parts[position-1]=new FruitPlatterRenderingPart(stack,isGrided);
+		}
+		public void extractRenderState(BlockEntityRendererProvider.Context context,BlockEntity be) {
+			for(int i=0;i<4;i++) {
+
+				FruitPlatterRenderingPart cpart=parts[i];
+				if(cpart!=null) {
+					if(cpart.stack!=null) {
+						items[i]=new ItemStackRenderState();
+						context.itemModelResolver()
+						.appendItemLayers(items[i], cpart.stack,ItemDisplayContext.GROUND,be.getLevel(), null, 7+i);
+						continue;
+					}
+				}
+				items[i]=null;
+			}
 		}
 		FruitPlatterRenderingPart[] parts=new FruitPlatterRenderingPart[4];
+		ItemStackRenderState[] items=new ItemStackRenderState[4];
 		public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, QuadInstance instance) {
 			
 			for(int i=1;i<=4;i++) {
@@ -81,8 +89,8 @@ public class FruitPlatterRenderState extends BlockEntityRenderState {
 					switch(cpart.type) {
 					case 1:renderPartPiledAllFruit(i,cpart.model,poseStack,submitNodeCollector,camera,instance);break;
 					case 2:renderPartPiledSingleFruit(i,cpart.modelIndex,cpart.model,poseStack,submitNodeCollector,camera,instance);break;
-					case 3:renderPartPiledItem(i,cpart.stack,poseStack,submitNodeCollector,camera,instance);break;
-					case 4:renderPartGridedItem(i,cpart.stack,poseStack,submitNodeCollector,camera,instance);break;
+					case 3:renderPartPiledItem(i,items[i-1],poseStack,submitNodeCollector,camera,instance);break;
+					case 4:renderPartGridedItem(i,items[i-1],poseStack,submitNodeCollector,camera,instance);break;
 					case 5:renderGridedFruit(i,cpart.model,poseStack,submitNodeCollector,camera,instance);break;
 					}
 				}

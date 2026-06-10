@@ -18,25 +18,25 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 import com.khjxiaogu.convivium.blocks.basin.BasinBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.teammoeg.caupona.client.util.GuiUtils;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 
-public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity> {
+public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity,BasinRenderState> {
 	/**
 	 * @param rendererDispatcherIn  
 	 */
@@ -44,40 +44,43 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity> {
 	}
 
 
-
-	private static Vector3f clr(int col) {
-		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
+	@Override
+	public BasinRenderState createRenderState() {
+		return new BasinRenderState();
 	}
 
-	@Override
-	public void render(BasinBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {
-		FluidStack fs=blockEntity.tankin.getFluid();
-		float tr=1;
-		if(!fs.isEmpty()) {
-			matrixStack.pushPose();
-			
-			tr=fs.getAmount()/250+1;
-			if(blockEntity.recipeHandler.getProcessMax()!=0)
-				tr+=blockEntity.recipeHandler.getProcess()*1f/blockEntity.recipeHandler.getProcessMax();
-			else
-				tr+=1;
-			matrixStack.translate(0, tr/16f, 0);
-			matrixStack.mulPose(GuiUtils.rotate90);
 
-			VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
-			IClientFluidTypeExtensions attr=IClientFluidTypeExtensions.of(fs.getFluid());
-			TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
-					.getSprite(attr.getStillTexture(fs));
-			int col = attr.getTintColor(fs);
-			Vector3f clr;
-			float alp = 1f;
-			clr = clr(col);
-			GuiUtils.drawTexturedColoredRect(builder, matrixStack, 3/16f,3/16f, 10/16f, 10/16f, clr.x(), clr.y(),
-					clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
-					combinedOverlayIn);
-			matrixStack.popPose();
+
+	@Override
+	public void submit(BasinRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		if(state.spite!=null) {
+			poseStack.pushPose();
+			poseStack.translate(0, state.level/16f, 0);
+			poseStack.mulPose(FluidRenderHelper.rotate90);
+			FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite,
+				3/16f,3/16f, 10/16f, 10/16f, 
+				state.color, state.lightCoords, OverlayTexture.NO_OVERLAY);
+			poseStack.popPose();
 			
+		}
+	}
+
+
+
+	@Override
+	public void extractRenderState(BasinBlockEntity blockEntity, BasinRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+		FluidStack fs=FluidUtil.getStack(blockEntity.tankin, 0);
+		state.spite=null;
+		if(!fs.isEmpty()) {
+			FluidModel model=FluidRenderHelper.getFluidModel(fs);
+			state.spite=model.stillMaterial().sprite();
+			state.color=FluidRenderHelper.getFluidColor(model, fs);
+			state.level=fs.getAmount()/250+1;
+			if(blockEntity.recipeHandler.getProcessMax()!=0)
+				state.level+=blockEntity.recipeHandler.getProcess()*1f/blockEntity.recipeHandler.getProcessMax();
+			else
+				state.level+=1;
 		}
 	}
 

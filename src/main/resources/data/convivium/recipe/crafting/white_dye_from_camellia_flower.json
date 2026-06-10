@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
-		{"item": "convivium:camellia_flower"}
+		"convivium:camellia_flower"
 	],
 	"result": {
 		"id": "minecraft:white_dye"

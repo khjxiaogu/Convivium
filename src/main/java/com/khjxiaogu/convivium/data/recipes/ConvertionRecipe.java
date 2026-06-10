@@ -20,6 +20,7 @@ package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
@@ -37,6 +38,9 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ConvertionRecipe extends IDataRecipe {
@@ -57,8 +61,8 @@ public class ConvertionRecipe extends IDataRecipe {
 	public static final MapCodec<ConvertionRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		Codec.list(FloatSizedOrCatalystIngredient.NESTED_CODEC).optionalFieldOf("items",ImmutableList.of()).forGetter(o->o.items),
 		Codec.list(FloatemStack.CODEC).optionalFieldOf("outputs",ImmutableList.of()).forGetter(o->o.output),
-		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidIn",FluidStack.EMPTY).forGetter(o->o.in),
-		FluidStack.OPTIONAL_CODEC.optionalFieldOf("fluidOut",FluidStack.EMPTY).forGetter(o->o.out),
+		SizedFluidIngredient.CODEC.fieldOf("fluidIn").forGetter(o->o.in),
+		FluidStackTemplate.CODEC.fieldOf("fluidOut").forGetter(o->o.out),
 		Codec.INT.fieldOf("temperature").forGetter(o->o.temperature),
 		Codec.INT.fieldOf("time").forGetter(o->o.processTime),
 		Codec.BOOL.fieldOf("consumeAll").forGetter(o->o.consumeExtra)
@@ -66,22 +70,22 @@ public class ConvertionRecipe extends IDataRecipe {
 	public static final StreamCodec<RegistryFriendlyByteBuf,ConvertionRecipe> STREAM_CODEC=StreamCodec.composite(
 		FloatSizedOrCatalystIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.items,
 		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o->o.output,
-		FluidStack.OPTIONAL_STREAM_CODEC,o->o.in,
-		FluidStack.OPTIONAL_STREAM_CODEC,o->o.out,
+		SizedFluidIngredient.STREAM_CODEC,o->o.in,
+		FluidStackTemplate.STREAM_CODEC,o->o.out,
 		ByteBufCodecs.VAR_INT,o->o.temperature,
 		ByteBufCodecs.VAR_INT,o->o.processTime,
 		ByteBufCodecs.BOOL,o->o.consumeExtra,
 		ConvertionRecipe::new);
 	public List<FloatSizedOrCatalystIngredient> items;
 	public List<FloatemStack> output=new ArrayList<>();
-	public FluidStack in= FluidStack.EMPTY;
-	public FluidStack out= FluidStack.EMPTY;
+	public SizedFluidIngredient in;
+	public FluidStackTemplate out;
 	public int temperature=0;
 	public int processTime=200;
 	public boolean consumeExtra;
 	
 
-	public ConvertionRecipe(List<FloatSizedOrCatalystIngredient> items, FluidStack in, FluidStack out,
+	public ConvertionRecipe(List<FloatSizedOrCatalystIngredient> items, SizedFluidIngredient in, FluidStackTemplate out,
 			int temperature, int processTime, boolean consumeExtra) {
 		this.items = items;
 		this.in = in;
@@ -90,7 +94,7 @@ public class ConvertionRecipe extends IDataRecipe {
 		this.processTime = processTime;
 		this.consumeExtra = consumeExtra;
 	}
-	public ConvertionRecipe(List<FloatSizedOrCatalystIngredient> items, List<FloatemStack> output, FluidStack in,FluidStack out, int temperature, int processTime, boolean consumeExtra) {
+	public ConvertionRecipe(List<FloatSizedOrCatalystIngredient> items, List<FloatemStack> output, SizedFluidIngredient in,FluidStackTemplate out, int temperature, int processTime, boolean consumeExtra) {
 		super();
 		this.items = items;
 		this.output = output;

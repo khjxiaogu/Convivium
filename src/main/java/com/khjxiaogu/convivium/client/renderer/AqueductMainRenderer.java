@@ -19,36 +19,35 @@
 package com.khjxiaogu.convivium.client.renderer;
 
 import org.joml.Quaternionf;
+import org.jspecify.annotations.Nullable;
 
-import com.google.common.collect.ImmutableSet;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import com.teammoeg.caupona.client.util.GuiUtils;
-import com.teammoeg.caupona.client.util.ModelUtils;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 
-public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControllerBlockEntity> {
-	public static final DynamicBlockModelReference rotor=ModelUtils.getModel(CVMain.MODID,"aqueduct_wavemaker_rotor");
+public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControllerBlockEntity,AqueductMainRenderState> {
+	public static final DynamicBlockModelReference rotor_wheels=DynamicBlockModelReference.getModel(CVMain.rl("aqueduct_wavemaker_rotor_wheels"));
+	public static final DynamicBlockModelReference rotor_cogs=DynamicBlockModelReference.getModel(CVMain.rl("aqueduct_wavemaker_rotor_cogs"));
 
 	/**
 	 * @param rendererDispatcherIn  
@@ -56,46 +55,50 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 	public AqueductMainRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 	}
 
-	private FluidStack water=new FluidStack(Fluids.WATER,1000);
-	@SuppressWarnings({ "deprecation", "resource" })
 	@Override
-	public void render(AqueductControllerBlockEntity blockEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLightIn, int combinedOverlayIn) {
-		if (!blockEntity.getLevel().hasChunkAt(blockEntity.getBlockPos()))
-			return;
-		BlockState state = blockEntity.getBlockState();
-		Direction facing=state.getValue(AqueductControllerBlock.FACING);
-
+	public AqueductMainRenderState createRenderState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void submit(AqueductMainRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		poseStack.pushPose();
+		poseStack.rotateAround(state.hrotation,0.5f,0.5f,0.5f);
+		QuadInstance quadInstance=new QuadInstance();
+		quadInstance.setLightCoords(state.lightCoords);
+		if(state.shouldApart) 
+			rotor_wheels.submit(submitNodeCollector, poseStack, RenderTypes.translucentMovingBlock(), quadInstance);
+		if(state.active)
+			poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
+		rotor_cogs.submit(submitNodeCollector, poseStack, RenderTypes.translucentMovingBlock(), quadInstance);
+		if(!state.shouldApart) {
+			rotor_wheels.submit(submitNodeCollector, poseStack, RenderTypes.translucentMovingBlock(), quadInstance);
+		}
+		poseStack.popPose();
+		
+		poseStack.pushPose();
+		poseStack.translate(0, 15/16f, 0);
+		poseStack.mulPose(FluidRenderHelper.rotate90);
+		FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite,
+			0, 0, 1, 1,
+			state.color, state.lightCoords, OverlayTexture.NO_OVERLAY);
+		poseStack.popPose();
+	}
+	@Override
+	public void extractRenderState(AqueductControllerBlockEntity blockEntity, AqueductMainRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 		boolean isBlack=RotationUtils.isBlackGrid(blockEntity.getBlockPos());
-		
-		matrixStack.pushPose();
-		matrixStack.rotateAround(new Quaternionf().rotateAxis((float) (facing.toYRot()*Math.PI/180f),0,-1,0),0.5f,0.5f,0.5f);
-		boolean shouldApart=state.getValue(KineticBasedBlock.ACTIVE)&&state.getValue(KineticBasedBlock.LOCKED);
-		if(shouldApart)
-			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Wheels"),matrixStack, combinedLightIn, combinedOverlayIn);
-		if(state.getValue(KineticBasedBlock.ACTIVE))
-			matrixStack.rotateAround(RotationUtils.getRotation(partialTicks,0f,0f,1f,isBlack),0.5f,0.5f,0.5f);
-		if(shouldApart)
-			ModelUtils.renderModelGroups(rotor,buffer.getBuffer(RenderType.cutout()),ImmutableSet.of("Cogs"),matrixStack, combinedLightIn, combinedOverlayIn);
-		else
-			ModelUtils.renderModel(rotor,buffer.getBuffer(RenderType.cutout()), matrixStack, combinedLightIn, combinedOverlayIn);
-		matrixStack.popPose();
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0, 15/16f, 0);
-		matrixStack.mulPose(GuiUtils.rotate90);
-		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
-		IClientFluidTypeExtensions attr0 = IClientFluidTypeExtensions.of(Fluids.WATER);
-		TextureAtlas atlas = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite sprite = atlas.getSprite(attr0.getStillTexture(water));
-		int col = attr0.getTintColor(water);
-		float alp = 1f;
-		GuiUtils.drawTexturedColoredRect(builder, matrixStack, 0, 0, 1, 1,(col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f, alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,combinedOverlayIn);
-		matrixStack.popPose();
-		
-		
-
-
+		BlockState bs=blockEntity.getBlockState();
+		state.shouldApart=bs.getValue(KineticBasedBlock.ACTIVE)&&bs.getValue(KineticBasedBlock.LOCKED);
+		state.rotation=RotationUtils.getRotation(partialTicks,0f,0f,1f,isBlack);
+		state.hrotation=new Quaternionf().rotateAxis((float) (bs.getValue(AqueductControllerBlock.FACING).toYRot()*Math.PI/180f),0,-1,0);
+		BlockState blockState=blockEntity.getBlockState();
+		if(blockState.hasProperty(KineticBasedBlock.ACTIVE))
+			state.active=blockState.getValue(KineticBasedBlock.ACTIVE);
+		FluidStack fs=new FluidStack(Fluids.WATER,1000);
+		FluidModel model=FluidRenderHelper.getFluidModel(fs);
+		state.spite=model.stillMaterial().sprite();
+		state.color=FluidRenderHelper.getFluidColor(model, fs);
 	}
 
 }

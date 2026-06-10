@@ -1,0 +1,23 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:sweeteners"
+  ],
+  "output": "convivium:fruit_tongsui",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "contains",
+      "relish": "hearth"
+    }
+  ],
+  "removeNBT": false,
+  "required": [
+    "#convivium:fruits"
+  ],
+  "time": 200
+}

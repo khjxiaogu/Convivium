@@ -40,7 +40,7 @@ public class SorbetItem extends EdibleBlock {
 	public final boolean isSmpl;
 	Supplier<Fluid> fluid;
 	public SorbetItem(Block block,Supplier<Fluid> fluid,Properties props,boolean isSmpl) {
-		super(block,props.craftRemainder(CVBlocks.FLAT_BREAD.get().asItem()).stacksTo(1));
+		super(block,props.stacksTo(1));
 		bl = block;
 		this.isSmpl=isSmpl;
 		this.fluid=fluid;

@@ -1,0 +1,30 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "wine",
+    "seasons",
+    "hearth"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:fruits"
+  ],
+  "output": "convivium:posca",
+  "priority": 100,
+  "relish": [
+    {
+      "type": "and",
+      "cond1": {
+        "type": "contains",
+        "relish": "wine"
+      },
+      "cond2": {
+        "type": "contains",
+        "relish": "seasons"
+      }
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

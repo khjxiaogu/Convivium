@@ -29,15 +29,11 @@ import org.jetbrains.annotations.NotNull;
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.CVTags;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticTransferBlockEntity;
-import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
-import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.khjxiaogu.convivium.util.BeveragePendingContext;
 import com.khjxiaogu.convivium.util.CurrentSwayInfo;
-import com.khjxiaogu.convivium.util.FloatSizedOrCatalystIngredient;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.teammoeg.caupona.CPConfig;
@@ -80,7 +76,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInfinitable, MenuProvider {
 	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(6) {
-		@Override
+		/*@Override
 		public boolean isValid(int index, ItemResource resource) {
 			if (index < 4)
 				return isValidInput(resource.toStack());
@@ -99,17 +95,17 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			if (index < 4)
 				return 1;
 			return super.getCapacityAsLong(index, resource);
-		}
+		}*/
 	};
 	public static final int IDLE = 0;
 	public static final int ADDING_INGREDIENT = 1;
 	public static final int MIXING = 2;
 	public static final int HEATING = 3;
 	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1,1250) {
-		@Override
+		/*@Override
 		public boolean isValid(int index, FluidResource resource) {
 			return RelishFluidRecipe.recipes.containsKey(resource.getFluid()) || resource.has(CVComponents.BEVERAGE_INFO);
-		}
+		}*/
 	};
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
 	public static Codec<List<CurrentSwayInfo>> CSI_CODEC = Codec.list(CurrentSwayInfo.CODEC);
@@ -132,14 +128,14 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		super(CVBlockEntityTypes.WHISK.get(), pWorldPosition, pBlockState);
 		contain = new LazyTickWorker(CPConfig.SERVER.containerTick.get(), () -> {
 			if (processMax == 0) {
-				if (tryContianFluid())
+				//if (tryContianFluid())
 					return true;
 			}
 			return false;
 		});
 
 	}
-
+/*
 	protected void resetAdding() {
 		if(status==ADDING_INGREDIENT) {
 			target=null;
@@ -357,16 +353,6 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 							continue outer;
 					}
 				}
-				// no longer have counting test
-				/*
-				 * if (r.items != null && !r.items.isEmpty()) {
-				 * 
-				 * for (FloatSizedOrCatalystIngredient i : r.items) { boolean flag = true; for
-				 * (FloatemStack fs : info.stacks) { if (i.testWithPart(fs,amt)) { tccn -=
-				 * i.count(); flag = false; break; } } if (flag) break outer; } } if (r.output
-				 * != null && !r.output.isEmpty()) { for (FloatemStack i : r.output) { tccn +=
-				 * i.getCount(); } } if (tccn * cnt / newpart > MAX_DENSE) break;
-				 */
 				
 				if (!r.out.isEmpty())
 					for (int i = 0; i < r.out.getAmount()/250; i++)
@@ -700,7 +686,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		}
 
 	}
-
+*/
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
 		return new WhiskContainer(pContainerId, pPlayerInventory, this);
@@ -718,5 +704,21 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	@Override
 	public boolean isInfinite() {
 		return inf;
+	}
+
+	@Override
+	public void handleMessage(short type, int data) {
+		if (type == 0) {
+			rs = data != 0;
+		} else if (type == 1) {
+			isHeating = data != 0;
+		}
+		this.syncData();
+	}
+
+	@Override
+	public boolean isReceiver() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

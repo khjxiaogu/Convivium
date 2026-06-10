@@ -6,18 +6,10 @@
 		"GGG"
 	],
 	"key": {
-		"I": {
-			"item": "minecraft:iron_ingot"
-		},
-		"G": {
-			"item": "minecraft:granite"
-		},
-		"W": {
-			"item": "minecraft:granite_wall"
-		},
-		"P": {
-			"tag": "minecraft:planks"
-		}
+		"I": "minecraft:iron_ingot",
+		"G": "minecraft:granite",
+		"W": "minecraft:granite_wall",
+		"P": "#minecraft:planks"
 	},
 	"result": {
 		"id": "convivium:pestle_and_mortar"

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVFluids;
@@ -48,21 +49,27 @@ import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class CVRecipeProvider extends RecipeProvider {
 	private final HashMap<String, Integer> PATH_COUNT = new HashMap<>();
@@ -70,12 +77,39 @@ public class CVRecipeProvider extends RecipeProvider {
 	static final Fluid water = fluid(mrl("nail_soup")), milk = fluid(mrl("scalded_milk")), stock = fluid(mrl("stock"));
 	public static List<IDataRecipe> recipes = new ArrayList<>();
 
-	public CVRecipeProvider(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> future) {
-		super(generatorIn.getPackOutput(), future);
+	public static class Runner extends RecipeProvider.Runner{
+		public Runner(PackOutput packOutput, CompletableFuture<Provider> registries) {
+			super(packOutput, registries);
+		}
+
+		@Override
+		public String getName() {
+			return CVMain.MODID;
+		}
+
+		@Override
+		protected RecipeProvider createRecipeProvider(Provider registries, RecipeOutput output) {
+			return new CVRecipeProvider(registries,output);
+		}
+		
 	}
 
+	public CVRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+		super(registries, output);
+	}
+	public HolderSet<Item> createTag(Identifier tagName){
+		return registries.lookupOrThrow(Registries.ITEM).getOrThrow(ItemTags.create(tagName));
+	}
+	public HolderSet<Item> createTag(TagKey<Item> tagName){
+		return registries.lookupOrThrow(Registries.ITEM).getOrThrow(tagName);
+	}
+	
 	@Override
-	protected void buildRecipes(RecipeOutput out) {
+	protected void buildRecipes() {
+		RecipeOutput outx=this.output;
+		BiConsumer<Identifier,IDataRecipe> out = (r1,r2) -> {
+			outx.accept(ResourceKey.create(Registries.RECIPE, r1),r2,null);
+		};
 		// out.accept(new
 		// GrindingRecipe(rl("grinding/pome"),List.of(Pair.of(Ingredient.of(Items.APPLE),2)),
 		// null, 0f, new FluidStack(Fluids.WATER,250),new
@@ -116,8 +150,8 @@ public class CVRecipeProvider extends RecipeProvider {
 		 * .effect(MobEffects.SATURATION).amp("1").time("100").compare("3",GT.C,"1").
 		 * next() .end(out);
 		 */
-		//out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA), null);
-		//out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA), null);
+		//out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA));
+		//out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA));
 		relish(out, Constants.TEA, "#7eb3c2", CVFluids.teaf.get());
 		relish(out, Constants.MILK, "#dac381", NeoForgeMod.MILK.get());
 		relish(out, Constants.COCOA, "#ea9359", CVFluids.cocoaf.get());
@@ -125,30 +159,30 @@ public class CVRecipeProvider extends RecipeProvider {
 		relish(out, Constants.JUICE, "#aac35d", CVFluids.bjuicef.get(), CVFluids.djuicef.get(), CVFluids.pjuicef.get());
 		relish(out, Constants.WINE, "#ce6c71", CVFluids.bwinef.get(), CVFluids.dwinef.get(), CVFluids.pwinef.get());
 		relish(out, Constants.NONE, "#ffffff");
-		out.accept(rl("bottle/beverage"), new BowlContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get(),Ingredient.of(Items.GLASS_BOTTLE)), null);
+		out.accept(rl("bottle/beverage"), new BowlContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get(),Ingredient.of(Items.GLASS_BOTTLE)));
 		for (String s : CVItems.base_drinks) {
 			if (s.equals("milk")) {
-				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), NeoForgeMod.MILK.get(),Ingredient.of(Items.GLASS_BOTTLE)), null);
+				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), NeoForgeMod.MILK.get(),Ingredient.of(Items.GLASS_BOTTLE)));
 			} else if (s.equals("water")) {
-				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), Fluids.WATER,Ingredient.of(Items.GLASS_BOTTLE)), null);
+				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), Fluids.WATER,Ingredient.of(Items.GLASS_BOTTLE)));
 			} else
-				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)), null);
+				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)));
 		}
 		
 		// taste(Items.APPLE).vars().astringency(2).end().end(out);
 		out.accept(rl("convertion/tea"),
-			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("powdered_tea"), 1f)), new FluidStack(Fluids.WATER, 250), cvfluid("tea", 250), 60, 200, false), null);
+			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("powdered_tea"), 1f)), SizedFluidIngredient.of(Fluids.WATER, 250), cvfluid("tea", 250), 60, 200, false));
 		out.accept(rl("convertion/cocoa_from_water"),
-			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)), new FluidStack(Fluids.WATER, 250), cvfluid("hot_chocolate", 250), 40, 200, false), null);
+			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)), SizedFluidIngredient.of(Fluids.WATER, 250), cvfluid("hot_chocolate", 250), 40, 200, false));
 		out.accept(rl("convertion/cocoa_from_milk"),new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)),
-			new FluidStack(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), 40, 200, false),null);
+			SizedFluidIngredient.of(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), 40, 200, false));
 		for (String s : List.of("pome", "drupe", "berry"))
 			out.accept(rl("basin/" + s + "_juice_to_sapa"), new BasinRecipe(SizedOrCatalystFluidIngredient.of(cvfluid(s + "_juice"), 250), 
-				SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),List.of(new ItemStack(cpitem("sapa_spice_jar"))), 1, 200, true), null);
+				SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),List.of(new ItemStackTemplate(cpitem("sapa_spice_jar"))), 1, 200, true));
 		for (String s : List.of("pome", "drupe", "berry"))
-			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(List.of(), cvfluid(s + "_must", 250), cvfluid(s + "_juice", 250), 40, 200, false), null);
+			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(List.of(), SizedFluidIngredient.of(cvfluid(s + "_must"), 250), cvfluid(s + "_juice", 250), 40, 200, false));
 		for (String s : CVFluids.intern.keySet())
-			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)), null);
+			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)));
 		Map<String,String> relishnames=new HashMap<>();
 
 		relishnames.put("tea", Constants.TEA);
@@ -158,7 +192,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		relishnames.put("wine", Constants.WINE);
 		relishnames.put("water", Constants.WATER);
 		for(String s : CVFluids.sorbets) {
-			out.accept(rl("bottle/" + s+"_sorbet"), new BowlContainingRecipe(cvitem(s+"_sorbet"), cvfluid(s+"_sorbet"),Ingredient.of(cvitem("flatbread"))), null);
+			out.accept(rl("bottle/" + s+"_sorbet"), new BowlContainingRecipe(cvitem(s+"_sorbet"), cvfluid(s+"_sorbet"),Ingredient.of(cvitem("flatbread"))));
 			String[] relishes=s.split("_");
 			FluidIngredient input;
 			if(s.equals("fallback")) {
@@ -170,40 +204,47 @@ public class CVRecipeProvider extends RecipeProvider {
 			}else {
 				throw new RuntimeException("Illegal names");
 			}
-			out.accept(rl("grinding/"+s+"_sorbet"), new GrindingRecipe(Arrays.asList(SizedOrCatalystIngredient.of(Items.ICE, 1)),
+			out.accept(rl("grinding/"+s+"_sorbet"), new GrindingRecipe(
+				Arrays.asList(SizedOrCatalystIngredient.of(Items.ICE, 1)),
 				null, 0,
-				new SizedOrCatalystFluidIngredient(input,250), new FluidStack(cvfluid(s+"_sorbet"),250),Arrays.asList(),200, true), null);
+				new SizedOrCatalystFluidIngredient(input,250),
+				Optional.of(new FluidStackTemplate(cvfluid(s+"_sorbet"),250)),
+				Arrays.asList(),200, true));
 		}
-		type("hot_chocolate").has(Constants.COCOA).canContains(SPICE).canContains(SWEET).time(200).end(out);
-		type("mulled_wine").has(WINE).allow(WATER).mustContains(SPICE).canContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
-		type("jaegertee").has(WINE).and().has(TEA).allow(WATER).mustContains(SPICE).canContains(SWEET).canContains(FRUIT).priority(100).time(200).end(out);
-		type("posca").has(WINE).and().has(JUICE).allow(WATER).canContains(FRUIT).priority(100).time(200).end(out);
-		type("leicha").has(TEA).allow(WATER).mustContains(NUTS).priority(100).time(200).end(out);
-		type("te_mocha").has(TEA).and().has(MILK).and().has(COCOA).allow(WATER).canContains(SWEET).priority(100).time(200).end(out);
-		type("kahwa_tea").has(TEA).allow(WATER).mustContains(NUTS).mustContains(SPICE).priority(100).time(200).end(out);
-		type("saidi_tea").has(TEA).mustContains(SWEET).priority(100).time(200).end(out);
-		type("milk_tea").has(MILK).and().has(TEA).allow(WATER).canContains(SWEET).canContains(NUTS).canContains(SPICE).priority(100).time(200).end(out);
-		type("sweet_tea").has(TEA).allow(WATER).mustContains(SWEET).canContains(FRUIT).priority(100).time(200).end(out);
-		type("fruit_tongsui").has(WATER).mustContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
-		type("ade").has(JUICE).and().has(WATER).canContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
-		type("punch").has(WATER).and().has(JUICE).allow(WINE).mustContains(SWEET).canContains(SPICE).priority(100).time(200).end(out);
-		type("syllabub").has(MILK).and().has(JUICE).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
-		type("posset").has(WINE).and().has(MILK).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
-		type("chocolate_tea").has(COCOA).and().has(TEA).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
-		type("cocoa_wine").has(COCOA).and().has(WINE).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
-		type("chocolate_milk").has(COCOA).and().has(MILK).allow(WATER).canContains(SPICE).canContains(SWEET).canContains(NUTS).priority(100).time(200).end(out);
+		
+		type("hot_chocolate").has(Constants.COCOA).canContains(createTag(SPICE)).canContains(createTag(SWEET)).time(200).end(out);
+		type("mulled_wine").has(WINE).allow(WATER).mustContains(createTag(SPICE)).canContains(createTag(FRUIT)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("jaegertee").has(WINE).and().has(TEA).allow(WATER).mustContains(createTag(SPICE)).canContains(createTag(SWEET)).canContains(createTag(FRUIT)).priority(100).time(200).end(out);
+		type("posca").has(WINE).and().has(JUICE).allow(WATER).canContains(createTag(FRUIT)).priority(100).time(200).end(out);
+		type("leicha").has(TEA).allow(WATER).mustContains(createTag(NUTS)).priority(100).time(200).end(out);
+		type("te_mocha").has(TEA).and().has(MILK).and().has(COCOA).allow(WATER).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("kahwa_tea").has(TEA).allow(WATER).mustContains(createTag(NUTS)).mustContains(createTag(SPICE)).priority(100).time(200).end(out);
+		type("saidi_tea").has(TEA).mustContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("milk_tea").has(MILK).and().has(TEA).allow(WATER).canContains(createTag(SWEET)).canContains(createTag(NUTS)).canContains(createTag(SPICE)).priority(100).time(200).end(out);
+		type("sweet_tea").has(TEA).allow(WATER).mustContains(createTag(SWEET)).canContains(createTag(FRUIT)).priority(100).time(200).end(out);
+		type("fruit_tongsui").has(WATER).mustContains(createTag(FRUIT)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("ade").has(JUICE).and().has(WATER).canContains(createTag(FRUIT)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("punch").has(WATER).and().has(JUICE).allow(WINE).mustContains(createTag(SWEET)).canContains(createTag(SPICE)).priority(100).time(200).end(out);
+		type("syllabub").has(MILK).and().has(JUICE).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("posset").has(WINE).and().has(MILK).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("chocolate_tea").has(COCOA).and().has(TEA).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("cocoa_wine").has(COCOA).and().has(WINE).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
+		type("chocolate_milk").has(COCOA).and().has(MILK).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).canContains(createTag(NUTS)).priority(100).time(200).end(out);
 	}
 
+	@SuppressWarnings("unused")
 	private TasteRecipeBuilder taste(Item it) {
 		return new TasteRecipeBuilder(rl("taste/" + Utils.getRegistryName(it).getNamespace() + "/" + Utils.getRegistryName(it).getPath())).item(Ingredient.of(it));
 	}
 
+	@SuppressWarnings("unused")
 	private TasteRecipeBuilder taste(TagKey<Item> it) {
-		return new TasteRecipeBuilder(rl("taste/" + it.location().getNamespace() + "/" + it.location().getPath())).item(Ingredient.of(it));
+		return new TasteRecipeBuilder(rl("taste/" + it.location().getNamespace() + "/" + it.location().getPath())).item(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(it)));
 	}
 
+	@SuppressWarnings("unused")
 	private SwayRecipeBuilder create(String name, String icon) {
-		return new SwayRecipeBuilder(rl("sway_effect/" + name), ResourceLocation.parse(icon));
+		return new SwayRecipeBuilder(rl("sway_effect/" + name), Identifier.parse(icon));
 	}
 	private BeverageIngredientBuilder bingredient() {
 		return new BeverageIngredientBuilder();
@@ -212,73 +253,78 @@ public class CVRecipeProvider extends RecipeProvider {
 		return new TypeRecipeBuilder(rl("beverage_type/" + name), cvfluid(name));
 	}
 
-	private TypeRecipeBuilder type(ResourceLocation rl) {
+	private TypeRecipeBuilder type(Identifier rl) {
 		return new TypeRecipeBuilder(rl("beverage_type/" + rl.getPath()), fluid(rl));
 	}
 
+	@SuppressWarnings("unused")
 	private SwayRecipeBuilder createME(String name) {
-		return new SwayRecipeBuilder(rl("sway_effect/" + name), ResourceLocation.withDefaultNamespace("mob_effect/" + name));
+		return new SwayRecipeBuilder(rl("sway_effect/" + name), Identifier.withDefaultNamespace("mob_effect/" + name));
 	}
 
 	private Fluid cvfluid(String name) {
-		return BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name));
+		return BuiltInRegistries.FLUID.getValue(Identifier.fromNamespaceAndPath(CVMain.MODID, name));
 	}
 
-	private FluidStack cvfluid(String name, int amt) {
-		return new FluidStack(BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name)), amt);
+	private FluidStackTemplate cvfluid(String name, int amt) {
+		return new FluidStackTemplate(BuiltInRegistries.FLUID.getValue(Identifier.fromNamespaceAndPath(CVMain.MODID, name)), amt);
 	}
 
-	private void relish(RecipeOutput out, String name, String clr, Fluid... fs) {
-		out.accept(rl("relish/" + name), new RelishRecipe(name, ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "relish/" + name), clr), null);
+	private void relish(BiConsumer<Identifier,IDataRecipe> out, String name, String clr, Fluid... fs) {
+		out.accept(rl("relish/" + name), new RelishRecipe(name, Identifier.fromNamespaceAndPath(CVMain.MODID, "relish/" + name), clr));
 		for (Fluid f : fs) {
-			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(f, name), null);
-			type(Utils.getRegistryName(f)).only(name).canContains(SPICE).canContains(SWEET).time(200).end(out);
+			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(f, name));
+			type(Utils.getRegistryName(f)).only(name).canContains(createTag(SPICE)).canContains(createTag(SWEET)).time(200).end(out);
 
 		}
 	}
 
 	private Item cvitem(String name) {
-		return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(CVMain.MODID, name));
+		return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(CVMain.MODID, name));
 	}
 
 	private Item cpitem(String name) {
-		return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(CPMain.MODID, name));
+		return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(CPMain.MODID, name));
 	}
 
+	@SuppressWarnings("unused")
 	private Item mitem(String name) {
-		return BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace(name));
+		return BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(name));
 	}
 
-	private Item item(ResourceLocation rl) {
-		return BuiltInRegistries.ITEM.get(rl);
+	@SuppressWarnings("unused")
+	private Item item(Identifier rl) {
+		return BuiltInRegistries.ITEM.getValue(rl);
 	}
 
-	private static Fluid fluid(ResourceLocation rl) {
-		return BuiltInRegistries.FLUID.get(rl);
+	private static Fluid fluid(Identifier rl) {
+		return BuiltInRegistries.FLUID.getValue(rl);
 	}
 
-	private static ResourceLocation mrl(String s) {
-		return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s);
+	private static Identifier mrl(String s) {
+		return Identifier.fromNamespaceAndPath(CVMain.MODID, s);
 	}
 
-	private ResourceLocation ftag(String s) {
-		return ResourceLocation.fromNamespaceAndPath("c", s);
+	@SuppressWarnings("unused")
+	private Identifier ftag(String s) {
+		return Identifier.fromNamespaceAndPath("c", s);
 	}
 
-	private ResourceLocation mcrl(String s) {
-		return ResourceLocation.withDefaultNamespace(s);
+	@SuppressWarnings("unused")
+	private Identifier mcrl(String s) {
+		return Identifier.withDefaultNamespace(s);
 	}
 
-	private ResourceLocation rl(String s) {
+	private Identifier rl(String s) {
 		if (!s.contains("/"))
 			s = "crafting/" + s;
 		if (PATH_COUNT.containsKey(s)) {
 			int count = PATH_COUNT.get(s) + 1;
 			PATH_COUNT.put(s, count);
-			return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s + count);
+			return Identifier.fromNamespaceAndPath(CVMain.MODID, s + count);
 		}
 		PATH_COUNT.put(s, 1);
-		return ResourceLocation.fromNamespaceAndPath(CVMain.MODID, s);
+		return Identifier.fromNamespaceAndPath(CVMain.MODID, s);
 	}
 
 }

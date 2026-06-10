@@ -80,8 +80,8 @@ public final class FloatSizedOrCatalystIngredient {
 	 * Helper method to create a simple sized ingredient that matches items in a
 	 * tag.
 	 */
-	public static FloatSizedOrCatalystIngredient of(TagKey<Item> tag, int count) {
-		return new FloatSizedOrCatalystIngredient(Ingredient.of(BuiltInRegistries.ITEM.get(tag).get()), count);
+	public static FloatSizedOrCatalystIngredient of(Ingredient tag, int count) {
+		return new FloatSizedOrCatalystIngredient(tag, count);
 	}
 
 	private final Ingredient ingredient;

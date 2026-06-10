@@ -26,6 +26,7 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.compat.jei.LoreCallback;
 import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.teammoeg.caupona.compat.jei.category.BaseCallback;
+import com.teammoeg.caupona.compat.jei.category.CPCategory;
 import com.teammoeg.caupona.util.SizedOrCatalystIngredient;
 import com.teammoeg.caupona.util.Utils;
 
@@ -40,18 +41,17 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRecipe>> {
+public class GrindingCategory implements CPCategory<RecipeHolder<GrindingRecipe>> {
 	@SuppressWarnings("rawtypes")
-	public static RecipeType<RecipeHolder> TYPE=RecipeType.create(CVMain.MODID, "grinding",RecipeHolder.class);
+	public static IRecipeType<RecipeHolder> TYPE=IRecipeType.create(CVMain.MODID, "grinding",RecipeHolder.class);
 	private IDrawable BACKGROUND;
 	private IDrawable ICON;
 
@@ -68,10 +68,10 @@ public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRe
 
 	@SuppressWarnings("resource")
 	@Override
-	public void draw(RecipeHolder<GrindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX,
+	public void draw(RecipeHolder<GrindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor stack, double mouseX,
 			double mouseY) {
 		String burnTime = String.valueOf(recipe.value().processTime / 20f) + "s";
-		stack.drawString(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
+		stack.text(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRe
 		return Arrays.asList(sizedOrCatalystIngredient.getItems());
 	}
 	private static RecipeIngredientRole type(SizedOrCatalystIngredient sizedOrCatalystIngredient) {
-		return sizedOrCatalystIngredient.count() == 0 ? RecipeIngredientRole.CATALYST : RecipeIngredientRole.INPUT;
+		return sizedOrCatalystIngredient.count() == 0 ? RecipeIngredientRole.CRAFTING_STATION : RecipeIngredientRole.INPUT;
 	}
 
 	private static class CatalistCallback implements IRecipeSlotRichTooltipCallback {
@@ -132,7 +132,7 @@ public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRe
 		}
 		for(int i=0;i<3;i++) {
 			if(i>=recipe.output.size())break;
-			builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 6+18*i).addIngredient(VanillaTypes.ITEM_STACK, recipe.output.get(i));
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 6+18*i).add(recipe.output.get(i));
 		}
 		if (recipe.in!=null)
 			builder.addSlot(RecipeIngredientRole.INPUT, 29, 14)
@@ -140,17 +140,17 @@ public class GrindingCategory implements IRecipeCategory<RecipeHolder<GrindingRe
 					.setFluidRenderer(1000, false, 16, 37)
 					.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density))
 					.addRichTooltipCallback(new LoreCallback());
-		if(!recipe.out.isEmpty())
+		if(recipe.out.isPresent())
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 81, 14)
-			.addIngredient(NeoForgeTypes.FLUID_STACK,recipe.out)
+			.add(NeoForgeTypes.FLUID_STACK,recipe.out.get().create())
 			.setFluidRenderer(1000, false, 16, 37);
 	}
 
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public RecipeType<RecipeHolder<GrindingRecipe>> getRecipeType() {
-		return (RecipeType)TYPE;
+	public IRecipeType<RecipeHolder<GrindingRecipe>> getRecipeType() {
+		return (IRecipeType)TYPE;
 	}
 
 }

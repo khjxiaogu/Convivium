@@ -22,11 +22,13 @@
 package com.khjxiaogu.convivium.blocks.foods;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
+import com.khjxiaogu.convivium.CVMain;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.IInfinitable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -114,5 +116,10 @@ public class SorbetBlockEntity extends CPBaseBlockEntity implements IInfinitable
 	}
 	public ItemStacksResourceHandler getInternal() {
 		return internal;
+	}
+
+	@Override
+	public ItemResource getValidContainer(int slot) {
+		return ItemResource.of(BuiltInRegistries.ITEM.getValue(CVMain.rl("flatbread")));
 	}
 }

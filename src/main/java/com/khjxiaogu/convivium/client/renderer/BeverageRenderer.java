@@ -19,31 +19,29 @@
 package com.khjxiaogu.convivium.client.renderer;
 
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.teammoeg.caupona.client.util.GuiUtils;
-import com.teammoeg.caupona.util.Utils;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
-public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity> {
+public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity,BeverageRenderState> {
 	@SuppressWarnings("unchecked")
 	public static final Pair<Vec3,Quaternionf>[] rots=new Pair[] {
 		Pair.of(Vec3.ZERO.add(0,0,0), new Quaternionf()),//side
@@ -60,53 +58,50 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 	}
 
 
-	@Override
-	public void render(BeverageBlockEntity pBlockEntity, float pPartialTick, PoseStack matrixStack,
-			MultiBufferSource pBufferSource, int combinedLightIn, int combinedOverlayIn) {
-		TextureAtlasSprite sprite;
-		Vector3f clr;
-		if(pBlockEntity.getInternal().is(Items.POTION)) {
-			IClientFluidTypeExtensions attr=IClientFluidTypeExtensions.of(Fluids.WATER);
-			sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
-					.getSprite(attr.getStillTexture());
-			clr=clr(PotionContents.getColor(pBlockEntity.getInternal().get(DataComponents.POTION_CONTENTS).getAllEffects()));
-		}else {
-			FluidStack fs = Utils.extractFluid(pBlockEntity.getInternal());
 
-			if(fs.isEmpty())return;
-			IClientFluidTypeExtensions attr=IClientFluidTypeExtensions.of(fs.getFluid());
-			sprite = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
-					.getSprite(attr.getStillTexture(fs));
-			clr =clr( attr.getTintColor(fs));
-		}
-		
-		matrixStack.pushPose();
-		matrixStack.translate(5/16f, 3/16f, 5/16f);
-		
-		VertexConsumer builder = pBufferSource.getBuffer(RenderType.translucent());
-		
-		
-		float alp = 1f;
-		for(Pair<Vec3, Quaternionf> p:rots) {
-			matrixStack.pushPose();
-			matrixStack.translate(p.getFirst().x, p.getFirst().y, p.getFirst().z);
-			matrixStack.mulPose(p.getSecond());
-			
-			GuiUtils.drawTexturedColoredRect(builder, matrixStack, 0, 0, 3/8f, 3/8f, clr.x(), clr.y(),
-					clr.z(), alp, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), combinedLightIn,
-					combinedOverlayIn);
-			matrixStack.popPose();
-		}
-		matrixStack.popPose();	
-		
+	@Override
+	public BeverageRenderState createRenderState() {
+		return new BeverageRenderState();
 	}
 
 
+	@Override
+	public void submit(BeverageRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		if(state.sprite!=null) {
+			poseStack.pushPose();
+			poseStack.translate(5/16f, 3/16f, 5/16f);
+			for(Pair<Vec3, Quaternionf> p:rots) {
+				poseStack.pushPose();
+				poseStack.translate(p.getFirst().x, p.getFirst().y, p.getFirst().z);
+				poseStack.mulPose(p.getSecond());
+				FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.sprite,0, 0, 3/8f, 3/8f, state.clr, state.lightCoords, OverlayTexture.NO_OVERLAY);
+				poseStack.popPose();
+			}
+			poseStack.popPose();	
+		}
+	}
 
 
+	@Override
+	public void extractRenderState(BeverageBlockEntity blockEntity, BeverageRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+		state.clr=0xffffffff;
+		state.sprite=null;
+		ItemResource item=blockEntity.getInternal().getResource(0);
+		if(item.is(Items.POTION)) {
+			FluidModel model=FluidRenderHelper.getFluidModel(new FluidStack(Fluids.WATER,1000));
+			PotionContents comp=item.get(DataComponents.POTION_CONTENTS);
+			if(comp!=null)
+				state.clr=comp.getColor();
+			state.sprite = model.stillMaterial().sprite();
 
-	private static Vector3f clr(int col) {
-		return new Vector3f((col >> 16 & 255) / 255.0f, (col >> 8 & 255) / 255.0f, (col & 255) / 255.0f);
+		}else {
+			FluidStack fs = FluidUtil.getFirstStackContained(blockEntity.getInternal().getResource(0).toStack());
+			if(fs.isEmpty())return;
+			FluidModel model=FluidRenderHelper.getFluidModel(fs);
+			state.clr=FluidRenderHelper.getFluidColor(model, fs);
+			state.sprite = model.stillMaterial().sprite();
+		}
 	}
 
 }

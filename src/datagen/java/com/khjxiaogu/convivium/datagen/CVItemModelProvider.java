@@ -18,26 +18,37 @@
 
 package com.khjxiaogu.convivium.datagen;
 
+import java.util.function.BiConsumer;
+
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
-import com.teammoeg.caupona.util.Utils;
+import com.khjxiaogu.convivium.client.BeverageTint;
 
-import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.ItemModelOutput;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelInstance;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.item.ItemModel.Unbaked;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-public class CVItemModelProvider extends ItemModelProvider {
+public class CVItemModelProvider extends ItemModelGenerators {
 
-	public CVItemModelProvider(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
-		super(generator.getPackOutput(), modid, existingFileHelper);
+	public CVItemModelProvider(ItemModelOutput itemModelOutput, BiConsumer<Identifier, ModelInstance> modelOutput) {
+		super(itemModelOutput, modelOutput);
 	}
-
+	public static final ModelTemplate POT_TEMPLATE=ModelTemplates.createItem("generated", TextureSlot.LAYER0, TextureSlot.LAYER1, TextureSlot.PARTICLE);
+	
 	@Override
-	protected void registerModels() {
+	public void run() {
 		for (String mt : CVItems.base_material) {
 			texture(mt);
 		}
@@ -48,8 +59,7 @@ public class CVItemModelProvider extends ItemModelProvider {
 			simpleTexture(mt, "beverages/");
 		}
 		for(String mt:CVFluids.sorbets) {
-			super.singleTexture(mt+"_sorbet", ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"), "layer0",
-				ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/sorbets/" + mt));
+			texture(mt+"_sorbet","sorbets/" + mt);
 
 		}
 		texture("flatbread");
@@ -57,27 +67,43 @@ public class CVItemModelProvider extends ItemModelProvider {
 		texture("jug");
 	}
 
-	public void itemModel(Item item, String name) {
-		super.withExistingParent(Utils.getRegistryName(item).getPath(), ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "block/" + name));
-	}
+	public void potTexture(String n, String name, String par) {
 
-	public ItemModelBuilder potTexture(String n, String name, String par) {
-		return withExistingParent(n, ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"))
-			.texture("layer0", ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par + name))
-			.texture("layer1", ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par + name + "_overlay"));
-	}
+		Item item=BuiltInRegistries.ITEM.getValue(CVMain.rl(n));
+    	Identifier rkey=CVMain.rl( par + name);
+    	Identifier texture=rkey.withPrefix("item/");
+    	Identifier overlay=texture.withSuffix("_overlay");
+        Identifier model = POT_TEMPLATE.create(item, new TextureMapping().put(TextureSlot.LAYER0, mat(overlay)).put(TextureSlot.LAYER1, mat(texture)).put(TextureSlot.PARTICLE, mat(texture)), modelOutput);
+        this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, new BeverageTint(0xff3333aa)));
 
-	public ItemModelBuilder simpleTexture(String name, String par) {
-		return super.singleTexture(name, ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"), "layer0",
-			ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par + name));
 	}
+    public Material mat(Identifier path) {
+    	return new Material(path,false);
+    }
 
-	public ItemModelBuilder texture(String name) {
-		return texture(name, name);
+	public void simpleTexture(String name, String par) {
+		this.itemModelOutput.accept(BuiltInRegistries.ITEM.getValue(CVMain.rl(name)),
+		ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(CVMain.rl("item/" + name),new TextureMapping().put(TextureSlot.LAYER0, new Material(CVMain.rl("item/" + par + name),false)), this.modelOutput))
+		);
+
 	}
+	public Unbaked plain(String name) {
+		return plain(name,"");
+	}
+	public Unbaked plain(String name, String par) {
+		return ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(CVMain.rl("item/" + name),new TextureMapping().put(TextureSlot.LAYER0, new Material(CVMain.rl("item/" + par + name),false)), this.modelOutput))
+		;
 
-	public ItemModelBuilder texture(String name, String par) {
-		return super.singleTexture(name, ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"), "layer0",
-			ResourceLocation.fromNamespaceAndPath(CVMain.MODID, "item/" + par));
+	}
+	public void texture(String name) {
+		texture(name, name);
+	}
+	public void texture(Item name, String par) {
+		this.itemModelOutput.accept(name,
+			ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(name), TextureMapping.layer0(new Material(Identifier.fromNamespaceAndPath(CVMain.MODID, "item/"+par))), this.modelOutput)
+				));
+	}
+	public void texture(String name, String par) {
+		texture(BuiltInRegistries.ITEM.getValue(CVMain.rl(name)),par);
 	}
 }

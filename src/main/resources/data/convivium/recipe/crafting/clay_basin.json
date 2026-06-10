@@ -6,12 +6,8 @@
 		"CCC"
 	],
 	"key": {
-		"C": {
-			"item": "minecraft:clay_ball"
-		},
-		"S": {
-			"item": "minecraft:stick"
-		}
+		"C": "minecraft:clay_ball",
+		"S": "minecraft:stick"
 	},
 	"result": {
 		"id": "convivium:clay_basin"

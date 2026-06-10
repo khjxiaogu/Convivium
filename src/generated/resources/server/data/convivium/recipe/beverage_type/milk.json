@@ -1,0 +1,22 @@
+{
+  "type": "convivium:beverage",
+  "allowedRelish": [
+    "cereal"
+  ],
+  "density": 0.0,
+  "optional": [
+    "#convivium:spice",
+    "#convivium:sweeteners"
+  ],
+  "output": "minecraft:milk",
+  "priority": 0,
+  "relish": [
+    {
+      "type": "only_major",
+      "relish": "cereal"
+    }
+  ],
+  "removeNBT": false,
+  "required": [],
+  "time": 200
+}

@@ -1,8 +1,6 @@
 {
 	"type": "convivium:taste",
-	"item": {
-		"item": "minecraft:golden_apple"
-	},
+	"item": "minecraft:golden_apple",
 	"priority": 0,
 	"variants": {
 		"astringency": 3,

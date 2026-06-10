@@ -116,15 +116,19 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 					if(countRemain>0)
 						return RecipeHandleStatus.BLOCKED;
 				}
-				FluidResource fr=FluidResource.of(recipe.value().out);
-				int count=recipe.value().out.amount();
-				if(recipe.value().keepInfo) {
-					fr=fr.withMergedPatch(tanks.getResource(0).getComponentsPatch());
+				if(recipe.value().out.isPresent()) {
+					FluidResource fr=FluidResource.of(recipe.value().out.get());
+					int count=recipe.value().out.get().amount();
+					if(recipe.value().keepInfo) {
+						fr=fr.withMergedPatch(tanks.getResource(0).getComponentsPatch());
+					}
+					if(tanks.insert(1, fr, count, trans)!=count) {
+						return RecipeHandleStatus.BLOCKED;
+					}
 				}
-				if(tanks.insert(1, fr, count, trans)==count) {
 					trans.commit();
 					return RecipeHandleStatus.SUCCEED;
-				}
+				
 			}
 		}
 		return RecipeHandleStatus.FAILED;

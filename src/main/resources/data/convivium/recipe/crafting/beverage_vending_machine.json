@@ -6,21 +6,11 @@
 		"IQI"
 	],
 	"key": {
-		"I": {
-			"item": "minecraft:iron_ingot"
-		},
-		"Q": {
-			"item": "minecraft:writable_book"
-		},
-		"C": {
-			"item": "convivium:cog"
-		},
-		"P": {
-			"item": "caupona:stew_pot"
-		},
-		"T": {
-			"item": "minecraft:terracotta"
-		}
+		"I": "minecraft:iron_ingot",
+		"Q": "minecraft:writable_book",
+		"C": "convivium:cog",
+		"P": "caupona:stew_pot",
+		"T": "minecraft:terracotta"
 	},
 	"result": {
 		"id": "convivium:beverage_vending_machine"

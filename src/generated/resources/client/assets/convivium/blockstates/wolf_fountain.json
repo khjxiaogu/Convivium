@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=east": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 90
+    },
+    "active=false,facing=north": {
+      "model": "convivium:block/wolf_fountain_1"
+    },
+    "active=false,facing=south": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "convivium:block/wolf_fountain_1",
+      "y": 270
+    },
+    "active=true,facing=east": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 90
+    },
+    "active=true,facing=north": {
+      "model": "convivium:block/wolf_fountain_2"
+    },
+    "active=true,facing=south": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 180
+    },
+    "active=true,facing=west": {
+      "model": "convivium:block/wolf_fountain_2",
+      "y": 270
+    }
+  }
+}

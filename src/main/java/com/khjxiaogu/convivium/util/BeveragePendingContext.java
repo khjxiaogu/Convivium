@@ -78,7 +78,7 @@ public class BeveragePendingContext extends IPendingContext {
 				info.activeRelish2 = activerelish.get(1);
 			info.activeRelish1 = activerelish.get(0);
 		}
-		outer: for (FloatemStack fs : info.stacks) {
+		for (FloatemStack fs : info.stacks) {
 			Map<String,Double> lvar=new HashMap<>();
 			items.add(new FloatemTagStack(fs));
 			for (RecipeHolder<TasteRecipe> recipe : TasteRecipe.recipes) {

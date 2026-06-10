@@ -1,0 +1,98 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"ambientocclusion": false,
+	"elements": [
+		{
+			"name": "fu2Base",
+			"from": [8, 2, 5],
+			"to": [11, 4, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, 0, 8]},
+			"faces": {
+				"up": {"uv": [6, 3, 9, 6], "texture": "#fruit"}
+			}
+		},
+		{
+			"name": "fu2BaseSlopeN",
+			"from": [8, 2, 2],
+			"to": [11, 4, 5],
+			"rotation": {"angle": -45, "axis": "x", "origin": [11, 4, 5]},
+			"faces": {
+				"north": {"uv": [8, 14, 14, 16], "texture": "#fruit"},
+				"east": {"uv": [11, 12, 14, 14], "texture": "#fruit"},
+				"west": {"uv": [8, 12, 11, 14], "texture": "#fruit"},
+				"up": {"uv": [6, 0, 9, 3], "texture": "#fruit"}
+			}
+		},
+		{
+			"name": "fu2BaseSlopeS",
+			"from": [8, 1, 6],
+			"to": [11, 4, 8],
+			"rotation": {"angle": -45, "axis": "x", "origin": [11, 4, 8]},
+			"faces": {
+				"east": {"uv": [8, 12, 11, 14], "rotation": 270, "texture": "#fruit"},
+				"south": {"uv": [6, 6, 9, 9], "texture": "#fruit"},
+				"west": {"uv": [11, 12, 14, 14], "rotation": 90, "texture": "#fruit"},
+				"down": {"uv": [8, 14, 14, 16], "texture": "#fruit"}
+			}
+		},
+		{
+			"name": "fu2BaseSlopeE",
+			"from": [11, 2, 5],
+			"to": [14, 4, 8],
+			"rotation": {"angle": -45, "axis": "z", "origin": [11, 4, 8]},
+			"faces": {
+				"north": {"uv": [8, 12, 11, 14], "texture": "#fruit"},
+				"east": {"uv": [8, 14, 14, 16], "texture": "#fruit"},
+				"south": {"uv": [11, 12, 14, 14], "texture": "#fruit"},
+				"up": {"uv": [9, 3, 12, 6], "texture": "#fruit"}
+			}
+		},
+		{
+			"name": "fu2BaseSlopeW",
+			"from": [5, 2, 5],
+			"to": [8, 4, 8],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [11, 12, 14, 14], "texture": "#fruit"},
+				"south": {"uv": [8, 12, 11, 14], "texture": "#fruit"},
+				"west": {"uv": [8, 14, 14, 16], "texture": "#fruit"},
+				"up": {"uv": [3, 3, 6, 6], "texture": "#fruit"}
+			}
+		},
+		{
+			"name": "fu2Deco1",
+			"from": [10, 3, 6],
+			"to": [12, 5, 8],
+			"rotation": {"angle": -22.5, "axis": "y", "origin": [11, 0, 5]},
+			"faces": {
+				"north": {"uv": [2, 12, 4, 14], "texture": "#fruit"},
+				"east": {"uv": [0, 12, 2, 14], "texture": "#fruit"},
+				"south": {"uv": [2, 12, 4, 14], "texture": "#fruit"},
+				"west": {"uv": [0, 12, 2, 14], "texture": "#fruit"},
+				"up": {"uv": [0, 14, 2, 16], "rotation": 90, "texture": "#fruit"}
+			}
+		},
+		{
+			"name": "fu2Deco2",
+			"from": [10.5, 5, 6],
+			"to": [10.5, 7, 8],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [10, 5, 7]},
+			"faces": {
+				"east": {"uv": [4, 12, 6, 14], "texture": "#fruit"},
+				"west": {"uv": [6, 12, 8, 14], "texture": "#fruit"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "FruitUnit2",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6]
+		}
+	],
+	"loader": "caupona:layered"
+}

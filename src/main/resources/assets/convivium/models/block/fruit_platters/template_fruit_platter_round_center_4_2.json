@@ -1,0 +1,32 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"ambientocclusion": false,
+	"elements": [
+		{
+			"name": "fruit2",
+			"from": [9, 2, 5],
+			"to": [13, 6, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 0, 7]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "rotation": 270, "texture": "#fruit"},
+				"east": {"uv": [4, 4, 8, 8], "rotation": 90, "texture": "#fruit"},
+				"south": {"uv": [8, 0, 12, 4], "rotation": 90, "texture": "#fruit"},
+				"west": {"uv": [0, 4, 4, 8], "rotation": 90, "texture": "#fruit"},
+				"up": {"uv": [4, 0, 8, 4], "rotation": 90, "texture": "#fruit"},
+				"down": {"uv": [12, 0, 16, 4], "rotation": 90, "texture": "#fruit"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "FruitUnit2",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0]
+		}
+	],
+	"loader": "caupona:layered"
+}

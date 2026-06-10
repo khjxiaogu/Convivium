@@ -1,0 +1,118 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 32],
+	"textures": {
+		"1": "convivium:block/stone_aqueduct"
+	},
+	"elements": [
+		{
+			"name": "shaft",
+			"from": [7, 7, 14],
+			"to": [9, 9, 16],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 8, 0]},
+			"faces": {
+				"north": {"uv": [5.5, 5, 6, 6], "texture": "#1"},
+				"east": {"uv": [5.5, 5, 6, 6], "texture": "#1"},
+				"south": {"uv": [5.5, 5, 6, 6], "texture": "#1"},
+				"west": {"uv": [5.5, 5, 6, 6], "texture": "#1"},
+				"up": {"uv": [5.5, 5, 6, 6], "texture": "#1"},
+				"down": {"uv": [5.5, 5, 6, 6], "texture": "#1"}
+			}
+		},
+		{
+			"name": "eccentricWheel6",
+			"from": [3.01, 6.01, 12.01],
+			"to": [9.99, 9.99, 13.99],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [6, 4.5, 7.75, 6.5], "texture": "#1"},
+				"east": {"uv": [5.75, 6.5, 6.75, 7.5], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 180, "texture": "#1"},
+				"west": {"uv": [7.75, 4.5, 8.25, 6.5], "rotation": 90, "texture": "#1"},
+				"up": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 180, "texture": "#1"}
+			}
+		},
+		{
+			"name": "eccentricWheel5",
+			"from": [6.01, 6.01, 10.01],
+			"to": [9.99, 12.99, 11.99],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [7.75, 4.5, 8.25, 6.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5.75, 6.5, 6.75, 7.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "eccentricWheel4",
+			"from": [6.01, 6.01, 8.01],
+			"to": [9.99, 12.99, 9.99],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [7.75, 4.5, 8.25, 6.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5.75, 6.5, 6.75, 7.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "eccentricWheel3",
+			"from": [6.01, 6.01, 6.01],
+			"to": [9.99, 12.99, 7.99],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [7.75, 4.5, 8.25, 6.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5.75, 6.5, 6.75, 7.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "eccentricWheel2",
+			"from": [6.01, 6.01, 4.01],
+			"to": [9.99, 12.99, 5.99],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [7.75, 4.5, 8.25, 6.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5.75, 6.5, 6.75, 7.5], "texture": "#1"}
+			}
+		},
+		{
+			"name": "eccentricWheel1",
+			"from": [6.01, 6.01, 2.01],
+			"to": [9.99, 12.99, 3.99],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 4]},
+			"faces": {
+				"north": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [6, 4.5, 7.75, 6.5], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [6.75, 6.5, 8.5, 7.5], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [7.75, 4.5, 8.25, 6.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5.75, 6.5, 6.75, 7.5], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Wheels",
+			"origin": [8, 8, 0],
+			"scope": 0,
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6]
+		}
+	],
+	"loader": "caupona:layered"
+}

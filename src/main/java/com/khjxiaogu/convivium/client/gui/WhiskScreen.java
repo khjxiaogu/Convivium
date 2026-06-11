@@ -38,6 +38,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -206,20 +207,20 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractBackground(graphics, mouseX, mouseY, a);
-		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+		graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 		if (getBlockEntity().getSpeed() > 0) {
-			graphics.blit(TEXTURE, leftPos + 128, topPos + 8, 176, 0, 24, 24, 256, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 128, topPos + 8, 176, 0, 24, 24, 256, 256);
 		}
 		if (getBlockEntity().isLastHeating) {
-			graphics.blit(TEXTURE, leftPos + 130, topPos + 96, 176, 24, 19, 19, 256, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 130, topPos + 96, 176, 24, 19, 19, 256, 256);
 		}
 		if (getBlockEntity().processMax > 0) {
-			graphics.blit(TEXTURE, leftPos + 111, topPos + 42, 176, 43,
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 111, topPos + 42, 176, 43,
 					(int) (17 * (getBlockEntity().processMax - getBlockEntity().process) * 1f / getBlockEntity().processMax), 13, 256, 256);
 			int idx=0;
 			if(getBlockEntity().getSpeed()>0)
 				idx=(RotationUtils.getTicks()/5)%4;
-			graphics.blit(TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52, 256, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos+129,topPos+42, 234, 52*idx, 22,52, 256, 256);
 		}else {
 			if(getBlockEntity().tank.getAmountAsInt(0)>0) {
 				BeverageInfo info=null;

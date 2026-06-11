@@ -69,7 +69,6 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 		return shape;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public float getDestroyProgress(BlockState pState, Player player, BlockGetter worldIn, BlockPos pos) {
 		if (worldIn.getBlockEntity(pos) instanceof BeverageVendingBlockEntity blockEntity) {

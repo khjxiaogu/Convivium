@@ -39,7 +39,6 @@ import com.khjxiaogu.convivium.client.renderer.AqueductRenderer;
 import com.khjxiaogu.convivium.client.renderer.BasinRenderer;
 import com.khjxiaogu.convivium.client.renderer.BeverageRenderer;
 import com.khjxiaogu.convivium.client.renderer.CogRenderer;
-import com.khjxiaogu.convivium.client.renderer.FruitModel;
 import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderer;
 import com.khjxiaogu.convivium.client.renderer.PamRenderer;
 import com.khjxiaogu.convivium.client.renderer.VendingRenderer;
@@ -47,17 +46,11 @@ import com.khjxiaogu.convivium.client.renderer.WhiskRenderer;
 import com.khjxiaogu.convivium.client.renderer.WolfFountainProjectileRenderer;
 import com.khjxiaogu.convivium.client.renderer.WolfFountainRenderer;
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.teammoeg.caupona.CPMain;
-
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
@@ -128,14 +121,13 @@ public class CVClientRegistry {
             ),CVFluids.mixedf.get());
 
 
-		for(Entry<Supplier<Fluid>, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
+		for(Entry<Supplier<? extends Fluid>, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
 			TextureColorPair tcp=s.getValue();
 			event.register(new FluidModel.Unbaked(
 				new Material(tcp.texture()),
 	            new Material(tcp.texture()),
 	            null,
 	            new FluidTintSource() {
-
 					@Override
 					public int color(FluidState state) {
 						return tcp.c();
@@ -146,33 +138,7 @@ public class CVClientRegistry {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onCommonSetup(@SuppressWarnings("unused") FMLClientSetupEvent event) {
-		registerFruitModel(Items.APPLE, "apple", FruitModel.ModelType.ROUND);
-		registerFruitModel(get(CPMain.MODID, "fig"), "fig", FruitModel.ModelType.ROUND);
-		registerFruitModel(Items.GLISTERING_MELON_SLICE, "glistering_melon", FruitModel.ModelType.SLICE);
-		registerFruitModel(Items.GLOW_BERRIES, "glow_berries", FruitModel.ModelType.MISC);
-		registerFruitModelGlint(Items.ENCHANTED_GOLDEN_APPLE, "golden_apple", FruitModel.ModelType.ROUND);
-		registerFruitModel(Items.GOLDEN_APPLE, "golden_apple", FruitModel.ModelType.ROUND);
-		registerFruitModel(Items.MELON_SLICE, "melon", FruitModel.ModelType.SLICE);
-		registerFruitModel(Items.SWEET_BERRIES, "sweet_berries", FruitModel.ModelType.MISC);
-		registerFruitModel(get(CPMain.MODID, "walnut"), "walnut", FruitModel.ModelType.ROUND);
-		registerFruitModel(get(CPMain.MODID, "wolfberries"), "wolfberries", FruitModel.ModelType.MISC);
 
-	}
-
-
-	public static void registerFruitModelGlint(Item item, String name, FruitModel.ModelType type) {
-		FruitPlatterRenderer.models.put(item, new FruitModel(name, type, RenderTypes.glint()));
-	}
-
-	public static void registerFruitModel(Item item, String name, FruitModel.ModelType type) {
-		FruitPlatterRenderer.models.put(item, new FruitModel(name, type, RenderTypes.translucentMovingBlock()));
-	}
-
-	private static Item get(String modid, String id) {
-		return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(modid, id));
-	}
 
 	@SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {

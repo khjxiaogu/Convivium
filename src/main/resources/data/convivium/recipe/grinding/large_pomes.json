@@ -3,7 +3,7 @@
 	"density": 0.0,
 	"fluidIn": {
 		"amount": 250,
-		"fluid": "minecraft:water"
+		"ingredient": "minecraft:water"
 	},
 	"fluidOut": {
 		"amount": 250,
@@ -12,7 +12,7 @@
 	"items": [
 		{
 			"count": 2,
-			"tag": "convivium:fruits/pomes/large"
+			"ingredient": "#convivium:fruits/pomes/large"
 		}
 	],
 	"keepInfo": false,

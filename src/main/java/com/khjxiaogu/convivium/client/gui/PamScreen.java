@@ -25,6 +25,7 @@ import com.khjxiaogu.convivium.blocks.pestle_and_mortar.PamContainer;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,12 +77,12 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractBackground(graphics, mouseX, mouseY, a);
-		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+		graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 		if(getBlockEntity().getSpeed()>0) {
-			graphics.blit(TEXTURE, leftPos+86, topPos+1, 176, 0, 24, 24, 256, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos+86, topPos+1, 176, 0, 24, 24, 256, 256);
 		}
 		if (getBlockEntity().recipeHandler.getProcessMax() > 0) {
-			graphics.blit(TEXTURE, leftPos + 108, topPos + 23, 176, 24, (int) (22*(getBlockEntity().recipeHandler.getFinishedProgress())*1f/getBlockEntity().recipeHandler.getProcessMax()), 15, 256, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 108, topPos + 23, 176, 24, (int) (22*(getBlockEntity().recipeHandler.getFinishedProgress())*1f/getBlockEntity().recipeHandler.getProcessMax()), 15, 256, 256);
 		}
 	}
 

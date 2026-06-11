@@ -26,6 +26,7 @@ import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -84,12 +85,12 @@ public class BasinScreen extends AbstractContainerScreen<BasinContainer> {
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractBackground(graphics, mouseX, mouseY, a);
-		graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+		graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 		if(getBlockEntity().isLastHeating) {
-			graphics.blit(TEXTURE, leftPos+37, topPos+28, 176, 0, 16, 29,256,256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos+37, topPos+28, 176, 0, 16, 29,256,256);
 		}
 		if (getBlockEntity().recipeHandler.getProcessMax() > 0) {
-			graphics.blit(TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().recipeHandler.getProcessMax()-getBlockEntity().recipeHandler.getProcess())*1f/getBlockEntity().recipeHandler.getProcessMax()), 43,256,256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 82, topPos + 19, 176, 29, (int) (16*(getBlockEntity().recipeHandler.getProcessMax()-getBlockEntity().recipeHandler.getProcess())*1f/getBlockEntity().recipeHandler.getProcessMax()), 43,256,256);
 		}
 	}
 

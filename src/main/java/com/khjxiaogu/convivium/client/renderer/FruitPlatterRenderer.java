@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
 
+import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.platter.GlobalConfig;
 import com.khjxiaogu.convivium.blocks.platter.PlatterBlockEntity;
 import com.khjxiaogu.convivium.blocks.platter.SlotConfig;
@@ -38,6 +39,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEntity,FruitPlatterRenderState> {
 	public static final Map<Item,FruitModel> models=new HashMap<>();
@@ -57,7 +59,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 		boolean canFull=blockEntity.config==GlobalConfig.PILED;
 		FruitModel[] model=new FruitModel[4];
 		for(int i=0;i<4;i++) {
-			ItemStack is=blockEntity.storage.getResource(i).toStack(blockEntity.storage.getAmountAsInt(i));
+			ItemResource is=blockEntity.storage.getResource(i);
 			if(!is.isEmpty()) {
 				Item it=is.getItem();
 				items.compute(it, (_,v)->v==null?1:v+1);
@@ -131,6 +133,9 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 					FruitPlatterRenderingContext ctx=new FruitPlatterRenderingContext();
 					fillContext(blockEntity,ctx);
 					blockEntity.renderingContext=ctx;
+					for(int i=1;i<=4;i++) {
+					   CVMain.logger.trace("position "+i+":"+ctx.parts[i-1]);
+					}
 				}
 			}
 		}
@@ -148,15 +153,17 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 
 	@Override
 	public void submit(FruitPlatterRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-		QuadInstance qi=new QuadInstance();
-		qi.setLightCoords(state.lightCoords);
-		state.ctx.submit(poseStack, submitNodeCollector, camera, qi);
+
+		state.ctx.submit(poseStack, submitNodeCollector, camera, state);
 	}
 
 
 	@Override
 	public void extractRenderState(PlatterBlockEntity blockEntity, FruitPlatterRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+		
 		state.ctx=getOrCreateContext(blockEntity);
+
 		state.ctx.extractRenderState(render, blockEntity);
 	}
 

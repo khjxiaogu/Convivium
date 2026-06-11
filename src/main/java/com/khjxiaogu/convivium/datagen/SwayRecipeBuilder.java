@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.khjxiaogu.convivium.data.recipes.SwayRecipe.SwayEffect;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
+import com.khjxiaogu.convivium.data.recipes.SwayRecipe.SwayEffect;
 import com.khjxiaogu.convivium.data.recipes.compare.Compare;
 import com.khjxiaogu.convivium.data.recipes.compare.CompareCondition;
 import com.khjxiaogu.convivium.data.recipes.numbers.Expression;

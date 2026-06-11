@@ -20,7 +20,6 @@ package com.khjxiaogu.convivium.blocks.foods;
 
 import java.util.function.Supplier;
 
-import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.util.BeverageInfo;

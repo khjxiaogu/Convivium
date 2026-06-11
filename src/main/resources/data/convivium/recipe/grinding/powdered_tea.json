@@ -4,7 +4,7 @@
 	"items": [
 		{
 			"count": 1,
-			"item": "convivium:steamed_camellia_shoots"
+			"ingredient": "convivium:steamed_camellia_shoots"
 		}
 	],
 	"keepInfo": false,

@@ -37,24 +37,16 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries.Keys;
 
 public class CVFluids {
-	public static Map<Supplier<Fluid>,TextureColorPair> clientExtensiondata=new HashMap<>();
+	public static Map<Supplier<? extends Fluid>,TextureColorPair> clientExtensiondata=new HashMap<>();
 	public static record TextureColorPair (Identifier texture, int c) {
-		public TextureColorPair copy() {
-			return new TextureColorPair(texture,c);
-		}
-		public Identifier texture() {
-			return texture;
-		}
-		public int c() {
-			return c;
-		}
-		public FluidType create(String n) {
-			
-			FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
-				.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n));
-			
-			return ft;
-		}
+	}
+
+	public static FluidType create(String n) {
+		
+		FluidType ft = new FluidType(FluidType.Properties.create().viscosity(1200)
+			.temperature(333).rarity(Rarity.UNCOMMON).descriptionId("item." + CVMain.MODID + "." + n));
+		
+		return ft;
 	}
 	public static final String[] sorbets=new String[] {
 		"cocoa_juice",
@@ -82,32 +74,32 @@ public class CVFluids {
 
 	// private static final Map<String, TextureColorPair> soupfluids = new
 	// HashMap<>();
-	public static final DeferredHolder<FluidType, FluidType> cocoa = FLUID_TYPES.register("hot_chocolate", () -> bvg(0xff734e3d).create("hot_chocolate"));
-	public static final DeferredHolder<FluidType, FluidType> tea = FLUID_TYPES.register("tea", () -> water(0xff6c902e).create("tea"));
-	public static final DeferredHolder<FluidType, FluidType> b_juice = FLUID_TYPES.register("berry_juice", () -> water(0xffcc6d57).create("berry_juice"));
-	public static final DeferredHolder<FluidType, FluidType> d_juice = FLUID_TYPES.register("drupe_juice", () -> water(0xffd48e2d).create("drupe_juice"));
-	public static final DeferredHolder<FluidType, FluidType> p_juice = FLUID_TYPES.register("pome_juice", () -> water(0xffe3c25e).create("pome_juice"));
-	public static final DeferredHolder<FluidType, FluidType> b_wine = FLUID_TYPES.register("berry_must", () -> bvg(0xffcc6d57).create("berry_must"));
-	public static final DeferredHolder<FluidType, FluidType> d_wine = FLUID_TYPES.register("drupe_must", () -> bvg(0xffd48e2d).create("drupe_must"));
-	public static final DeferredHolder<FluidType, FluidType> p_wine = FLUID_TYPES.register("pome_must", () -> bvg(0xffe3c25e).create("pome_must"));
-	public static final DeferredHolder<FluidType, FluidType> mixed = FLUID_TYPES.register("mixed", () -> bvg(0xffee9999).create("beverage"));
+	public static final DeferredHolder<FluidType, FluidType> cocoa = FLUID_TYPES.register("hot_chocolate", () -> create("hot_chocolate"));
+	public static final DeferredHolder<FluidType, FluidType> tea = FLUID_TYPES.register("tea", () -> create("tea"));
+	public static final DeferredHolder<FluidType, FluidType> b_juice = FLUID_TYPES.register("berry_juice", () -> create("berry_juice"));
+	public static final DeferredHolder<FluidType, FluidType> d_juice = FLUID_TYPES.register("drupe_juice", () -> create("drupe_juice"));
+	public static final DeferredHolder<FluidType, FluidType> p_juice = FLUID_TYPES.register("pome_juice", () -> create("pome_juice"));
+	public static final DeferredHolder<FluidType, FluidType> b_wine = FLUID_TYPES.register("berry_must", () -> create("berry_must"));
+	public static final DeferredHolder<FluidType, FluidType> d_wine = FLUID_TYPES.register("drupe_must", () -> create("drupe_must"));
+	public static final DeferredHolder<FluidType, FluidType> p_wine = FLUID_TYPES.register("pome_must", () -> create("pome_must"));
+	public static final DeferredHolder<FluidType, FluidType> mixed = FLUID_TYPES.register("mixed", () -> create("beverage"));
 
-	public static final DeferredHolder<Fluid, BaseFluid> cocoaf = FLUIDS.register("hot_chocolate", () -> new BaseFluid(new BaseFlowingFluid.Properties(cocoa, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> teaf = FLUIDS.register("tea", () -> new BaseFluid(new BaseFlowingFluid.Properties(tea, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> bjuicef = FLUIDS.register("berry_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(b_juice, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> djuicef = FLUIDS.register("drupe_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(d_juice, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> pjuicef = FLUIDS.register("pome_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(p_juice, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> bwinef = FLUIDS.register("berry_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(b_wine, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> dwinef = FLUIDS.register("drupe_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(d_wine, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
-	public static final DeferredHolder<Fluid, BaseFluid> pwinef = FLUIDS.register("pome_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(p_wine, null,
-		null).slopeFindDistance(1).explosionResistance(100F)));
+	public static final DeferredHolder<Fluid, BaseFluid> cocoaf = register("hot_chocolate", () -> new BaseFluid(new BaseFlowingFluid.Properties(cocoa, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),bvg(0xff734e3d));
+	public static final DeferredHolder<Fluid, BaseFluid> teaf = register("tea", () -> new BaseFluid(new BaseFlowingFluid.Properties(tea, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),water(0xff6c902e));
+	public static final DeferredHolder<Fluid, BaseFluid> bjuicef = register("berry_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(b_juice, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),water(0xffcc6d57));
+	public static final DeferredHolder<Fluid, BaseFluid> djuicef = register("drupe_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(d_juice, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),water(0xffd48e2d));
+	public static final DeferredHolder<Fluid, BaseFluid> pjuicef = register("pome_juice", () -> new BaseFluid(new BaseFlowingFluid.Properties(p_juice, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),water(0xffe3c25e));
+	public static final DeferredHolder<Fluid, BaseFluid> bwinef = register("berry_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(b_wine, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),bvg(0xffcc6d57));
+	public static final DeferredHolder<Fluid, BaseFluid> dwinef = register("drupe_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(d_wine, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),bvg(0xffd48e2d));
+	public static final DeferredHolder<Fluid, BaseFluid> pwinef = register("pome_must", () -> new BaseFluid(new BaseFlowingFluid.Properties(p_wine, null,
+		null).slopeFindDistance(1).explosionResistance(100F)),bvg(0xffe3c25e));
 	public static final DeferredHolder<Fluid, BeverageFluid> mixedf = FLUIDS.register("mixed", () -> new BeverageFluid(new BaseFlowingFluid.Properties(mixed, null,
 		null).slopeFindDistance(1).explosionResistance(100F)));
 	public static Map<String, TextureColorPair> intern = new HashMap<>();
@@ -130,7 +122,7 @@ public class CVFluids {
 		intern.put("cocoa_wine", bvg(0xffca9787));
 		intern.put("chocolate_milk", bvg(0xffc69f8f));
 		for (Entry<String, TextureColorPair> ent : intern.entrySet()) {
-			DeferredHolder<FluidType, FluidType> type = FLUID_TYPES.register(ent.getKey(), () -> ent.getValue().create(ent.getKey()));
+			DeferredHolder<FluidType, FluidType> type = FLUID_TYPES.register(ent.getKey(), () -> create(ent.getKey()));
 			clientExtensiondata.put(
 			FLUIDS.register(ent.getKey(), () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,
 				null).slopeFindDistance(1).explosionResistance(100F)))
@@ -138,13 +130,17 @@ public class CVFluids {
 		}
 		for(String s:sorbets) {
 			TextureColorPair tcp=new TextureColorPair(CVMain.rl("block/sorbets/"+s), 0xffffffff);
-			DeferredHolder<FluidType, FluidType> type=FLUID_TYPES.register(s+"_sorbet",t -> tcp.create(t.getPath()));
+			DeferredHolder<FluidType, FluidType> type=FLUID_TYPES.register(s+"_sorbet",t -> create(t.getPath()));
 			clientExtensiondata.put(
 			FLUIDS.register(s+"_sorbet", () -> new BeverageFluid(new BaseFlowingFluid.Properties(type, null,null).slopeFindDistance(1).explosionResistance(100F)))
 			, tcp);
 		}
 	}
-
+    public static <I extends Fluid> DeferredHolder<Fluid, I> register(final String name, final Supplier<? extends I> sup,TextureColorPair tcp) {
+       DeferredHolder<Fluid, I> data=FLUIDS.register(name,sup);
+       clientExtensiondata.put(data,tcp);
+       return data;
+    }
 	public static TextureColorPair water(int c) {
 		return new TextureColorPair(STILL_WATER_TEXTURE, c);
 	}

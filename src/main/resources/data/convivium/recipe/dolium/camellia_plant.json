@@ -2,16 +2,16 @@
 	"type": "caupona:dolium",
 	"items": [
 		{
-			"item": "convivium:camellia_seeds",
+			"ingredient": "convivium:camellia_seeds",
 			"count": 8
 		},
 		{
-			"item": "minecraft:dirt",
+			"ingredient": "minecraft:dirt",
 			"count": 2
 		}
 	],
 	"fluid":{
-		"fluid":"minecraft:water",
+		"ingredient":"minecraft:water",
 		"amount": 1000
 	},
 	"density": 0.0,

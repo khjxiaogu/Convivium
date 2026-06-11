@@ -113,7 +113,7 @@ public class CVStatesProvider extends BlockModelGenerators {
 		horizontalBlock(CVBlocks.lead_basin.get(), bmf("lead_basin"));
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("beverage"), bmf("beverage"));
-		simpleBlock(cvblock("fruit_platter"), bmf(CPMain.rl("dish")));
+		simpleBlock(cvblock("fruit_platter"), bmf(CPMain.rl("block/dish")));
 		simpleBlockItem(cvblock("camellia_plant"), CVMain.rl("camellia_plant"));
 		blockItemModel(CVBlocks.CAMELLIA_FLOWER.get(), CVMain.rl("camellia_product_stage_c"));
 		this.horizontalBlock(CVBlocks.wolf_fountain.get(), PropertyDispatch.initial(KineticBasedBlock.ACTIVE).generate(bs->bs?bmf("wolf_fountain_2"):bmf("wolf_fountain_1")));
@@ -195,7 +195,7 @@ public class CVStatesProvider extends BlockModelGenerators {
 	}
 	protected void empty(Block name) {
 		this.blockStateOutput.accept(
-		this.getVariantBuilder(name,bmf(Identifier.withDefaultNamespace("block")))
+		this.getVariantBuilder(name,bmf(Identifier.withDefaultNamespace("block/block")))
 		);
 
 	}
@@ -313,9 +313,9 @@ public class CVStatesProvider extends BlockModelGenerators {
 				if (existsModel(rl))
 					return super.plainModel(rl);
 			}
-
+			CVMain.logger.warn("Model file " + orl + " not exists, using unchecked");
 		}
-		CVMain.logger.warn("Model file " + orl + " not exists, using unchecked");
+		
 		return super.plainModel(rl);
 	}
 

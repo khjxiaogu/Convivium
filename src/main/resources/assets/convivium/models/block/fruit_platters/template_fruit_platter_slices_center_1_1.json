@@ -25,6 +25,5 @@
 			"color": 0,
 			"children": [0]
 		}
-	],
-	"loader": "caupona:layered"
+	]
 }

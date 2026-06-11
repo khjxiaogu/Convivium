@@ -4,7 +4,7 @@
 	"items": [
 		{
 			"count": 1,
-			"item": "minecraft:cocoa_beans"
+			"ingredient": "minecraft:cocoa_beans"
 		}
 	],
 	"keepInfo": false,

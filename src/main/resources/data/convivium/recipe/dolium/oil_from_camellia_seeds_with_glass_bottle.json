@@ -6,11 +6,11 @@
 	"items": [
 		{
 			"count": 16,
-			"item": "convivium:camellia_seeds"
+			"ingredient": "convivium:camellia_seeds"
 		},
 		{
 			"count": 0,
-			"item": "minecraft:anvil"
+			"ingredient": "minecraft:anvil"
 		}
 	],
 	"keepInfo": false,

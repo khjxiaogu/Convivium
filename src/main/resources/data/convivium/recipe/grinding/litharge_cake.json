@@ -4,7 +4,7 @@
 	"items": [
 		{
 			"count": 1,
-			"item": "caupona:leaden_walnut"
+			"ingredient": "caupona:leaden_walnut"
 		}
 	],
 	"keepInfo": false,

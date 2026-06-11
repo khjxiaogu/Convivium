@@ -4,7 +4,7 @@
 	"items": [
 		{
 			"count": 1,
-			"item": "caupona:silphium"
+			"ingredient": "caupona:silphium"
 		}
 	],
 	"keepInfo": false,

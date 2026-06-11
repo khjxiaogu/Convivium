@@ -27,12 +27,9 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.util.FloatemStack;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -40,23 +37,6 @@ import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 
 public final class FloatSizedOrCatalystIngredient {
 	public static final Codec<Float> NON_NEGATIVE_FLOAT=Codec.FLOAT.validate(t->t>=0?DataResult.success(t):DataResult.error(()->("Value must be non-negative: "+t)));
-
-	/**
-	 * The "nested" codec for {@link SizedIngredient}.
-	 *
-	 * <p>
-	 * The count is serialized separately from the rest of the ingredient, for
-	 * example:
-	 *
-	 * <pre>{@code
-	 * {
-	 *     "ingredient": {
-	 *         "item": "minecraft:apple"
-	 *     },
-	 *     "count": 3
-	 * }
-	 * }</pre>
-	 */
 	public static final Codec<FloatSizedOrCatalystIngredient> NESTED_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Ingredient.CODEC.fieldOf("ingredient").forGetter(FloatSizedOrCatalystIngredient::ingredient),
 		NeoForgeExtraCodecs.optionalFieldAlwaysWrite(NON_NEGATIVE_FLOAT, "count", 1f).forGetter(FloatSizedOrCatalystIngredient::count))

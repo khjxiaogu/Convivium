@@ -41,6 +41,5 @@
 			"color": 0,
 			"children": [0, 1]
 		}
-	],
-	"loader": "caupona:layered"
+	]
 }

@@ -41,8 +41,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class AeolipileRenderer implements BlockEntityRenderer<AeolipileBlockEntity,AeolipileRenderState> {
-	public static final DynamicBlockModelReference aeolipile=DynamicBlockModelReference.getModel(CVMain.rl("aeolipile_rotor"));
-	public static final DynamicBlockModelReference aeolipile_cw=DynamicBlockModelReference.getModel(CVMain.rl("aeolipile_rotor_clockwise"));
+	public static final DynamicBlockModelReference aeolipile=DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/aeolipile_rotor"));
+	public static final DynamicBlockModelReference aeolipile_cw=DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/aeolipile_rotor_clockwise"));
 	/**
 	 * @param rendererDispatcherIn  
 	 */

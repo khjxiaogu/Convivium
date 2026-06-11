@@ -46,8 +46,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 
 public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControllerBlockEntity,AqueductMainRenderState> {
-	public static final DynamicBlockModelReference rotor_wheels=DynamicBlockModelReference.getModel(CVMain.rl("aqueduct_wavemaker_rotor_wheels"));
-	public static final DynamicBlockModelReference rotor_cogs=DynamicBlockModelReference.getModel(CVMain.rl("aqueduct_wavemaker_rotor_cogs"));
+	public static final DynamicBlockModelReference rotor_wheels=DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/aqueduct_wavemaker_rotor_wheels"));
+	public static final DynamicBlockModelReference rotor_cogs=DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/aqueduct_wavemaker_rotor_cogs"));
 
 	/**
 	 * @param rendererDispatcherIn  

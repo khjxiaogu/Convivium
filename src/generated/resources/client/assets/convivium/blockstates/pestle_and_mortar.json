@@ -11,9 +11,6 @@
     {
       "apply": {
         "model": "convivium:block/pestle_and_mortar_stator"
-      },
-      "when": {
-        "active": "true"
       }
     }
   ]

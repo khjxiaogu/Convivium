@@ -11,9 +11,6 @@
     {
       "apply": {
         "model": "convivium:block/whisk_stator"
-      },
-      "when": {
-        "active": "true"
       }
     }
   ]

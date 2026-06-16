@@ -66,23 +66,23 @@ public class PlatterScreen extends AbstractContainerScreen<PlatterContainer> {
 		this.clearWidgets();
 		this.addRenderableWidget(btn1 = new ImageButton(
 				Button.builder(cpile, _ -> 
-			blockEntity.sendMessage((short) 0,(2-btn1.state+1)%3)).pos(leftPos + 154, topPos + 2).size(20, 20)
+				menu.sendMessage((short) 0,(2-btn1.state+1)%3)).pos(leftPos + 154, topPos + 2).size(20, 20)
 				, 176, 0, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(cpile) :(btn1.state==1 ? Tooltip.create(cgrid):Tooltip.create(csep))));
 		this.addRenderableWidget(btnsl1 = new ImageButton(
-				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 2,btnsl1.state%2)).pos(leftPos + 82, topPos + 9).size(12, 12)
+				Button.builder(cmodel, _ -> menu.sendMessage((short) 2,btnsl1.state%2)).pos(leftPos + 82, topPos + 9).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl1.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 		this.addRenderableWidget(btnsl2 = new ImageButton(
-				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 3,btnsl2.state%2)).pos(leftPos + 115, topPos + 32).size(12, 12)
+				Button.builder(cmodel, _ -> menu.sendMessage((short) 3,btnsl2.state%2)).pos(leftPos + 115, topPos + 32).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl2.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 		this.addRenderableWidget(btnsl3 = new ImageButton(
-				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 4,btnsl3.state%2)).pos(leftPos + 82, topPos + 55).size(12, 12)
+				Button.builder(cmodel, _ -> menu.sendMessage((short) 4,btnsl3.state%2)).pos(leftPos + 82, topPos + 55).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl3.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 		this.addRenderableWidget(btnsl4 = new ImageButton(
-				Button.builder(cmodel, _ -> blockEntity.sendMessage((short) 5,btnsl4.state%2)).pos(leftPos + 49, topPos + 32).size(12, 12)
+				Button.builder(cmodel, _ -> menu.sendMessage((short) 5,btnsl4.state%2)).pos(leftPos + 49, topPos + 32).size(12, 12)
 				, 176, 140, 256, 256, TEXTURE,
 				() -> (btnsl4.state==1 ? Tooltip.create(cmodel):Tooltip.create(citem))));
 	}

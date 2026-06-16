@@ -60,6 +60,14 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 	public final FluidStacksResourceHandler tank=new FluidStacksResourceHandler(1,2500) {
 
 		@Override
+		public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+
+			System.out.println("subupdate");
+			new Exception().printStackTrace();
+			return super.extract(index, resource, amount, transaction);
+		}
+
+		@Override
 		protected void onContentsChanged(int index, FluidStack previousContents) {
 			super.onContentsChanged(index, previousContents);
 			syncData();
@@ -93,23 +101,27 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 				int extracted;
 				try(Transaction trans=Transaction.open(transaction)){
 					extracted=super.extract(index, resource, 250, trans);
-					if(isInfinite) {
+					System.out.println("trans");
+					if(!isInfinite) {
 						trans.commit();
 					}
 				}
 				if(extracted>=250) {
+					System.out.println("update");
+					new Exception().printStackTrace();
 					BlockStateSnapshotJournal journal=new BlockStateSnapshotJournal(BeverageVendingBlockEntity.this,getBlockState().setValue(BeverageVendingBlock.ACTIVE,false));
 					journal.updateSnapshots(transaction);
+					return extracted;
 				}
-				return extracted;
+				
 			}
 			return 0;
 		}
 
 		@Override
 		public int extract(FluidResource resource, int amount, TransactionContext transaction) {
-			// TODO Auto-generated method stub
-			return super.extract(resource, amount, transaction);
+
+			return extract(0,resource, amount, transaction);
 		}
 		
 	};

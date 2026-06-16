@@ -56,7 +56,7 @@ public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlock
 		poseStack.translate(0,0,3/128f);
 		
 		
-		submitNodeCollector.submitText(poseStack, -14, -8, state.num, false, Font.DisplayMode.NORMAL, state.lightCoords,0xffffffff, Integer.MIN_VALUE, 0);
+		submitNodeCollector.submitText(poseStack, -14, -8, state.num, false, Font.DisplayMode.POLYGON_OFFSET, state.lightCoords,0xffffffff, 0, 0);
 		poseStack.popPose();
 		
 	}

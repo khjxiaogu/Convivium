@@ -19,10 +19,13 @@
 package com.khjxiaogu.convivium.blocks.vending;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVTags;
+import com.teammoeg.caupona.api.CauponaApi;
 import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
+import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -144,6 +147,21 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 			if (player.getUUID().equals(blockEntity.owner)) {
 				if (FluidUtil.interactWithFluidHandler(player, hand, pos, blockEntity.tank))
 					return InteractionResult.SUCCESS;
+				else {
+					Optional<ItemStack> out=CauponaApi.getFilledItemStack(blockEntity.tank,held);
+					if(out.isPresent()) {
+						ItemStack ret = out.get();
+						if (held.getCount() > 1) {
+							held.shrink(1);
+							if (!player.addItem(ret)) {
+								player.drop(ret, false);
+							}
+						} else
+							player.setItemInHand(hand, held);
+						return InteractionResult.SUCCESS;
+					}
+					
+				}
 			}
 			if (state.getValue(ACTIVE)) {
 				if (FluidUtil.interactWithFluidHandler(player, hand, pos, blockEntity.handler))

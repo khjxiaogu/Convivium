@@ -187,8 +187,8 @@ public class CVStatesProvider extends BlockModelGenerators {
 		 */
 		this.blockStateOutput.accept(
 		this.getMultipartBuilder(cvblock(name))
-		.with(condition(CogCageBlock.ACTIVE, false), bmf("dynamic/" + rotor))
-		.with(condition(CogCageBlock.ACTIVE, true), bmf(stator))
+		.with(condition(KineticBasedBlock.ACTIVE, false), bmf("dynamic/" + rotor))
+		.with(bmf(stator))
 		);
 		blockItemModel(name);
 

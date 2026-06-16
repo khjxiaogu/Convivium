@@ -63,19 +63,19 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 		super.init();
 		this.clearWidgets();
 		this.addRenderableWidget(btnsl1 = new ImageButton(
-				Button.builder(p8, _ -> getBlockEntity().sendMessage((short) 0,0)).pos(leftPos + 101, topPos + 16).size(14, 14)
+				Button.builder(p8, _ -> menu.sendMessage((short) 0,0)).pos(leftPos + 101, topPos + 16).size(14, 14)
 				, 176, 14, 256, 256, TEXTURE,
 				() -> Tooltip.create(p8)));
 		this.addRenderableWidget(btnsl2 = new ImageButton(
-				Button.builder(p1, _ -> getBlockEntity().sendMessage((short) 1,0)).pos(leftPos + 86, topPos + 16).size(14, 14)
+				Button.builder(p1, _ -> menu.sendMessage((short) 1,0)).pos(leftPos + 86, topPos + 16).size(14, 14)
 				, 176, 0, 256, 256, TEXTURE,
 				() -> Tooltip.create(p1)));
 		this.addRenderableWidget(btnsl3 = new ImageButton(
-				Button.builder(m1, _ -> getBlockEntity().sendMessage((short) 2,0)).pos(leftPos + 27, topPos + 16).size(14, 14)
+				Button.builder(m1, _ -> menu.sendMessage((short) 2,0)).pos(leftPos + 27, topPos + 16).size(14, 14)
 				, 176, 28, 256, 256, TEXTURE,
 				() -> Tooltip.create(m1)));
 		this.addRenderableWidget(btnsl4 = new ImageButton(
-				Button.builder(m8, _ -> getBlockEntity().sendMessage((short) 3,0)).pos(leftPos + 12, topPos + 16).size(14, 14)
+				Button.builder(m8, _ -> menu.sendMessage((short) 3,0)).pos(leftPos + 12, topPos + 16).size(14, 14)
 				, 176, 42, 256, 256, TEXTURE,
 				() -> Tooltip.create(m8)));
 	}
@@ -94,7 +94,7 @@ public class BeverageVendingScreen extends AbstractContainerScreen<BeverageVendi
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		tooltip.clear();
 
-		graphics.centeredText(this.font,""+getBlockEntity().amt,leftPos + 57,topPos + 19, 0xffffff);
+		graphics.centeredText(this.font,""+getBlockEntity().amt,leftPos + 57,topPos + 19, 0xffffffff);
 		FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tank, leftPos + 123, topPos + 25, 32, 46,mouseX,mouseY,tooltip::add);
 		
 		super.extractRenderState(graphics, mouseX, mouseY, a);

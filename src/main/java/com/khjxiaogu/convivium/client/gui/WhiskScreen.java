@@ -80,7 +80,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		super.init();
 		this.addRenderableWidget(btn1 = new ImageButton(
 				Button.builder(hon, _ -> {if(btn1.state!=2)
-			getBlockEntity().sendMessage((short) 1,btn1.state);}).pos(leftPos + 119, topPos + 117).size(20, 20)
+					menu.sendMessage((short) 1,btn1.state);}).pos(leftPos + 119, topPos + 117).size(20, 20)
 				, 176, 72, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(hrs) :(btn1.state==1 ? Tooltip.create(hoff):Tooltip.create(hon))));
 	}

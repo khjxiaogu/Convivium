@@ -18,13 +18,12 @@
 
 package com.khjxiaogu.convivium.datagen;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.khjxiaogu.convivium.util.Constants;
 
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+
 public class VariantDataBuilder<T> {
-	protected Map<String,Float> variantData=new HashMap<>();
+	protected Object2FloatOpenHashMap<String> variantData=new Object2FloatOpenHashMap<String>();
 	private T par;
 	public VariantDataBuilder(T par) {
 		super();

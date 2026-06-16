@@ -33,7 +33,6 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverl
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -54,11 +53,11 @@ public abstract class RotationRenderer<T extends BlockEntity,S extends RotationR
 	@Override
 	public void extractRenderState(T blockEntity, S state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
-		state.rotation=RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos());
+		state.rotation=null;
 		BlockState blockState=blockEntity.getBlockState();
+		if(blockState.hasProperty(KineticBasedBlock.ACTIVE)&&blockState.getValue(KineticBasedBlock.ACTIVE)) 
+			state.rotation=RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos());
 		state.rotor=getMainRotor(blockState,blockEntity);
-		if(blockState.hasProperty(KineticBasedBlock.ACTIVE))
-			state.active=blockState.getValue(KineticBasedBlock.ACTIVE);
 	}
 	@Override
 	public void submit(S state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
@@ -67,17 +66,11 @@ public abstract class RotationRenderer<T extends BlockEntity,S extends RotationR
 		quadInstance.setOverlayCoords(OverlayTexture.NO_OVERLAY);
 		poseStack.pushPose();
 		this.customRender(state, poseStack, submitNodeCollector, camera, quadInstance);
-		if(state.active) 
-			poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
+		if(state.rotation!=null)
+		poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
 		this.customRenderRotated(state, poseStack, submitNodeCollector, camera, quadInstance);
-		if(state.active) {
-			submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose,buffer)->{
-				for(BakedQuad quad:state.rotor.get().getAll()) {
-					buffer.putBakedQuad(pose, quad, quadInstance);
-				}
-			});
-			
-		}
+		if(state.rotation!=null)
+			state.rotor.submit(submitNodeCollector, poseStack, RenderTypes.translucentMovingBlock(), quadInstance);
 		poseStack.popPose();
 	};
 }

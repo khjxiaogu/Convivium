@@ -43,7 +43,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import com.teammoeg.caupona.components.IFoodInfo;
-import com.teammoeg.caupona.data.recipes.FoodValueRecipe;
 import com.teammoeg.caupona.util.ChancedEffect;
 import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.Utils;
@@ -85,8 +84,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public Fluid[] relishes = new Fluid[5];
 	public String activeRelish1 = "";
 	public String activeRelish2 = "";
-	public int healing;
-	public float saturation;
 
 	public BeverageInfo() {
 		effects = new ArrayList<>();
@@ -102,9 +99,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		Codec.list(ChancedEffect.CODEC).fieldOf("feffects").forGetter(o -> o.foodeffect),
 		Codec.list(BuiltInRegistries.FLUID.byNameCodec().<Optional<Fluid>>xmap(o->o==Fluids.EMPTY?Optional.empty():Optional.of(o), o->o.orElse(Fluids.EMPTY))).fieldOf("relish").forGetter(o->o.getRelishList()),
 		Codec.STRING.fieldOf("activeRelish1").forGetter(o -> o.activeRelish1),
-		Codec.STRING.fieldOf("activeRelish2").forGetter(o -> o.activeRelish2),
-		Codec.INT.fieldOf("heal").forGetter(o -> o.healing),
-		Codec.FLOAT.fieldOf("sat").forGetter(o -> o.saturation)).apply(t, BeverageInfo::new));
+		Codec.STRING.fieldOf("activeRelish2").forGetter(o -> o.activeRelish2)).apply(t, BeverageInfo::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageInfo> STREAM_CODEC = StreamCodec.composite(
 		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.stacks,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.effects,
@@ -113,8 +108,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)).apply(ByteBufCodecs.list()),o->o.getRelishList(),
 		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish1,
 		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish2,
-		ByteBufCodecs.INT,o -> o.healing,
-		ByteBufCodecs.FLOAT,o -> o.saturation,
 		BeverageInfo::new);
 	private Lazy<Collection<MobEffectInstance>> potionEffectsCollectionView=Lazy.of(()->new AbstractCollection<MobEffectInstance>() {
 		@Override
@@ -164,7 +157,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	}
 
 	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, String activeRelish1,
-		String activeRelish2, int healing, float saturation) {
+		String activeRelish2) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
@@ -173,23 +166,18 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		this.relishes = relishes;
 		this.activeRelish1 = activeRelish1;
 		this.activeRelish2 = activeRelish2;
-		this.healing = healing;
-		this.saturation = saturation;
 	}
 
-	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, int healing,
-		float saturation) {
+	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
 		this.swayeffects = swayeffects;
 		this.foodeffect = foodeffect;
 		this.relishes = relishes;
-		this.healing = healing;
-		this.saturation = saturation;
 	}
 	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, List<Optional<Fluid>> relishes, String activeRelish1,
-		String activeRelish2, int healing, float saturation) {
+		String activeRelish2) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
@@ -201,15 +189,13 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		}
 		this.activeRelish1 = activeRelish1;
 		this.activeRelish2 = activeRelish2;
-		this.healing = healing;
-		this.saturation = saturation;
 	}
 	public BeverageInfo copy() {
 		return new BeverageInfo(stacks.stream().map(t->t.copy()).toList(),
 			effects.stream().map(t->t.copy()).toList(),
 			swayeffects.stream().map(t->t.copy()).toList(),
 			foodeffect.stream().map(t->t.copy()).toList(),
-			Arrays.copyOf(relishes,5),activeRelish1,activeRelish2,healing,saturation);
+			Arrays.copyOf(relishes,5),activeRelish1,activeRelish2);
 	}
 	public List<Optional<Fluid>> getRelishList(){
 		return List.of(Optional.ofNullable(relishes[0]),
@@ -353,12 +339,12 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 
 	@Override
 	public int getHealing() {
-		return healing;
+		return 0;
 	}
 
 	@Override
 	public float getSaturation() {
-		return saturation;
+		return 0;
 	}
 
 
@@ -384,23 +370,8 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 
 	public void recalculateHAS() {
 		foodeffect.clear();
-		float nh = 0;
-		float ns = 0;
 		for (FloatemStack fs : stacks) {
-			FoodValueRecipe fvr = FoodValueRecipe.recipes.get(fs.getItem());
-			if (fvr != null) {
-				nh += fvr.heal * fs.getCount();
-				ns += fvr.sat * fs.getCount() * fvr.heal;
-				if (fvr.effects != null)
-					fvr.effects.forEach(foodeffect::add);
-				continue;
-			}
-			FoodProperties f = fs.getStack().getComponents().get(DataComponents.FOOD);
 			Consumable c = fs.getStack().getComponents().get(DataComponents.CONSUMABLE);
-			if (f != null) {
-				nh += fs.count * f.nutrition();
-				ns += fs.count * f.saturation();
-			}
 			if(c!=null) {
 				c.onConsumeEffects().stream().<ChancedEffect>flatMap(t->{
 					if(t instanceof ApplyStatusEffectsConsumeEffect eff) {
@@ -411,13 +382,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 				}).forEach(foodeffect::add);
 			}
 		}
-		int conv = (int) (0.075 * nh);
-		this.healing = (int) Math.ceil(nh - conv);
-		ns += conv / 2f;
-		if (this.healing > 0)
-			this.saturation = Math.max(0.6f, ns / this.healing);
-		else
-			this.saturation = 0;
 	}
 
 	public boolean addItem(ItemStack is, float parts) {
@@ -452,37 +416,10 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		return null;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(relishes);
-		result = prime * result + Objects.hash(effects, foodeffect, healing, saturation, stacks, swayeffects);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		BeverageInfo other = (BeverageInfo) obj;
-		return Objects.equals(effects, other.effects) && Objects.equals(foodeffect, other.foodeffect) && healing == other.healing && Arrays.equals(relishes, other.relishes)
-			&& Float.floatToIntBits(saturation) == Float.floatToIntBits(other.saturation) && Objects.equals(stacks, other.stacks) && Objects.equals(swayeffects, other.swayeffects);
-	}
 
 	@Override
 	public Builder getFood(int extraHealing, int extraSaturation) {
 		FoodProperties.Builder b = new FoodProperties.Builder();
-		b.nutrition(healing+extraHealing);
-		float extraSat=0;
-		if(healing+extraHealing>0) {
-			extraSat=extraSaturation/(healing+extraHealing);
-		}
-		if(Float.isNaN(saturation))
-			b.saturationModifier(extraSat);
-		else
-			b.saturationModifier(saturation+extraSat);
 		b.alwaysEdible();
 		return b;
 	}
@@ -518,6 +455,24 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 				tooltipAdder.accept(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_1", r1.value().getText()));
 		}
 		
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(relishes);
+		result = prime * result + Objects.hash(effects, stacks);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		BeverageInfo other = (BeverageInfo) obj;
+		return Objects.equals(effects, other.effects) && Arrays.equals(relishes, other.relishes) && Objects.equals(stacks, other.stacks);
 	}
 
 }

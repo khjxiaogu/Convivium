@@ -41,6 +41,8 @@ import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.FloatemTagStack;
 import com.teammoeg.caupona.util.ResultCachingMap;
 
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -55,7 +57,7 @@ public class BeveragePendingContext extends IPendingContext {
 
 	public BeveragePendingContext(BeverageInfo info) {
 		items = new ArrayList<>(info.stacks.size());
-		Map<String, Double> variant = new HashMap<>();
+		Object2DoubleOpenHashMap<String> variant = new Object2DoubleOpenHashMap<String>();
 
 		int cnt = info.getRelishCount();
 
@@ -66,7 +68,7 @@ public class BeveragePendingContext extends IPendingContext {
 			if (rfr != null) {
 				relishes.merge(rfr.value().relish, 1,SUtils.INT_SUM);
 				rfr.value().variantData.forEach((e, d) -> {
-					variant.merge(e,d.doubleValue() / cnt,SUtils.SUM);
+					variant.mergeDouble(e,d*1d / cnt,SUtils.DBL_SUM);
 				});
 			}
 		}
@@ -79,19 +81,19 @@ public class BeveragePendingContext extends IPendingContext {
 			info.activeRelish1 = activerelish.get(0);
 		}
 		for (FloatemStack fs : info.stacks) {
-			Map<String,Double> lvar=new HashMap<>();
+			Object2DoubleOpenHashMap<String> lvar=new Object2DoubleOpenHashMap<String>();
 			items.add(new FloatemTagStack(fs));
 			for (RecipeHolder<TasteRecipe> recipe : TasteRecipe.recipes) {
 				if (recipe.value().item.test(fs.getStack())) {
 					recipe.value().variantData.forEach((e, f) -> {
-						lvar.merge(e,f.doubleValue(),SUtils.SUM);
+						lvar.mergeDouble(e,(double)f,SUtils.DBL_SUM);
 					});
 					break;
 				}
 			}
 			totalItems += fs.getCount();
-			for(Entry<String, Double> p:lvar.entrySet()) {
-				variant.merge(p.getKey(),30*p.getValue()*Mth.sin(Math.min(fs.getCount(), 30)*Mth.PI/60)/Mth.PI,SUtils.SUM);
+			for(Object2DoubleMap.Entry<String> p:lvar.object2DoubleEntrySet()) {
+				variant.mergeDouble(p.getKey(),30d*p.getDoubleValue()*Mth.sin(Math.min(fs.getCount(), 30)*Mth.PI/60)/Mth.PI,SUtils.DBL_SUM);
 			}
 			
 		}
@@ -100,7 +102,7 @@ public class BeveragePendingContext extends IPendingContext {
 			RecipeHolder<RelishRecipe> rr1 = RelishRecipe.recipes.get(rel);
 			if (rr1 != null) {
 				rr1.value().variantData.forEach((e, d) -> {
-					variant.merge(e,d.doubleValue(),SUtils.SUM);
+					variant.mergeDouble(e,d.doubleValue(),SUtils.DBL_SUM);
 				});
 			}
 		}

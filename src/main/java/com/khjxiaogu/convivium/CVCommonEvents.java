@@ -18,7 +18,16 @@
 
 package com.khjxiaogu.convivium;
 
+import com.khjxiaogu.convivium.data.recipes.BasinRecipe;
+import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
+import com.khjxiaogu.convivium.data.recipes.ConvertionRecipe;
+import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
+import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
+import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.khjxiaogu.convivium.util.PotionItemInfo;
+import com.teammoeg.caupona.data.recipes.*;
 
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +37,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
@@ -57,7 +67,20 @@ public class CVCommonEvents {
 		if ((!event.getOrigin().is(Items.GLASS_BOTTLE)) && event.getTarget().is(Items.GLASS_BOTTLE))
 			event.setResult(EventResult.ALLOW);
 	}*/
+	@SubscribeEvent
+	public static void sendRecipes(OnDatapackSyncEvent event) {
+		event.sendRecipes(BowlContainingRecipe.TYPE.get(),
+			BasinRecipe.TYPE.get(),
+			BeverageTypeRecipe.TYPE.get(),
+			ConvertionRecipe.TYPE.get(),
+			GrindingRecipe.TYPE.get(),
+			RelishFluidRecipe.TYPE.get(),
+			RelishRecipe.TYPE.get(),
+			SwayRecipe.TYPE.get(),
+			TasteRecipe.TYPE.get()
+				);
 
+	}
 	@SuppressWarnings("resource")
 	@SubscribeEvent
 	public static void onBlockClick(PlayerInteractEvent.RightClickBlock event) {

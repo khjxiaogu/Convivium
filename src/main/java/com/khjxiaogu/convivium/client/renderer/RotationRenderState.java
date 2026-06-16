@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 public class RotationRenderState extends BlockEntityRenderState{
 	Quaternionf rotation;
 	DynamicBlockModelReference rotor;
-	public boolean active;
 	public Quaternionf getRotation() {
 		return rotation;
 	}

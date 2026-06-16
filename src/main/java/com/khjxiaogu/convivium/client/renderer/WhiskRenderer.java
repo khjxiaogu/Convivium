@@ -19,33 +19,25 @@
 package com.khjxiaogu.convivium.client.renderer;
 
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
-import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.teammoeg.caupona.client.util.FluidRenderHelper;
+
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.util.ARGB;
 
 public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity,WhiskRenderState> {
-	//public static final DynamicBlockModelReference cog=ModelUtils.getModel(CVMain.MODID,"whisk_rotor");
+	public static final DynamicBlockModelReference cog=DynamicBlockModelReference.getModel(CVMain.rl("whisk_rotor"));
 	ItemModelResolver render;
 	/**
 	 * @param rendererDispatcherIn  
@@ -128,9 +120,49 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity,Whisk
 	public WhiskRenderState createRenderState() {
 		return new WhiskRenderState();
 	}
+	private final static Quaternionf rotationAxis=new Quaternionf().rotateAxis((float) (Math.PI*(0.35)/2),0,1,0);
+	private final static Quaternionf rotationHori=new Quaternionf().rotateXYZ(0,-30,0);
 	@Override
 	public void submit(WhiskRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-		
+		poseStack.pushPose();
+		if(state.rotation!=null) 
+			poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
+		if(state.spite1!=null){		
+			poseStack.pushPose();
+			poseStack.rotateAround(rotationAxis,0.5f,0.5f,0.5f);
+			poseStack.translate(6/16f,(6/16f),6/16f);
+			poseStack.mulPose(rotationHori);
+			poseStack.scale(0.5f, 0.5f, 0.5f);
+			state.irs.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+			poseStack.popPose();
+		}
+		final QuadInstance quadInstance = new QuadInstance();
+		quadInstance.setLightCoords(state.lightCoords);
+		if(state.rotation!=null) 
+			cog.submit(submitNodeCollector, poseStack, RenderTypes.translucentMovingBlock(), quadInstance);
+		poseStack.popPose();
+		if(state.spite1!=null) {
+			poseStack.pushPose();
+			poseStack.translate(0, 7/16f, 0);
+			poseStack.mulPose(FluidRenderHelper.rotate90);
+
+			if(state.spite2==null) {
+				FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite1,
+					.125f, .125f, .75f, .75f, 
+					state.color1, state.lightCoords, OverlayTexture.NO_OVERLAY);
+			}else {
+				float alp=state.progress;
+				FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite1,
+					.125f, .125f, .75f, .75f, 
+					ARGB.multiplyAlpha(state.color1, alp), state.lightCoords, OverlayTexture.NO_OVERLAY);
+				
+				FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite2,
+					.125f, .125f, .75f, .75f, 
+					ARGB.multiplyAlpha(state.color2, 1-alp), state.lightCoords, OverlayTexture.NO_OVERLAY);
+			}
+			poseStack.popPose();
+			
+		}
 	}
 
 }

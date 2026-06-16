@@ -30,7 +30,7 @@ import com.khjxiaogu.convivium.blocks.platter.SlotConfig;
 import com.khjxiaogu.convivium.client.renderer.FruitModel.ModelType;
 import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderState.FruitPlatterRenderingContext;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.QuadInstance;
+
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

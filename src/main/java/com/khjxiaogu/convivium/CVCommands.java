@@ -19,9 +19,7 @@
 package com.khjxiaogu.convivium;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.khjxiaogu.convivium.data.recipes.numbers.Expression;
@@ -34,6 +32,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.teammoeg.caupona.util.Utils;
 
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -119,7 +118,7 @@ public class CVCommands {
 	}
 
 	private static void place(BoundingBox bb, ServerLevel level, INumber expr, BlockInput[] ips, boolean replace) {
-		Map<String, Double> env = new HashMap<>();
+		Object2DoubleOpenHashMap<String> env = new Object2DoubleOpenHashMap<String>();
 		ConstantEnvironment venv = new ConstantEnvironment(env);
 		BlockPos.MutableBlockPos posx = new MutableBlockPos();
 		List<BlockPos> poss = new ArrayList<>();

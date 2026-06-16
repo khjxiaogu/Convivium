@@ -22,15 +22,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
+import java.util.function.DoubleBinaryOperator;
+import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.teammoeg.caupona.util.SerializeUtil;
 
+import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.floats.FloatBinaryOperator;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class SUtils {
-	public static final BiFunction<Double,Double,Double> SUM=(a,b)->a+b;
+	public static final FloatBinaryOperator SUM=(a,b)->a+b;
+	public static final DoubleBinaryOperator DBL_SUM=(a,b)->a+b;
 	public static final BiFunction<Integer,Integer,Integer> INT_SUM=(a,b)->a+b;
 	public static Map<String, Float> fromJson(JsonObject json, String name) {
 		Map<String, Float> variantData = new HashMap<>();
@@ -63,4 +72,23 @@ public class SUtils {
 			p.writeFloat(e.getValue());
 		});
 	}
+	public static final Codec<Object2FloatOpenHashMap<String>> VARIANTS_CODEC=Codec.compoundList(Codec.STRING, Codec.FLOAT)
+			.xmap(t->{
+				Object2FloatOpenHashMap<String> varData=new Object2FloatOpenHashMap<String>();
+				for(Pair<String, Float> pair:t) {
+					varData.put(pair.getFirst(), (float)pair.getSecond());
+				}
+				return varData;
+			}, t->t.object2FloatEntrySet().stream().map(e->Pair.of(e.getKey(),e.getFloatValue())).collect(Collectors.toList()));
+	public static final StreamCodec<ByteBuf, Object2FloatOpenHashMap<String>> VARIANTS_STREAM_CODEC=SerializeUtil.pair(ByteBufCodecs.STRING_UTF8, ByteBufCodecs.FLOAT).apply(ByteBufCodecs.list()).map(
+			t->{
+				Object2FloatOpenHashMap<String> varData=new Object2FloatOpenHashMap<String>();
+				for(Pair<String, Float> pair:t) {
+					varData.put(pair.getFirst(), (float)pair.getSecond());
+				}
+				return varData;
+			},
+			t->t.object2FloatEntrySet().stream().map(e->Pair.of(e.getKey(),e.getFloatValue())).collect(Collectors.toList())
+			);
 }
+

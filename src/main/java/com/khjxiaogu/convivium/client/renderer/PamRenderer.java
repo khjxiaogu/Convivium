@@ -37,7 +37,6 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -64,10 +63,16 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity,PamRenderState>
 	@Override
 	public void extractRenderState(PamBlockEntity blockEntity, PamRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
 		super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
-		FluidResource fs = blockEntity.tanks.getResource(1);
-		if(fs.isEmpty())
-			fs=blockEntity.tanks.getResource(0);
-		state.fluid=fs.toStack(250);
+		FluidResource fluid = blockEntity.tanks.getResource(1);
+		if(fluid.isEmpty())
+			fluid=blockEntity.tanks.getResource(0);
+		FluidStack fs=fluid.toStack(250);
+		state.spite=null;
+		if(!fs.isEmpty()) {
+			FluidModel model=FluidRenderHelper.getFluidModel(fs);
+			state.spite=model.stillMaterial().sprite();
+			state.color=FluidRenderHelper.getFluidColor(model, fs);
+		}
 		for(int i=0;i<6;i++) {
 			ItemResource is=blockEntity.inv.getResource(i);
 			state.stacks[i]=null;
@@ -90,16 +95,12 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity,PamRenderState>
 	public void customRender(PamRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, QuadInstance instance) {
 		super.customRender(state, poseStack, submitNodeCollector, camera, instance);
 		boolean type=true;
-		FluidStack fs=state.fluid;
-		if(!fs.isEmpty()) {
+		if(state.spite!=null) {
 			type=false;
 			poseStack.pushPose();
 			poseStack.translate(0, 7/16f, 0);
 			poseStack.mulPose(FluidRenderHelper.rotate90);
-			FluidModel model=FluidRenderHelper.getFluidModel(fs);
-			int col=FluidRenderHelper.getFluidColor(model, fs);
-			TextureAtlasSprite spite=model.stillMaterial().sprite();
-			FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, spite, .125f, .125f, .75f, .75f, col, state.lightCoords, OverlayTexture.NO_OVERLAY);
+			FluidRenderHelper.submitColoredTexturedRect(submitNodeCollector, poseStack, state.spite, .125f, .125f, .75f, .75f, state.color, state.lightCoords, OverlayTexture.NO_OVERLAY);
 			poseStack.popPose();
 			
 		}

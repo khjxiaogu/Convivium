@@ -90,14 +90,6 @@ public class RelishRecipe extends IDataRecipe {
 		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
 		this.color = color;
 	}
-/*
-	public RelishRecipe(Identifier id,FriendlyByteBuf pb) {
-		super(id);
-		relishName=pb.readUtf();
-		tag=pb.readIdentifier();
-		color=pb.readUtf();
-		variantData=SUtils.fromPacket(pb);
-	}*/
 	@Override
 	public RecipeSerializer<RelishRecipe> getSerializer() {
 		return SERIALIZER.get();
@@ -112,11 +104,4 @@ public class RelishRecipe extends IDataRecipe {
 	public RecipeType<RelishRecipe> getType() {
 		return TYPE.get();
 	}
-/*
-	public void write(FriendlyByteBuf pb) {
-		pb.writeUtf(relishName);
-		pb.writeIdentifier(tag);
-		pb.writeUtf(color);
-		SUtils.toPacket(pb, variantData);
-	}*/
 }

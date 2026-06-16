@@ -1,9 +1,10 @@
 package com.khjxiaogu.convivium.client.renderer;
 
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class PamRenderState extends RotationRenderState {
-	FluidStack fluid;
+	TextureAtlasSprite spite;
+	int color;
 	ItemStackRenderState[] stacks=new ItemStackRenderState[6];
 }

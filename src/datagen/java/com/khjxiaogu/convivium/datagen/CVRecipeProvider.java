@@ -171,16 +171,17 @@ public class CVRecipeProvider extends RecipeProvider {
 		
 		// taste(Items.APPLE).vars().astringency(2).end().end(out);
 		out.accept(rl("convertion/tea"),
-			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("powdered_tea"), 1f)), SizedFluidIngredient.of(Fluids.WATER, 250), cvfluid("tea", 250), 60, 200, false));
+			new ConvertionRecipe(SizedOrCatalystIngredient.of(cvitem("powdered_tea"), 1), SizedFluidIngredient.of(Fluids.WATER, 250), cvfluid("tea", 250), true, 200));
 		out.accept(rl("convertion/cocoa_from_water"),
-			new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)), SizedFluidIngredient.of(Fluids.WATER, 250), cvfluid("hot_chocolate", 250), 40, 200, false));
-		out.accept(rl("convertion/cocoa_from_milk"),new ConvertionRecipe(List.of(FloatSizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1f)),
-			SizedFluidIngredient.of(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), 40, 200, false));
+			new ConvertionRecipe(SizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1), SizedFluidIngredient.of(Fluids.WATER, 250), cvfluid("hot_chocolate", 250), true, 200));
+		out.accept(rl("convertion/cocoa_from_milk"),
+			new ConvertionRecipe(SizedOrCatalystIngredient.of(cvitem("cocoa_powder"), 1),
+			SizedFluidIngredient.of(NeoForgeMod.MILK.get(), 250), cvfluid("hot_chocolate", 250), true, 200));
 		for (String s : List.of("pome", "drupe", "berry"))
 			out.accept(rl("basin/" + s + "_juice_to_sapa"), new BasinRecipe(SizedOrCatalystFluidIngredient.of(cvfluid(s + "_juice"), 250), 
 				SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),List.of(new ItemStackTemplate(cpitem("sapa_spice_jar"))), 1, 200, true));
 		for (String s : List.of("pome", "drupe", "berry"))
-			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(List.of(), SizedFluidIngredient.of(cvfluid(s + "_must"), 250), cvfluid(s + "_juice", 250), 40, 200, false));
+			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(SizedFluidIngredient.of(cvfluid(s + "_must"), 250), cvfluid(s + "_juice", 250), true, 200));
 		for (String s : CVFluids.intern.keySet())
 			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)));
 		Map<String,String> relishnames=new HashMap<>();
@@ -273,7 +274,7 @@ public class CVRecipeProvider extends RecipeProvider {
 	private void relish(BiConsumer<Identifier,IDataRecipe> out, String name, String clr, Fluid... fs) {
 		out.accept(rl("relish/" + name), new RelishRecipe(name, Identifier.fromNamespaceAndPath(CVMain.MODID, "relish/" + name), clr));
 		for (Fluid f : fs) {
-			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(f, name));
+			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(f.builtInRegistryHolder(), name));
 			type(Utils.getRegistryName(f)).only(name).canContains(createTag(SPICE)).canContains(createTag(SWEET)).time(200).end(out);
 
 		}

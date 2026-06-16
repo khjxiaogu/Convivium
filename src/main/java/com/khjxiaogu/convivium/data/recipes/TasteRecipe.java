@@ -19,6 +19,8 @@
 package com.khjxiaogu.convivium.data.recipes;
 
 import java.util.List;
+import java.util.Map;
+
 import com.khjxiaogu.convivium.util.SUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -52,9 +54,9 @@ public class TasteRecipe extends IDataRecipe {
 			Ingredient.CONTENTS_STREAM_CODEC,o->o.item,
 			TasteRecipe::new
 			);
-	public TasteRecipe(Object2FloatOpenHashMap<String> variantData, int priority, Ingredient item) {
+	public TasteRecipe(Map<String,Float> variantData, int priority, Ingredient item) {
 		super();
-		this.variantData = variantData;
+		this.variantData = new Object2FloatOpenHashMap<String>(variantData);
 		this.priority = priority;
 		this.item = item;
 	}

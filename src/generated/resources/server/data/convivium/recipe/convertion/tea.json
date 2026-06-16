@@ -1,6 +1,5 @@
 {
   "type": "convivium:convertion",
-  "consumeAll": false,
   "fluidIn": {
     "amount": 250,
     "ingredient": "minecraft:water"
@@ -9,12 +8,11 @@
     "amount": 250,
     "id": "convivium:tea"
   },
-  "items": [
-    {
-      "count": 1.0,
-      "ingredient": "convivium:powdered_tea"
-    }
-  ],
-  "temperature": 60,
-  "time": 200
+  "heated": true,
+  "items": {
+    "count": 1,
+    "ingredient": "convivium:powdered_tea"
+  },
+  "time": 200,
+  "vairants": {}
 }

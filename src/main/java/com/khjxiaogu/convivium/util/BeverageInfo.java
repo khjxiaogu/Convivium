@@ -20,11 +20,12 @@ package com.khjxiaogu.convivium.util;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -38,6 +39,7 @@ import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -47,6 +49,11 @@ import com.teammoeg.caupona.util.ChancedEffect;
 import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.Utils;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntRBTreeMap;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -72,7 +79,6 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -81,9 +87,8 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public List<ChancedEffect> effects;
 	public List<ChancedEffect> swayeffects;
 	public List<ChancedEffect> foodeffect;
-	public Fluid[] relishes = new Fluid[5];
-	public String activeRelish1 = "";
-	public String activeRelish2 = "";
+	public Object2IntRBTreeMap<Holder<Fluid>> relishes=new Object2IntRBTreeMap<Holder<Fluid>>(Comparator.comparing(t->t.getKey()));
+	public List<String> activeRelish = new ArrayList<>(3);
 
 	public BeverageInfo() {
 		effects = new ArrayList<>();
@@ -96,18 +101,16 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		Codec.list(FloatemStack.CODEC).fieldOf("items").forGetter(o -> o.stacks),
 		Codec.list(ChancedEffect.CODEC).fieldOf("effects").forGetter(o -> o.effects),
 		Codec.list(ChancedEffect.CODEC).fieldOf("sway").forGetter(o -> o.swayeffects),
-		Codec.list(ChancedEffect.CODEC).fieldOf("feffects").forGetter(o -> o.foodeffect),
-		Codec.list(BuiltInRegistries.FLUID.byNameCodec().<Optional<Fluid>>xmap(o->o==Fluids.EMPTY?Optional.empty():Optional.of(o), o->o.orElse(Fluids.EMPTY))).fieldOf("relish").forGetter(o->o.getRelishList()),
-		Codec.STRING.fieldOf("activeRelish1").forGetter(o -> o.activeRelish1),
-		Codec.STRING.fieldOf("activeRelish2").forGetter(o -> o.activeRelish2)).apply(t, BeverageInfo::new));
+		Codec.list(ChancedEffect.CODEC).fieldOf("foodeffects").forGetter(o -> o.foodeffect),
+		Codec.unboundedMap(BuiltInRegistries.FLUID.holderByNameCodec(), Codec.INT).fieldOf("relish").forGetter(o->o.relishes),
+		Codec.list(Codec.STRING,0,2).fieldOf("activeRelish").forGetter(o -> o.activeRelish)).apply(t, BeverageInfo::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageInfo> STREAM_CODEC = StreamCodec.composite(
 		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.stacks,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.effects,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.swayeffects,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.foodeffect,
-		ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)).apply(ByteBufCodecs.list()),o->o.getRelishList(),
-		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish1,
-		ByteBufCodecs.STRING_UTF8,o -> o.activeRelish2,
+		ByteBufCodecs.map(HashMap::new, ByteBufCodecs.holderRegistry(Registries.FLUID), ByteBufCodecs.INT),o->o.relishes,
+		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list(2)),o -> o.activeRelish,
 		BeverageInfo::new);
 	private Lazy<Collection<MobEffectInstance>> potionEffectsCollectionView=Lazy.of(()->new AbstractCollection<MobEffectInstance>() {
 		@Override
@@ -156,82 +159,160 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		return potionEffectsCollectionView.get();
 	}
 
-	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes, String activeRelish1,
-		String activeRelish2) {
+	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Map<Holder<Fluid>,Integer> relishes, List<String> activeRelish) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
 		this.swayeffects = swayeffects;
 		this.foodeffect = foodeffect;
-		this.relishes = relishes;
-		this.activeRelish1 = activeRelish1;
-		this.activeRelish2 = activeRelish2;
-	}
-
-	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Fluid[] relishes) {
-		super();
-		this.stacks = stacks;
-		this.effects = effects;
-		this.swayeffects = swayeffects;
-		this.foodeffect = foodeffect;
-		this.relishes = relishes;
-	}
-	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, List<Optional<Fluid>> relishes, String activeRelish1,
-		String activeRelish2) {
-		super();
-		this.stacks = stacks;
-		this.effects = effects;
-		this.swayeffects = swayeffects;
-		this.foodeffect = foodeffect;
-		int i=0;
-		for(Optional<Fluid> relish:relishes) {
-			this.relishes[i++]=relish.orElse(null);
-		}
-		this.activeRelish1 = activeRelish1;
-		this.activeRelish2 = activeRelish2;
+		this.relishes.putAll(relishes);
+		this.activeRelish.addAll(activeRelish);
 	}
 	public BeverageInfo copy() {
 		return new BeverageInfo(stacks.stream().map(t->t.copy()).toList(),
 			effects.stream().map(t->t.copy()).toList(),
 			swayeffects.stream().map(t->t.copy()).toList(),
 			foodeffect.stream().map(t->t.copy()).toList(),
-			Arrays.copyOf(relishes,5),activeRelish1,activeRelish2);
+			relishes,activeRelish);
 	}
-	public List<Optional<Fluid>> getRelishList(){
-		return List.of(Optional.ofNullable(relishes[0]),
-			Optional.ofNullable(relishes[1]),
-			Optional.ofNullable(relishes[2]),
-			Optional.ofNullable(relishes[3]),
-			Optional.ofNullable(relishes[4]));
-	}
-	public Vector3f getColor() {
-		return getColor(relishes);
-	}
-
 	public int getIColor() {
 		return getIColor(relishes);
 	}
-
-	public static Vector3f getColor(Fluid[] relishes) {
+	public int addableRelish(int origAmt,int toMixAmt) {
+		int remain=5-toMixAmt;
+		if(relishes.size()==1)
+			return Math.min(remain,origAmt);
+		int total=0;
+		for(int ent:relishes.values()) {
+			total+=ent;
+		}
+		if(total==5)
+			return 0;
+		
+		if(total==origAmt) {
+			if(remain==origAmt)
+				return remain;
+			return 0;
+		}
+		if(relishes.size()==2&&total*2==origAmt) {
+			if(remain==4)
+				return origAmt;
+			if(remain==2)
+				return remain;
+		}
+		return 0;
+	}
+	public int addableRelish(int origAmt) {
+		if(relishes.size()==1)
+			return 5-origAmt;
+		int total=0;
+		for(int ent:relishes.values()) {
+			total+=ent;
+		}
+		if(total==5)
+			return 0;
+		if(total==origAmt||(relishes.size()==2&&total*2==origAmt)) {
+			return 5-origAmt;
+		}
+		return 0;
+	}
+	public void addRelish(int origAmt,Holder<Fluid> added,int addAmt) {
+		Object2IntOpenHashMap<Holder<Fluid>> relishes=new Object2IntOpenHashMap<Holder<Fluid>>();
+		relishes.putAll(this.relishes);
+		int total=0;
+		for(int ent:relishes.values()) {
+			total+=ent;
+		}
+		final int ftotal=total;
+		relishes.replaceAll((_,t)->t*origAmt/ftotal);
+		relishes.mergeInt(added, addAmt, (a,b)->a+b);
+		completeRatio(relishes);
+		this.relishes.clear();
+		this.relishes.putAll(relishes);
+	}
+	public void removeRelish(int origAmt,Holder<Fluid> added,int remAmt) {
+		if(relishes.size()==1) {
+			if(origAmt<=remAmt) {
+				relishes.clear();
+				return;
+			}
+			return;
+		}
+		Object2IntOpenHashMap<Holder<Fluid>> relishes=new Object2IntOpenHashMap<Holder<Fluid>>();
+		relishes.putAll(this.relishes);
+		int total=0;
+		for(int ent:relishes.values()) {
+			total+=ent;
+		}
+		final int ftotal=total;
+		relishes.replaceAll((_,t)->t*origAmt/ftotal);
+		relishes.mergeInt(added, -remAmt, (a,b)->a+b);
+		relishes.values().removeIf(t->t<=0);
+		completeRatio(relishes);
+		this.relishes.clear();
+		this.relishes.putAll(relishes);
+	}
+	public void exchangeRelish(int origAmt,Holder<Fluid> original,Holder<Fluid> added,int remAmt) {
+		Object2IntOpenHashMap<Holder<Fluid>> relishes=new Object2IntOpenHashMap<Holder<Fluid>>();
+		relishes.putAll(this.relishes);
+		int total=0;
+		for(int ent:relishes.values()) {
+			total+=ent;
+		}
+		final int ftotal=total;
+		relishes.replaceAll((_,t)->t*origAmt/ftotal);
+		relishes.mergeInt(original, -remAmt, (a,b)->a+b);
+		relishes.mergeInt(added, remAmt, (a,b)->a+b);
+		relishes.values().removeIf(t->t<=0);
+		completeRatio(relishes);
+		this.relishes.clear();
+		this.relishes.putAll(relishes);
+	}
+	public void addRelishes(int origAmt,Object2IntMap<Holder<Fluid>> added,int addAmt) {
+		Object2IntOpenHashMap<Holder<Fluid>> relishes=new Object2IntOpenHashMap<Holder<Fluid>>();
+		relishes.putAll(this.relishes);
+		int total=0;
+		for(int ent:relishes.values()) {
+			total+=ent;
+		}
+		final int ftotal=total;
+		int atotal=0;
+		for(int ent:relishes.values()) {
+			atotal+=ent;
+		}
+		final int fatotal=atotal;
+		relishes.replaceAll((_,t)->t*origAmt/ftotal);
+		for(Entry<Holder<Fluid>> ent:added.object2IntEntrySet())
+			relishes.mergeInt(ent.getKey(), ent.getIntValue()*addAmt/fatotal, (a,b)->a+b);
+		completeRatio(relishes);
+		this.relishes.clear();
+		this.relishes.putAll(relishes);
+	}
+	public static void completeRatio(Object2IntMap<Holder<Fluid>> map) {
+		if(map.size()==1) {
+			map.replaceAll((_,_)->1);
+		}else
+		if(map.size()==2) {
+			for(int ent:map.values()) {
+				if(ent!=2)
+					return;
+			}
+			map.replaceAll((_,_)->1);
+		}
+	}
+	public static int getIColor(Object2IntMap<Holder<Fluid>> relishes) {
 		Vector3f clr = new Vector3f();
 		int cnt = 0;
-		for (int i = 0; i < 5; i++) {
-			Fluid f = relishes[i];
+		for (Entry<Holder<Fluid>> ent:relishes.object2IntEntrySet()) {
+			Fluid f = ent.getKey().value();
 			if (f != null) {
 				FluidStack fs=new FluidStack(f,1000);
-				
-				clr.add(ARGB.vector3fFromRGB24(FluidRenderHelper.getFluidColor(FluidRenderHelper.getFluidModel(fs), fs)));
-				cnt++;
+				clr.add(ARGB.vector3fFromRGB24(FluidRenderHelper.getFluidColor(FluidRenderHelper.getFluidModel(fs), fs)).mul(ent.getIntValue()));
+				cnt+=ent.getIntValue();
 			}
 		}
 		if (cnt == 0) cnt = 1;
 		clr = clr.div(cnt);
-		return clr;
-	}
-
-	public static int getIColor(Fluid[] relishes) {
-		Vector3f clr = getColor(relishes);
-
 		return 0xff << 24 | ((int) (clr.x * 0xff)) << 16 | ((int) (clr.y * 0xff)) << 8 | ((int) (clr.z * 0xff));
 	}
 
@@ -240,14 +321,14 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	}
 
 	public int getRelishCount() {
-		for (int i = 0; i < 5; i++) {
-			if (relishes[i] == null)
-				return i;
+		int num=0;
+		for(int i:relishes.values()) {
+			num+=i;
 		}
-		return 5;
+		return num;
 	}
 
-	public Pair<List<CurrentSwayInfo>, Fluid> adjustParts(float oparts, float parts) {
+	public Pair<List<CurrentSwayInfo>, Either<BeverageTypeRecipe, Fluid>> adjustParts(float oparts, float parts) {
 		for (FloatemStack fs : stacks) {
 			fs.setCount(fs.getCount() * oparts / parts);
 		}
@@ -281,7 +362,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		}
 	}
 
-	public Pair<List<CurrentSwayInfo>, Fluid> handleSway() {
+	public Pair<List<CurrentSwayInfo>, Either<BeverageTypeRecipe,Fluid>> handleSway() {
 		BeveragePendingContext ctx = new BeveragePendingContext(this);
 		swayeffects.clear();
 		List<CurrentSwayInfo> swi = SwayRecipe.recipes.stream().map(t -> t.value()).map(ctx::handleSwayRecipe).flatMap(Optional::stream)
@@ -298,8 +379,8 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 			.thenComparing(e -> e.chance));
 		recalculateHAS();
 		return Pair.of(swi,
-			BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).map(t -> t.output).findFirst()
-				.orElse(CVFluids.mixedf.get()));
+			BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).<Either<BeverageTypeRecipe,Fluid>>map(t -> Either.left(t)).findFirst()
+				.orElse(Either.right(CVFluids.mixedf.get())));
 	}
 
 	public Fluid checkFluidType() {
@@ -443,8 +524,11 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	}
 	@Override
 	public void addToTooltip(TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag, DataComponentGetter components) {
-		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish1);
-		RecipeHolder<RelishRecipe> r2 = RelishRecipe.recipes.get(activeRelish2);
+		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish.get(0));
+		
+		RecipeHolder<RelishRecipe> r2 =null;
+		if(activeRelish.size()>1)
+			r2 = RelishRecipe.recipes.get(activeRelish.get(1));
 		if (!effects.isEmpty())
 			PotionContents.addPotionTooltip(potionEffectsCollectionView.get(), tooltipAdder, 1, 20);
 
@@ -459,11 +543,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(relishes);
-		result = prime * result + Objects.hash(effects, stacks);
-		return result;
+		return Objects.hash(effects, relishes, stacks);
 	}
 
 	@Override
@@ -472,7 +552,10 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		BeverageInfo other = (BeverageInfo) obj;
-		return Objects.equals(effects, other.effects) && Arrays.equals(relishes, other.relishes) && Objects.equals(stacks, other.stacks);
+		return Objects.equals(effects, other.effects) && Objects.equals(relishes, other.relishes) && Objects.equals(stacks, other.stacks);
 	}
+
+
+
 
 }

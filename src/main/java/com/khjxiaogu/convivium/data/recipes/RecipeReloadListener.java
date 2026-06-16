@@ -18,8 +18,6 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,8 +51,8 @@ public class RecipeReloadListener{
 		BeverageTypeRecipe.sorted = filterRecipes(recipes, BeverageTypeRecipe.class, BeverageTypeRecipe.TYPE).collect(Collectors.toList());
 		BeverageTypeRecipe.sorted.sort((t2, t1) -> t1.value().getPriority() - t2.value().getPriority());
 		ConvertionRecipe.recipes=filterRecipes(recipes,ConvertionRecipe.class,ConvertionRecipe.TYPE).collect(Collectors.toMap(t->t.id().identifier(), t->t));
-		ConvertionRecipe.sorted=new ArrayList<>(ConvertionRecipe.recipes.values());
-		ConvertionRecipe.sorted.sort(Comparator.comparingInt(t->t.value().heated?1:0));
+		ConvertionRecipe.heatedRecipes=ConvertionRecipe.recipes.values().stream().filter(t->t.value().heated).collect(Collectors.toList());
+		ConvertionRecipe.unheatedRecipes=ConvertionRecipe.recipes.values().stream().filter(t->!t.value().heated).collect(Collectors.toList());
 		GrindingRecipe.recipes=filterRecipes(recipes,GrindingRecipe.class,GrindingRecipe.TYPE).collect(Collectors.toMap(t->t.id().identifier(), t->t));
 		RelishFluidRecipe.recipes=filterRecipes(recipes,RelishFluidRecipe.class,RelishFluidRecipe.TYPE).collect(Collectors.toMap(t->t.value().fluid, t->t));
 		RelishRecipe.recipes=filterRecipes(recipes,RelishRecipe.class,RelishRecipe.TYPE).collect(Collectors.toMap(t->t.value().relishName, t->t));

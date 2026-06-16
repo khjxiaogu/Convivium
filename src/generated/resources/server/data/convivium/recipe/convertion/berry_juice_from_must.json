@@ -1,6 +1,5 @@
 {
   "type": "convivium:convertion",
-  "consumeAll": false,
   "fluidIn": {
     "amount": 250,
     "ingredient": "convivium:berry_must"
@@ -9,6 +8,7 @@
     "amount": 250,
     "id": "convivium:berry_juice"
   },
-  "temperature": 40,
-  "time": 200
+  "heated": true,
+  "time": 200,
+  "vairants": {}
 }

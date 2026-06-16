@@ -23,26 +23,27 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
 
 public class OnlyFluidCondition implements RelishCondition {
 	public static final MapCodec<OnlyFluidCondition> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-		BuiltInRegistries.FLUID.byNameCodec().fieldOf("relish").forGetter(o->o.f))
+		BuiltInRegistries.FLUID.holderByNameCodec().fieldOf("relish").forGetter(o->o.f))
 		.apply(t, OnlyFluidCondition::new));
-	Fluid f;
-	public OnlyFluidCondition(Fluid relish) {
+	Holder<Fluid> f;
+	public OnlyFluidCondition(Holder<Fluid> relish) {
 		f=relish;
 	}
 
 	@Override
 	public boolean test(BeveragePendingContext t) {
-		return t.relishFluids.stream().allMatch(f::isSame);
+		return t.relishFluids.size()==1&&t.relishFluids.containsKey(f);
 	}
 
 	@Override
 	public String getTranslation(TranslationProvider p) {
-		return p.getTranslation("recipe.convivium.relish_cond.only_fluid",f.getFluidType().getDescription());
+		return p.getTranslation("recipe.convivium.relish_cond.only_fluid",f.value().getFluidType().getDescription());
 	}
 
 

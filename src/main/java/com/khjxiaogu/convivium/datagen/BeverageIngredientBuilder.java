@@ -101,7 +101,7 @@ public class BeverageIngredientBuilder {
 		return cond(new HasRelishCondition(relish));
 	}
 	public BeverageIngredientBuilder has(Fluid relish) {
-		return cond(new HasFluidCondition(relish));
+		return cond(new HasFluidCondition(relish.builtInRegistryHolder()));
 	}
 	public BeverageIngredientBuilder and() {
 		condition=AndRelishCondition::new;

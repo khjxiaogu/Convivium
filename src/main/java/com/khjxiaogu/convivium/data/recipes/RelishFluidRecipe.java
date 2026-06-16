@@ -25,6 +25,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -37,26 +39,26 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class RelishFluidRecipe extends IDataRecipe {
-	public Fluid fluid;
+	public Holder<Fluid> fluid;
 	public String relish;
 	public Object2FloatOpenHashMap<String> variantData;
 	public static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<RelishFluidRecipe>> SERIALIZER;
 	public static DeferredHolder<RecipeType<?>,RecipeType<RelishFluidRecipe>> TYPE;
-	public static Map<Fluid, RecipeHolder<RelishFluidRecipe>> recipes;
+	public static Map<Holder<Fluid>, RecipeHolder<RelishFluidRecipe>> recipes;
 	public static final MapCodec<RelishFluidRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-			BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(o->o.fluid),
+			BuiltInRegistries.FLUID.holderByNameCodec().fieldOf("fluid").forGetter(o->o.fluid),
 			Codec.STRING.fieldOf("relish").forGetter(o->o.relish),
-			SUtils.VARIANTS_CODEC.fieldOf("variant").forGetter(o->o.variantData)
+			SUtils.VARIANTS_CODEC.xmap(Object2FloatOpenHashMap<String>::new, o->o).fieldOf("variants").forGetter(o->o.variantData)
 		).apply(t, RelishFluidRecipe::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf,RelishFluidRecipe> STREAM_CODEC=StreamCodec.composite(
-		ByteBufCodecs.registry(Registries.FLUID),o->o.fluid,
+		ByteBufCodecs.holderRegistry(Registries.FLUID),o->o.fluid,
 		ByteBufCodecs.STRING_UTF8,o->o.relish,
 		SUtils.VARIANTS_STREAM_CODEC.cast(),o->o.variantData,
 		RelishFluidRecipe::new);
-	public RelishFluidRecipe(Fluid fluid, String relish) {
+	public RelishFluidRecipe(Holder<Fluid> fluid, String relish) {
 		this(fluid,relish,new Object2FloatOpenHashMap<String>());
 	}
-	public RelishFluidRecipe(Fluid fluid, String relish,Object2FloatOpenHashMap<String> variantData) {
+	public RelishFluidRecipe(Holder<Fluid> fluid, String relish,Object2FloatOpenHashMap<String> variantData) {
 		super();
 		this.fluid = fluid;
 		this.relish = relish;

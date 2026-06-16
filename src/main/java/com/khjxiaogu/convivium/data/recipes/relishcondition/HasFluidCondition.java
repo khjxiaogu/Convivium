@@ -23,6 +23,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.TranslationProvider;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -32,26 +33,26 @@ import net.minecraft.world.level.material.Fluid;
 
 public class HasFluidCondition implements RelishCondition {
 	public static final MapCodec<HasFluidCondition> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
-		BuiltInRegistries.FLUID.byNameCodec().fieldOf("relish").forGetter(o->o.f))
+		BuiltInRegistries.FLUID.holderByNameCodec().fieldOf("relish").forGetter(o->o.f))
 		.apply(t, HasFluidCondition::new));
-	Fluid f;
+	Holder<Fluid> f;
 	public static final StreamCodec<RegistryFriendlyByteBuf,HasFluidCondition> STREAM_CODEC=StreamCodec.composite(
-			ByteBufCodecs.registry(Registries.FLUID),o->o.f,
+			ByteBufCodecs.holderRegistry(Registries.FLUID),o->o.f,
 			HasFluidCondition::new);
 	
 
-	public HasFluidCondition(Fluid relish) {
+	public HasFluidCondition(Holder<Fluid> relish) {
 		this.f=relish;
 	}
 
 	@Override
 	public boolean test(BeveragePendingContext t) {
-		return t.relishFluids.contains(f);
+		return t.relishFluids.containsKey(f);
 	}
 
 	@Override
 	public String getTranslation(TranslationProvider p) {
-		return p.getTranslation("recipe.convivium.relish_cond.contains_fluid",f.getFluidType().getDescription());
+		return p.getTranslation("recipe.convivium.relish_cond.contains_fluid",f.value().getFluidType().getDescription());
 	}
 
 

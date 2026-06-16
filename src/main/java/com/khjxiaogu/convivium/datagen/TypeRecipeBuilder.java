@@ -101,7 +101,7 @@ public class TypeRecipeBuilder {
 		return cond(new HasRelishCondition(relish));
 	}
 	public TypeRecipeBuilder has(Fluid relish) {
-		return cond(new HasFluidCondition(relish));
+		return cond(new HasFluidCondition(relish.builtInRegistryHolder()));
 	}
 	public TypeRecipeBuilder and() {
 		condition=AndRelishCondition::new;

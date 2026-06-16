@@ -33,12 +33,14 @@ import com.teammoeg.caupona.client.gui.ImageButton;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
 import com.teammoeg.caupona.util.Utils;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -70,8 +72,6 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	private ArrayList<Component> tooltip = new ArrayList<>(2);
 	ImageButton btn1;
 	ImageButton btn2;
-	public static MutableComponent rs = Utils.translate("gui." + CVMain.MODID + ".whisk.redstone");
-	public static MutableComponent nors = Utils.translate("gui." + CVMain.MODID + ".whisk.manual");
 	public static MutableComponent hon = Utils.translate("gui." + CVMain.MODID + ".whisk.heat_on");
 	public static MutableComponent hoff = Utils.translate("gui." + CVMain.MODID + ".whisk.heat_off");
 	public static MutableComponent hrs = Utils.translate("gui." + CVMain.MODID + ".whisk.heat_redstone");
@@ -83,12 +83,6 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 			getBlockEntity().sendMessage((short) 1,btn1.state);}).pos(leftPos + 119, topPos + 117).size(20, 20)
 				, 176, 72, 256, 256, TEXTURE,
 				() -> btn1.state == 2 ? Tooltip.create(hrs) :(btn1.state==1 ? Tooltip.create(hoff):Tooltip.create(hon))));
-		
-		this.addRenderableWidget(btn2 = new ImageButton(
-				Button.builder(hon, _ -> {
-			getBlockEntity().sendMessage((short) 0,btn2.state);}).pos(leftPos + 141, topPos + 117).size(20, 20)
-				, 176, 132, 256, 256, TEXTURE,
-				() -> (btn2.state==0 ? Tooltip.create(rs):Tooltip.create(nors))));
 	}
 
 	public void drawActiveSway(GuiGraphicsExtractor transform,int x,int y,CurrentSwayInfo info) {
@@ -129,7 +123,6 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		tooltip.clear();
-		btn2.state=getBlockEntity().rs?0:1;
 		btn1.state=btn2.state==0?2:(getBlockEntity().isHeating?0:1);
 		super.extractRenderState(graphics, mouseX, mouseY, a);
 		if (getBlockEntity().processMax == 0) {
@@ -140,14 +133,9 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					info=getBlockEntity().target.get(CVComponents.BEVERAGE_INFO);
 				if(info==null)
 					info=fluid.get(CVComponents.BEVERAGE_INFO);
-				
-				
-				int amt = fluid.getAmount() / 250;
 				if (info == null) {// not beverage fluid: create a temporary info
 					info = new BeverageInfo();
-					for (int i = 0; i < amt; i++) {
-						info.relishes[i] = fluid.getFluid();
-					}
+					info.relishes.put(fluid.typeHolder(), 1);
 				}
 				if (isMouseIn(mouseX, mouseY, 132, 45, 16, 46)) {
 					if(info!=null)
@@ -155,18 +143,19 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 
 				}
 				FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tank, leftPos + 132, topPos + 45, 16, 46, mouseX, mouseY, tooltip::add);
-				for(int i=4;i>=0;i--) {
-					Fluid f=info.relishes[i];
-					if(f!=null) {
-						RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f);
-						
+				int i=0;
+				for(Entry<Holder<Fluid>> f:info.relishes.object2IntEntrySet()) {
+					
+					RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f.getKey());
+					for(int j=0;j<f.getIntValue();j++) {
 						if(rr!=null) {
 							RecipeHolder<RelishRecipe> r=RelishRecipe.recipes.get(rr.value().relish);
-							if(isMouseIn(mouseX, mouseY, 152,45+9*(4-i), 19, 9)) {
+							if(isMouseIn(mouseX, mouseY, 152,45+9*(4-i++), 19, 9)) {
 								tooltip.add(r.value().getText());
 							}
 						}
 					}
+					
 				}
 			}
 			
@@ -211,7 +200,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		if (getBlockEntity().getSpeed() > 0) {
 			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 128, topPos + 8, 176, 0, 24, 24, 256, 256);
 		}
-		if (getBlockEntity().isLastHeating) {
+		if (getBlockEntity().isHeating) {
 			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 130, topPos + 96, 176, 24, 19, 19, 256, 256);
 		}
 		if (getBlockEntity().processMax > 0) {
@@ -229,23 +218,17 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					info=getBlockEntity().target.get(CVComponents.BEVERAGE_INFO);
 				if(info==null)
 					info=fluid.get(CVComponents.BEVERAGE_INFO);
-				
-				
-				int amt = fluid.getAmount() / 250;
 				if (info == null) {// not beverage fluid: create a temporary info
 					info = new BeverageInfo();
-					for (int i = 0; i < amt; i++) {
-						info.relishes[i] = fluid.getFluid();
-					}
+					info.relishes.put(fluid.typeHolder(), 1);
 				}
-				for(int i=4;i>=0;i--) {
-					Fluid f=info.relishes[i];
-					if(f!=null) {
-						RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f);
-						//System.out.println(f);
+				int i=0;
+				for(Entry<Holder<Fluid>> f:info.relishes.object2IntEntrySet()) {
+					RecipeHolder<RelishFluidRecipe> rr=RelishFluidRecipe.recipes.get(f.getKey());
+					for(int j=0;j<f.getIntValue();j++) {
 						if(rr!=null) {
 							graphics.blit(Identifier.fromNamespaceAndPath(CVMain.MODID,"textures/gui/relishes/"+rr.value().relish+".png")
-							, leftPos + 152, topPos + 45+9*(4-i), 0, 0,
+							, leftPos + 152, topPos + 45+9*(4-i++), 0, 0,
 							19, 11,32,32);
 						}
 					}

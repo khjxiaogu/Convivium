@@ -31,6 +31,7 @@ public class ConstantEnvironment implements IEnvironment {
 		return map.getDouble(key);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Double getOptional(String key) {
 		return map.get(key);

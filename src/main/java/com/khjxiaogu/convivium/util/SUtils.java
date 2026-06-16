@@ -18,13 +18,15 @@
 
 package com.khjxiaogu.convivium.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.DoubleBinaryOperator;
-import java.util.stream.Collectors;
-
+import java.util.function.Function;
+import java.util.function.IntFunction;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
@@ -72,23 +74,26 @@ public class SUtils {
 			p.writeFloat(e.getValue());
 		});
 	}
-	public static final Codec<Object2FloatOpenHashMap<String>> VARIANTS_CODEC=Codec.compoundList(Codec.STRING, Codec.FLOAT)
-			.xmap(t->{
-				Object2FloatOpenHashMap<String> varData=new Object2FloatOpenHashMap<String>();
-				for(Pair<String, Float> pair:t) {
-					varData.put(pair.getFirst(), (float)pair.getSecond());
-				}
-				return varData;
-			}, t->t.object2FloatEntrySet().stream().map(e->Pair.of(e.getKey(),e.getFloatValue())).collect(Collectors.toList()));
-	public static final StreamCodec<ByteBuf, Object2FloatOpenHashMap<String>> VARIANTS_STREAM_CODEC=SerializeUtil.pair(ByteBufCodecs.STRING_UTF8, ByteBufCodecs.FLOAT).apply(ByteBufCodecs.list()).map(
-			t->{
-				Object2FloatOpenHashMap<String> varData=new Object2FloatOpenHashMap<String>();
-				for(Pair<String, Float> pair:t) {
-					varData.put(pair.getFirst(), (float)pair.getSecond());
-				}
-				return varData;
-			},
-			t->t.object2FloatEntrySet().stream().map(e->Pair.of(e.getKey(),e.getFloatValue())).collect(Collectors.toList())
-			);
+	public static <K,V,T extends Map<K,V>> Function<List<Pair<K,V>>,T> toMap(IntFunction<T> sup){
+		return list->{
+			T varData=sup.apply(list.size());
+			for(Pair<K, V> pair:list) {
+				varData.put(pair.getFirst(), pair.getSecond());
+			}
+			return varData;
+		};
+	}
+	public static <K,V,T extends Map<K,V>> Function<T,List<Pair<K,V>>> toPairList(){
+		return map->{
+			List<Pair<K,V>> list=new ArrayList<>();
+			for(Entry<K, V> e:map.entrySet())
+				list.add(Pair.of(e.getKey(),e.getValue()));
+			return list;
+		};
+	}
+	public static final Codec<Map<String, Float>> VARIANTS_CODEC=Codec.compoundList(Codec.STRING, Codec.FLOAT)
+		.xmap(toMap(HashMap::new), toPairList());
+	public static final StreamCodec<ByteBuf, Object2FloatOpenHashMap<String>> VARIANTS_STREAM_CODEC=ByteBufCodecs
+		.map(Object2FloatOpenHashMap::new, ByteBufCodecs.STRING_UTF8, ByteBufCodecs.FLOAT);
 }
 

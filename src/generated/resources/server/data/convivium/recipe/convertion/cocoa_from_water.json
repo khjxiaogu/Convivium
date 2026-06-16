@@ -1,6 +1,5 @@
 {
   "type": "convivium:convertion",
-  "consumeAll": false,
   "fluidIn": {
     "amount": 250,
     "ingredient": "minecraft:water"
@@ -9,12 +8,11 @@
     "amount": 250,
     "id": "convivium:hot_chocolate"
   },
-  "items": [
-    {
-      "count": 1.0,
-      "ingredient": "convivium:cocoa_powder"
-    }
-  ],
-  "temperature": 40,
-  "time": 200
+  "heated": true,
+  "items": {
+    "count": 1,
+    "ingredient": "convivium:cocoa_powder"
+  },
+  "time": 200,
+  "vairants": {}
 }

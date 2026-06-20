@@ -66,6 +66,6 @@ public class RecipeReloadListener{
 
 	static <I extends RecipeInput,R extends Recipe<I>> Stream<RecipeHolder<R>> filterRecipes(RecipeMap recipes, Class<R> class1,
 			DeferredHolder<RecipeType<?>,RecipeType<R>> recipeType) {
-		return recipes.byType(recipeType.get()).stream().filter(class1::isInstance).map(t->(RecipeHolder<R>)t);
+		return recipes.byType(recipeType.get()).stream().filter(t->class1.isInstance(t.value())).map(t->(RecipeHolder<R>)t);
 	}
 }

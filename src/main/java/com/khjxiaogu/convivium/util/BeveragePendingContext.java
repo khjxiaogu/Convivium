@@ -39,6 +39,7 @@ import com.teammoeg.caupona.util.FloatemTagStack;
 import com.teammoeg.caupona.util.ResultCachingMap;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -81,7 +82,7 @@ public class BeveragePendingContext extends IPendingContext {
 			for (RecipeHolder<TasteRecipe> recipe : TasteRecipe.recipes) {
 				if (recipe.value().item.test(fs.getStack())) {
 					recipe.value().variantData.forEach((e, f) -> {
-						lvar.mergeDouble(e,(double)f,SUtils.DBL_SUM);
+						lvar.mergeDouble(e,f,SUtils.DBL_SUM);
 					});
 					break;
 				}
@@ -96,10 +97,14 @@ public class BeveragePendingContext extends IPendingContext {
 
 			RecipeHolder<RelishRecipe> rr1 = RelishRecipe.recipes.get(rel);
 			if (rr1 != null) {
-				rr1.value().variantData.forEach((e, d) -> {
-					variant.mergeDouble(e,d.doubleValue(),SUtils.DBL_SUM);
+				rr1.value().variants.forEach((e, d) -> {
+					variant.mergeDouble(e,d,SUtils.DBL_SUM);
 				});
 			}
+		}
+		info.variants.clear();
+		for(Entry<String> ent:variant.object2DoubleEntrySet()) {
+			info.variants.put(ent.getKey(), (float)ent.getDoubleValue());
 		}
 		taste = new ConstantEnvironment(variant);
 	}
@@ -126,7 +131,7 @@ public class BeveragePendingContext extends IPendingContext {
 				return t.getSecond();
 			})
 			.flatMap(Optional::stream)
-			.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
+			.sorted((t2, t1) -> Mth.ceil(t1.getDisplay() - t2.getDisplay()))
 			.collect(Collectors.toList());
 		info.swayeffects.sort(
 			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
@@ -137,7 +142,7 @@ public class BeveragePendingContext extends IPendingContext {
 
 	public List<CurrentSwayInfo> getSwayHint() {
 		return SwayRecipe.recipes.stream().map(RecipeHolder::value).map(this::handleSwayHint).flatMap(Optional::stream)
-			.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
+			.sorted((t2, t1) -> Mth.ceil(t1.getDisplay() - t2.getDisplay()))
 			.collect(Collectors.toList());
 	}
 
@@ -146,7 +151,7 @@ public class BeveragePendingContext extends IPendingContext {
 			VariantEnvironment env = new VariantEnvironment(taste, sway.locals);
 			CurrentSwayInfo csi = new CurrentSwayInfo(sway.icon, env);
 			if (sway.hasEffects(env))
-				csi.active = 1;
+				csi.setActive(1);
 			return csi.toOptional();
 		}
 		return Optional.empty();
@@ -159,7 +164,7 @@ public class BeveragePendingContext extends IPendingContext {
 			CurrentSwayInfo csi = new CurrentSwayInfo(sway.icon, env);
 			Pair<Boolean, List<MobEffectInstance>> effs = sway.getEffects(env);
 			if (effs.getFirst()) {
-				csi.active = 1;
+				csi.setActive(1);
 			}
 			return Optional.of(Pair.of(effs.getSecond(), csi.toOptional()));
 		}

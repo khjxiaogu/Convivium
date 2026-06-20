@@ -40,7 +40,7 @@ public class RotationUtils {
 	}
 
 	public static int getTicks() {
-		return ticksOfSecond;
+		return ticksOfSecond/ 2;
 	}
 
 	public static float getCycle(float pt, boolean black) {

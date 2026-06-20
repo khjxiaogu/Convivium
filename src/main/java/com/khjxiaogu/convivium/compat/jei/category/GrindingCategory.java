@@ -70,6 +70,7 @@ public class GrindingCategory implements CPCategory<RecipeHolder<GrindingRecipe>
 	@Override
 	public void draw(RecipeHolder<GrindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor stack, double mouseX,
 			double mouseY) {
+		CPCategory.super.draw(recipe, recipeSlotsView, stack, mouseX, mouseY);
 		String burnTime = String.valueOf(recipe.value().processTime / 20f) + "s";
 		stack.text(Minecraft.getInstance().font,  burnTime, 100, 55, 0xFFFFFF);
 	}

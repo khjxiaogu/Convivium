@@ -34,23 +34,23 @@ public class CurrentSwayInfo {
 		Codec.INT.fieldOf("pungency").forGetter(i -> i.dpungent),
 		Codec.INT.fieldOf("thickness").forGetter(i -> i.dthick),
 		Codec.INT.fieldOf("soothingness").forGetter(i -> i.drousing),
-		Codec.DOUBLE.fieldOf("display").forGetter(i -> i.display),
-		Codec.INT.fieldOf("active").forGetter(i -> i.active),
+		Codec.FLOAT.fieldOf("display").forGetter(i -> i.getDisplay()),
+		Codec.INT.fieldOf("active").forGetter(i -> i.getActive()),
 		Identifier.CODEC.fieldOf("icon").forGetter(i -> i.icon)).apply(t, CurrentSwayInfo::new));
-	public int dsweet;
-	public int dastringent;
-	public int dpungent;
-	public int dthick;
-	public int drousing;
-	public double display;
-	public int active;
-	public Identifier icon;
+	private int dsweet;
+	private int dastringent;
+	private int dpungent;
+	private int dthick;
+	private int drousing;
+	private float display;
+	private int active;
+	public final Identifier icon;
 	public Identifier image;
 
 	public CurrentSwayInfo(Identifier ic, VariantEnvironment env) {
-		display = env.get(Constants.DISPLAY);
+		display = (float)env.get(Constants.DISPLAY);
 		icon = ic;
-		if (display > 0) {
+		if (getDisplay() > 0) {
 			dsweet = fromVal(env.get(Constants.SWEETNESS_DELTA));
 			dastringent = fromVal(env.get(Constants.ASTRINGENCY_DELTA));
 			dpungent = fromVal(env.get(Constants.PUNGENCY_DELTA));
@@ -60,7 +60,7 @@ public class CurrentSwayInfo {
 
 	}
 
-	public CurrentSwayInfo(int dsweet, int dastringent, int dpungent, int dthick, int drousing, double display, int active,
+	public CurrentSwayInfo(int dsweet, int dastringent, int dpungent, int dthick, int drousing, float display, int active,
 		Identifier icon) {
 		super();
 		this.dsweet = dsweet;
@@ -69,7 +69,7 @@ public class CurrentSwayInfo {
 		this.dthick = dthick;
 		this.drousing = drousing;
 		this.display = display;
-		this.active = active;
+		this.setActive(active);
 		this.icon = icon;
 		this.image = Identifier.fromNamespaceAndPath(icon.getNamespace(), "textures/" + icon.getPath() + ".png");
 	}
@@ -91,7 +91,7 @@ public class CurrentSwayInfo {
 	}
 
 	public boolean shouldShow() {
-		return display > 0 || active > 0;
+		return getDisplay() > 0 || getActive() > 0;
 	}
 
 	public Optional<CurrentSwayInfo> toOptional() {
@@ -100,11 +100,21 @@ public class CurrentSwayInfo {
 
 	public static int fromVal(double d) {
 		boolean sign = d < 0;
-		int v = Mth.floor(Math.abs(d));
-		if (v > 3)
-			v = 3;
+		int v = Mth.floor(Math.abs(d)*10);
 		if (sign) v = -v;
 
 		return v;
+	}
+
+	public int getActive() {
+		return active;
+	}
+
+	public float getDisplay() {
+		return display;
+	}
+
+	public void setActive(int active) {
+		this.active = active;
 	}
 }

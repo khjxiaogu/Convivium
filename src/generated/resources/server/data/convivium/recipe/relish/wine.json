@@ -1,6 +1,7 @@
 {
   "type": "convivium:relish",
   "color": "#CE6C71",
+  "font": "w",
   "relish": "wine",
   "tag": "convivium:relish/wine",
   "variants": {}

@@ -112,6 +112,7 @@ public class ClientEvents {
 					sn=Mth.abs(sn);
 					ev.getToolTip().add(Utils.translate(key,Component.translatable("enchantment.level." + Mth.ceil(sn))).withStyle(Style.EMPTY.withColor(Constants.COLOR_OF_TASTES[i])));
 				}
+				break;
 			}
 		}
 	}

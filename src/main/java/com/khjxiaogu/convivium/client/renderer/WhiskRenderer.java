@@ -19,25 +19,39 @@
 package com.khjxiaogu.convivium.client.renderer;
 
 import org.joml.Quaternionf;
+import org.jspecify.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVMain;
+import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.whisk.WhiskBlockEntity;
+import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity,WhiskRenderState> {
-	public static final DynamicBlockModelReference cog=DynamicBlockModelReference.getModel(CVMain.rl("whisk_rotor"));
+
+	public static final DynamicBlockModelReference cog=DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/whisk_rotor"));
 	ItemModelResolver render;
 	/**
 	 * @param rendererDispatcherIn  
@@ -114,7 +128,38 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity,Whisk
 	}
 
 */
+	@Override
+	public void extractRenderState(WhiskBlockEntity blockEntity, WhiskRenderState state, float partialTicks,
+			Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+		FluidResource fluid=blockEntity.tank.getResource(0);
+		FluidStack fs=fluid.toStack(250);
+		state.spite1=null;
+		if(!fs.isEmpty()) {
+			FluidModel model=FluidRenderHelper.getFluidModel(fs);
+			state.spite1=model.stillMaterial().sprite();
+			state.color1=FluidRenderHelper.getFluidColor(model, fs);
+		}
+		if(blockEntity.target!=null) {
 
+			FluidStack fs2=blockEntity.target.toStack(250);
+			FluidModel model=FluidRenderHelper.getFluidModel(fs2);
+			state.spite2=model.stillMaterial().sprite();
+			state.color2=FluidRenderHelper.getFluidColor(model, fs2);
+		}
+		if(blockEntity.processMax>0)
+			state.progress=blockEntity.process*1f/blockEntity.processMax;
+		BlockState blockState=blockEntity.getBlockState();
+		if(blockState.hasProperty(KineticBasedBlock.ACTIVE)&&blockState.getValue(KineticBasedBlock.ACTIVE)) 
+			state.rotation=RotationUtils.getYRotation(partialTicks,blockEntity.getBlockPos());
+		ItemResource is=blockEntity.inv.getResource(0);
+		state.irs=null;
+		if(!is.isEmpty()) {
+			ItemStackRenderState isrs=new ItemStackRenderState();
+			render.appendItemLayers(isrs, is.toStack(),ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 7);
+			state.irs=isrs;
+		}
+	}
 
 	@Override
 	public WhiskRenderState createRenderState() {
@@ -127,7 +172,7 @@ public class WhiskRenderer implements BlockEntityRenderer<WhiskBlockEntity,Whisk
 		poseStack.pushPose();
 		if(state.rotation!=null) 
 			poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
-		if(state.spite1!=null){		
+		if(state.spite1!=null&&state.irs!=null){		
 			poseStack.pushPose();
 			poseStack.rotateAround(rotationAxis,0.5f,0.5f,0.5f);
 			poseStack.translate(6/16f,(6/16f),6/16f);

@@ -37,6 +37,7 @@ import org.joml.Vector3f;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.mojang.datafixers.util.Either;
@@ -49,6 +50,7 @@ import com.teammoeg.caupona.util.ChancedEffect;
 import com.teammoeg.caupona.util.FloatemStack;
 import com.teammoeg.caupona.util.Utils;
 
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -60,6 +62,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvents;
@@ -84,6 +89,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public List<FloatemStack> stacks;
+	public Object2FloatOpenHashMap<String> variants;
 	public List<ChancedEffect> effects;
 	public List<ChancedEffect> swayeffects;
 	public List<ChancedEffect> foodeffect;
@@ -94,11 +100,13 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		effects = new ArrayList<>();
 		swayeffects = new ArrayList<>();
 		stacks = new ArrayList<>();
+		variants=new Object2FloatOpenHashMap<>();
 		foodeffect = new ArrayList<>();
 	}
 
 	public static final Codec<BeverageInfo> CODEC = RecordCodecBuilder.create(t -> t.group(
 		Codec.list(FloatemStack.CODEC).fieldOf("items").forGetter(o -> o.stacks),
+		SUtils.VARIANTS_CODEC.fieldOf("variants").forGetter(o->o.variants),
 		Codec.list(ChancedEffect.CODEC).fieldOf("effects").forGetter(o -> o.effects),
 		Codec.list(ChancedEffect.CODEC).fieldOf("sway").forGetter(o -> o.swayeffects),
 		Codec.list(ChancedEffect.CODEC).fieldOf("foodeffects").forGetter(o -> o.foodeffect),
@@ -106,6 +114,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		Codec.list(Codec.STRING,0,2).fieldOf("activeRelish").forGetter(o -> o.activeRelish)).apply(t, BeverageInfo::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf,BeverageInfo> STREAM_CODEC = StreamCodec.composite(
 		FloatemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.stacks,
+		SUtils.VARIANTS_STREAM_CODEC,o -> o.variants,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.effects,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.swayeffects,
 		ChancedEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),o -> o.foodeffect,
@@ -159,20 +168,22 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		return potionEffectsCollectionView.get();
 	}
 
-	public BeverageInfo(List<FloatemStack> stacks, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Map<Holder<Fluid>,Integer> relishes, List<String> activeRelish) {
+	public BeverageInfo(List<FloatemStack> stacks,Map<String,Float> variants, List<ChancedEffect> effects, List<ChancedEffect> swayeffects, List<ChancedEffect> foodeffect, Map<Holder<Fluid>,Integer> relishes, List<String> activeRelish) {
 		super();
 		this.stacks = stacks;
 		this.effects = effects;
+		this.variants=new Object2FloatOpenHashMap<>(variants);
 		this.swayeffects = swayeffects;
 		this.foodeffect = foodeffect;
 		this.relishes.putAll(relishes);
 		this.activeRelish.addAll(activeRelish);
 	}
 	public BeverageInfo copy() {
-		return new BeverageInfo(stacks.stream().map(t->t.copy()).toList(),
-			effects.stream().map(t->t.copy()).toList(),
-			swayeffects.stream().map(t->t.copy()).toList(),
-			foodeffect.stream().map(t->t.copy()).toList(),
+		return new BeverageInfo(stacks.stream().map(t->t.copy()).collect(Collectors.toList()),
+				variants,
+			effects.stream().map(t->t.copy()).collect(Collectors.toList()),
+			swayeffects.stream().map(t->t.copy()).collect(Collectors.toList()),
+			foodeffect.stream().map(t->t.copy()).collect(Collectors.toList()),
 			relishes,activeRelish);
 	}
 	public int getIColor() {
@@ -180,7 +191,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	}
 	public int addableRelish(int origAmt,int toMixAmt) {
 		int remain=5-toMixAmt;
-		if(relishes.size()==1)
+		if(relishes.size()<=1)
 			return Math.min(remain,origAmt);
 		int total=0;
 		for(int ent:relishes.values()) {
@@ -203,7 +214,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		return 0;
 	}
 	public int addableRelish(int origAmt) {
-		if(relishes.size()==1)
+		if(relishes.size()<=1)
 			return 5-origAmt;
 		int total=0;
 		for(int ent:relishes.values()) {
@@ -277,7 +288,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		}
 		final int ftotal=total;
 		int atotal=0;
-		for(int ent:relishes.values()) {
+		for(int ent:added.values()) {
 			atotal+=ent;
 		}
 		final int fatotal=atotal;
@@ -301,6 +312,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		}
 	}
 	public static int getIColor(Object2IntMap<Holder<Fluid>> relishes) {
+		
 		Vector3f clr = new Vector3f();
 		int cnt = 0;
 		for (Entry<Holder<Fluid>> ent:relishes.object2IntEntrySet()) {
@@ -313,7 +325,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		}
 		if (cnt == 0) cnt = 1;
 		clr = clr.div(cnt);
-		return 0xff << 24 | ((int) (clr.x * 0xff)) << 16 | ((int) (clr.y * 0xff)) << 8 | ((int) (clr.z * 0xff));
+		return ARGB.colorFromFloat(1f, clr.x, clr.y, clr.z);
 	}
 
 	public float getDensity() {
@@ -372,7 +384,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 				return t.getSecond();
 			})
 			.flatMap(Optional::stream)
-			.sorted((t2, t1) -> Mth.ceil(t1.display - t2.display))
+			.sorted((t2, t1) -> Mth.ceil(t1.getDisplay() - t2.getDisplay()))
 			.collect(Collectors.toList());
 		swayeffects.sort(
 			Comparator.<ChancedEffect, String>comparing(e -> e.effect.getEffect().getRegisteredName())
@@ -522,6 +534,14 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		}
 		return b;
 	}
+	private static String handleNumber(float value) {
+		int rv=((int)value);
+		if(rv>0)
+			return "+"+rv;
+		if(rv<0)
+			return "-"+rv;
+		return " 0";
+	}
 	@Override
 	public void addToTooltip(TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag, DataComponentGetter components) {
 		RecipeHolder<RelishRecipe> r1 = RelishRecipe.recipes.get(activeRelish.get(0));
@@ -529,16 +549,39 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		RecipeHolder<RelishRecipe> r2 =null;
 		if(activeRelish.size()>1)
 			r2 = RelishRecipe.recipes.get(activeRelish.get(1));
-		if (!effects.isEmpty())
-			PotionContents.addPotionTooltip(potionEffectsCollectionView.get(), tooltipAdder, 1, 20);
-
+		if(!this.relishes.isEmpty()) {
+			MutableComponent comp=Component.literal("").withStyle(Style.EMPTY.withFont(new FontDescription.Resource(CVMain.rl("relish"))));
+			for(Entry<Holder<Fluid>> relish:this.relishes.object2IntEntrySet()) {
+				RecipeHolder<RelishFluidRecipe> rcp=RelishFluidRecipe.recipes.get(relish.getKey());
+				if(rcp!=null) {
+					RecipeHolder<RelishRecipe> rp=RelishRecipe.recipes.get(rcp.value().relish);
+					if(rp!=null) {
+						for(int i=0;i<relish.getIntValue();i++)
+							comp.append(rp.value().relishFont);
+						continue;
+					}
+				}
+				for(int i=0;i<relish.getIntValue();i++)
+					comp.append("n");
+			}
+			tooltipAdder.accept(Component.translatable("tooltip.convivium.relishes").append(comp));
+		}
+		MutableComponent comp2=Component.literal("");
+		comp2.append(Component.translatable("tooltip.convivium.taste.sweetness",handleNumber(variants.getFloat("sweetness")))).append(Component.literal(" "));
+		comp2.append(Component.translatable("tooltip.convivium.taste.astringency",handleNumber(variants.getFloat("astringency")))).append(Component.literal(" "));
+		comp2.append(Component.translatable("tooltip.convivium.taste.pungency",handleNumber(variants.getFloat("pungency")))).append(Component.literal(" "));
+		comp2.append(Component.translatable("tooltip.convivium.taste.thickness",handleNumber(variants.getFloat("thickness")))).append(Component.literal(" "));
+		comp2.append(Component.translatable("tooltip.convivium.taste.soothingness",handleNumber(variants.getFloat("soothingness")))).append(Component.literal(" "));
+		tooltipAdder.accept(comp2);
 		if (r1 != null) {
 			if (r2 != null) {
 				tooltipAdder.accept(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_2", r1.value().getText(), r2.value().getText()));
 			} else
 				tooltipAdder.accept(Utils.translate("tooltip." + CVMain.MODID + ".major_relish_1", r1.value().getText()));
 		}
-		
+		if (!effects.isEmpty())
+			PotionContents.addPotionTooltip(potionEffectsCollectionView.get(), tooltipAdder, 1, 20);
+
 	}
 
 	@Override

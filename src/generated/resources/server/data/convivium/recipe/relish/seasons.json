@@ -1,6 +1,7 @@
 {
   "type": "convivium:relish",
   "color": "#AAC35D",
+  "font": "s",
   "relish": "seasons",
   "tag": "convivium:relish/seasons",
   "variants": {}

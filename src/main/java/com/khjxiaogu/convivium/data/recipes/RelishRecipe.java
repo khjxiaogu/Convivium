@@ -18,21 +18,16 @@
 
 package com.khjxiaogu.convivium.data.recipes;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.khjxiaogu.convivium.CVMain;
-import com.mojang.datafixers.util.Pair;
+import com.khjxiaogu.convivium.util.SUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.data.IDataRecipe;
-import com.teammoeg.caupona.util.SerializeUtil;
 import com.teammoeg.caupona.util.Utils;
 
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -49,11 +44,14 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 public class RelishRecipe extends IDataRecipe {
 	public Identifier tag;
 	public String relishName;
-	public Map<String,Float> variantData=new HashMap<>();
+	public String relishFont;
+	public Object2FloatOpenHashMap<String> variants;
 	public TextColor color;
 	public static Map<String, RecipeHolder<RelishRecipe>> recipes;
 	public RelishRecipe(String name, Identifier tag, String color) {
+		this();
 		this.relishName=name;
+		this.relishFont=name.substring(0,1);
 		this.tag = tag;
 		this.color = TextColor.parseColor(color).getOrThrow();
 	}
@@ -62,34 +60,31 @@ public class RelishRecipe extends IDataRecipe {
 	public static final MapCodec<RelishRecipe> CODEC=RecordCodecBuilder.mapCodec(t->t.group(
 		Identifier.CODEC.fieldOf("tag").forGetter(o->o.tag),
 		Codec.STRING.fieldOf("relish").forGetter(o->o.relishName),
-		Codec.compoundList(Codec.STRING, Codec.FLOAT).optionalFieldOf("variants").forGetter(o->Optional.of(o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()))),
+		Codec.STRING.optionalFieldOf("font","n").forGetter(o->o.relishFont),
+		SUtils.VARIANTS_CODEC.fieldOf("variants").forGetter(o->o.variants),
 		TextColor.CODEC.optionalFieldOf("color",TextColor.fromLegacyFormat(ChatFormatting.WHITE)).forGetter(o->o.color)
 		).apply(t, RelishRecipe::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf,RelishRecipe> STREAM_CODEC=StreamCodec.composite(
 		Identifier.STREAM_CODEC,o->o.tag,
 		ByteBufCodecs.STRING_UTF8,o->o.relishName,
-		SerializeUtil.pair(ByteBufCodecs.STRING_UTF8, ByteBufCodecs.FLOAT).apply(ByteBufCodecs.list()), o->o.variantData.entrySet().stream().map(e->Pair.of(e.getKey(),e.getValue())).collect(Collectors.toList()),
+		ByteBufCodecs.STRING_UTF8,o->o.relishFont,
+		SUtils.VARIANTS_STREAM_CODEC,o->o.variants,
 		ByteBufCodecs.INT.map(TextColor::fromRgb, t->t.getValue()),o->o.color,
 		RelishRecipe::new
 		);
 	public RelishRecipe() {
+		this.variants=new Object2FloatOpenHashMap<String>();
 	}
 
-	public RelishRecipe(Identifier tag, String relishName, List<Pair<String, Float>> variantData, TextColor color) {
+	public RelishRecipe(Identifier tag, String relishName,String relishFont, Map<String, Float> variantData, TextColor color) {
 		super();
 		this.tag = tag;
+		this.relishFont=relishFont;
 		this.relishName = relishName;
-		variantData.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond()));
+		this.variants=new Object2FloatOpenHashMap<String>(variantData);
 		this.color = color;
 	}
 
-	public RelishRecipe(Identifier tag, String relishName, Optional<List<Pair<String, Float>>> variantData,TextColor color) {
-		super();
-		this.tag = tag;
-		this.relishName = relishName;
-		variantData.ifPresent(o->o.stream().forEach(p->this.variantData.put(p.getFirst(),p.getSecond())));
-		this.color = color;
-	}
 	@Override
 	public RecipeSerializer<RelishRecipe> getSerializer() {
 		return SERIALIZER.get();

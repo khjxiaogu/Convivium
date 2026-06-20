@@ -59,7 +59,7 @@ public class PamScreen extends AbstractContainerScreen<PamContainer> {
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		tooltip.clear();
 		FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tanks,0, leftPos + 42, topPos + 19, 16, 37,mouseX,mouseY,tooltip::add);
-		FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tanks,0, leftPos + 133, topPos + 34, 16, 37,mouseX,mouseY,tooltip::add);
+		FluidRenderHelper.handleGuiTank(graphics, getBlockEntity().tanks,1, leftPos + 133, topPos + 34, 16, 37,mouseX,mouseY,tooltip::add);
 		super.extractRenderState(graphics, mouseX, mouseY, a);
 		if (!tooltip.isEmpty()) {
 			graphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);

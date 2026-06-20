@@ -1,4 +1,4 @@
-// 26.1.2	2026-06-16T19:34:31.9233738	convivium
+// 26.1.2	2026-06-20T23:19:54.4111787	convivium
 e29c6f26acd671166bc17da612df7a7850d872ed data/convivium/recipe/basin/berry_juice_to_sapa.json
 00de8228676882c17a487041d17aa7f4a10cf4cd data/convivium/recipe/basin/drupe_juice_to_sapa.json
 b0333ddfb0507798a288254e504cdc80f9c03008 data/convivium/recipe/basin/pome_juice_to_sapa.json
@@ -96,13 +96,13 @@ a826fe6c3c05197619c55edf2d75955ebc9cd721 data/convivium/recipe/grinding/milk_tea
 79822c053774e881d85407b81885729e1bda7d3d data/convivium/recipe/grinding/tea_sorbet.json
 150bee4b3fd847c114a031c18b8e77dd18f8329f data/convivium/recipe/grinding/tea_wine_sorbet.json
 6df49da78e94990629f608d2e82cf72296465faa data/convivium/recipe/grinding/wine_sorbet.json
-26c678e337abcaceaee56b401b0396bfb48c7b67 data/convivium/recipe/relish/bath.json
-78abaf129fcc7fddb6b4351aeca06eb1159b8eea data/convivium/recipe/relish/cereal.json
-18a9ad40ac43e8996fc4bb55257a10bc7749bb15 data/convivium/recipe/relish/fire.json
-77203c29dbb783c3f07b53d7b67662a7b0be5cae data/convivium/recipe/relish/hearth.json
+94eec8f409527b2753a3b40a17370281450c734a data/convivium/recipe/relish/bath.json
+5819f6bc17fe9d14885348f6a5bcd3a3f915329f data/convivium/recipe/relish/cereal.json
+d69878711b658d86676cc3097925be54732e57be data/convivium/recipe/relish/fire.json
+4c180547b2b90734a65d6dd33a6d459a5c9958dc data/convivium/recipe/relish/hearth.json
 9f5320d4c610030948d688598e8f70e0546f8718 data/convivium/recipe/relish/none.json
-f367ec1d343d363d55b3cb096bb8cb71a8d101a9 data/convivium/recipe/relish/seasons.json
-cc3ac79ddd88a6030580d0d248c44657d9d806db data/convivium/recipe/relish/wine.json
+336f08bbe5e1a2c4d809e538bad6ee67c351ed62 data/convivium/recipe/relish/seasons.json
+ed0213aa5db33c101a0343a2771f7bd68dbda75b data/convivium/recipe/relish/wine.json
 e2cd7c6ee045d400642b67705d5e36f43a942743 data/convivium/recipe/relish_fluid/berry_juice.json
 5423f1d86e3d02aac61d82e264b34b48dd183232 data/convivium/recipe/relish_fluid/berry_must.json
 f1344513996831afd55cc41ca990e157ce924763 data/convivium/recipe/relish_fluid/drupe_juice.json

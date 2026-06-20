@@ -1,0 +1,60 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/bath_text.png",
+            "ascent": 7,
+            "chars": [
+                "b"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/cereal_text.png",
+            "ascent": 7,
+            "chars": [
+                "c"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/fire_text.png",
+            "ascent": 7,
+            "chars": [
+                "f"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/hearth_text.png",
+            "ascent": 7,
+            "chars": [
+                "h"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/none_text.png",
+            "ascent": 7,
+            "chars": [
+                "n"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/seasons_text.png",
+            "ascent": 7,
+            "chars": [
+                "s"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "convivium:gui/relishes/wine_text.png",
+            "ascent": 7,
+            "chars": [
+                "w"
+            ]
+        }
+    ]
+}

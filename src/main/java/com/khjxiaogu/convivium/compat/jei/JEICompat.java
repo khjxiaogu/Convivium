@@ -94,7 +94,7 @@ public class JEICompat implements IModPlugin {
 		registry.addGuiContainerHandler(BasinScreen.class, new GuiTankHandler<BasinScreen>(manager)
 			.addTank(62, 24, 16, 37, t->FluidUtil.getStack(t.getBlockEntity().tankin, 0)));
 		registry.addGuiContainerHandler(WhiskScreen.class, new GuiTankHandler<WhiskScreen>(manager)
-			.addTank(132, 45, 16, 46, t->FluidUtil.getStack(t.getBlockEntity().tank, 0)));
+			.addTank(134, 58, 16, 46, t->FluidUtil.getStack(t.getBlockEntity().tank, 0)));
 		registry.addGuiContainerHandler(BeverageVendingScreen.class, new GuiTankHandler<BeverageVendingScreen>(manager)
 			.addTank(123, 25, 32, 46, t->FluidUtil.getStack(t.getBlockEntity().tank, 0)));
 		

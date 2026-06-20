@@ -1,6 +1,7 @@
 {
   "type": "convivium:relish",
   "color": "#EA9359",
+  "font": "f",
   "relish": "fire",
   "tag": "convivium:relish/fire",
   "variants": {}

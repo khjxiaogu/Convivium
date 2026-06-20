@@ -46,6 +46,7 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.RootCommitJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
@@ -108,8 +109,9 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 				}
 				if(extracted>=250) {
 					System.out.println("update");
-					new Exception().printStackTrace();
-					BlockStateSnapshotJournal journal=new BlockStateSnapshotJournal(BeverageVendingBlockEntity.this,getBlockState().setValue(BeverageVendingBlock.ACTIVE,false));
+					BlockState nxtbs=getBlockState().setValue(BeverageVendingBlock.ACTIVE,false);
+
+					RootCommitJournal journal=new RootCommitJournal(()->getLevel().setBlockAndUpdate(getBlockPos(), nxtbs));
 					journal.updateSnapshots(transaction);
 					return extracted;
 				}

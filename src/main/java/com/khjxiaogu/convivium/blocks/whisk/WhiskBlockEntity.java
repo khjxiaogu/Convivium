@@ -71,7 +71,6 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
-import net.neoforged.neoforge.transfer.RangedResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -85,9 +84,14 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInfinitable, MenuProvider {
 	public enum HeatingStatus{
-		ON,
-		REDSTONE,
-		OFF;
+		ON(Utils.translate("gui." + CVMain.MODID + ".whisk.heat_on")),
+		OFF(Utils.translate("gui." + CVMain.MODID + ".whisk.heat_off")),
+		REDSTONE(Utils.translate("gui." + CVMain.MODID + ".whisk.heat_redstone"));
+		public final Component text;
+
+		private HeatingStatus(Component text) {
+			this.text = text;
+		}
 	}
 	public List<CurrentSwayInfo> swayhint = new ArrayList<>();
 	public static Codec<List<CurrentSwayInfo>> CSI_CODEC = Codec.list(CurrentSwayInfo.CODEC);
@@ -104,17 +108,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 
 		@Override
 		protected void onContentsChanged(int index, FluidStack previousContents) {
-			convertion.onContainerChanged();
 			super.onContentsChanged(index, previousContents);
+			convertion.onContainerChanged();
+			syncData();
 		}
 	};
-	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(4) {
-		@Override
-		public boolean isValid(int index, ItemResource resource) {
-			if (index == 0)
-				return isValidInput(resource.toStack());
-			return super.isValid(index, resource);
-		}
+	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(2) {
 		@Override
 		protected void onContentsChanged(int slot,ItemStack stack) {
 			super.onContentsChanged(slot,stack);
@@ -198,6 +197,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		if (info == null) {
 			info=new BeverageInfo();
 			info.relishes.put(resource.typeHolder(), 1);
+			info.checkFluidType();
 		}else {
 			return info.copy();
 		}
@@ -208,6 +208,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		if (info == null) {
 			info=new BeverageInfo();
 			info.relishes.put(resource.typeHolder(), 1);
+			info.checkFluidType();
 		}
 		return info;
 	}
@@ -225,7 +226,16 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		targetAmount=amount;
 	}
 	public DelegatingResourceHandler<FluidResource> modtank=new DelegatingResourceHandler<>(tank) {
+		@Override
+		public int extract(FluidResource resource, int amount, TransactionContext transaction) {
 
+			return extract(0,resource, amount, transaction);
+		}
+		@Override
+		public int insert(FluidResource resource, int amount, TransactionContext transaction) {
+
+			return insert(0,resource, amount, transaction);
+		}
 		@Override
 		public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
 			if(target!=null||processMax>0)
@@ -255,11 +265,14 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					int beforeParts=beforeAmount/250;
 					int insertParts=amount/250;
 					int toAdd=info.addableRelish(beforeParts);
+					System.out.println(toAdd);
 					int toAdd2=ninfo.addableRelish(insertParts,beforeParts);
+					System.out.println(toAdd2);
 					if(toAdd2<=toAdd) {
 						info.addRelishes(beforeParts, ninfo.relishes, toAdd2);
 						info.merge(ninfo, beforeParts, toAdd2);
 						setFluid(info,orig,beforeAmount+toAdd2*250,40);
+						System.out.println("succeed");
 						return toAdd2*250;
 					}
 					return 0;
@@ -282,7 +295,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	public WhiskBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(CVBlockEntityTypes.WHISK.get(), pWorldPosition, pBlockState);
 		contain = new LazyTickWorker(CPConfig.SERVER.containerTick.get(), () -> {
-			if (processMax == 0) {
+			if (processMax == 0&&!convertion.shouldTick()) {
 				if (tryContianFluid())
 					return true;
 			}
@@ -320,15 +333,18 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		nbt.putChild("inv", inv);
 	}
 	private boolean tryContianFluid() {
-		ItemResource container=inv.getResource(1);
+		ItemResource container=inv.getResource(0);
 		if(!container.isEmpty()) {
 			try(Transaction trans=Transaction.openRoot()){
 				if (!inf) {
 					ItemStack containerStack=container.toStack();
-					@Nullable ResourceHandler<FluidResource> cap=containerStack.getCapability(Capabilities.Fluid.ITEM,new TwoSlotItemAccess(inv, 1,2));
+					@Nullable ResourceHandler<FluidResource> cap=containerStack.getCapability(Capabilities.Fluid.ITEM,new TwoSlotItemAccess(inv, 0,1));
 					if(cap!=null) {
 						int amt=cap.getAmountAsInt(0);
 						if (ResourceHandlerUtil.move(cap, modtank, _->true, amt, trans)>0) {
+							trans.commit();
+							return true;
+						}else if (ResourceHandlerUtil.move(modtank, cap, _->true, amt, trans)>0) {
 							trans.commit();
 							return true;
 						}
@@ -338,12 +354,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			try(Transaction trans=Transaction.openRoot()){
 				if(modtank.getAmountAsInt(0)>=250) {
 					FluidResource rs=modtank.getResource(0);
-					int itemCount=inv.extract(1, container, 1, trans);
+					int itemCount=inv.extract(0, container, 1, trans);
 					int fluidAmount=modtank.extract(rs, 250, trans);
 					if(itemCount>0&&fluidAmount>=250) {
 						ContanerContainFoodEvent result=Utils.contain(container,rs,fluidAmount);
 						if(result.isAllowed()) {
-							if(inv.insert(2,result.getOutput(), 1, trans)==1) {
+							if(inv.insert(1,result.getOutput(), 1, trans)==1) {
 								trans.commit();
 								return true;
 							}
@@ -375,13 +391,22 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			inv.extract(0, itemCur, 1, trans);
 			if(itemCur.is(Items.POTION)) {
 				UseRemainder out=itemCur.get(DataComponents.USE_REMAINDER);
-				if(out!=null&&inv.insert(2, ItemResource.of(out.convertInto()), 1, trans)!=1)
+				if(out!=null&&inv.insert(1, ItemResource.of(out.convertInto()), 1, trans)!=1)
 					return;
 				for (MobEffectInstance eff : itemCur.get(DataComponents.POTION_CONTENTS).getAllEffects())
 					info.addEffect(eff, part);
-			}else {
-				if(!info.addItem(itemCur.toStack(), part))
+			}else{
+				ItemStack curStack=itemCur.toStack();
+				boolean hasRecipe=false;
+				for(RecipeHolder<TasteRecipe> ti:TasteRecipe.recipes) {
+					if(ti.value().item.test(curStack)) {
+						hasRecipe=true;
+						break;
+					}
+				}
+				if(!(hasRecipe&&info.addItem(curStack, part))) {
 					return;
+				}
 			}
 			setFluid(info,fr,amount,40);
 			trans.commit();
@@ -460,9 +485,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	@Override
 	public Object getCapability(BlockCapability<?, Direction> type, Direction d) {
 		if (type == Capabilities.Item.BLOCK) {
-			if (d == Direction.DOWN)
-				return RangedResourceHandler.of(inv, 2, 3);
-			return RangedResourceHandler.of(inv, 0, 1);
+			return inv;
 		}
 		if (type == Capabilities.Fluid.BLOCK)
 			return modtank;
@@ -477,7 +500,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		int num1 = 0;
 		int num2 = 0;
 		for (CurrentSwayInfo hint : swayhint) {
-			if (hint.active > 0) {
+			if (hint.getActive() > 0) {
 				if (num1++ < 3) {
 					this.swayhint.add(hint);
 				}
@@ -513,7 +536,6 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 	}
 	@Override
 	public void handleMessage(short type, int data) {
-		// TODO Auto-generated method stub
-		
+		this.heating=HeatingStatus.values()[(data+1)%3];
 	}
 }

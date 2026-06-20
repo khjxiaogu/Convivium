@@ -21,10 +21,7 @@ package com.khjxiaogu.convivium.blocks.whisk;
 import java.util.List;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
-import com.khjxiaogu.convivium.blocks.basin.BasinBlockEntity;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
-import com.teammoeg.caupona.util.Utils;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
@@ -46,8 +43,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 
@@ -81,6 +79,9 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 			return p;
 		BlockEntity be = level.getBlockEntity(pos);
 		if (be instanceof WhiskBlockEntity pam) {
+			if(player.isShiftKeyDown()) {
+				pam.tank.set(0, FluidResource.EMPTY, 0);
+			}
 			if (!level.isClientSide())
 				player.openMenu(pam, pam.getBlockPos());
 			return InteractionResult.SUCCESS;
@@ -103,29 +104,19 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 			if(held.getItem()==Items.POTION) {
 				PotionContents potc=held.get(DataComponents.POTION_CONTENTS);
 				if(potc.potion().filter(o->o==Potions.WATER).isPresent()) {
-					FluidStack water=new FluidStack(Fluids.WATER,250);
-					/*if(pam.accessabletank.fill(water,FluidAction.SIMULATE)==250) {
-						ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
-						held.shrink(1);
-						pam.accessabletank.fill(water, FluidAction.EXECUTE);
-						ItemHandlerHelper.giveItemToPlayer(player, remain);
-						return ItemInteractionResult.SUCCESS;
-					}*/
+					FluidResource water=FluidResource.of(Fluids.WATER);
+					try(Transaction trans=Transaction.openRoot()){
+						if(pam.modtank.insert(0,water,250,trans)==250) {
+							ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
+							held.shrink(1);
+							player.getInventory().placeItemBackInInventory(remain);
+							return InteractionResult.SUCCESS;
+						}
+					}
 				}
 			}
-/*
-			FluidStack out=Utils.extractFluid(held);
-			if (!out.isEmpty()) {
-				if(pam.accessabletank.fill(out, FluidAction.SIMULATE)==out.getAmount()) {
-					pam.accessabletank.fill(out, FluidAction.EXECUTE);
-					ItemStack ret = held.getCraftingRemainingItem();
-					held.shrink(1);
-					ItemHandlerHelper.giveItemToPlayer(player, ret);
-					return ItemInteractionResult.sidedSuccess(level.isClientSide);
-				}
-			}
-			if (FluidUtil.interactWithFluidHandler(player, hand, pam.accessabletank))
-				return ItemInteractionResult.SUCCESS;*/
+			if (FluidUtil.interactWithFluidHandler(player, hand, pos, pam.modtank))
+				return InteractionResult.SUCCESS;
 		}
 		
 		return p;

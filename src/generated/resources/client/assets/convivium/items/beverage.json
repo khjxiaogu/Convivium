@@ -4,6 +4,10 @@
     "model": "convivium:item/beverage",
     "tints": [
       {
+        "type": "minecraft:constant",
+        "value": -1
+      },
+      {
         "type": "convivium:beverage",
         "default": -13421654
       }

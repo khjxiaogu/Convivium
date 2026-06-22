@@ -29,6 +29,7 @@ import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 import com.khjxiaogu.convivium.util.PotionItemInfo;
 import com.teammoeg.caupona.data.recipes.*;
 
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.damagesource.DamageContainer.Reduction;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
@@ -67,6 +70,12 @@ public class CVCommonEvents {
 		if ((!event.getOrigin().is(Items.GLASS_BOTTLE)) && event.getTarget().is(Items.GLASS_BOTTLE))
 			event.setResult(EventResult.ALLOW);
 	}*/
+	@SubscribeEvent
+	public static void modifyDamage(LivingIncomingDamageEvent event) {
+		if(event.getEntity().hasEffect(CVMobEffects.DELICACY)) {
+			event.setAmount(event.getAmount()*(0.2f*(1+event.getEntity().getEffect(CVMobEffects.DELICACY).getAmplifier())));
+		}
+	}
 	@SubscribeEvent
 	public static void sendRecipes(OnDatapackSyncEvent event) {
 		event.sendRecipes(BowlContainingRecipe.TYPE.get(),

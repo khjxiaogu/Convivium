@@ -190,6 +190,7 @@ public class PlatterBlock extends CPRegisteredEntityBlock<PlatterBlockEntity> {
 				}else
 					player.openMenu( blockEntity, blockEntity.getBlockPos());
 			}
+			return InteractionResult.SUCCESS_SERVER;
 		}
 		return p;
 	}

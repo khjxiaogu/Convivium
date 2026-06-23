@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "convivium:item/glass_bowl_empty"
+    "layer0": "convivium:item/beverages/glass_bowl_empty"
   }
 }

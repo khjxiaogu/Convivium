@@ -66,7 +66,7 @@ public class CVItemModelProvider extends ItemModelGenerators {
 		texture("flatbread");
 		potTexture("beverage", "alcohol_bottle", "beverages/");
 		for(String bottleType:CVItems.bottles) {
-			texture("glass_"+bottleType,"glass_" + bottleType + "_empty");
+			texture("glass_"+bottleType,"beverages/glass_" + bottleType + "_empty");
 			potTexture("beverage_"+bottleType, "glass_"+bottleType, "beverages/");
 		}
 		texture("jug");

@@ -1,4 +1,4 @@
-// 26.1.2	2026-06-23T11:55:45.7869513	Model Definitions - convivium
+// 26.1.2	2026-06-23T12:02:12.171625	Model Definitions - convivium
 7b6aec1eddcc0930499d128603f89c1d63a161d6 assets/convivium/blockstates/aeolipile.json
 0898337ce06471fa6329d0fd4f64140683dd6e76 assets/convivium/blockstates/basin.json
 51554397b376befce96eb79a9842170d04f80e52 assets/convivium/blockstates/beverage.json
@@ -154,10 +154,10 @@ b6d172559a69de57c5424cc5b677dd1ad960ffbb assets/convivium/models/item/fallback_s
 e70c5705a4d5a34f1d1a8d0a3bfb9cc17a50ca13 assets/convivium/models/item/fresh_camellia_shoots.json
 2a64adee0acba0449dcf568b84986fd2b26841f8 assets/convivium/models/item/fruit_platter.json
 36a15198cbf0276f1f815f12d99aaa2ecd3d1a5e assets/convivium/models/item/fruit_tongsui.json
-dc60c3d41d94f36502bc3ca3ffb13986278daeee assets/convivium/models/item/glass_bowl.json
-4a1be0b9d39c0ff5bc45fb220db68cb6c3d62164 assets/convivium/models/item/glass_cup.json
-c4fc6938ac54182e9326a6766b73f2906257d052 assets/convivium/models/item/glass_jug.json
-7c33be3bee0e6c25dceb926ae287d8a69e83ecb6 assets/convivium/models/item/glass_mug.json
+519b6b3850401e8a25654587751fa0006985901e assets/convivium/models/item/glass_bowl.json
+61b23ec0f8f48cdf25a29e6cd4e0f1fa2cc5f3aa assets/convivium/models/item/glass_cup.json
+935f583efc47f20f59f5ac3d6aa4aceba727682e assets/convivium/models/item/glass_jug.json
+39c4bb5c4906c7c308e6304633237abc911ce7d5 assets/convivium/models/item/glass_mug.json
 ad1775cf3c3402e575822f413f8355fe3c50d83e assets/convivium/models/item/hot_chocolate.json
 e233c94bf8a9e1e449a239c3fc579353666abc37 assets/convivium/models/item/jaegertee.json
 742245df0716a4d554ab368bb1e73aa540b7a04f assets/convivium/models/item/jug.json

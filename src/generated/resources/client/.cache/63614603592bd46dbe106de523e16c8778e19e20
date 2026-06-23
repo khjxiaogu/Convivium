@@ -1,7 +1,11 @@
-// 26.1.2	2026-06-21T02:49:19.7468564	Model Definitions - convivium
+// 26.1.2	2026-06-23T11:55:45.7869513	Model Definitions - convivium
 7b6aec1eddcc0930499d128603f89c1d63a161d6 assets/convivium/blockstates/aeolipile.json
 0898337ce06471fa6329d0fd4f64140683dd6e76 assets/convivium/blockstates/basin.json
 51554397b376befce96eb79a9842170d04f80e52 assets/convivium/blockstates/beverage.json
+26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_bowl.json
+26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_cup.json
+26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_jug.json
+26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_mug.json
 09876292773882d4139aea6c3c345cf641ff3790 assets/convivium/blockstates/beverage_vending_machine.json
 51a8f6b55c0d5946eb32f550e118ebfec8f17f0f assets/convivium/blockstates/cage_wheel.json
 d8942c00871959636625f71be72fbdbf013c3c9a assets/convivium/blockstates/camellia_plant.json
@@ -40,7 +44,11 @@ cd822d7d84e1567615933b7e7b1fcf4e55720779 assets/convivium/items/aeolipile.json
 d638ab696b893728b209e03f66d3449b6081a38e assets/convivium/items/basin.json
 4c0cc7724dd79c12d6db2cf88181b2fd5a89304e assets/convivium/items/berry_juice.json
 f8ffa4f5ef18e19c73a0c5e519afa60edeb61499 assets/convivium/items/berry_must.json
-868f768f3a0eaa131c1138dc2666693397024694 assets/convivium/items/beverage.json
+c8f65af525564b4469eeb99373899494cee66d79 assets/convivium/items/beverage.json
+5595d95dafdd200d97a1fc9cbc7847c5d8cbb44a assets/convivium/items/beverage_bowl.json
+d7887d80897e3c00ca128abd5c9cd475b2dc964d assets/convivium/items/beverage_cup.json
+fc92e5b50700a2130fb986cee505507f70fa9b97 assets/convivium/items/beverage_jug.json
+07f7209532ba6d5f792b7d14c101c24503af08b1 assets/convivium/items/beverage_mug.json
 a85e7002e25bccd45c2110b3597d8e4161a6b89b assets/convivium/items/beverage_vending_machine.json
 6f3b3271d8526b3e043420093386544df7e76068 assets/convivium/items/cage_wheel.json
 9902c4d48f39fb2845060e28057d2b5f1f9aa7b6 assets/convivium/items/camellia_flower.json
@@ -68,6 +76,10 @@ ac575c55213111a3475ac2c28c4be7e291ecf974 assets/convivium/items/flatbread.json
 900941abddda79722ce280072fddc95742d6cff4 assets/convivium/items/fresh_camellia_shoots.json
 281705c83ee3fe5974be48e91f318e608d1ef4e1 assets/convivium/items/fruit_platter.json
 0aca010d53a960b2927f4c022d93ec9b3eba8db5 assets/convivium/items/fruit_tongsui.json
+36b049bae7cb9b4e9cc50ca85f032aa081bfcd0c assets/convivium/items/glass_bowl.json
+83fdeed35e43c036ef906a8d2756c77d57b5f257 assets/convivium/items/glass_cup.json
+698b879b4ab9a7fe464951c43bd2dc48d116fc39 assets/convivium/items/glass_jug.json
+90618b27d5642ad44ab851e37a85629e39cb4f7c assets/convivium/items/glass_mug.json
 fe65dd4c92a6090f52f4409f0dfe5c6a75bd7970 assets/convivium/items/hot_chocolate.json
 48e976b6604388313611c42e70a72129496bf129 assets/convivium/items/jaegertee.json
 9e192d813e6c8df93d0a9d13eb3f25797e9ce897 assets/convivium/items/jug.json
@@ -115,7 +127,11 @@ cc1d4f67e4c70433132105373b79922a9373c5f6 assets/convivium/models/item/ade.json
 5b0dc6ffa560c19968ea25118fdf6e6ef1a6b582 assets/convivium/models/item/basin.json
 70f35f53986adb048fef462f3596e9dc96452ce6 assets/convivium/models/item/berry_juice.json
 007d5776118b04ac978d764dd6333cb69b0fd02b assets/convivium/models/item/berry_must.json
-32ad1c097653b2286cba2015bcaaa6a382d89174 assets/convivium/models/item/beverage.json
+94ee47fcc79b4dbbfef6d8519c7b49eb195557ce assets/convivium/models/item/beverage.json
+3cfec0ce70ad125c4397437cade4a117cbaf2214 assets/convivium/models/item/beverage_bowl.json
+abffa00a479dbd9fa2febc0ffc421de14731475c assets/convivium/models/item/beverage_cup.json
+b21065d30b8bc15e816a1b4928ea8275c6a6adb3 assets/convivium/models/item/beverage_jug.json
+5979191e6a234df05a0515a8388ffb0a0545ef62 assets/convivium/models/item/beverage_mug.json
 64dc2f920b0b2db1198bda67e5b59a4950d6f6a5 assets/convivium/models/item/cage_wheel.json
 9ce901d0a950a5a2008cbb32a445ce2d07aacfde assets/convivium/models/item/camellia_flower.json
 c6aacf37378e27c4be527194b94e782369d9d054 assets/convivium/models/item/camellia_seeds.json
@@ -138,6 +154,10 @@ b6d172559a69de57c5424cc5b677dd1ad960ffbb assets/convivium/models/item/fallback_s
 e70c5705a4d5a34f1d1a8d0a3bfb9cc17a50ca13 assets/convivium/models/item/fresh_camellia_shoots.json
 2a64adee0acba0449dcf568b84986fd2b26841f8 assets/convivium/models/item/fruit_platter.json
 36a15198cbf0276f1f815f12d99aaa2ecd3d1a5e assets/convivium/models/item/fruit_tongsui.json
+dc60c3d41d94f36502bc3ca3ffb13986278daeee assets/convivium/models/item/glass_bowl.json
+4a1be0b9d39c0ff5bc45fb220db68cb6c3d62164 assets/convivium/models/item/glass_cup.json
+c4fc6938ac54182e9326a6766b73f2906257d052 assets/convivium/models/item/glass_jug.json
+7c33be3bee0e6c25dceb926ae287d8a69e83ecb6 assets/convivium/models/item/glass_mug.json
 ad1775cf3c3402e575822f413f8355fe3c50d83e assets/convivium/models/item/hot_chocolate.json
 e233c94bf8a9e1e449a239c3fc579353666abc37 assets/convivium/models/item/jaegertee.json
 742245df0716a4d554ab368bb1e73aa540b7a04f assets/convivium/models/item/jug.json

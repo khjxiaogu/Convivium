@@ -60,6 +60,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class CVBlocks {
 	public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CVMain.MODID);
 	public static final DeferredHolder<Block, BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
+	public static final DeferredHolder<Block, BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
+	public static final DeferredHolder<Block, BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
+	public static final DeferredHolder<Block, BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
+	public static final DeferredHolder<Block, BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
+	
+	
 	public static final DeferredHolder<Block, CogCageBlock> cage = baseblock("cage_wheel", b -> new CogCageBlock(getKineticProps(b)));
 	public static final DeferredHolder<Block, CogCageBlock> cog = baseblock("cog", b -> new CogCageBlock(getKineticProps(b)));
 	public static final DeferredHolder<Block, AeolipileBlock> aeolipile = baseblock("aeolipile", b -> new AeolipileBlock(getKineticProps(b)));

@@ -85,7 +85,7 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 	@Override
 	public void extractRenderState(BeverageBlockEntity blockEntity, BeverageRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
-		state.clr=0xffffffff;
+		state.clr=0xff3333aa;
 		state.sprite=null;
 		ItemResource item=blockEntity.getInternal().getResource(0);
 		if(item.is(Items.POTION)) {

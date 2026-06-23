@@ -107,13 +107,13 @@ public class CVClientRegistry {
 
 				@Override
 				public int color(FluidState state) {
-					return 0xffee9999;
+					return 0xff3333aa;
 				}
 				@Override
 				public int colorAsStack(FluidStack stack) {
 					BeverageInfo cmp=stack.get(CVComponents.BEVERAGE_INFO);
 					if(cmp==null)
-						return 0xffee9999;
+						return 0xff3333aa;
 					return cmp.getIColor();
 			    }
 			},

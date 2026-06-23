@@ -65,6 +65,10 @@ public class CVItemModelProvider extends ItemModelGenerators {
 		}
 		texture("flatbread");
 		potTexture("beverage", "alcohol_bottle", "beverages/");
+		for(String bottleType:CVItems.bottles) {
+			texture("glass_"+bottleType,"glass_" + bottleType + "_empty");
+			potTexture("beverage_"+bottleType, "glass_"+bottleType, "beverages/");
+		}
 		texture("jug");
 	}
 
@@ -74,8 +78,8 @@ public class CVItemModelProvider extends ItemModelGenerators {
     	Identifier rkey=CVMain.rl( par + name);
     	Identifier texture=rkey.withPrefix("item/");
     	Identifier overlay=texture.withSuffix("_overlay");
-        Identifier model = POT_TEMPLATE.create(item, new TextureMapping().put(TextureSlot.LAYER0, mat(texture)).put(TextureSlot.LAYER1, mat(overlay)).put(TextureSlot.PARTICLE, mat(texture)), modelOutput);
-        this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model,new Constant(0xffffffff), new BeverageTint(0xff3333aa)));
+        Identifier model = POT_TEMPLATE.create(item, new TextureMapping().put(TextureSlot.LAYER0, mat(overlay)).put(TextureSlot.LAYER1, mat(texture)).put(TextureSlot.PARTICLE, mat(texture)), modelOutput);
+        this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model,new BeverageTint(0xff3333aa)));
 
 	}
     public Material mat(Identifier path) {
@@ -84,8 +88,7 @@ public class CVItemModelProvider extends ItemModelGenerators {
 
 	public void simpleTexture(String name, String par) {
 		this.itemModelOutput.accept(BuiltInRegistries.ITEM.getValue(CVMain.rl(name)),
-		ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(CVMain.rl("item/" + name),new TextureMapping().put(TextureSlot.LAYER0, new Material(CVMain.rl("item/" + par + name),false)), this.modelOutput))
-		);
+		ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(CVMain.rl("item/" + name),new TextureMapping().put(TextureSlot.LAYER0, new Material(CVMain.rl("item/" + par + name),false)), this.modelOutput)));
 
 	}
 	public Unbaked plain(String name) {

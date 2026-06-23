@@ -1,7 +1,7 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "convivium:item/beverage",
+    "model": "convivium:item/beverage_jug",
     "tints": [
       {
         "type": "convivium:beverage",

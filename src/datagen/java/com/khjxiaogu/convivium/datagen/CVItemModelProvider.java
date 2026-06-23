@@ -25,7 +25,6 @@ import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.BeverageTint;
 
-import net.minecraft.client.color.item.Constant;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.model.ItemModelUtils;

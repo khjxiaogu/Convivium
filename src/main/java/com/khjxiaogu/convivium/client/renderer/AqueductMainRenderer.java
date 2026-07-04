@@ -57,8 +57,8 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 
 	@Override
 	public AqueductMainRenderState createRenderState() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return new AqueductMainRenderState();
 	}
 	@Override
 	public void submit(AqueductMainRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {

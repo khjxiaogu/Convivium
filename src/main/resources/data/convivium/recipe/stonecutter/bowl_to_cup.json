@@ -1,0 +1,8 @@
+{
+	"type": "stonecutting",
+	"ingredient": "convivium:glass_bowl",
+	"result": {
+		"id": "convivium:glass_cup"
+	},
+	"count": 1
+}

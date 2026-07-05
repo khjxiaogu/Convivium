@@ -1,0 +1,8 @@
+{
+	"type": "stonecutting",
+	"ingredient": "convivium:glass_bowl",
+	"result": {
+		"id": "minecraft:glass_bottle"
+	},
+	"count": 1
+}

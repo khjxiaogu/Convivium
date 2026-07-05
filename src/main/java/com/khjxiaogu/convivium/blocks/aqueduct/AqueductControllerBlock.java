@@ -29,11 +29,14 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -93,17 +96,8 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 		shapes[getShapeIndex(Direction.EAST,AqueductMainConnection.A)]=shapes[getShapeIndex(Direction.WEST,AqueductMainConnection.A)]=Shapes.or(base, e,w);
 		shapes[getShapeIndex(Direction.EAST,AqueductMainConnection.N)]=shapes[getShapeIndex(Direction.WEST,AqueductMainConnection.N)]=shapes[getShapeIndex(Direction.NORTH,AqueductMainConnection.N)]=shapes[getShapeIndex(Direction.SOUTH,AqueductMainConnection.N)]=Shapes.or(base,n,s,e,w);
 	}
-	/**
-	 * Update the provided state given the provided neighbor direction and neighbor
-	 * state, returning a new state.
-	 * For example, fences make their connections to the passed in state if
-	 * possible, and wet concrete powder immediately
-	 * returns its solidified counterpart.
-	 * Note that this method should ideally consider only the specific direction
-	 * passed in.
-	 */
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-			BlockPos pCurrentPos, BlockPos pFacingPos) {
+	@Override
+	public BlockState updateShape(BlockState pState, LevelReader level, ScheduledTickAccess ticks,BlockPos pCurrentPos, Direction pFacing, BlockPos pFacingPos, BlockState pFacingState, RandomSource random) {
 		Direction dir=pState.getValue(FACING);
 		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
 			AqueductMainConnection c=pState.getValue(CONN).connects(dir,pFacing);

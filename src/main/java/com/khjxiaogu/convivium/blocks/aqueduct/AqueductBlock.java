@@ -28,11 +28,14 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -100,17 +103,9 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		return super.getStateForPlacement(pContext).setValue(CONN, conn);
 	}
 
-	/**
-	 * Update the provided state given the provided neighbor direction and neighbor
-	 * state, returning a new state.
-	 * For example, fences make their connections to the passed in state if
-	 * possible, and wet concrete powder immediately
-	 * returns its solidified counterpart.
-	 * Note that this method should ideally consider only the specific direction
-	 * passed in.
-	 */
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-			BlockPos pCurrentPos, BlockPos pFacingPos) {
+
+	@Override
+	public BlockState updateShape(BlockState pState, LevelReader level, ScheduledTickAccess ticks,BlockPos pCurrentPos, Direction pFacing, BlockPos pFacingPos, BlockState pFacingState, RandomSource random) {
 		if(pFacingState.is(CVTags.Blocks.AQUEDUCT)) {
 			AqueductConnection c=pState.getValue(CONN).connects(pFacing);
 			boolean canConnect=true;
@@ -127,6 +122,7 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 		
 		return pState;
 	}
+
 
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {

@@ -82,14 +82,14 @@ public class BeveragePendingContext extends IPendingContext {
 			for (RecipeHolder<TasteRecipe> recipe : TasteRecipe.recipes) {
 				if (recipe.value().item.test(fs.getStack())) {
 					recipe.value().variantData.forEach((e, f) -> {
-						lvar.mergeDouble(e,f,SUtils.DBL_SUM);
+						lvar.mergeDouble(e,f*fs.getCount(),SUtils.DBL_SUM);
 					});
 					break;
 				}
 			}
 			totalItems += fs.getCount();
 			for(Object2DoubleMap.Entry<String> p:lvar.object2DoubleEntrySet()) {
-				variant.mergeDouble(p.getKey(),30d*p.getDoubleValue()*Mth.sin(Math.min(fs.getCount(), 30)*Mth.PI/60)/Mth.PI,SUtils.DBL_SUM);
+				variant.mergeDouble(p.getKey(),p.getDoubleValue(),SUtils.DBL_SUM);
 			}
 			
 		}
@@ -105,6 +105,18 @@ public class BeveragePendingContext extends IPendingContext {
 		info.variants.clear();
 		for(Entry<String> ent:variant.object2DoubleEntrySet()) {
 			info.variants.put(ent.getKey(), (float)ent.getDoubleValue());
+		}
+		double total=0;
+		for(String s:Constants.TASTES) {
+			total+=Mth.clamp(variant.getDouble(s), -10, 10);
+		}
+		double scale=1;
+        if (total > 20) {
+            scale = 20 / total;
+        }
+        final double useScale=scale;
+        for(String s:Constants.TASTES) {
+        	variant.computeDoubleIfPresent(s, (_,d)->Mth.clamp(d, -10, 10)*useScale);
 		}
 		taste = new ConstantEnvironment(variant);
 	}

@@ -110,6 +110,7 @@ public class WhiskBlock extends KineticBasedBlock<WhiskBlockEntity> {
 							ItemStack remain=new ItemStack(Items.GLASS_BOTTLE);
 							held.shrink(1);
 							player.getInventory().placeItemBackInInventory(remain);
+							trans.commit();
 							return InteractionResult.SUCCESS;
 						}
 					}

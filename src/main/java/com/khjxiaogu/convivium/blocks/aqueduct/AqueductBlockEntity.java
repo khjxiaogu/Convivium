@@ -151,7 +151,7 @@ public class AqueductBlockEntity extends CPBaseBlockEntity {
 			if(!bs.is(CVTags.Blocks.AQUEDUCT_MOVE))return false;
 			if(!bs2.is(Blocks.AIR))return false;
 			if(be!=null) {
-				CompoundTag nbt=be.saveWithoutMetadata(this.getLevel().registryAccess());
+				CompoundTag nbt=be.saveWithFullMetadata(this.getLevel().registryAccess());
 				this.level.removeBlockEntity(src);
 				this.level.setBlock(src, Blocks.AIR.defaultBlockState(), 2);
 				this.level.removeBlockEntity(src);

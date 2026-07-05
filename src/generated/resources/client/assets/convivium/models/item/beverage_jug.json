@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "convivium:item/beverages/glass_jug_overlay",
+    "layer1": "convivium:item/beverages/glass_jug",
+    "particle": "convivium:item/beverages/glass_jug"
+  }
+}

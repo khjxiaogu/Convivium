@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "convivium:item/beverage_bowl",
+    "tints": [
+      {
+        "type": "convivium:beverage",
+        "default": -13421654
+      }
+    ]
+  }
+}

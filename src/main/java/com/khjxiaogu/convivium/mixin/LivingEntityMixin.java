@@ -21,7 +21,6 @@ package com.khjxiaogu.convivium.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.khjxiaogu.convivium.CVMobEffects;
@@ -33,12 +32,7 @@ public class LivingEntityMixin {
 
 	public LivingEntityMixin() {
 	}
-	@ModifyVariable(at = @At("HEAD"),method="Lnet/minecraft/world/entity/LivingEntity;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z",index=3,argsOnly=true,require=0)
-	public float setAmount(float amount) {
-		if(getThis().hasEffect(CVMobEffects.DELICACY))
-			return amount*(0.2f*(1+getThis().getEffect(CVMobEffects.DELICACY).getAmplifier()));
-		return amount;
-	}
+
 	@Inject(method = "getJumpPower", at = @At("RETURN"), cancellable = true)
 	protected void onGetJump(CallbackInfoReturnable<Float> cir) {
 		if(getThis().hasEffect(CVMobEffects.RADICATION))

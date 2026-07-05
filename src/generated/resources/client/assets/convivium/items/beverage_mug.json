@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "convivium:item/beverage_mug",
+    "tints": [
+      {
+        "type": "convivium:beverage",
+        "default": -13421654
+      }
+    ]
+  }
+}

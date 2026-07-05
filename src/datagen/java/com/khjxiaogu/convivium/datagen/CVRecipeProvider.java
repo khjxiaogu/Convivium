@@ -40,7 +40,6 @@ import com.khjxiaogu.convivium.data.recipes.GrindingRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.util.Constants;
-import com.khjxiaogu.convivium.util.FloatSizedOrCatalystIngredient;
 import com.teammoeg.caupona.CPMain;
 import com.teammoeg.caupona.data.IDataRecipe;
 import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
@@ -161,12 +160,16 @@ public class CVRecipeProvider extends RecipeProvider {
 		relish(out, Constants.NONE, "#ffffff");
 		out.accept(rl("bottle/beverage"), new BowlContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get(),Ingredient.of(Items.GLASS_BOTTLE)));
 		for (String s : CVItems.base_drinks) {
+			Fluid f;
 			if (s.equals("milk")) {
-				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), NeoForgeMod.MILK.get(),Ingredient.of(Items.GLASS_BOTTLE)));
+				f=NeoForgeMod.MILK.get();
 			} else if (s.equals("water")) {
-				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), Fluids.WATER,Ingredient.of(Items.GLASS_BOTTLE)));
+				f=Fluids.WATER;
 			} else
-				out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)));
+				f=cvfluid(s);
+			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), f,Ingredient.of(Items.GLASS_BOTTLE)));
+			for(String bottleType:CVItems.bottles)
+				out.accept(rl("bottle/"+ s+"_"+bottleType), new BowlContainingRecipe(cvitem("beverage_"+bottleType), f,Ingredient.of(cvitem("glass_"+bottleType))));
 		}
 		
 		// taste(Items.APPLE).vars().astringency(2).end().end(out);

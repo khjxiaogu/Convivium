@@ -98,7 +98,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		}
 		transform.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 27+21*barIdx,topPos + y, 176,110, 14, 12,256,256);
 		if(image!=null)
-		transform.blit(RenderPipelines.GUI_TEXTURED,image, leftPos + 27+21*barIdx+3, topPos + y+1, 0, 0,10, 10,10,10);	
+		transform.blit(RenderPipelines.GUI_TEXTURED,image, leftPos + 27+21*barIdx+4, topPos + y, 0, 0, 9, 9, 9, 9);	
 		if(isMouseIn(mouseX,mouseY,27+21*barIdx,y,14,12)) {
 			tooltip.add(Utils.translate(icon.toLanguageKey("sway","name")));
 

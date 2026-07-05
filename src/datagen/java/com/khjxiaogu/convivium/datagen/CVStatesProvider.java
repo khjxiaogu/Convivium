@@ -30,6 +30,7 @@ import java.util.function.UnaryOperator;
 import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVFluids;
+import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
@@ -167,6 +168,9 @@ public class CVStatesProvider extends BlockModelGenerators {
 		empty(CVBlocks.FLAT_BREAD.get());
 		for(String s:CVFluids.sorbets) {
 			empty(s+"_sorbet");
+		}
+		for(String bottleType:CVItems.bottles) {
+			empty("beverage_"+bottleType);
 		}
 	}
 

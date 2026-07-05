@@ -42,6 +42,7 @@ public class CVItems {
 	public static final DeferredHolder<Item, JugItem> JUG = ITEMS.registerItem("jug", t -> new JugItem(t.stacksTo(1)));
 	public static final String[] base_material = new String[] { "camellia_flower", "camellia_seeds", "clay_basin", "dolium_lid", "fresh_camellia_shoots", "cocoa_powder", "neroli", "spice_blend",
 		"powdered_tea", "steamed_camellia_shoots" };
+	public static final String[] bottles=new String[] {"bowl","mug","jug","cup"};
 	public static final String[] base_drinks = new String[] { "berry_juice", "berry_must", "drupe_juice", "drupe_must", "pome_juice", "pome_must", "tea", "hot_chocolate", "milk", "water" };
 	public static final DeferredHolder<Item, BeveragePotionFluid> POTION = ITEMS.registerItem("potion_dummy", t -> new BeveragePotionFluid(t));
 	//public static final DeferredHolder<Item, SorbetItem> FLAT_BREAD=ITEMS.register("flat_bread", () -> new SorbetItem(CVBlocks.FLAT_BREAD.get(), createProps(), true));
@@ -50,6 +51,9 @@ public class CVItems {
 	static {
 		for (String s : base_material) {
 			item(s);
+		}
+		for (String s : bottles) {
+			item("glass_"+s);
 		}
 		for (String s : base_drinks) {
 			Supplier<Fluid> drink_fluids;

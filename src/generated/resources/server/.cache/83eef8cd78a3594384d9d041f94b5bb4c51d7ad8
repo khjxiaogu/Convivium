@@ -1,4 +1,4 @@
-// 26.1.2	2026-06-23T11:52:18.4372175	convivium
+// 26.1.2	2026-07-08T16:29:58.6423527	convivium
 e29c6f26acd671166bc17da612df7a7850d872ed data/convivium/recipe/basin/berry_juice_to_sapa.json
 00de8228676882c17a487041d17aa7f4a10cf4cd data/convivium/recipe/basin/drupe_juice_to_sapa.json
 b0333ddfb0507798a288254e504cdc80f9c03008 data/convivium/recipe/basin/pome_juice_to_sapa.json
@@ -42,6 +42,10 @@ a01352a33f1e5655c2aa66ba881f45a459aa7492 data/convivium/recipe/bottle/berry_must
 bcfb6534d508693a616947e77d2bafee8157ee5f data/convivium/recipe/bottle/berry_must_jug.json
 64676faa2d3f9366bf62992b7c5b80aef609dc84 data/convivium/recipe/bottle/berry_must_mug.json
 f9967cead5c84b4914b1a6f82ec1ceae417c22c7 data/convivium/recipe/bottle/beverage.json
+0f28274d0ba52cde9768010b99cfc5e17ac992e8 data/convivium/recipe/bottle/beverage_bowl.json
+92780a5e4e4937c7b06cc1a88ae545bbfc82ef65 data/convivium/recipe/bottle/beverage_cup.json
+3a72bbb7858d1060c665abfe2d4d79dcf13bba6c data/convivium/recipe/bottle/beverage_jug.json
+7f6fc0cf8ff06e894c9a008db3fc59da70b16753 data/convivium/recipe/bottle/beverage_mug.json
 e3594169390d2d3b911d897587650c9642e083d6 data/convivium/recipe/bottle/chocolate_milk.json
 692fe9d971c0841c52e59f9c120f3de7398adcf6 data/convivium/recipe/bottle/chocolate_tea.json
 98e774c61f2eec5428136f2f2cfdfe0050853deb data/convivium/recipe/bottle/cocoa_juice_sorbet.json

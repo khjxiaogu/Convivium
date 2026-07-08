@@ -44,56 +44,59 @@ public enum AqueductConnection implements StringRepresentable{
 		this.e = e;
 	}
 	public static AqueductConnection get(Direction dir) {
-		switch(dir) {
-		case EAST:return E;
-		case WEST:return W;
-		case NORTH:return N;
-		case SOUTH:return S;
-		}
-		return A;
+		return switch(dir) {
+		case EAST->E;
+		case WEST->W;
+		case NORTH->N;
+		case SOUTH->S;
+		default->A;
+		};
 	}
 	public AqueductConnection connects(Direction another) {
-		if(this==N) {
-			switch(another) {
-			case WEST:return NW;
-			case EAST:return NE;
-			case SOUTH:return Z;
-			}
-			return this;
+		return switch(this) {
+		case N:{
+			yield switch(another) {
+			case WEST->NW;
+			case EAST->NE;
+			case SOUTH->Z;
+			default->this;
+			};
 		}
-		if(this==S) {
-			switch(another) {
-			case WEST:return SW;
-			case EAST:return SE;
-			case NORTH:return Z;
-			}
-			return this;
+		case S:{
+			yield switch(another) {
+			case WEST->SW;
+			case EAST->SE;
+			case NORTH->Z;
+			default->this;
+			};
 		}
-		if(this==W) {
-			switch(another) {
-			case NORTH:return NW;
-			case SOUTH:return SW;
-			case EAST:return X;
-			}
-			return this;
+		case W:{
+			yield switch(another) {
+			case NORTH->NW;
+			case SOUTH->SW;
+			case EAST->X;
+			default->this;
+			};
 		}
-		if(this==E) {
-			switch(another) {
-			case WEST:return X;
-			case NORTH:return NE;
-			case SOUTH:return SE;
-			}
-			return this;
+		case E:{
+			yield switch(another) {
+			case WEST->X;
+			case NORTH->NE;
+			case SOUTH->SE;
+			default->this;
+			};
 		}
-		if(this==A) {
-			switch(another) {
-			case WEST:return W;
-			case EAST:return E;
-			case SOUTH:return S;
-			case NORTH:return N;
-			}
+		case A:{
+			yield switch(another) {
+			case WEST->W;
+			case EAST->E;
+			case SOUTH->S;
+			case NORTH->N;
+			default->this;
+			};
 		}
-		return this;
+		default:yield this;
+		};
 	}
 	private static final Direction[] NORTH=new Direction[] {Direction.NORTH};
 	private static final Direction[] WEST=new Direction[] {Direction.WEST};
@@ -107,127 +110,136 @@ public enum AqueductConnection implements StringRepresentable{
 	private static final Direction[] WE=new Direction[] {Direction.EAST,Direction.WEST};
 	private static final Direction[] NS=new Direction[] {Direction.NORTH,Direction.SOUTH};
 	public boolean canConnectTo(Direction d) {
-		switch(d) {
-		case NORTH:return !n;
-		case SOUTH:return !s;
-		case WEST:return !w;
-		case EAST:return !e;
-		}
-		return false;
+		return switch(d) {
+		case NORTH->!n;
+		case SOUTH->!s;
+		case WEST->!w;
+		case EAST->!e;
+		default->false;
+		};
 	}
 	public Direction[] getNext(Direction from) {
-		if(this==NW) {
-			switch(from) {
-			case WEST:return NORTH;
-			case NORTH:return WEST;
+		return switch(this) {
+		case NW:{
+			yield switch(from) {
+			case WEST->NORTH;
+			case NORTH->WEST;
+			default->NRW;
+			};
+		}
+		case SW:{
+			yield switch(from) {
+			case WEST->SOUTH;
+			case SOUTH->WEST;
+			default->SUW;
+			};
+		}
+		case SE:{
+			yield switch(from) {
+			case SOUTH->EAST;
+			case EAST->SOUTH;
+			default->SUE;
+			};
+		}
+		case NE:{
+			yield switch(from) {
+			case EAST->NORTH;
+			case NORTH->EAST;
+			default->NRE;
+			};
+		}
+		case X:{
+			yield switch(from) {
+			case EAST->WEST;
+			case WEST->EAST;
+			default->WE;
+			};
+		}
+		case Z:{
+			yield switch(from) {
+			case SOUTH->NORTH;
+			case NORTH->SOUTH;
+			default->NS;
+			};
+		}
+		default:{
+			if(this==N&&from!=Direction.NORTH) {
+				yield NORTH;
 			}
-			return NRW;
-		}
-		if(this==SW) {
-			switch(from) {
-			case WEST:return SOUTH;
-			case SOUTH:return WEST;
+			if(this==E&&from!=Direction.EAST) {
+				yield EAST;
 			}
-			return SUW;
-		}
-		if(this==SE) {
-			switch(from) {
-			case SOUTH:return EAST;
-			case EAST:return SOUTH;
+			if(this==S&&from!=Direction.SOUTH) {
+				yield SOUTH;
 			}
-			return SUE;
-		}
-		if(this==NE) {
-			switch(from) {
-			case EAST:return NORTH;
-			case NORTH:return EAST;
+			if(this==W&&from!=Direction.WEST) {
+				yield WEST;
 			}
-			return NRE;
+			yield NONE;
 		}
-		if(this==X) {
-			switch(from) {
-			case EAST:return WEST;
-			case WEST:return EAST;
-			}
-			return WE;
-		}
-		if(this==Z) {
-			switch(from) {
-			case SOUTH:return NORTH;
-			case NORTH:return SOUTH;
-			}
-			return NS;
-		}
-		if(this==N&&from!=Direction.NORTH) {
-			return NORTH;
-		}
-		if(this==E&&from!=Direction.EAST) {
-			return EAST;
-		}
-		if(this==S&&from!=Direction.SOUTH) {
-			return SOUTH;
-		}
-		if(this==W&&from!=Direction.WEST) {
-			return WEST;
-		}
-		return NONE;
+		};
+		
 	}
 	public AqueductConnection disconnects(Direction another) {
-		if(this==NW) {
-			switch(another) {
-			case WEST:return N;
-			case NORTH:return W;
-			}
-			return this;
+		return switch(this) {
+		case NW:{
+			yield switch(another) {
+				case WEST->N;
+				case NORTH->W;
+				default->this;
+			};
 		}
-		if(this==SW) {
-			switch(another) {
-			case WEST:return S;
-			case SOUTH:return W;
-			}
-			return this;
+		case SW:{
+			yield switch(another) {
+				case WEST->S;
+				case SOUTH->W;
+				default->this;
+			};
 		}
-		if(this==SE) {
-			switch(another) {
-			case SOUTH:return E;
-			case EAST:return S;
-			}
-			return this;
+		case SE:{
+			yield switch(another) {
+				case SOUTH->E;
+				case EAST->S;
+				default->this;
+			};
 		}
-		if(this==NE) {
-			switch(another) {
-			case EAST:return N;
-			case NORTH:return E;
-			}
-			return this;
+		case NE:{
+			yield switch(another) {
+				case EAST->N;
+				case NORTH->E;
+				default->this;
+			};
 		}
-		if(this==X) {
-			switch(another) {
-			case EAST:return W;
-			case WEST:return E;
-			}
-			return this;
+		case X:{
+			yield switch(another) {
+				case EAST->W;
+				case WEST->E;
+				default->this;
+			};
 		}
-		if(this==Z) {
-			switch(another) {
-			case SOUTH:return N;
-			case NORTH:return S;
-			}
-			return this;
+		case Z:{
+			yield switch(another) {
+				case SOUTH->N;
+				case NORTH->S;
+				default->this;
+			};
 		}
-		if(this==N&&another==Direction.NORTH)
-			return A;
-		if(this==S&&another==Direction.SOUTH)
-			return A;
-		if(this==E&&another==Direction.EAST)
-			return A;
-		if(this==W&&another==Direction.WEST)
-			return A;
-		return this;
+		default:{
+			if(this==N&&another==Direction.NORTH)
+				yield A;
+			if(this==S&&another==Direction.SOUTH)
+				yield A;
+			if(this==E&&another==Direction.EAST)
+				yield A;
+			if(this==W&&another==Direction.WEST)
+				yield A;
+			yield this;
+		}
+		};
+		
 	}
 	@Override
 	public String getSerializedName() {
-		// TODO Auto-generated method stub
 		return this.name().toLowerCase();
 	}
 }

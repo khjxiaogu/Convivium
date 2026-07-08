@@ -171,6 +171,8 @@ public class CVRecipeProvider extends RecipeProvider {
 			for(String bottleType:CVItems.bottles)
 				out.accept(rl("bottle/"+ s+"_"+bottleType), new BowlContainingRecipe(cvitem("beverage_"+bottleType), f,Ingredient.of(cvitem("glass_"+bottleType))));
 		}
+		for(String bottleType:CVItems.bottles)
+			out.accept(rl("bottle/beverage_"+bottleType), new BowlContainingRecipe(cvitem("beverage_"+bottleType), CVFluids.mixedf.get(),Ingredient.of(cvitem("glass_"+bottleType))));
 		
 		// taste(Items.APPLE).vars().astringency(2).end().end(out);
 		out.accept(rl("convertion/tea"),

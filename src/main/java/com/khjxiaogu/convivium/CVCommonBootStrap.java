@@ -97,6 +97,12 @@ public class CVCommonBootStrap {
 		});
 		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVItems.beverages.stream().map(t->t.get()).toArray(Item[]::new));
 		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.BEVERAGE.get().asItem());
+
+		
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.BOWL.get().asItem());
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.JUG.get().asItem());
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.MUG.get().asItem());
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.CUP.get().asItem());
 		
 	}
 

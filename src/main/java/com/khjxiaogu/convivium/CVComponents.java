@@ -19,18 +19,18 @@
 package com.khjxiaogu.convivium;
 
 import com.khjxiaogu.convivium.util.BeverageInfo;
-import com.khjxiaogu.convivium.util.PotionItemInfo;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVComponents {
 	public static final DeferredRegister<DataComponentType<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, CVMain.MODID);
 
-	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionItemInfo>> POTION_ITEM = REGISTRY.register("potion_item",
-		() -> DataComponentType.<PotionItemInfo>builder().cacheEncoding().persistent(PotionItemInfo.CODEC).build());
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> POTION_ITEM = REGISTRY.register("potion_item",
+		() -> DataComponentType.<ItemStackTemplate>builder().cacheEncoding().persistent(ItemStackTemplate.CODEC).networkSynchronized(ItemStackTemplate.STREAM_CODEC).build());
 
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BeverageInfo>> BEVERAGE_INFO = REGISTRY.register("beverage_info",
 		() -> DataComponentType.<BeverageInfo>builder().cacheEncoding().persistent(BeverageInfo.CODEC).networkSynchronized(BeverageInfo.STREAM_CODEC).build());

@@ -26,19 +26,17 @@ import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
-import com.khjxiaogu.convivium.util.PotionItemInfo;
 import com.teammoeg.caupona.data.recipes.*;
 
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.damagesource.DamageContainer.Reduction;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -96,8 +94,8 @@ public class CVCommonEvents {
 		ItemStack is = event.getItemStack();
 		Player playerIn = event.getEntity();
 		if (CVConfig.COMMON.canPlacePotion.get() && is.is(Items.POTION) && playerIn.isShiftKeyDown()) {
-			ItemStack replace = new ItemStack(CVItems.POTION.get(), is.getCount());
-			replace.set(CVComponents.POTION_ITEM, new PotionItemInfo(is.copy()));
+			ItemStack replace = is.transmuteCopy(CVItems.POTION.get());
+			replace.set(CVComponents.POTION_ITEM, ItemStackTemplate.fromNonEmptyStack(is));
 			playerIn.setItemInHand(event.getHand(), replace);
 			CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn, event.getHand(), event.getHitVec()));
 			is.setCount(replace.getCount());

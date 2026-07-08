@@ -45,6 +45,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -59,11 +61,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVBlocks {
 	public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CVMain.MODID);
-	public static final DeferredHolder<Block, BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
-	public static final DeferredHolder<Block, BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
-	public static final DeferredHolder<Block, BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
-	public static final DeferredHolder<Block, BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
-	public static final DeferredHolder<Block, BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b, false));
+	public static final DeferredHolder<Block, BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(Items.GLASS_BOTTLE), false,true));
+	public static final DeferredHolder<Block, BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_BOWL)), false,true));
+	public static final DeferredHolder<Block, BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_CUP)), false,true));
+	public static final DeferredHolder<Block, BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_JUG)), false,true));
+	public static final DeferredHolder<Block, BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_MUG)), false,true));
 	
 	
 	public static final DeferredHolder<Block, CogCageBlock> cage = baseblock("cage_wheel", b -> new CogCageBlock(getKineticProps(b)));

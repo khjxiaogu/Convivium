@@ -25,7 +25,6 @@ import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVTags;
 import com.teammoeg.caupona.api.CauponaApi;
 import com.teammoeg.caupona.blocks.CPHorizontalEntityBlock;
-import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

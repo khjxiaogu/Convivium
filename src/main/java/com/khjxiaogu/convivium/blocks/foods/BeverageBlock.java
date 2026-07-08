@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
+import com.khjxiaogu.convivium.CVComponents;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
 import com.teammoeg.caupona.util.WorldDropOperation;
 
@@ -35,6 +36,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -135,6 +137,9 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		if (pLevel.getBlockEntity(pPos) instanceof BeverageBlockEntity bowl) {
 			bowl.setComponents(DataComponentMap.EMPTY);
+			ItemStackTemplate potion=pStack.get(CVComponents.POTION_ITEM);
+			if(potion!=null)
+				pStack=potion.create();
 			ItemResource ir=bowl.getInternal().getResourceFrom(pStack);
 			try(Transaction trans=Transaction.openRoot()){
 				bowl.getInternal().insert(0, ir, 1,trans);

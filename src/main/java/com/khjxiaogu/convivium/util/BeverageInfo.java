@@ -535,11 +535,11 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		return b;
 	}
 	private static String handleNumber(float value) {
-		int rv=((int)value);
+		int rv=Mth.floor(value);
 		if(rv>0)
 			return "+"+rv;
 		if(rv<0)
-			return "-"+rv;
+			return ""+rv;
 		return " 0";
 	}
 	@Override

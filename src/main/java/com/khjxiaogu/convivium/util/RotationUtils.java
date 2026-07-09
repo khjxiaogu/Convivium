@@ -24,14 +24,14 @@ import net.minecraft.core.BlockPos;
 
 public class RotationUtils {
 	private static int ticksOfSecond;
-
+	private static final int PERIOD=40;
 	public static void resetTimer() {
 		ticksOfSecond = 0;
 	}
 
 	public static void tick() {
 		ticksOfSecond++;
-		if (ticksOfSecond >= 40)
+		if (ticksOfSecond >= PERIOD)
 			ticksOfSecond = 0;
 	}
 
@@ -45,8 +45,8 @@ public class RotationUtils {
 
 	public static float getCycle(float pt, boolean black) {
 		if (black)
-			return (ticksOfSecond + pt) / 40f;
-		return (20 - (ticksOfSecond + pt)) / 40f;
+			return (ticksOfSecond + pt) / PERIOD;
+		return 0.5f-(ticksOfSecond + pt) / PERIOD;
 	}
 
 	public static boolean isBlackGrid(BlockPos pos) {

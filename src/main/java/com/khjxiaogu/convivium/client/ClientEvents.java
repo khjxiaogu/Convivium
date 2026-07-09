@@ -54,7 +54,7 @@ public class ClientEvents {
 	 * @param load  
 	 */
 	@SubscribeEvent
-	public static void JoinWorld(LevelEvent.Load load)
+	public static void levelLoad(LevelEvent.Load load)
 	{
 		RotationUtils.resetTimer();
 	}

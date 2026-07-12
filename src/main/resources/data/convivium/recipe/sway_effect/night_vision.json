@@ -4,12 +4,12 @@
 		{
 			"condition": [
 				{
-					"compare": "less",
+					"compare": "lesser_equals",
 					"left": "thickness-5.3",
 					"right": 2
 				},
 				{
-					"compare": "less",
+					"compare": "lesser_equals",
 					"left": "astringency-(-5.8)",
 					"right": 2
 				}

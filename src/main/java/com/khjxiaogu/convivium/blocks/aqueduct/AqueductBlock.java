@@ -138,7 +138,7 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-		if(pPos.equals(pEntity.blockPosition()))
+		if(pPos.getY()==pEntity.getBlockY())
 			if(pLevel.getBlockEntity(pPos) instanceof AqueductBlockEntity aq) {
 				if(aq.tonxt>0&&aq.from!=null) {
 					Direction[] dirs=pState.getValue(AqueductBlock.CONN).getNext(aq.from);
@@ -149,7 +149,7 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 						pEntity.addDeltaMovement(computeVelocity(pEntity.position().subtract(Vec3.atLowerCornerOf(pPos)),Vec3.atLowerCornerOf(v3),spd*0.5*0.0125));
 						
 					}else{
-						Vec3 from=Vec3.atLowerCornerOf(aq.from.getUnitVec3i());
+						Vec3 from=Vec3.atLowerCornerOf(aq.from.getOpposite().getUnitVec3i());
 						pEntity.addDeltaMovement(computeVelocity(pEntity.position().subtract(Vec3.atLowerCornerOf(pPos)),from,spd*0.5*0.0125));
 						
 					}
@@ -162,20 +162,15 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
     private static final double MAXD = 0.05;
 
     public static Vec3 computeVelocity(Vec3 opos, Vec3 direction,double speed) {
-        // 方向必须平行于坐标轴
-        if (Math.abs(direction.x()) > EPSILON) { // 水平方向
-            // 需要垂直居中 (y -> CENTER)
+        if (Math.abs(direction.x()) > EPSILON) {
         	double distToCenter=opos.z() - CENTER;
             if (Math.abs(distToCenter) > MAXD) {
-                // 计算垂直调整速度
                 double vy = -Mth.sign(distToCenter) * speed;
                 return new Vec3(0,0, vy);
             }
-			// 已居中，沿水平方向移出
 			return direction.add(0, 0, -distToCenter).scale(speed);
         }
         double distToCenter=opos.x() - CENTER;
-		// 需要水平居中 (x -> CENTER)
 		if (Math.abs(distToCenter) > MAXD) {
 		    double vx = -Mth.sign(distToCenter) * speed;
 		    return new Vec3(vx, 0, 0);

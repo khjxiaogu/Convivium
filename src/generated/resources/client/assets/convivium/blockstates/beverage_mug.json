@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
-      "model": "minecraft:block/block"
+    "facing=east": {
+      "model": "convivium:block/beverage_mug",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "convivium:block/beverage_mug"
+    },
+    "facing=south": {
+      "model": "convivium:block/beverage_mug",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "convivium:block/beverage_mug",
+      "y": 270
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.khjxiaogu.convivium.client.renderer;
 
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 
@@ -9,7 +10,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class AqueductMainRenderState extends BlockEntityRenderState{
 	Quaternionf rotation;
-	Quaternionf hrotation;
+	Quaternionfc hrotation;
 	DynamicBlockModelReference rotor;
 	boolean active;
 	boolean shouldApart;

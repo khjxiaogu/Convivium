@@ -23,7 +23,7 @@ import org.joml.Quaternionf;
 
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.teammoeg.caupona.blocks.CPHorizontalBlock;
+import com.teammoeg.caupona.client.util.RenderHelper;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -31,8 +31,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.phys.Vec3;
 
 public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlockEntity,VendingRenderState> {
@@ -48,9 +48,8 @@ public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlock
 	}
 	@Override
 	public void submit(VendingRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-		Direction dir=state.rotation;
 		poseStack.pushPose();
-		poseStack.rotateAround(new Quaternionf().rotateAxis(-(float)(dir.toYRot()/180*Math.PI),0,1,0),0.5f,0.5f,0.5f);
+		poseStack.rotateAround(state.rotation,0.5f,0.5f,0.5f);
 		poseStack.scale(1/38f,1/38f, 1);
 		poseStack.mulPose(rotation);
 		poseStack.translate(0,0,3/128f);
@@ -70,7 +69,7 @@ public class VendingRenderer implements BlockEntityRenderer<BeverageVendingBlock
 			todraw=""+blockEntity.amt;
 		state.num=Component.literal(todraw).getVisualOrderText();
 		
-		state.rotation=blockEntity.getBlockState().getValue(CPHorizontalBlock.FACING);
+		state.rotation=RenderHelper.getRotation(blockEntity.getBlockState().getValue(HorizontalDirectionalBlock.FACING));
 	}
 	
 }

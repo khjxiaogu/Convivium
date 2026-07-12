@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVMain;
@@ -30,6 +29,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
+import com.teammoeg.caupona.client.util.RenderHelper;
 
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.FluidModel;
@@ -91,7 +91,7 @@ public class AqueductMainRenderer implements BlockEntityRenderer<AqueductControl
 		BlockState bs=blockEntity.getBlockState();
 		state.shouldApart=bs.getValue(KineticBasedBlock.ACTIVE)&&bs.getValue(KineticBasedBlock.LOCKED);
 		state.rotation=RotationUtils.getRotation(partialTicks,0f,0f,1f,isBlack);
-		state.hrotation=new Quaternionf().rotateAxis((float) (bs.getValue(AqueductControllerBlock.FACING).toYRot()*Math.PI/180f),0,-1,0);
+		state.hrotation=RenderHelper.getRotation(bs.getValue(AqueductControllerBlock.FACING).getOpposite());
 		BlockState blockState=blockEntity.getBlockState();
 		if(blockState.hasProperty(KineticBasedBlock.ACTIVE))
 			state.active=blockState.getValue(KineticBasedBlock.ACTIVE);

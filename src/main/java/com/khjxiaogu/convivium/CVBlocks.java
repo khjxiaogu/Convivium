@@ -56,41 +56,41 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.common.util.Lazy;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVBlocks {
 	public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CVMain.MODID);
-	public static final DeferredHolder<Block, BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(Items.GLASS_BOTTLE), false,true));
-	public static final DeferredHolder<Block, BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_BOWL)), false,true));
-	public static final DeferredHolder<Block, BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_CUP)), false,true));
-	public static final DeferredHolder<Block, BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_JUG)), false,true));
-	public static final DeferredHolder<Block, BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_MUG)), false,true));
+	public static final DeferredBlock<BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(Items.GLASS_BOTTLE), false,true));
+	public static final DeferredBlock<BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_BOWL)), false,true));
+	public static final DeferredBlock<BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_CUP)), false,true));
+	public static final DeferredBlock<BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_JUG)), false,true));
+	public static final DeferredBlock<BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_MUG)), false,true));
+	public static final List<DeferredBlock<BeverageBlock>> BEVERAGE_BLOCKS=List.of(BEVERAGE,BOWL,CUP,JUG,MUG); 
 	
-	
-	public static final DeferredHolder<Block, CogCageBlock> cage = baseblock("cage_wheel", b -> new CogCageBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, CogCageBlock> cog = baseblock("cog", b -> new CogCageBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, AeolipileBlock> aeolipile = baseblock("aeolipile", b -> new AeolipileBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, PlatterBlock> platter = baseblock("fruit_platter", b -> new PlatterBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, WhiskBlock> whisk = baseblock("whisk", b -> new WhiskBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, PamBlock> pam = baseblock("pestle_and_mortar", b -> new PamBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, BasinBlock> basin = baseblock("basin", b -> new BasinBlock(getKineticProps(b)));
-	public static final DeferredHolder<Block, BasinBlock> lead_basin = baseblock("lead_basin", b -> new BasinBlock(b.sound(SoundType.METAL)
+	public static final DeferredBlock<CogCageBlock> cage = baseblock("cage_wheel", b -> new CogCageBlock(getKineticProps(b)));
+	public static final DeferredBlock<CogCageBlock> cog = baseblock("cog", b -> new CogCageBlock(getKineticProps(b)));
+	public static final DeferredBlock<AeolipileBlock> aeolipile = baseblock("aeolipile", b -> new AeolipileBlock(getKineticProps(b)));
+	public static final DeferredBlock<PlatterBlock> platter = baseblock("fruit_platter", b -> new PlatterBlock(getKineticProps(b)));
+	public static final DeferredBlock<WhiskBlock> whisk = baseblock("whisk", b -> new WhiskBlock(getKineticProps(b)));
+	public static final DeferredBlock<PamBlock> pam = baseblock("pestle_and_mortar", b -> new PamBlock(getKineticProps(b)));
+	public static final DeferredBlock<BasinBlock> basin = baseblock("basin", b -> new BasinBlock(getKineticProps(b)));
+	public static final DeferredBlock<BasinBlock> lead_basin = baseblock("lead_basin", b -> new BasinBlock(b.sound(SoundType.METAL)
 		.strength(3.5f, 10).noOcclusion()));
-	public static final DeferredHolder<Block, WolfFountainBlock> wolf_fountain = baseblock("wolf_fountain", b -> new WolfFountainBlock(getKineticProps(b)));
+	public static final DeferredBlock<WolfFountainBlock> wolf_fountain = baseblock("wolf_fountain", b -> new WolfFountainBlock(getKineticProps(b)));
 
-	public static final List<DeferredHolder<Block, Block>> aqueducts = new ArrayList<>();
-	public static final List<DeferredHolder<Block, Block>> aqueduct_mains = new ArrayList<>();
-	public static final DeferredHolder<Block, CamelliaFlowerBlock> CAMELLIA_FLOWER = baseblock("camellia_product",
+	public static final List<DeferredBlock<Block>> aqueducts = new ArrayList<>();
+	public static final List<DeferredBlock<Block>> aqueduct_mains = new ArrayList<>();
+	public static final DeferredBlock<CamelliaFlowerBlock> CAMELLIA_FLOWER = baseblock("camellia_product",
 		b -> new CamelliaFlowerBlock(b.mapColor(MapColor.PLANT).replaceable().noCollision()
 			.instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ).ignitedByLava()
 			.pushReaction(PushReaction.DESTROY)));
-	public static final DeferredHolder<Block, CamelliaBlock> CAMELLIA = baseblock("camellia_plant", b -> new CamelliaBlock(b.mapColor(MapColor.WOOD)
+	public static final DeferredBlock<CamelliaBlock> CAMELLIA = baseblock("camellia_plant", b -> new CamelliaBlock(b.mapColor(MapColor.WOOD)
 		.strength(2.0F).noOcclusion().sound(SoundType.WOOD)));
-	public static final DeferredHolder<Block, BeverageVendingBlock> BEVERAGE_VENDING_MACHINE = baseblock("beverage_vending_machine",
+	public static final DeferredBlock<BeverageVendingBlock> BEVERAGE_VENDING_MACHINE = baseblock("beverage_vending_machine",
 		b -> new BeverageVendingBlock(b.mapColor(MapColor.COLOR_ORANGE)
 			.strength(2.0F).noOcclusion().sound(SoundType.STONE)));
-	public static final DeferredHolder<Block, SorbetBlock> FLAT_BREAD = baseblock("flatbread",
+	public static final DeferredBlock<SorbetBlock> FLAT_BREAD = baseblock("flatbread",
 		b -> new SorbetBlock(getSProps(b)),(o,t)->new SorbetItem(t, null, o, true));
 	public static final List<Block> beverage = new ArrayList<>();
 	public static final List<Block> sorbets = new ArrayList<>();
@@ -105,22 +105,22 @@ public class CVBlocks {
 	}
 
 	// register any block to registry
-	static <T extends Block> DeferredHolder<Block, T> baseblock(String name, Function<Properties,T> bl) {
-		DeferredHolder<Block, T> blx = BLOCKS.registerBlock(name, bl);
+	static <T extends Block> DeferredBlock<T> baseblock(String name, Function<Properties,T> bl) {
+		DeferredBlock<T> blx = BLOCKS.registerBlock(name, bl);
 		CVItems.ITEMS.registerItem(name, t -> new CPBlockItem(blx.get(), t, CVMain.MAIN_TAB));
 		return blx;
 	}
 
 	// register any block to registry with custom item factory
-	static <T extends Block> DeferredHolder<Block, T> baseblock(String name, Function<Properties,T> bl, BiFunction<Item.Properties, T, Item> toitem) {
-		DeferredHolder<Block, T> blx = BLOCKS.registerBlock(name, bl);
+	static <T extends Block> DeferredBlock<T> baseblock(String name, Function<Properties,T> bl, BiFunction<Item.Properties, T, Item> toitem) {
+		DeferredBlock<T> blx = BLOCKS.registerBlock(name, bl);
 		CVItems.ITEMS.registerItem(name, t -> toitem.apply(t,blx.get()));
 		return blx;
 	}
 
 	// register basic block to registry
-	static DeferredHolder<Block, Block> block(String name, Properties props) {
-		DeferredHolder<Block, Block> blx = BLOCKS.registerSimpleBlock(name);
+	static DeferredBlock<Block> block(String name) {
+		DeferredBlock<Block> blx = BLOCKS.registerSimpleBlock(name);
 		CVItems.ITEMS.registerItem(name, t -> new CPBlockItem(blx.get(), t, CVMain.MAIN_TAB));
 		return blx;
 	}

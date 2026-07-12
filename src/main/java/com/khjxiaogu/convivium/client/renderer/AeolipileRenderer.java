@@ -18,7 +18,6 @@
 
 package com.khjxiaogu.convivium.client.renderer;
 
-import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVMain;
@@ -28,6 +27,7 @@ import com.khjxiaogu.convivium.util.RotationUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
 import com.teammoeg.caupona.client.util.DynamicBlockModelReference;
+import com.teammoeg.caupona.client.util.RenderHelper;
 
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -37,6 +37,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -77,15 +78,15 @@ public class AeolipileRenderer implements BlockEntityRenderer<AeolipileBlockEnti
 	public void extractRenderState(AeolipileBlockEntity blockEntity, AeolipileRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 		BlockState bs = blockEntity.getBlockState();
-		Direction facing=bs.getValue(KineticBasedBlock.FACING);
+		Direction facing=bs.getValue(HorizontalDirectionalBlock.FACING);
 
 		BlockPos facingPos=blockEntity.getFacingPos();
 		boolean isBlack=RotationUtils.isBlackGrid(facingPos);
 		state.active=bs.getValue(KineticBasedBlock.ACTIVE);
 		if(state.active) 
-			state.rotation=RotationUtils.getRotation(partialTicks,1f,0f,0f,(float) (facing.toYRot()*Math.PI/180f),0,-1,0,isBlack);
+			state.rotation=RotationUtils.getRotation(partialTicks,1f,0f,0f,RenderHelper.getRotation(facing.getOpposite()),isBlack);
 		else
-			state.rotation=new Quaternionf().rotateAxis((float) (facing.toYRot()*Math.PI/180f),0,-1,0);
+			state.rotation=RenderHelper.getRotation(facing.getOpposite());
 		state.rotor=isBlack?aeolipile_cw:aeolipile;
 	}
 

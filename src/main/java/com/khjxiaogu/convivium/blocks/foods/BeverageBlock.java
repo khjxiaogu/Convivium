@@ -38,11 +38,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -57,6 +59,13 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 	public BeverageBlock(Properties blockProps) {
 		super(blockProps, CVBlockEntityTypes.BEVERAGE);
 		CVBlocks.beverage.add(this);
+		this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection());
+
 	}
 
 
@@ -169,6 +178,13 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 		return 0;
 	}
 	
+	@Override
+	protected void createBlockStateDefinition(
+			net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(BlockStateProperties.HORIZONTAL_FACING);
+	}
+
 	@Override
 	public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 		return 20;

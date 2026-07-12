@@ -39,6 +39,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -123,7 +124,7 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
 		if(pPos.equals(pEntity.blockPosition()))
 			if(pState.getValue(KineticBasedBlock.ACTIVE)) {
-				Direction dir=pState.getValue(AqueductControllerBlock.FACING);
+				Direction dir=pState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 				Direction moving;
 				if(RotationUtils.isBlackGrid(pPos)) {
 					moving=dir.getClockWise();

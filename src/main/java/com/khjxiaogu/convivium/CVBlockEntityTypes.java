@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -64,7 +65,7 @@ public class CVBlockEntityTypes {
 		makeType(WolfFountainBlockEntity::new, () -> CVBlocks.wolf_fountain));
 	
 	
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageBlockEntity>> BEVERAGE = REGISTER.register("beverage", makeType(BeverageBlockEntity::new, () -> CVBlocks.BEVERAGE));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageBlockEntity>> BEVERAGE = REGISTER.register("beverage", makeTypes2(BeverageBlockEntity::new, () -> CVBlocks.BEVERAGE_BLOCKS));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageVendingBlockEntity>> BEVERAGE_VENDING_MACHINE = REGISTER.register("beverage_vending_machine",
 		makeType(BeverageVendingBlockEntity::new, () -> CVBlocks.BEVERAGE_VENDING_MACHINE));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SorbetBlockEntity>> SORBET = REGISTER.register("sorbet",
@@ -81,7 +82,7 @@ public class CVBlockEntityTypes {
 		return () -> new BlockEntityType<>(create, valid.get().stream().collect(Collectors.toSet()));
 	}
 	private static <T extends BlockEntity, E extends Block> Supplier<BlockEntityType<T>> makeTypes2(BlockEntitySupplier<T> create,
-		Supplier<List<DeferredHolder<Block, E>>> valid) {
+		Supplier<List<DeferredBlock<E>>> valid) {
 		return () -> new BlockEntityType<>(create, valid.get().stream().map(DeferredHolder<Block, E>::get).collect(Collectors.toSet()));
 	}
 

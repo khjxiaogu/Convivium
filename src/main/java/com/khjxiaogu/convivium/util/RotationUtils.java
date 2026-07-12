@@ -19,12 +19,13 @@
 package com.khjxiaogu.convivium.util;
 
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 
 import net.minecraft.core.BlockPos;
 
 public class RotationUtils {
 	private static int ticksOfSecond;
-	private static final int PERIOD=40;
+	private static final int PERIOD=80;
 	public static void resetTimer() {
 		ticksOfSecond = 0;
 	}
@@ -62,6 +63,9 @@ public class RotationUtils {
 	}
 	public static Quaternionf getRotation(float pt,float x, float y, float z,float delta,float dx,float dy,float dz, boolean black) {
 		return new Quaternionf().rotationAxis(delta,dx,dy,dz).mul(new Quaternionf().rotationAxis((float) (getCycle(pt, black) * 2 * Math.PI), x, y, z));
+	}
+	public static Quaternionf getRotation(float pt,float x, float y, float z,Quaternionfc origin, boolean black) {
+		return new Quaternionf(origin).mul(new Quaternionf().rotationAxis((float) (getCycle(pt, black) * 2 * Math.PI), x, y, z));
 	}
 	public static Quaternionf getYRotation(float pt, BlockPos pos) {
 		return getYRotation(pt, isBlackGrid(pos));

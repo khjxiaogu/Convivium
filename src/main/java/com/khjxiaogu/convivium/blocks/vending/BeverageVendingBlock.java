@@ -102,7 +102,7 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
 
 	}
 
@@ -146,20 +146,17 @@ public class BeverageVendingBlock extends CPHorizontalEntityBlock<BeverageVendin
 			if (player.getUUID().equals(blockEntity.owner)) {
 				if (FluidUtil.interactWithFluidHandler(player, hand, pos, blockEntity.tank))
 					return InteractionResult.SUCCESS;
-				else {
-					Optional<ItemStack> out=CauponaApi.getFilledItemStack(blockEntity.tank,held);
-					if(out.isPresent()) {
-						ItemStack ret = out.get();
-						if (held.getCount() > 1) {
-							held.shrink(1);
-							if (!player.addItem(ret)) {
-								player.drop(ret, false);
-							}
-						} else
-							player.setItemInHand(hand, held);
-						return InteractionResult.SUCCESS;
-					}
-					
+				Optional<ItemStack> out=CauponaApi.getFilledItemStack(blockEntity.tank,held);
+				if(out.isPresent()) {
+					ItemStack ret = out.get();
+					if (held.getCount() > 1) {
+						held.shrink(1);
+						if (!player.addItem(ret)) {
+							player.drop(ret, false);
+						}
+					} else
+						player.setItemInHand(hand, held);
+					return InteractionResult.SUCCESS;
 				}
 			}
 			if (state.getValue(ACTIVE)) {

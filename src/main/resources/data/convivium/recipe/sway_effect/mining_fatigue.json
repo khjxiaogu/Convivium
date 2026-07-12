@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "pswpasbalance",
-					"right": 0.18
+					"compare": "less",
+					"left": "sweetness-8.3",
+					"right": 4.5
 				},
 				{
-					"compare": "greater",
-					"left": "nthppucontra",
-					"right": 0.18
+					"compare": "less",
+					"left": "astringency-7.5",
+					"right": 3.5
 				}
 			],
 			"effect": "minecraft:mining_fatigue",
-			"level": "max(1,min(2,floor((pswpasbalance+nthppucontra)/4/0.18+0.5)))",
-			"time": "900.0*min(6,((pswpasbalance+nthppucontra)/2/0.18-max(0,1-abs((pswpasbalance+nthppucontra)/2/0.18-3))))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,sweetness-8.3)/4.5)),-log(abs(max(0.1,astringency-7.5)/3.5))))))",
+			"time": "900.0*min(if(abs(sweetness)-abs(8.3),(1+(abs(sweetness)-abs(8.3))/4.5)^2,1),if(abs(astringency)-abs(7.5),(1+(abs(astringency)-abs(7.5))/3.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/mining_fatigue",
 	"locals": {
-		"display": "pswpasbalance+nthppucontra",
-		"astringencyDelta": "if(astringency+2,if(10/0.95-max(pas,psw),10,(pas-psw)/(4*0.95)),10)",
-		"pungencyDelta": "if(pungency+0,if(ppu-nth,max(0,10/1.0-ppu),-ppu)/4,10)",
+		"display": "max(0,10-(abs(sweetness-8.3)+abs(astringency-7.5)))",
+		"astringencyDelta": "max(4.0-astringency,0)+min(11.0-astringency)",
+		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness-2,if(10/0.95-max(psw,pas),10,(psw-pas)/(4*0.95)),10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-ppu,max(0,10/1.0-nth),-nth)/4,-10)",
-		"psw": "max(0,sweetness-2)",
-		"pas": "max(0,astringency+2)",
-		"pswpasbalance": "0.95*max(0,log((psw^2+pas^2)/(abs(psw-pas)+1))/1.5)",
-		"nth": "max(0,-thickness+0)",
-		"ppu": "max(0,pungency+0)",
-		"nthppucontra": "1.0*sqrt(max(0,(nth^2-ppu)*(nth-ppu^2)))/10"
+		"sweetnessDelta": "max(3.8000000000000007-sweetness,0)+min(12.8-sweetness)",
+		"thicknessDelta": 0.0
 	},
 	"priority": 0,
 	"relish": [

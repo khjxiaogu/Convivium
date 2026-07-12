@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "naspsobalance",
-					"right": 0.18
+					"compare": "less",
+					"left": "astringency-(-7.5)",
+					"right": 3
 				},
 				{
-					"compare": "greater",
-					"left": "ppupthwanewax",
-					"right": 0.18
+					"compare": "less",
+					"left": "soothingness-7.5",
+					"right": 3
 				}
 			],
 			"effect": "convivium:maritime_fatigue",
-			"level": "max(1,min(2,floor((naspsobalance+ppupthwanewax)/4/0.18+0.5)))",
-			"time": "500.0*min(6,((naspsobalance+ppupthwanewax)/2/0.18-max(0,1-abs((naspsobalance+ppupthwanewax)/2/0.18-3))))"
+			"level": "1",
+			"time": "500.0*min(if(abs(astringency)-abs((-7.5)),(1+(abs(astringency)-abs((-7.5)))/3)^2,1),if(abs(soothingness)-abs(7.5),(1+(abs(soothingness)-abs(7.5))/3)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/maritime_fatigue",
 	"locals": {
-		"display": "naspsobalance+ppupthwanewax",
-		"astringencyDelta": "if(-astringency+0,-if(10/1.0-max(nas,pso),10,(nas-pso)/(4*1.0)),-10)",
-		"pungencyDelta": "if(pungency+3,if(ppu-pth,max(0,10/1.0-ppu),-ppu)/4,10)",
-		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,nas),10,(pso-nas)/(4*1.0)),10)",
+		"display": "max(0,10-(abs(astringency-(-7.5))+abs(soothingness-7.5)))",
+		"astringencyDelta": "max(-10.5-astringency,0)+min(-4.5-astringency)",
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "max(4.5-soothingness,0)+min(10.5-soothingness)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "if(thickness+3,if(pth-ppu,max(0,10/1.0-pth),-pth)/4,10)",
-		"nas": "max(0,-astringency+0)",
-		"pso": "max(0,soothingness+0)",
-		"naspsobalance": "1.0*max(0,log((nas^2+pso^2)/(abs(nas-pso)+1))/1.5)",
-		"ppu": "max(0,pungency+3)",
-		"pth": "max(0,thickness+3)",
-		"ppupthwanewax": "1.0*sqrt(abs(ppu^2-pth^2))/5"
+		"thicknessDelta": 0.0
 	},
 	"priority": 0,
 	"relish": [

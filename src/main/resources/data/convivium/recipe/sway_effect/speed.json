@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "nasnthwanewax",
-					"right": 0.18
+					"compare": "less",
+					"left": "astringency-(-7)",
+					"right": 4
 				},
 				{
-					"compare": "greater",
-					"left": "npupswcontra",
-					"right": 0.18
+					"compare": "less",
+					"left": "thickness-(-8)",
+					"right": 3
 				}
 			],
 			"effect": "minecraft:speed",
-			"level": "max(1,min(2,floor((nasnthwanewax+npupswcontra)/4/0.18+0.5)))",
-			"time": "900.0*min(6,((nasnthwanewax+npupswcontra)/2/0.18-max(0,1-abs((nasnthwanewax+npupswcontra)/2/0.18-3))))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,astringency-(-7))/4)),-log(abs(max(0.1,thickness-(-8))/3))))))",
+			"time": "900.0*min(if(abs(astringency)-abs((-7)),(1+(abs(astringency)-abs((-7)))/4)^2,1),if(abs(thickness)-abs((-8)),(1+(abs(thickness)-abs((-8)))/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/speed",
 	"locals": {
-		"display": "nasnthwanewax+npupswcontra",
-		"astringencyDelta": "if(-astringency+0,-if(nas-nth,max(0,10/1.1-nas),-nas)/4,-10)",
-		"pungencyDelta": "if(-pungency+0,-if(npu-psw,max(0,10/1.0-npu),-npu)/4,-10)",
+		"display": "max(0,10-(abs(astringency-(-7))+abs(thickness-(-8))))",
+		"astringencyDelta": "max(-11-astringency,0)+min(-3-astringency)",
+		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness+0,if(psw-npu,max(0,10/1.0-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-nas,max(0,10/1.1-nth),-nth)/4,-10)",
-		"nas": "max(0,-astringency+0)",
-		"nth": "max(0,-thickness+0)",
-		"nasnthwanewax": "1.1*sqrt(abs(nas^2-nth^2))/5",
-		"npu": "max(0,-pungency+0)",
-		"psw": "max(0,sweetness+0)",
-		"npupswcontra": "1.0*sqrt(max(0,(npu^2-psw)*(npu-psw^2)))/10"
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "max(-11-thickness,0)+min(-5-thickness)"
 	},
 	"priority": 0,
 	"relish": [

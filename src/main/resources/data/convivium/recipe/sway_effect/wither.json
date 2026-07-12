@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "nasppublend",
-					"right": 0.18
+					"compare": "less",
+					"left": "soothingness-(-7.5)",
+					"right": 3
 				},
 				{
-					"compare": "greater",
-					"left": "psopthblend",
-					"right": 0.18
+					"compare": "less",
+					"left": "pungency-7.5",
+					"right": 3
 				}
 			],
 			"effect": "minecraft:wither",
-			"level": "max(1,min(3,floor((nasppublend+psopthblend)/2/0.18)-1))",
-			"time": "100.0*max(1,min(2,(nasppublend+psopthblend)/2/0.18))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,soothingness-(-7.5))/3)),-log(abs(max(0.1,pungency-7.5)/3))))))",
+			"time": "100.0*min(if(abs(soothingness)-abs((-7.5)),(1+(abs(soothingness)-abs((-7.5)))/3)^2,1),if(abs(pungency)-abs(7.5),(1+(abs(pungency)-abs(7.5))/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/wither",
 	"locals": {
-		"display": "nasppublend+psopthblend",
-		"astringencyDelta": "if(-astringency-2,-max(0,3-1.0*sqrt(nas*ppu)/2),-10)",
-		"pungencyDelta": "if(pungency+2,max(0,3-1.0*sqrt(ppu*nas)/2),10)",
-		"soothingnessDelta": "if(soothingness+0,max(0,3-1.0*sqrt(pso*pth)/2),10)",
+		"display": "max(0,10-(abs(soothingness-(-7.5))+abs(pungency-7.5)))",
+		"astringencyDelta": 0.0,
+		"pungencyDelta": "max(4.5-pungency,0)+min(10.5-pungency)",
+		"soothingnessDelta": "max(-10.5-soothingness,0)+min(-4.5-soothingness)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "if(thickness+0,max(0,3-1.0*sqrt(pth*pso)/2),10)",
-		"nas": "max(0,-astringency-2)",
-		"ppu": "max(0,pungency+2)",
-		"nasppublend": "1.0*sqrt(nas*ppu)/2",
-		"pso": "max(0,soothingness+0)",
-		"pth": "max(0,thickness+0)",
-		"psopthblend": "1.0*sqrt(pso*pth)/2"
+		"thicknessDelta": 0.0
 	},
 	"priority": 0,
 	"relish": [

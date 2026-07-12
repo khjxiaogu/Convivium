@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "pswnthwanewax",
-					"right": 0.24
+					"compare": "less",
+					"left": "sweetness-5",
+					"right": 2
 				},
 				{
-					"compare": "greater",
-					"left": "psonpubalance",
-					"right": 0.24
+					"compare": "less",
+					"left": "thickness-(-6)",
+					"right": 2
 				}
 			],
 			"effect": "minecraft:fire_resistance",
 			"level": "1",
-			"time": "600.0*2^max(0,min(3,(pswnthwanewax+psonpubalance)/2/0.24-1))"
+			"time": "600.0*min(if(abs(sweetness)-abs(5),(1+(abs(sweetness)-abs(5))/2)^2,1),if(abs(thickness)-abs((-6)),(1+(abs(thickness)-abs((-6)))/2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/fire_resistance",
 	"locals": {
-		"display": "pswnthwanewax+psonpubalance",
+		"display": "max(0,10-(abs(sweetness-5)+abs(thickness-(-6))))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency+0,-if(10/1.0-max(npu,pso),10,(npu-pso)/(4*1.0)),-10)",
-		"soothingnessDelta": "if(soothingness+0,if(10/1.0-max(pso,npu),10,(pso-npu)/(4*1.0)),10)",
-		"sweetnessDelta": "if(sweetness-2,if(psw-nth,max(0,10/1.0-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+2,-if(nth-psw,max(0,10/1.0-nth),-nth)/4,-10)",
-		"psw": "max(0,sweetness-2)",
-		"nth": "max(0,-thickness+2)",
-		"pswnthwanewax": "1.0*sqrt(abs(psw^2-nth^2))/5",
-		"pso": "max(0,soothingness+0)",
-		"npu": "max(0,-pungency+0)",
-		"psonpubalance": "1.0*max(0,log((pso^2+npu^2)/(abs(pso-npu)+1))/1.5)"
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": 0.0,
+		"sweetnessDelta": "max(3-sweetness,0)+min(7-sweetness)",
+		"thicknessDelta": "max(-8-thickness,0)+min(-4-thickness)"
 	},
 	"priority": 0,
 	"relish": [

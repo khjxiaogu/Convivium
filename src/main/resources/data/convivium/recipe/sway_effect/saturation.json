@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "pthpsowanewax",
-					"right": 0.18
+					"compare": "less",
+					"left": "thickness-(-8)",
+					"right": 4
 				},
 				{
-					"compare": "greater",
-					"left": "nswnpublend",
-					"right": 0.18
+					"compare": "less",
+					"left": "sweetness-(-6.5)",
+					"right": 3
 				}
 			],
 			"effect": "minecraft:saturation",
-			"level": "max(1,min(3,floor((pthpsowanewax+nswnpublend)/2/0.18)-1))",
-			"time": "2.0*max(1,min(2,(pthpsowanewax+nswnpublend)/2/0.18))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness-(-8))/4)),-log(abs(max(0.1,sweetness-(-6.5))/3))))))",
+			"time": "2.0"
 		}
 	],
 	"icon": "minecraft:mob_effect/saturation",
 	"locals": {
-		"display": "pthpsowanewax+nswnpublend",
+		"display": "max(0,10-(abs(thickness-(-8))+abs(sweetness-(-6.5))))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency-2,-max(0,3-1.0*sqrt(npu*nsw)/2),-10)",
-		"soothingnessDelta": "if(soothingness-2,if(pso-pth,max(0,10/1.0-pso),-pso)/4,10)",
-		"sweetnessDelta": "if(-sweetness-2,-max(0,3-1.0*sqrt(nsw*npu)/2),-10)",
-		"thicknessDelta": "if(thickness-2,if(pth-pso,max(0,10/1.0-pth),-pth)/4,10)",
-		"pth": "max(0,thickness-2)",
-		"pso": "max(0,soothingness-2)",
-		"pthpsowanewax": "1.0*sqrt(abs(pth^2-pso^2))/5",
-		"nsw": "max(0,-sweetness-2)",
-		"npu": "max(0,-pungency-2)",
-		"nswnpublend": "1.0*sqrt(nsw*npu)/2"
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": 0.0,
+		"sweetnessDelta": "max(-9.5-sweetness,0)+min(-3.5-sweetness)",
+		"thicknessDelta": "max(-12-thickness,0)+min(-4-thickness)"
 	},
 	"priority": 0,
 	"relish": [

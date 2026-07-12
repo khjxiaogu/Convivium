@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "pthnasbalance",
-					"right": 0.24
+					"compare": "less",
+					"left": "thickness-5.3",
+					"right": 2
 				},
 				{
-					"compare": "greater",
-					"left": "pswppubalance",
-					"right": 0.24
+					"compare": "less",
+					"left": "astringency-(-5.8)",
+					"right": 2
 				}
 			],
 			"effect": "minecraft:night_vision",
 			"level": "1",
-			"time": "1200.0*2^max(0,min(3,(pthnasbalance+pswppubalance)/2/0.24-1))"
+			"time": "1200.0*min(if(abs(thickness)-abs(5.3),(1+(abs(thickness)-abs(5.3))/2)^2,1),if(abs(astringency)-abs((-5.8)),(1+(abs(astringency)-abs((-5.8)))/2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/night_vision",
 	"locals": {
-		"display": "pthnasbalance+pswppubalance",
-		"astringencyDelta": "if(-astringency-2,-if(10/1.0-max(nas,pth),10,(nas-pth)/(4*1.0)),-10)",
-		"pungencyDelta": "if(pungency+0,if(10/1.0-max(ppu,psw),10,(ppu-psw)/(4*1.0)),10)",
+		"display": "max(0,10-(abs(thickness-5.3)+abs(astringency-(-5.8))))",
+		"astringencyDelta": "max(-7.8-astringency,0)+min(-3.8-astringency)",
+		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness+0,if(10/1.0-max(psw,ppu),10,(psw-ppu)/(4*1.0)),10)",
-		"thicknessDelta": "if(thickness-2,if(10/1.0-max(pth,nas),10,(pth-nas)/(4*1.0)),10)",
-		"pth": "max(0,thickness-2)",
-		"nas": "max(0,-astringency-2)",
-		"pthnasbalance": "1.0*max(0,log((pth^2+nas^2)/(abs(pth-nas)+1))/1.5)",
-		"psw": "max(0,sweetness+0)",
-		"ppu": "max(0,pungency+0)",
-		"pswppubalance": "1.0*max(0,log((psw^2+ppu^2)/(abs(psw-ppu)+1))/1.5)"
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "max(3.3-thickness,0)+min(7.3-thickness)"
 	},
 	"priority": 0,
 	"relish": [

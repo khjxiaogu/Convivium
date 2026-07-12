@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "nsopswcontra",
-					"right": 0.18
+					"compare": "less",
+					"left": "soothingness-(-7.2)",
+					"right": 3
 				},
 				{
-					"compare": "greater",
-					"left": "nthnpuwanewax",
-					"right": 0.18
+					"compare": "less",
+					"left": "sweetness-7.5",
+					"right": 3
 				}
 			],
 			"effect": "convivium:plummet",
 			"level": "1",
-			"time": "300.0*2^max(0,min(3,(nsopswcontra+nthnpuwanewax)/2/0.18-1))"
+			"time": "300.0*min(if(abs(soothingness)-abs((-7.2)),(1+(abs(soothingness)-abs((-7.2)))/3)^2,1),if(abs(sweetness)-abs(7.5),(1+(abs(sweetness)-abs(7.5))/3)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/plummet",
 	"locals": {
-		"display": "nsopswcontra+nthnpuwanewax",
+		"display": "max(0,10-(abs(soothingness-(-7.2))+abs(sweetness-7.5)))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(-pungency+0,-if(npu-nth,max(0,10/1.0-npu),-npu)/4,-10)",
-		"soothingnessDelta": "if(-soothingness+2,-if(nso-psw,max(0,10/0.9-nso),-nso)/4,-10)",
-		"sweetnessDelta": "if(sweetness-3,if(psw-nso,max(0,10/0.9-psw),-psw)/4,10)",
-		"thicknessDelta": "if(-thickness+0,-if(nth-npu,max(0,10/1.0-nth),-nth)/4,-10)",
-		"nso": "max(0,-soothingness+2)",
-		"psw": "max(0,sweetness-3)",
-		"nsopswcontra": "0.9*sqrt(max(0,(nso^2-psw)*(nso-psw^2)))/10",
-		"nth": "max(0,-thickness+0)",
-		"npu": "max(0,-pungency+0)",
-		"nthnpuwanewax": "1.0*sqrt(abs(nth^2-npu^2))/5"
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "max(-10.2-soothingness,0)+min(-4.2-soothingness)",
+		"sweetnessDelta": "max(4.5-sweetness,0)+min(10.5-sweetness)",
+		"thicknessDelta": 0.0
 	},
 	"priority": 0,
 	"relish": [

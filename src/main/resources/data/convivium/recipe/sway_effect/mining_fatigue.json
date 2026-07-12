@@ -22,10 +22,10 @@
 	"icon": "minecraft:mob_effect/mining_fatigue",
 	"locals": {
 		"display": "max(0,10-(abs(sweetness-8.3)+abs(astringency-7.5)))",
-		"astringencyDelta": "max(4.0-astringency,0)+min(11.0-astringency)",
+		"astringencyDelta": "max(4.0-astringency,0)+min(11.0-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(3.8000000000000007-sweetness,0)+min(12.8-sweetness)",
+		"sweetnessDelta": "max(3.8-sweetness,0)+min(12.8-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

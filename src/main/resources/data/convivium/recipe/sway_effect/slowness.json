@@ -22,11 +22,11 @@
 	"icon": "minecraft:mob_effect/slowness",
 	"locals": {
 		"display": "max(0,10-(abs(astringency-6.5)+abs(thickness-7)))",
-		"astringencyDelta": "max(3.5-astringency,0)+min(9.5-astringency)",
+		"astringencyDelta": "max(3.5-astringency,0)+min(9.5-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(4-thickness,0)+min(10-thickness)"
+		"thicknessDelta": "max(4-thickness,0)+min(10-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

@@ -22,8 +22,8 @@
 	"icon": "minecraft:mob_effect/absorption",
 	"locals": {
 		"display": "max(0,10-(abs(pungency-(-7.7))+abs(astringency-(-7))))",
-		"astringencyDelta": "max(-10.5-astringency,0)+min(-3.5-astringency)",
-		"pungencyDelta": "max(-10.2-pungency,0)+min(-5.2-pungency)",
+		"astringencyDelta": "max((-10.5)-astringency,0)+min((-3.5)-astringency,0)",
+		"pungencyDelta": "max((-10.2)-pungency,0)+min((-5.2)-pungency,0)",
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0

@@ -22,8 +22,8 @@
 	"icon": "minecraft:mob_effect/poison",
 	"locals": {
 		"display": "max(0,10-(abs(pungency-6)+abs(astringency-6)))",
-		"astringencyDelta": "max(2-astringency,0)+min(10-astringency)",
-		"pungencyDelta": "max(2-pungency,0)+min(10-pungency)",
+		"astringencyDelta": "max(2-astringency,0)+min(10-astringency,0)",
+		"pungencyDelta": "max(2-pungency,0)+min(10-pungency,0)",
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0

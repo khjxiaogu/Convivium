@@ -23,8 +23,8 @@
 	"locals": {
 		"display": "max(0,10-(abs(soothingness-8.5)+abs(pungency-(-6.5))))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "max(-9.5-pungency,0)+min(-3.5-pungency)",
-		"soothingnessDelta": "max(4.5-soothingness,0)+min(12.5-soothingness)",
+		"pungencyDelta": "max((-9.5)-pungency,0)+min((-3.5)-pungency,0)",
+		"soothingnessDelta": "max(4.5-soothingness,0)+min(12.5-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

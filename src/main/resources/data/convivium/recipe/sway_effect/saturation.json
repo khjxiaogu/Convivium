@@ -25,8 +25,8 @@
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(-9.5-sweetness,0)+min(-3.5-sweetness)",
-		"thicknessDelta": "max(-12-thickness,0)+min(-4-thickness)"
+		"sweetnessDelta": "max((-9.5)-sweetness,0)+min((-3.5)-sweetness,0)",
+		"thicknessDelta": "max((-12)-thickness,0)+min((-4)-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

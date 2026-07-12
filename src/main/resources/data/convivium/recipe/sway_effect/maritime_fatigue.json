@@ -22,9 +22,9 @@
 	"icon": "convivium:mob_effect/maritime_fatigue",
 	"locals": {
 		"display": "max(0,10-(abs(astringency-(-7.5))+abs(soothingness-7.5)))",
-		"astringencyDelta": "max(-10.5-astringency,0)+min(-4.5-astringency)",
+		"astringencyDelta": "max((-10.5)-astringency,0)+min((-4.5)-astringency,0)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(4.5-soothingness,0)+min(10.5-soothingness)",
+		"soothingnessDelta": "max(4.5-soothingness,0)+min(10.5-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

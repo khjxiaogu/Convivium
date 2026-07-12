@@ -24,9 +24,9 @@
 		"display": "max(0,10-(abs(thickness-(-8.2))+abs(soothingness-6)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(3-soothingness,0)+min(9-soothingness)",
+		"soothingnessDelta": "max(3-soothingness,0)+min(9-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(-9.7-thickness,0)+min(-6.699999999999999-thickness)"
+		"thicknessDelta": "max((-9.7)-thickness,0)+min((-6.7)-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

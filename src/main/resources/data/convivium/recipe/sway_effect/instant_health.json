@@ -22,10 +22,10 @@
 	"icon": "minecraft:mob_effect/instant_health",
 	"locals": {
 		"display": "max(0,10-(abs(astringency-7.2)+abs(sweetness-(-6))))",
-		"astringencyDelta": "max(2.2-astringency,0)+min(12.2-astringency)",
+		"astringencyDelta": "max(2.2-astringency,0)+min(12.2-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(-9-sweetness,0)+min(-3-sweetness)",
+		"sweetnessDelta": "max((-9)-sweetness,0)+min((-3)-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

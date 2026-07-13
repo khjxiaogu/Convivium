@@ -31,8 +31,10 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.OnlyMajorRelishCondi
 import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 
-import net.minecraft.core.HolderSet;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -41,10 +43,12 @@ import net.minecraft.world.level.material.Fluid;
 public class TypeRecipeBuilder {
 	private BeverageTypeRecipe recipe;
 	Identifier rl;
-	public TypeRecipeBuilder(Identifier rl,Fluid out) {
+	private final Provider registries;
+	public TypeRecipeBuilder(Identifier rl,Fluid out,Provider registries) {
 		recipe=new BeverageTypeRecipe();
 		recipe.output=out;
 		this.rl=rl;
+		this.registries=registries;
 	}
 	public TypeRecipeBuilder mustContains(Ingredient igd) {
 		recipe.must.add(igd);
@@ -56,8 +60,8 @@ public class TypeRecipeBuilder {
 	public TypeRecipeBuilder mustContains(Item igd) {
 		return mustContains(Ingredient.of(igd));
 	}
-	public TypeRecipeBuilder mustContains(HolderSet<Item> igd) {
-		return mustContains(Ingredient.of(igd));
+	public TypeRecipeBuilder mustContains(TagKey<Item> igd) {
+		return mustContains(Ingredient.of(registries.getOrThrow(igd)));
 	}
 	public TypeRecipeBuilder canContains(Ingredient igd) {
 		recipe.optional.add(igd);
@@ -69,8 +73,8 @@ public class TypeRecipeBuilder {
 	public TypeRecipeBuilder canContains(Item igd) {
 		return canContains(Ingredient.of(igd));
 	}
-	public TypeRecipeBuilder canContains(HolderSet<Item> igd) {
-		return canContains(Ingredient.of(igd));
+	public TypeRecipeBuilder canContains(TagKey<Item> igd) {
+		return canContains(Ingredient.of(registries.getOrThrow(igd)));
 	}
 	private RelishCondition temp;
 	private BiFunction<RelishCondition,RelishCondition,LogicalRelishCondition> condition;
@@ -101,7 +105,7 @@ public class TypeRecipeBuilder {
 		return cond(new HasRelishCondition(relish));
 	}
 	public TypeRecipeBuilder has(Fluid relish) {
-		return cond(new HasFluidCondition(relish.builtInRegistryHolder()));
+		return cond(new HasFluidCondition(BuiltInRegistries.FLUID.wrapAsHolder(relish)));
 	}
 	public TypeRecipeBuilder and() {
 		condition=AndRelishCondition::new;

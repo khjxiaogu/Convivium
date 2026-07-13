@@ -32,7 +32,9 @@ import com.khjxiaogu.convivium.data.recipes.relishcondition.OrRelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.util.BeverageFluidIngredient;
 
-import net.minecraft.core.HolderSet;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -44,7 +46,9 @@ public class BeverageIngredientBuilder {
 	private List<RelishCondition> relish=new ArrayList<>();
 	private List<String> allowedRelish=new ArrayList<>();
 	private float density;
-	public BeverageIngredientBuilder() {
+	private final Provider registries;
+	public BeverageIngredientBuilder(Provider registries) {
+		this.registries=registries;
 	}
 	public BeverageIngredientBuilder mustContains(Ingredient igd) {
 		must.add(igd);
@@ -56,8 +60,8 @@ public class BeverageIngredientBuilder {
 	public BeverageIngredientBuilder mustContains(Item igd) {
 		return mustContains(Ingredient.of(igd));
 	}
-	public BeverageIngredientBuilder mustContains(HolderSet<Item> igd) {
-		return mustContains(Ingredient.of(igd));
+	public BeverageIngredientBuilder mustContains(TagKey<Item> igd) {
+		return mustContains(Ingredient.of(registries.getOrThrow(igd)));
 	}
 	public BeverageIngredientBuilder canContains(Ingredient igd) {
 		optional.add(igd);
@@ -69,8 +73,8 @@ public class BeverageIngredientBuilder {
 	public BeverageIngredientBuilder canContains(Item igd) {
 		return canContains(Ingredient.of(igd));
 	}
-	public BeverageIngredientBuilder canContains(HolderSet<Item> igd) {
-		return canContains(Ingredient.of(igd));
+	public BeverageIngredientBuilder canContains(TagKey<Item> igd) {
+		return canContains(Ingredient.of(registries.getOrThrow(igd)));
 	}
 	private RelishCondition temp;
 	private BiFunction<RelishCondition,RelishCondition,LogicalRelishCondition> condition;
@@ -101,7 +105,7 @@ public class BeverageIngredientBuilder {
 		return cond(new HasRelishCondition(relish));
 	}
 	public BeverageIngredientBuilder has(Fluid relish) {
-		return cond(new HasFluidCondition(relish.builtInRegistryHolder()));
+		return cond(new HasFluidCondition(BuiltInRegistries.FLUID.wrapAsHolder(relish)));
 	}
 	public BeverageIngredientBuilder and() {
 		condition=AndRelishCondition::new;

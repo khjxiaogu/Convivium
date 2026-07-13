@@ -49,7 +49,6 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -57,7 +56,6 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -96,12 +94,12 @@ public class CVRecipeProvider extends RecipeProvider {
 	public CVRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
 		super(registries, output);
 	}
-	public HolderSet<Item> createTag(Identifier tagName){
+	/*public HolderSet<Item> createTag(Identifier tagName){
 		return registries.lookupOrThrow(Registries.ITEM).getOrThrow(ItemTags.create(tagName));
 	}
 	public HolderSet<Item> createTag(TagKey<Item> tagName){
 		return registries.lookupOrThrow(Registries.ITEM).getOrThrow(tagName);
-	}
+	}*/
 	
 	@Override
 	protected void buildRecipes() {
@@ -218,34 +216,34 @@ public class CVRecipeProvider extends RecipeProvider {
 				Arrays.asList(),200, true));
 		}
 		
-		type("hot_chocolate").has(Constants.COCOA).canContains(createTag(SPICE)).canContains(createTag(SWEET)).time(200).end(out);
-		type("mulled_wine").has(WINE).allow(WATER).mustContains(createTag(SPICE)).canContains(createTag(FRUIT)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("jaegertee").has(WINE).and().has(TEA).allow(WATER).mustContains(createTag(SPICE)).canContains(createTag(SWEET)).canContains(createTag(FRUIT)).priority(100).time(200).end(out);
-		type("posca").has(WINE).and().has(JUICE).allow(WATER).canContains(createTag(FRUIT)).priority(100).time(200).end(out);
-		type("leicha").has(TEA).allow(WATER).mustContains(createTag(NUTS)).priority(100).time(200).end(out);
-		type("te_mocha").has(TEA).and().has(MILK).and().has(COCOA).allow(WATER).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("kahwa_tea").has(TEA).allow(WATER).mustContains(createTag(NUTS)).mustContains(createTag(SPICE)).priority(100).time(200).end(out);
-		type("saidi_tea").has(TEA).mustContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("milk_tea").has(MILK).and().has(TEA).allow(WATER).canContains(createTag(SWEET)).canContains(createTag(NUTS)).canContains(createTag(SPICE)).priority(100).time(200).end(out);
-		type("sweet_tea").has(TEA).allow(WATER).mustContains(createTag(SWEET)).canContains(createTag(FRUIT)).priority(100).time(200).end(out);
-		type("fruit_tongsui").has(WATER).mustContains(createTag(FRUIT)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("ade").has(JUICE).and().has(WATER).canContains(createTag(FRUIT)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("punch").has(WATER).and().has(JUICE).allow(WINE).mustContains(createTag(SWEET)).canContains(createTag(SPICE)).priority(100).time(200).end(out);
-		type("syllabub").has(MILK).and().has(JUICE).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("posset").has(WINE).and().has(MILK).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("chocolate_tea").has(COCOA).and().has(TEA).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("cocoa_wine").has(COCOA).and().has(WINE).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).priority(100).time(200).end(out);
-		type("chocolate_milk").has(COCOA).and().has(MILK).allow(WATER).canContains(createTag(SPICE)).canContains(createTag(SWEET)).canContains(createTag(NUTS)).priority(100).time(200).end(out);
+		type("hot_chocolate").has(Constants.COCOA).canContains(SPICE).canContains(SWEET).time(200).end(out);
+		type("mulled_wine").has(WINE).allow(WATER).mustContains(SPICE).canContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
+		type("jaegertee").has(WINE).and().has(TEA).allow(WATER).mustContains(SPICE).canContains(SWEET).canContains(FRUIT).priority(100).time(200).end(out);
+		type("posca").has(WINE).and().has(JUICE).allow(WATER).canContains(FRUIT).priority(100).time(200).end(out);
+		type("leicha").has(TEA).allow(WATER).mustContains(NUTS).priority(100).time(200).end(out);
+		type("te_mocha").has(TEA).and().has(MILK).and().has(COCOA).allow(WATER).canContains(SWEET).priority(100).time(200).end(out);
+		type("kahwa_tea").has(TEA).allow(WATER).mustContains(NUTS).mustContains(SPICE).priority(100).time(200).end(out);
+		type("saidi_tea").has(TEA).mustContains(SWEET).priority(100).time(200).end(out);
+		type("milk_tea").has(MILK).and().has(TEA).allow(WATER).canContains(SWEET).canContains(NUTS).canContains(SPICE).priority(100).time(200).end(out);
+		type("sweet_tea").has(TEA).allow(WATER).mustContains(SWEET).canContains(FRUIT).priority(100).time(200).end(out);
+		type("fruit_tongsui").has(WATER).mustContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
+		type("ade").has(JUICE).and().has(WATER).canContains(FRUIT).canContains(SWEET).priority(100).time(200).end(out);
+		type("punch").has(WATER).and().has(JUICE).allow(WINE).mustContains(SWEET).canContains(SPICE).priority(100).time(200).end(out);
+		type("syllabub").has(MILK).and().has(JUICE).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
+		type("posset").has(WINE).and().has(MILK).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
+		type("chocolate_tea").has(COCOA).and().has(TEA).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
+		type("cocoa_wine").has(COCOA).and().has(WINE).allow(WATER).canContains(SPICE).canContains(SWEET).priority(100).time(200).end(out);
+		type("chocolate_milk").has(COCOA).and().has(MILK).allow(WATER).canContains(SPICE).canContains(SWEET).canContains(NUTS).priority(100).time(200).end(out);
 	}
 
 	@SuppressWarnings("unused")
 	private TasteRecipeBuilder taste(Item it) {
-		return new TasteRecipeBuilder(rl("taste/" + Utils.getRegistryName(it).getNamespace() + "/" + Utils.getRegistryName(it).getPath())).item(Ingredient.of(it));
+		return new TasteRecipeBuilder(rl("taste/" + Utils.getRegistryName(it).getNamespace() + "/" + Utils.getRegistryName(it).getPath()),registries).item(it);
 	}
 
 	@SuppressWarnings("unused")
 	private TasteRecipeBuilder taste(TagKey<Item> it) {
-		return new TasteRecipeBuilder(rl("taste/" + it.location().getNamespace() + "/" + it.location().getPath())).item(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(it)));
+		return new TasteRecipeBuilder(rl("taste/" + it.location().getNamespace() + "/" + it.location().getPath()),registries).item(it);
 	}
 
 	@SuppressWarnings("unused")
@@ -253,14 +251,14 @@ public class CVRecipeProvider extends RecipeProvider {
 		return new SwayRecipeBuilder(rl("sway_effect/" + name), Identifier.parse(icon));
 	}
 	private BeverageIngredientBuilder bingredient() {
-		return new BeverageIngredientBuilder();
+		return new BeverageIngredientBuilder(registries);
 	}
 	private TypeRecipeBuilder type(String name) {
-		return new TypeRecipeBuilder(rl("beverage_type/" + name), cvfluid(name));
+		return new TypeRecipeBuilder(rl("beverage_type/" + name), cvfluid(name),registries);
 	}
 
 	private TypeRecipeBuilder type(Identifier rl) {
-		return new TypeRecipeBuilder(rl("beverage_type/" + rl.getPath()), fluid(rl));
+		return new TypeRecipeBuilder(rl("beverage_type/" + rl.getPath()), fluid(rl),registries);
 	}
 
 	@SuppressWarnings("unused")
@@ -279,8 +277,8 @@ public class CVRecipeProvider extends RecipeProvider {
 	private void relish(BiConsumer<Identifier,IDataRecipe> out, String name, String clr, Fluid... fs) {
 		out.accept(rl("relish/" + name), new RelishRecipe(name, Identifier.fromNamespaceAndPath(CVMain.MODID, "relish/" + name), clr));
 		for (Fluid f : fs) {
-			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(f.builtInRegistryHolder(), name));
-			type(Utils.getRegistryName(f)).only(name).canContains(createTag(SPICE)).canContains(createTag(SWEET)).time(200).end(out);
+			out.accept(rl("relish_fluid/" + Utils.getRegistryName(f).getPath()), new RelishFluidRecipe(BuiltInRegistries.FLUID.wrapAsHolder(f), name));
+			type(Utils.getRegistryName(f)).only(name).canContains(SPICE).canContains(SWEET).time(200).end(out);
 
 		}
 	}

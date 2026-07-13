@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
+import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.ICreativeModeTabItem;
 import com.teammoeg.caupona.util.Utils;
@@ -87,9 +88,9 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 					}
 				}
 			}
-			if(worldIn.getBlockEntity(blockpos) instanceof BeverageBlockEntity be) {
-				ItemResource ir=be.getInternal().getResource(0);
-				if(ir.is(Items.GLASS_BOTTLE)&&handler!=null) {
+			if(worldIn.getBlockEntity(blockpos) instanceof IFoodContainer be) {
+				ItemResource ir=be.getValidContainer(0);
+				if(handler!=null) {
 					FluidResource rs=handler.getResource(0);
 					if(!rs.isEmpty()) {
 						if(!worldIn.isClientSide()) {
@@ -97,9 +98,8 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 								int amt = handler.extract(rs,250, ctx);
 								ContanerContainFoodEvent ev=Utils.contain(ir,rs,amt);
 								if (ev.isAllowed()) {
-									if(be.exchangeInternal(ev.getOutput(),ctx).is(Items.GLASS_BOTTLE)) {
+									if(be.exchangeInternal(ev.getOutput(),ctx).equals(ir)) {
 										ctx.commit();
-										be.syncData();
 									}
 								}
 							}

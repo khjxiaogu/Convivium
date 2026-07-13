@@ -87,7 +87,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 		ItemResource ir=inv.getResource(0);
 		int itemCount=inv.getAmountAsInt(0);
 		ItemStack is=ir.toStack(itemCount);
-		RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(id,fluid,is,this.getBlockState().is(CVBlocks.lead_basin.get()));
+		RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(id,fluid,is,this.getBlockState().is(CVBlocks.LEAD_BASIN.get()));
 		if(recipe!=null) {
 			int itemIn=recipe.value().item.count();
 			int fluidIn=recipe.value().in.amount();
@@ -181,7 +181,7 @@ public class BasinBlockEntity extends CPBaseBlockEntity implements MenuProvider 
 				isLastHeating = false;
 				FluidStack fluid=tankin.getResource(0).toStack(tankin.getAmountAsInt(0));
 				ItemStack is=inv.getResource(0).toStack(inv.getAmountAsInt(0));
-				RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(fluid,is,this.getBlockState().is(CVBlocks.lead_basin.get()));
+				RecipeHolder<BasinRecipe> recipe=BasinRecipe.testAll(fluid,is,this.getBlockState().is(CVBlocks.LEAD_BASIN.get()));
 				if(recipe!=null) {
 					recipeHandler.setRecipe(recipe,recipe.value().processTime);
 					this.syncData();

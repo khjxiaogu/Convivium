@@ -45,10 +45,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class CVItems {
 	public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(CVMain.MODID);
 	public static final DeferredItem<JugItem> JUG = ITEMS.registerItem("jug", t -> new JugItem(t.stacksTo(1)));
-	public static final String[] base_material = new String[] { "camellia_flower", "camellia_seeds", "clay_basin", "dolium_lid", "fresh_camellia_shoots", "cocoa_powder", "neroli", "spice_blend",
+	public static final String[] BASE_MATERIAL = new String[] { "camellia_flower", "camellia_seeds", "clay_basin", "dolium_lid", "fresh_camellia_shoots", "cocoa_powder", "neroli", "spice_blend",
 		"powdered_tea", "steamed_camellia_shoots" };
-	public static final String[] bottles=new String[] {"bowl","mug","jug","cup"};
-	public static final String[] base_drinks = new String[] { "berry_juice", "berry_must", "drupe_juice", "drupe_must", "pome_juice", "pome_must", "tea", "hot_chocolate", "milk", "water" };
+	public static final String[] BOTTLE_TYPES=new String[] {"bowl","mug","jug","cup"};
+	public static final String[] BASE_DRINKS = new String[] { "berry_juice", "berry_must", "drupe_juice", "drupe_must", "pome_juice", "pome_must", "tea", "hot_chocolate", "milk", "water" };
 	public static final DeferredItem<BeveragePotionFluid> POTION = ITEMS.registerItem("potion_dummy", t -> new BeveragePotionFluid(t));
 	public static final DeferredItem<EmptyBeverageBlockItem> GLASS_BOWL = ITEMS.registerItem("glass_bowl",t->new EmptyBeverageBlockItem(CVBlocks.BOWL.get(), t, CVMain.MAIN_TAB));
 	public static final DeferredItem<EmptyBeverageBlockItem> GLASS_CUP = ITEMS.registerItem("glass_cup",t->new EmptyBeverageBlockItem(CVBlocks.CUP.get(), t, CVMain.MAIN_TAB));
@@ -57,13 +57,13 @@ public class CVItems {
 	
 	
 	//public static final DeferredItem<SorbetItem> FLAT_BREAD=ITEMS.register("flat_bread", () -> new SorbetItem(CVBlocks.FLAT_BREAD.get(), createProps(), true));
-	public static List<DeferredItem<BeverageItem>> beverages=new ArrayList<>();
-	public static List<DeferredItem<SorbetItem>> sorbets=new ArrayList<>();
+	public static final List<DeferredItem<BeverageItem>> BEVERAGES=new ArrayList<>();
+	public static final List<DeferredItem<SorbetItem>> SORBETS=new ArrayList<>();
 	static {
-		for (String s : base_material) {
+		for (String s : BASE_MATERIAL) {
 			item(s);
 		}
-		for (String s : base_drinks) {
+		for (String s : BASE_DRINKS) {
 			Supplier<Fluid> drink_fluids;
 			Consumable.Builder csm=Consumables.defaultDrink();
 			if("water".equals(s)) {
@@ -74,12 +74,12 @@ public class CVItems {
 			}else {
 				drink_fluids=Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s)));
 			}
-			beverages.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),drink_fluids, t.craftRemainder(Items.GLASS_BOTTLE)
+			BEVERAGES.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),drink_fluids, t.craftRemainder(Items.GLASS_BOTTLE)
 				.component(DataComponents.CONSUMABLE, csm.build()).usingConvertsTo(Items.GLASS_BOTTLE), true,false)));
 		}
-		for (String s : CVFluids.intern.keySet()) {
+		for (String s : CVFluids.SPECIAL_FLUIDS.keySet()) {
 			Consumable.Builder csm=Consumables.defaultDrink();
-			beverages.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s))), t
+			BEVERAGES.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s))), t
 				.craftRemainder(Items.GLASS_BOTTLE).usingConvertsTo(Items.GLASS_BOTTLE)
 				.component(DataComponents.CONSUMABLE, csm.build()), false,false)));
 		}

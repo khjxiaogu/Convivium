@@ -95,7 +95,7 @@ public class CVCommonBootStrap {
 				(block,ctx)->(block instanceof CPBaseBlockEntity)?(IFoodContainer)((CPBaseBlockEntity)block).getCapability(CPCapability.FOOD_CONTAINER, ctx):null);
 	
 		});
-		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVItems.beverages.stream().map(t->t.get()).toArray(Item[]::new));
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVItems.BEVERAGES.stream().map(t->t.get()).toArray(Item[]::new));
 		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.BEVERAGE.get().asItem());
 
 		

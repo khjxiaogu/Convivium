@@ -61,11 +61,11 @@ public class CogeCageBlockEntity extends KineticTransferBlockEntity implements C
 	}
 	@Override
 	public boolean isCogTowards(Direction facing) {
-		return this.getBlockState().is(CVBlocks.cog.get());
+		return this.getBlockState().is(CVBlocks.COG.get());
 	}
 
 	@Override
 	public boolean isCageTowards(Direction facing) {
-		return this.getBlockState().is(CVBlocks.cage.get());
+		return this.getBlockState().is(CVBlocks.CAGE.get());
 	}
 }

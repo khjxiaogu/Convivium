@@ -56,7 +56,7 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity,PamRenderState>
 
 	@Override
 	public DynamicBlockModelReference getMainRotor(BlockState state, PamBlockEntity be) {
-		if(state.is(CVBlocks.pam.get()))
+		if(state.is(CVBlocks.PAM.get()))
 			return DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/pestle_and_mortar_rotor"));
 		return null;
 	}

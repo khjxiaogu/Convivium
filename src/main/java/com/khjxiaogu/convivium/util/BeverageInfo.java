@@ -401,13 +401,13 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		recalculateHAS();
 		return Pair.of(swi,
 			BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).<Either<BeverageTypeRecipe,Fluid>>map(t -> Either.left(t)).findFirst()
-				.orElse(Either.right(CVFluids.mixedf.get())));
+				.orElse(Either.right(CVFluids.MIXED_FLUID.get())));
 	}
 
 	public Fluid checkFluidType() {
 		BeveragePendingContext ctx = new BeveragePendingContext(this);
 		return BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).map(t -> t.output).findFirst()
-			.orElse(CVFluids.mixedf.get());
+			.orElse(CVFluids.MIXED_FLUID.get());
 	}
 
 	public void merge(BeverageInfo f, float cparts, float oparts) {

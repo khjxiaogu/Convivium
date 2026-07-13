@@ -29,8 +29,8 @@ import net.minecraft.world.level.material.Fluid;
 
 public class CVTags {
 	public static class Blocks {
-		public static TagKey<Block> AQUEDUCT = create("aqueduct");
-		public static TagKey<Block> AQUEDUCT_MOVE = create("aqueduct_movable");
+		public static final TagKey<Block> AQUEDUCT = create("aqueduct");
+		public static final TagKey<Block> AQUEDUCT_MOVE = create("aqueduct_movable");
 
 		private static TagKey<Block> create(String s) {
 			return BlockTags.create(Identifier.fromNamespaceAndPath(CVMain.MODID, s));
@@ -39,12 +39,12 @@ public class CVTags {
 	}
 
 	public static class Items {
-		public static TagKey<Item> BEVERAGE_MATERIAL = create("beverage_material");
-		public static TagKey<Item> SPICE = create("spice");
-		public static TagKey<Item> FRUIT = create("fruits");
-		public static TagKey<Item> NUTS = create("nuts");
-		public static TagKey<Item> SWEET = create("sweeteners");
-		public static TagKey<Item> ASSES = create("asses");
+		public static final TagKey<Item> BEVERAGE_MATERIAL = create("beverage_material");
+		public static final TagKey<Item> SPICE = create("spice");
+		public static final TagKey<Item> FRUIT = create("fruits");
+		public static final TagKey<Item> NUTS = create("nuts");
+		public static final TagKey<Item> SWEET = create("sweeteners");
+		public static final TagKey<Item> ASSES = create("asses");
 
 		private static TagKey<Item> create(String s) {
 			return ItemTags.create(Identifier.fromNamespaceAndPath(CVMain.MODID, s));
@@ -52,8 +52,9 @@ public class CVTags {
 	}
 
 	public static class Fluids {
-		public static TagKey<Fluid> MENDABLE = create("mending_machine_fluid");
+		//public static final TagKey<Fluid> MENDABLE = create("mending_machine_fluid");
 
+		@SuppressWarnings("unused")
 		private static TagKey<Fluid> create(String s) {
 			return FluidTags.create(Identifier.fromNamespaceAndPath(CVMain.MODID, s));
 		}

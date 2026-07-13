@@ -54,7 +54,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity,BeverageRenderState> {
 	private static final Map<Block,DynamicBlockModelReference> MODELS=Util.make(()->{
 		Map<Block,DynamicBlockModelReference> map=new HashMap<>();
-		for(String s:CVItems.bottles) {
+		for(String s:CVItems.BOTTLE_TYPES) {
 			map.put(BuiltInRegistries.BLOCK.getValue(CVMain.rl("beverage_"+s)), DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/beverage_"+s)));
 		}
 		map.put(CVBlocks.BEVERAGE.get(), DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/beverage")));

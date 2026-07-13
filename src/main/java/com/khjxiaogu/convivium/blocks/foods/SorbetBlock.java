@@ -54,7 +54,7 @@ public class SorbetBlock extends CPRegisteredEntityBlock<SorbetBlockEntity> {
 
 	public SorbetBlock(Properties blockProps) {
 		super(blockProps, CVBlockEntityTypes.SORBET);
-		CVBlocks.sorbets.add(this);
+		CVBlocks.SORBETS.add(this);
 	}
 
 	@Override

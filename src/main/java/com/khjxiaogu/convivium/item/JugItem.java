@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
@@ -38,7 +37,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;

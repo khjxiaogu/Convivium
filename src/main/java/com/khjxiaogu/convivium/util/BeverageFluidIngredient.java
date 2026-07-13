@@ -108,7 +108,7 @@ public class BeverageFluidIngredient extends FluidIngredient {
 	@Override
 	protected Stream<Holder<Fluid>> generateFluids() {
 
-		return Stream.of(CVFluids.mixedf.getDelegate());
+		return Stream.of(CVFluids.MIXED_FLUID.getDelegate());
 	}
 
 	@Override

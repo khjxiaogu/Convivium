@@ -35,9 +35,9 @@ public class CogRenderer extends RotationRenderer<CogeCageBlockEntity,RotationRe
 
 	@Override
 	public DynamicBlockModelReference getMainRotor(BlockState state, CogeCageBlockEntity be) {
-		if(state.is(CVBlocks.cage.get()))
+		if(state.is(CVBlocks.CAGE.get()))
 			return DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/cage_wheel"));
-		if(state.is(CVBlocks.cog.get()))
+		if(state.is(CVBlocks.COG.get()))
 			return DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/cog"));
 		return null;
 	}

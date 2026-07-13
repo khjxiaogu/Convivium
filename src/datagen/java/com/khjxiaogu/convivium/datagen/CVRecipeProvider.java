@@ -149,15 +149,15 @@ public class CVRecipeProvider extends RecipeProvider {
 		 */
 		//out.accept(rl("relish_item/cocoa"), new RelishItemRecipe(Ingredient.of(cvitem("cocoa_powder")), Constants.COCOA));
 		//out.accept(rl("relish_item/tea"), new RelishItemRecipe(Ingredient.of(cvitem("powdered_tea")), Constants.TEA));
-		relish(out, Constants.TEA, "#7eb3c2", CVFluids.teaf.get());
+		relish(out, Constants.TEA, "#7eb3c2", CVFluids.TEA_FLUID.get());
 		relish(out, Constants.MILK, "#dac381", NeoForgeMod.MILK.get());
-		relish(out, Constants.COCOA, "#ea9359", CVFluids.cocoaf.get());
+		relish(out, Constants.COCOA, "#ea9359", CVFluids.COCOA_FLUID.get());
 		relish(out, Constants.WATER, "#886a51", Fluids.WATER);
-		relish(out, Constants.JUICE, "#aac35d", CVFluids.bjuicef.get(), CVFluids.djuicef.get(), CVFluids.pjuicef.get());
-		relish(out, Constants.WINE, "#ce6c71", CVFluids.bwinef.get(), CVFluids.dwinef.get(), CVFluids.pwinef.get());
+		relish(out, Constants.JUICE, "#aac35d", CVFluids.BERRY_JUICE_FLUID.get(), CVFluids.DRUPE_JUICE_FLUID.get(), CVFluids.POME_JUICE_FLUID.get());
+		relish(out, Constants.WINE, "#ce6c71", CVFluids.BERRY_WINE_FLUID.get(), CVFluids.DRUPE_WINE_FLUID.get(), CVFluids.POME_WINE_FLUID.get());
 		relish(out, Constants.NONE, "#ffffff");
-		out.accept(rl("bottle/beverage"), new BowlContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.mixedf.get(),Ingredient.of(Items.GLASS_BOTTLE)));
-		for (String s : CVItems.base_drinks) {
+		out.accept(rl("bottle/beverage"), new BowlContainingRecipe(CVBlocks.BEVERAGE.get().asItem(), CVFluids.MIXED_FLUID.get(),Ingredient.of(Items.GLASS_BOTTLE)));
+		for (String s : CVItems.BASE_DRINKS) {
 			Fluid f;
 			if (s.equals("milk")) {
 				f=NeoForgeMod.MILK.get();
@@ -166,11 +166,11 @@ public class CVRecipeProvider extends RecipeProvider {
 			} else
 				f=cvfluid(s);
 			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), f,Ingredient.of(Items.GLASS_BOTTLE)));
-			for(String bottleType:CVItems.bottles)
+			for(String bottleType:CVItems.BOTTLE_TYPES)
 				out.accept(rl("bottle/"+ s+"_"+bottleType), new BowlContainingRecipe(cvitem("beverage_"+bottleType), f,Ingredient.of(cvitem("glass_"+bottleType))));
 		}
-		for(String bottleType:CVItems.bottles)
-			out.accept(rl("bottle/beverage_"+bottleType), new BowlContainingRecipe(cvitem("beverage_"+bottleType), CVFluids.mixedf.get(),Ingredient.of(cvitem("glass_"+bottleType))));
+		for(String bottleType:CVItems.BOTTLE_TYPES)
+			out.accept(rl("bottle/beverage_"+bottleType), new BowlContainingRecipe(cvitem("beverage_"+bottleType), CVFluids.MIXED_FLUID.get(),Ingredient.of(cvitem("glass_"+bottleType))));
 		
 		// taste(Items.APPLE).vars().astringency(2).end().end(out);
 		out.accept(rl("convertion/tea"),
@@ -185,7 +185,7 @@ public class CVRecipeProvider extends RecipeProvider {
 				SizedOrCatalystIngredient.of(Items.FLOWER_POT, 1),List.of(new ItemStackTemplate(cpitem("sapa_spice_jar"))), 1, 200, true));
 		for (String s : List.of("pome", "drupe", "berry"))
 			out.accept(rl("convertion/" + s + "_juice_from_must"), new ConvertionRecipe(SizedFluidIngredient.of(cvfluid(s + "_must"), 250), cvfluid(s + "_juice", 250), true, 200));
-		for (String s : CVFluids.intern.keySet())
+		for (String s : CVFluids.SPECIAL_FLUIDS.keySet())
 			out.accept(rl("bottle/" + s), new BowlContainingRecipe(cvitem(s), cvfluid(s),Ingredient.of(Items.GLASS_BOTTLE)));
 		Map<String,String> relishnames=new HashMap<>();
 
@@ -195,7 +195,7 @@ public class CVRecipeProvider extends RecipeProvider {
 		relishnames.put("juice", Constants.JUICE);
 		relishnames.put("wine", Constants.WINE);
 		relishnames.put("water", Constants.WATER);
-		for(String s : CVFluids.sorbets) {
+		for(String s : CVFluids.SORBETS) {
 			out.accept(rl("bottle/" + s+"_sorbet"), new BowlContainingRecipe(cvitem(s+"_sorbet"), cvfluid(s+"_sorbet"),Ingredient.of(cvitem("flatbread"))));
 			String[] relishes=s.split("_");
 			FluidIngredient input;

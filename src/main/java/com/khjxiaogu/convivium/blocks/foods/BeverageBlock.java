@@ -59,7 +59,7 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 	final VoxelShape shape;
 	public BeverageBlock(Properties blockProps,VoxelShape shape) {
 		super(blockProps, CVBlockEntityTypes.BEVERAGE);
-		CVBlocks.beverage.add(this);
+		CVBlocks.BEVERAGES.add(this);
 		this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
 		this.shape=shape;
 	}

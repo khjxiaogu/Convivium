@@ -103,7 +103,7 @@ public class CVCommonEvents {
 				playerIn.setItemInHand(event.getHand(), is);
 			}
 		}
-		if (playerIn.isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).is(CVBlocks.platter.get())) {
+		if (playerIn.isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).is(CVBlocks.PLATTER.get())) {
 			event.setUseItem(TriState.FALSE);
 			event.setUseBlock(TriState.TRUE);
 		}

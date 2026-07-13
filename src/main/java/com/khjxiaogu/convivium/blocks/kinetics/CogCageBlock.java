@@ -68,7 +68,7 @@ public class CogCageBlock extends KineticBasedBlock<CogeCageBlockEntity> impleme
 
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-		if (pState.is(CVBlocks.cage.get()))
+		if (pState.is(CVBlocks.CAGE.get()))
 			return shapeCage;
 		return shapeCog;
 	}

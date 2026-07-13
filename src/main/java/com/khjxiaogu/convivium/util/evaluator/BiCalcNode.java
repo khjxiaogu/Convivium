@@ -53,7 +53,7 @@ class BiCalcNode extends BiNode{
 
 	@Override
 	public boolean isPrimary() {
-		return false;
+		return left.isPrimary()&&right.isPrimary();
 	}
 
 	@Override

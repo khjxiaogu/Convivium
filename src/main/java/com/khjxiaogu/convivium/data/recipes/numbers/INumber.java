@@ -31,7 +31,7 @@ import net.minecraft.network.codec.StreamCodec;
 public interface INumber extends ToDoubleFunction<IEnvironment>{
 
 	Codec<INumber> CODEC=Codec.either(Codec.STRING.xmap(Expression::new,o->o.expr), Codec.FLOAT.xmap(Expression::of,o->o.num)).xmap(Either::unwrap, o->(o instanceof Expression.Constant cons)?Either.right(cons):Either.left((Expression)o));
-	Codec<INumber> STRING_CODEC=Codec.STRING.xmap(Expression::of, Object::toString);
+	Codec<INumber> STRING_CODEC=Codec.STRING.comapFlatMap(Expression::parse, Object::toString);
 	public static final StreamCodec<ByteBuf,INumber> STREAM_CODEC=ByteBufCodecs.either(ByteBufCodecs.STRING_UTF8.map(Expression::new,o->o.expr), ByteBufCodecs.FLOAT.map(Expression::of,o->o.num)).map(Either::unwrap, o->(o instanceof Expression.Constant cons)?Either.right(cons):Either.left((Expression)o));
 
 	

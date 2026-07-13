@@ -37,7 +37,7 @@ class CalcNode implements Node{
 	
 	@Override
 	public boolean isPrimary() {
-		return false;
+		return nested.isPrimary();
 	}
 	
 	@Override

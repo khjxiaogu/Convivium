@@ -24,6 +24,7 @@ import com.khjxiaogu.convivium.util.evaluator.Evaluator;
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
 import com.khjxiaogu.convivium.util.evaluator.Node;
 import com.khjxiaogu.convivium.util.evaluator.NullEnvironment;
+import com.mojang.serialization.DataResult;
 
 public class Expression implements INumber{
 	public static class Constant implements INumber{
@@ -86,6 +87,13 @@ public class Expression implements INumber{
 		if(node.isPrimary())
 			return new Constant((float) node.eval(NullEnvironment.INSTANCE));
 		return new Expression(expr,node);
+	}
+	public static DataResult<INumber> parse(String expr) {
+		try {
+			return DataResult.success(of(expr));
+		}catch(Exception ex) {
+			return DataResult.error(ex::getMessage);
+		}
 	}
 	public double applyAsDouble(IEnvironment t) {
 		return node.eval(t);

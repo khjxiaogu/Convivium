@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.khjxiaogu.convivium.blocks.foods.BeverageItem;
+import com.khjxiaogu.convivium.blocks.foods.EmptyBeverageBlockItem;
 import com.khjxiaogu.convivium.blocks.foods.SorbetItem;
 import com.khjxiaogu.convivium.item.BeveragePotionFluid;
 import com.khjxiaogu.convivium.item.CVMaterialItem;
@@ -49,10 +50,10 @@ public class CVItems {
 	public static final String[] bottles=new String[] {"bowl","mug","jug","cup"};
 	public static final String[] base_drinks = new String[] { "berry_juice", "berry_must", "drupe_juice", "drupe_must", "pome_juice", "pome_must", "tea", "hot_chocolate", "milk", "water" };
 	public static final DeferredItem<BeveragePotionFluid> POTION = ITEMS.registerItem("potion_dummy", t -> new BeveragePotionFluid(t));
-	public static final DeferredItem<CVMaterialItem> GLASS_BOWL = item("glass_bowl");
-	public static final DeferredItem<CVMaterialItem> GLASS_CUP = item("glass_cup");
-	public static final DeferredItem<CVMaterialItem> GLASS_JUG = item("glass_jug");
-	public static final DeferredItem<CVMaterialItem> GLASS_MUG = item("glass_mug");
+	public static final DeferredItem<EmptyBeverageBlockItem> GLASS_BOWL = ITEMS.registerItem("glass_bowl",t->new EmptyBeverageBlockItem(CVBlocks.BOWL.get(), t, CVMain.MAIN_TAB));
+	public static final DeferredItem<EmptyBeverageBlockItem> GLASS_CUP = ITEMS.registerItem("glass_cup",t->new EmptyBeverageBlockItem(CVBlocks.CUP.get(), t, CVMain.MAIN_TAB));
+	public static final DeferredItem<EmptyBeverageBlockItem> GLASS_JUG = ITEMS.registerItem("glass_jug",t->new EmptyBeverageBlockItem(CVBlocks.JUG.get(), t, CVMain.MAIN_TAB));
+	public static final DeferredItem<EmptyBeverageBlockItem> GLASS_MUG = ITEMS.registerItem("glass_mug",t->new EmptyBeverageBlockItem(CVBlocks.MUG.get(), t, CVMain.MAIN_TAB));
 	
 	
 	//public static final DeferredItem<SorbetItem> FLAT_BREAD=ITEMS.register("flat_bread", () -> new SorbetItem(CVBlocks.FLAT_BREAD.get(), createProps(), true));

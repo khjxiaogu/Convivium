@@ -93,13 +93,15 @@ public class CVCommonEvents {
 	public static void onBlockClick(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack is = event.getItemStack();
 		Player playerIn = event.getEntity();
-		if (CVConfig.COMMON.canPlacePotion.get() && is.is(Items.POTION) && playerIn.isShiftKeyDown()) {
-			ItemStack replace = is.transmuteCopy(CVItems.POTION.get());
-			replace.set(CVComponents.POTION_ITEM, ItemStackTemplate.fromNonEmptyStack(is));
-			playerIn.setItemInHand(event.getHand(), replace);
-			CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn, event.getHand(), event.getHitVec()));
-			is.setCount(replace.getCount());
-			playerIn.setItemInHand(event.getHand(), is);
+		if (CVConfig.COMMON.canPlacePotion.get() && playerIn.isShiftKeyDown()) {
+			if(is.is(Items.POTION)||is.is(Items.GLASS_BOTTLE)) {
+				ItemStack replace = is.transmuteCopy(CVItems.POTION.get());
+				replace.set(CVComponents.POTION_ITEM, ItemStackTemplate.fromNonEmptyStack(is));
+				playerIn.setItemInHand(event.getHand(), replace);
+				CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn, event.getHand(), event.getHitVec()));
+				is.setCount(replace.getCount());
+				playerIn.setItemInHand(event.getHand(), is);
+			}
 		}
 		if (playerIn.isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).is(CVBlocks.platter.get())) {
 			event.setUseItem(TriState.FALSE);

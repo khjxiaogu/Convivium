@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
+import com.khjxiaogu.convivium.util.FoodPropertieHelper;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
 import com.teammoeg.caupona.util.WorldDropOperation;
 
@@ -112,15 +113,16 @@ public class SorbetBlock extends CPRegisteredEntityBlock<SorbetBlockEntity> {
 					if(fp.canConsume(player, stack)) {
 						try(Transaction trans=Transaction.openRoot()){
 							if(bowl.getInternal().extract(ir, 1, trans)>0) {
-								ItemStack iout=fp.onConsume(worldIn, player, stack);
+								WorldDropOperation drops=new WorldDropOperation(worldIn,pos);
+								drops.updateSnapshots(trans);
+								ItemStack iout=FoodPropertieHelper.getReminder(ir, fp.onConsume(worldIn, player, stack), 1, player.getAbilities().instabuild, drops::addDrop);
+								
 								int count=iout.getCount();
 								if(!iout.isEmpty()) {
 									ItemResource toOut=bowl.getInternal().getResourceFrom(iout);
 									count-=bowl.getInternal().insert(toOut, count, trans);
 									if(count>0) {
-										WorldDropOperation drops=new WorldDropOperation(worldIn,pos);
 										drops.addDrops(toOut.toStack(count));
-										drops.updateSnapshots(trans);
 									}
 								}else
 									worldIn.removeBlock(pos, false);

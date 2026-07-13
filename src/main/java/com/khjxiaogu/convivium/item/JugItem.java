@@ -151,7 +151,6 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 		if(e!=null){
 			FluidStack f=FluidUtil.getStack(e, 0);
 			if(!f.isEmpty()) {
-				builder.accept(f.getHoverName());
 				f.getTooltipLines(context, context.player(), tooltipFlag).forEach(builder::accept);
 			
 				builder.accept(Utils.string(e.getAmountAsInt(0)+"/1250 mB"));

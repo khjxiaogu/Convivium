@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:mining_fatigue",
 			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,sweetness-8.3)/4.5)),-log(abs(max(0.1,astringency-7.5)/3.5))))))",
-			"time": "900.0*min(if(abs(sweetness)-abs(8.3),(1+(abs(sweetness)-abs(8.3))/4.5)^2,1),if(abs(astringency)-abs(7.5),(1+(abs(astringency)-abs(7.5))/3.5)^2,1))"
+			"time": "900.0*min(if(abs(sweetness)-8.3,(1+(abs(sweetness)-8.3)/4.5)^2,1),if(abs(astringency)-7.5,(1+(abs(astringency)-7.5)/3.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/mining_fatigue",

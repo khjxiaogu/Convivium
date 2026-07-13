@@ -151,13 +151,11 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 	public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
 		@Nullable @org.jspecify.annotations.Nullable ResourceHandler<FluidResource> e=itemStack.getCapability(Capabilities.Fluid.ITEM,ItemAccess.forStack(itemStack));
 		if(e!=null){
-			FluidResource f=e.getResource(0);
+			FluidStack f=FluidUtil.getStack(e, 0);
 			if(!f.isEmpty()) {
 				builder.accept(f.getHoverName());
-				BeverageInfo info = f.get(CVComponents.BEVERAGE_INFO);
-				if(info!=null){
-					info.addToTooltip(context, builder, tooltipFlag, f);
-				}
+				f.getTooltipLines(context, context.player(), tooltipFlag).forEach(builder::accept);
+			
 				builder.accept(Utils.string(e.getAmountAsInt(0)+"/1250 mB"));
 				
 			}

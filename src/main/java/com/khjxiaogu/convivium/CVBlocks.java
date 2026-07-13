@@ -42,11 +42,15 @@ import com.khjxiaogu.convivium.blocks.wolf_fountain.WolfFountainBlock;
 import com.teammoeg.caupona.item.CPBlockItem;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -61,11 +65,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CVBlocks {
 	public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CVMain.MODID);
-	public static final DeferredBlock<BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(Items.GLASS_BOTTLE), false,true));
-	public static final DeferredBlock<BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_BOWL)), false,true));
-	public static final DeferredBlock<BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_CUP)), false,true));
-	public static final DeferredBlock<BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_JUG)), false,true));
-	public static final DeferredBlock<BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_MUG)), false,true));
+	public static final DeferredBlock<BeverageBlock> BEVERAGE = baseblock("beverage", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(Items.GLASS_BOTTLE).usingConvertsTo(Items.GLASS_BOTTLE).component(DataComponents.CONSUMABLE,Consumables.DEFAULT_DRINK), false,true));
+	public static final DeferredBlock<BeverageBlock> BOWL = baseblock("beverage_bowl", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_BOWL)).component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStackTemplate(CVItems.GLASS_BOWL))).component(DataComponents.CONSUMABLE,Consumables.DEFAULT_DRINK), false,true));
+	public static final DeferredBlock<BeverageBlock> CUP = baseblock("beverage_cup", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_CUP)).component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStackTemplate(CVItems.GLASS_CUP))).component(DataComponents.CONSUMABLE,Consumables.DEFAULT_DRINK), false,true));
+	public static final DeferredBlock<BeverageBlock> JUG = baseblock("beverage_jug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_JUG)).component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStackTemplate(CVItems.GLASS_JUG))).component(DataComponents.CONSUMABLE,Consumables.DEFAULT_DRINK), false,true));
+	public static final DeferredBlock<BeverageBlock> MUG = baseblock("beverage_mug", b -> new BeverageBlock(getBProps(b)), (b,r) -> new BeverageItem(r,()->CVFluids.mixedf.get(), b.craftRemainder(new ItemStackTemplate(CVItems.GLASS_MUG)).component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStackTemplate(CVItems.GLASS_MUG))).component(DataComponents.CONSUMABLE,Consumables.DEFAULT_DRINK), false,true));
 	public static final List<DeferredBlock<BeverageBlock>> BEVERAGE_BLOCKS=List.of(BEVERAGE,BOWL,CUP,JUG,MUG); 
 	
 	public static final DeferredBlock<CogCageBlock> cage = baseblock("cage_wheel", b -> new CogCageBlock(getKineticProps(b)));
@@ -91,7 +95,7 @@ public class CVBlocks {
 		b -> new BeverageVendingBlock(b.mapColor(MapColor.COLOR_ORANGE)
 			.strength(2.0F).noOcclusion().sound(SoundType.STONE)));
 	public static final DeferredBlock<SorbetBlock> FLAT_BREAD = baseblock("flatbread",
-		b -> new SorbetBlock(getSProps(b)),(o,t)->new SorbetItem(t, null, o, true));
+		b -> new SorbetBlock(getSProps(b)),(o,t)->new SorbetItem(t, null, o.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.6f).build()), true));
 	public static final List<Block> beverage = new ArrayList<>();
 	public static final List<Block> sorbets = new ArrayList<>();
 	static {
@@ -100,7 +104,7 @@ public class CVBlocks {
 			aqueduct_mains.add(baseblock(s + "_aqueduct_wavemaker", b -> new AqueductControllerBlock(getKineticProps(b))));
 		}
 		for(String s:CVFluids.sorbets) {
-			baseblock(s+"_sorbet",b -> new SorbetBlock(getSProps(b)),(b,t)->new SorbetItem(t,Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s+"_sorbet"))), b.craftRemainder(CVBlocks.FLAT_BREAD.get().asItem()), false));
+			baseblock(s+"_sorbet",b -> new SorbetBlock(getSProps(b)),(b,t)->new SorbetItem(t,Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s+"_sorbet"))), b.craftRemainder(CVBlocks.FLAT_BREAD.get().asItem()).food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.6f).build()), false));
 		}
 	}
 

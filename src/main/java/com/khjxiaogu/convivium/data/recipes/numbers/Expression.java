@@ -28,46 +28,52 @@ import com.mojang.serialization.DataResult;
 
 public class Expression implements INumber{
 	public static class Constant implements INumber{
-		float num=0;
-		private Constant(float num) {
+		private final double num;
+		private Constant(double num) {
 			super();
 			this.num = num;
 		}
+		public double num() {
+			return num;
+		}
 		@Override
 		public double applyAsDouble(IEnvironment t) {
-			// TODO Auto-generated method stub
 			return num;
 		}
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + Float.floatToIntBits(num);
-			return result;
+			return Objects.hash(num);
 		}
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
+			if (this == obj) return true;
+			if (obj == null) return false;
+			if (getClass() != obj.getClass()) return false;
 			Constant other = (Constant) obj;
-			if (Float.floatToIntBits(num) != Float.floatToIntBits(other.num))
-				return false;
-			return true;
+			return Double.doubleToLongBits(num) == Double.doubleToLongBits(other.num);
 		}
 		@Override
 		public String toString() {
 			return ""+ num ;
 		}
+		@Override
+		public DataResult<Double> asConstant() {
+			return DataResult.success(num);
+		}
+		@Override
+		public DataResult<String> asExpression() {
+			return DataResult.success(""+ num);
+		}
 		
 	}
 	public static final INumber ZERO=new Constant(0);
 	public static final INumber ONE=new Constant(1);
-	Node node;
-	String expr;
+	private final Node node;
+
+	private final String expr;
+	public String expr() {
+		return expr;
+	}
 	public Expression(String expr,Node node) {
 		super();
 		this.expr = expr;
@@ -79,7 +85,7 @@ public class Expression implements INumber{
 		this.node = Evaluator.eval(expr);
 	}
 
-	public static Constant of(float expr) {
+	public static Constant of(double expr) {
 		return new Constant(expr);
 	}
 	public static INumber of(String expr) {
@@ -94,6 +100,9 @@ public class Expression implements INumber{
 		}catch(Exception ex) {
 			return DataResult.error(ex::getMessage);
 		}
+	}
+	public DataResult<Double> asConstant(){
+		return DataResult.error(()->"Not a constant");
 	}
 	public double applyAsDouble(IEnvironment t) {
 		return node.eval(t);
@@ -116,6 +125,10 @@ public class Expression implements INumber{
 			return false;
 		Expression other = (Expression) obj;
 		return Objects.equals(expr, other.expr);
+	}
+	@Override
+	public DataResult<String> asExpression() {
+		return DataResult.success(expr);
 	}
 	
 }

@@ -217,7 +217,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		setSwayhint(swi.getFirst());
 		Either<BeverageTypeRecipe, Fluid> right=swi.getSecond();
 		info.completeData();
-		target=FluidResource.of(right.<Fluid>map(t->t.output, t->t),orig.getComponentsPatch()).with(CVComponents.BEVERAGE_INFO, info);
+		target=FluidResource.of(right.<Fluid>map(t->t.output, t->t),orig.getComponentsPatch()).with(CVComponents.BEVERAGE_INFO, info).with(DataComponents.CONSUMABLE, info.getConsumable().build());
 		processMax=time;
 		right.ifLeft(t->{
 			if(t.output!=orig.getFluid())

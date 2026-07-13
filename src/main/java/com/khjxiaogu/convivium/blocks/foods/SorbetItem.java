@@ -67,7 +67,7 @@ public class SorbetItem extends EdibleBlock {
 		if (helper.isType(CVMain.MAIN_TAB)) {
 			ItemStack is = new ItemStack(this);
 			if(fluid!=null)
-			Utils.writeItemFluid(is,fluid.get());
+			Utils.writeItemFluid(is, fluid.get());
 			addCreativeHints(is);
 			helper.accept(is,3);
 		}

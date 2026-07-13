@@ -28,8 +28,12 @@ import com.khjxiaogu.convivium.item.BeveragePotionFluid;
 import com.khjxiaogu.convivium.item.CVMaterialItem;
 import com.khjxiaogu.convivium.item.JugItem;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.consume_effects.ClearAllStatusEffectsConsumeEffect;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -60,17 +64,23 @@ public class CVItems {
 		}
 		for (String s : base_drinks) {
 			Supplier<Fluid> drink_fluids;
+			Consumable.Builder csm=Consumables.defaultDrink();
 			if("water".equals(s)) {
 				drink_fluids=()->Fluids.WATER;
 			}else if("milk".equals(s)) {
 				drink_fluids=NeoForgeMod.MILK;
+				csm.onConsume(ClearAllStatusEffectsConsumeEffect.INSTANCE);
 			}else {
 				drink_fluids=Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s)));
 			}
-			beverages.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),drink_fluids, t.craftRemainder(Items.GLASS_BOTTLE), true,false)));
+			beverages.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),drink_fluids, t.craftRemainder(Items.GLASS_BOTTLE)
+				.component(DataComponents.CONSUMABLE, csm.build()).usingConvertsTo(Items.GLASS_BOTTLE), true,false)));
 		}
 		for (String s : CVFluids.intern.keySet()) {
-			beverages.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s))), t.craftRemainder(Items.GLASS_BOTTLE), false,false)));
+			Consumable.Builder csm=Consumables.defaultDrink();
+			beverages.add(ITEMS.registerItem(s, t -> new BeverageItem(CVBlocks.BEVERAGE.get(),Lazy.of(()->BuiltInRegistries.FLUID.getValue(CVMain.rl(s))), t
+				.craftRemainder(Items.GLASS_BOTTLE).usingConvertsTo(Items.GLASS_BOTTLE)
+				.component(DataComponents.CONSUMABLE, csm.build()), false,false)));
 		}
 	/*	for (String s : CVFluids.sorbets) {
 			sorbets.add(ITEMS.register(s, () -> ));

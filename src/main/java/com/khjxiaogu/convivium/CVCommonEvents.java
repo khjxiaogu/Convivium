@@ -26,7 +26,7 @@ import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
-import com.teammoeg.caupona.data.recipes.*;
+import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
 
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;

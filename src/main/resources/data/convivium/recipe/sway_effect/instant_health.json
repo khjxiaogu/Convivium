@@ -10,18 +10,18 @@
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "sweetness-(-6)",
+					"left": "sweetness+6",
 					"right": 3
 				}
 			],
 			"effect": "minecraft:instant_health",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,astringency-7.2)/5)),-log(abs(max(0.1,sweetness-(-6))/3))))))",
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,astringency-7.2)/5)),-log(abs(max(0.1,sweetness+6)/3))))))",
 			"time": "1.0"
 		}
 	],
 	"icon": "minecraft:mob_effect/instant_health",
 	"locals": {
-		"display": "max(0,10-(abs(astringency-7.2)+abs(sweetness-(-6))))",
+		"display": "max(0,10-(abs(astringency-7.2)+abs(sweetness+6)))",
 		"astringencyDelta": "max(2.2-astringency,0)+min(12.2-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

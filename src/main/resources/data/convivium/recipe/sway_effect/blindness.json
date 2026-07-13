@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:blindness",
 			"level": "1",
-			"time": "1200.0*min(if(abs(thickness)-abs((-6.5)),(1+(abs(thickness)-abs((-6.5)))/4)^2,1),if(abs(astringency)-abs(7),(1+(abs(astringency)-abs(7))/3)^2,1))"
+			"time": "1200.0*min(if(abs(thickness)-abs((-6.5)),(1+(abs(thickness)-abs((-6.5)))/4)^2,1),if(abs(astringency)-7,(1+(abs(astringency)-7)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/blindness",

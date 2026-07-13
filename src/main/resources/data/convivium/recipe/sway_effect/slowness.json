@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:slowness",
 			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,astringency-6.5)/3)),-log(abs(max(0.1,thickness-7)/3))))))",
-			"time": "500.0*min(if(abs(astringency)-abs(6.5),(1+(abs(astringency)-abs(6.5))/3)^2,1),if(abs(thickness)-abs(7),(1+(abs(thickness)-abs(7))/3)^2,1))"
+			"time": "500.0*min(if(abs(astringency)-abs(6.5),(1+(abs(astringency)-abs(6.5))/3)^2,1),if(abs(thickness)-7,(1+(abs(thickness)-7)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/slowness",

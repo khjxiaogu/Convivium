@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:hunger",
 			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness-7.5)/4)),-log(abs(max(0.1,sweetness-6)/3))))))",
-			"time": "300.0*min(if(abs(thickness)-abs(7.5),(1+(abs(thickness)-abs(7.5))/4)^2,1),if(abs(sweetness)-abs(6),(1+(abs(sweetness)-abs(6))/3)^2,1))"
+			"time": "300.0*min(if(abs(thickness)-abs(7.5),(1+(abs(thickness)-abs(7.5))/4)^2,1),if(abs(sweetness)-6,(1+(abs(sweetness)-6)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/hunger",

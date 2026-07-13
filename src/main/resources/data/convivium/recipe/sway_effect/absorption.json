@@ -10,18 +10,18 @@
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "astringency-(-7)",
+					"left": "astringency+7",
 					"right": 3.5
 				}
 			],
 			"effect": "minecraft:absorption",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,pungency-(-7.7))/2.5)),-log(abs(max(0.1,astringency-(-7))/3.5))))))",
-			"time": "600.0*min(if(abs(pungency)-abs((-7.7)),(1+(abs(pungency)-abs((-7.7)))/2.5)^2,1),if(abs(astringency)-abs((-7)),(1+(abs(astringency)-abs((-7)))/3.5)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,pungency-(-7.7))/2.5)),-log(abs(max(0.1,astringency+7)/3.5))))))",
+			"time": "600.0*min(if(abs(pungency)-abs((-7.7)),(1+(abs(pungency)-abs((-7.7)))/2.5)^2,1),if(abs(astringency)-7,(1+(abs(astringency)-7)/3.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/absorption",
 	"locals": {
-		"display": "max(0,10-(abs(pungency-(-7.7))+abs(astringency-(-7))))",
+		"display": "max(0,10-(abs(pungency-(-7.7))+abs(astringency+7)))",
 		"astringencyDelta": "max((-10.5)-astringency,0)+min((-3.5)-astringency,0)",
 		"pungencyDelta": "max((-10.2)-pungency,0)+min((-5.2)-pungency,0)",
 		"soothingnessDelta": 0.0,

@@ -10,18 +10,18 @@
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "astringency-(-7)",
+					"left": "astringency+7",
 					"right": 3
 				}
 			],
 			"effect": "minecraft:resistance",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness-7.6)/3.5)),-log(abs(max(0.1,astringency-(-7))/3))))))",
-			"time": "600.0*min(if(abs(thickness)-abs(7.6),(1+(abs(thickness)-abs(7.6))/3.5)^2,1),if(abs(astringency)-abs((-7)),(1+(abs(astringency)-abs((-7)))/3)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness-7.6)/3.5)),-log(abs(max(0.1,astringency+7)/3))))))",
+			"time": "600.0*min(if(abs(thickness)-abs(7.6),(1+(abs(thickness)-abs(7.6))/3.5)^2,1),if(abs(astringency)-7,(1+(abs(astringency)-7)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/resistance",
 	"locals": {
-		"display": "max(0,10-(abs(thickness-7.6)+abs(astringency-(-7))))",
+		"display": "max(0,10-(abs(thickness-7.6)+abs(astringency+7)))",
 		"astringencyDelta": "max((-10)-astringency,0)+min((-4)-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

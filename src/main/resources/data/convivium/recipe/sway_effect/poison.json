@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:poison",
 			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,pungency-6)/4)),-log(abs(max(0.1,astringency-6)/4))))))",
-			"time": "160.0*min(if(abs(pungency)-abs(6),(1+(abs(pungency)-abs(6))/4)^2,1),if(abs(astringency)-abs(6),(1+(abs(astringency)-abs(6))/4)^2,1))"
+			"time": "160.0*min(if(abs(pungency)-6,(1+(abs(pungency)-6)/4)^2,1),if(abs(astringency)-6,(1+(abs(astringency)-6)/4)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/poison",

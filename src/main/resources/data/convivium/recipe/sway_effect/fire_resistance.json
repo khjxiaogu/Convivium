@@ -10,18 +10,18 @@
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "thickness-(-6)",
+					"left": "thickness+6",
 					"right": 2
 				}
 			],
 			"effect": "minecraft:fire_resistance",
 			"level": "1",
-			"time": "600.0*min(if(abs(sweetness)-abs(5),(1+(abs(sweetness)-abs(5))/2)^2,1),if(abs(thickness)-abs((-6)),(1+(abs(thickness)-abs((-6)))/2)^2,1))"
+			"time": "600.0*min(if(abs(sweetness)-5,(1+(abs(sweetness)-5)/2)^2,1),if(abs(thickness)-6,(1+(abs(thickness)-6)/2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/fire_resistance",
 	"locals": {
-		"display": "max(0,10-(abs(sweetness-5)+abs(thickness-(-6))))",
+		"display": "max(0,10-(abs(sweetness-5)+abs(thickness+6)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

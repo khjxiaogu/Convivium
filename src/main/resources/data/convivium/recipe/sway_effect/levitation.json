@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:levitation",
 			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,soothingness-6)/2.5)),-log(abs(max(0.1,sweetness-6.5)/3))))))",
-			"time": "160.0*min(if(abs(soothingness)-abs(6),(1+(abs(soothingness)-abs(6))/2.5)^2,1),if(abs(sweetness)-abs(6.5),(1+(abs(sweetness)-abs(6.5))/3)^2,1))"
+			"time": "160.0*min(if(abs(soothingness)-6,(1+(abs(soothingness)-6)/2.5)^2,1),if(abs(sweetness)-abs(6.5),(1+(abs(sweetness)-abs(6.5))/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/levitation",

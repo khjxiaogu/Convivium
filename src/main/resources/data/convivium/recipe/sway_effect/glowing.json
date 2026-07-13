@@ -10,18 +10,18 @@
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "soothingness-(-5)",
+					"left": "soothingness+5",
 					"right": 3
 				}
 			],
 			"effect": "minecraft:glowing",
 			"level": "1",
-			"time": "1200.0*min(if(abs(thickness)-abs(6.5),(1+(abs(thickness)-abs(6.5))/4)^2,1),if(abs(soothingness)-abs((-5)),(1+(abs(soothingness)-abs((-5)))/3)^2,1))"
+			"time": "1200.0*min(if(abs(thickness)-abs(6.5),(1+(abs(thickness)-abs(6.5))/4)^2,1),if(abs(soothingness)-5,(1+(abs(soothingness)-5)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/glowing",
 	"locals": {
-		"display": "max(0,10-(abs(thickness-6.5)+abs(soothingness-(-5))))",
+		"display": "max(0,10-(abs(thickness-6.5)+abs(soothingness+5)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "max((-8)-soothingness,0)+min((-2)-soothingness,0)",

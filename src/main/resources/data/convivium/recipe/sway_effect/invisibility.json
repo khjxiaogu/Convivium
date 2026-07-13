@@ -16,7 +16,7 @@
 			],
 			"effect": "minecraft:invisibility",
 			"level": "1",
-			"time": "1200.0*min(if(abs(thickness)-abs((-8.2)),(1+(abs(thickness)-abs((-8.2)))/1.5)^2,1),if(abs(soothingness)-abs(6),(1+(abs(soothingness)-abs(6))/3)^2,1))"
+			"time": "1200.0*min(if(abs(thickness)-abs((-8.2)),(1+(abs(thickness)-abs((-8.2)))/1.5)^2,1),if(abs(soothingness)-6,(1+(abs(soothingness)-6)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/invisibility",

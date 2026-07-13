@@ -5,7 +5,7 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "soothingness-(-7.2)",
+					"left": "soothingness+7.2",
 					"right": 3
 				},
 				{
@@ -16,15 +16,15 @@
 			],
 			"effect": "convivium:plummet",
 			"level": "1",
-			"time": "300.0*min(if(abs(soothingness)-abs((-7.2)),(1+(abs(soothingness)-abs((-7.2)))/3)^2,1),if(abs(sweetness)-abs(7.5),(1+(abs(sweetness)-abs(7.5))/3)^2,1))"
+			"time": "300.0*min(if(abs(soothingness)-7.2,(1+(abs(soothingness)-7.2)/3)^2,1),if(abs(sweetness)-7.5,(1+(abs(sweetness)-7.5)/3)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/plummet",
 	"locals": {
-		"display": "max(0,10-(abs(soothingness-(-7.2))+abs(sweetness-7.5)))",
+		"display": "max(0,10-(abs(soothingness+7.2)+abs(sweetness-7.5)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max((-10.2)-soothingness,0)+min((-4.2)-soothingness,0)",
+		"soothingnessDelta": "max(-10.2-soothingness,0)+min(-4.2-soothingness,0)",
 		"sweetnessDelta": "max(4.5-sweetness,0)+min(10.5-sweetness,0)",
 		"thicknessDelta": 0.0
 	},

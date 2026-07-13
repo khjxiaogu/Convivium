@@ -5,7 +5,7 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "thickness-(-6.5)",
+					"left": "thickness+6.5",
 					"right": 4
 				},
 				{
@@ -16,17 +16,17 @@
 			],
 			"effect": "minecraft:blindness",
 			"level": "1",
-			"time": "1200.0*min(if(abs(thickness)-abs((-6.5)),(1+(abs(thickness)-abs((-6.5)))/4)^2,1),if(abs(astringency)-7,(1+(abs(astringency)-7)/3)^2,1))"
+			"time": "1200.0*min(if(abs(thickness)-6.5,(1+(abs(thickness)-6.5)/4)^2,1),if(abs(astringency)-7,(1+(abs(astringency)-7)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/blindness",
 	"locals": {
-		"display": "max(0,10-(abs(thickness-(-6.5))+abs(astringency-7)))",
+		"display": "max(0,10-(abs(thickness+6.5)+abs(astringency-7)))",
 		"astringencyDelta": "max(4-astringency,0)+min(10-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max((-10.5)-thickness,0)+min((-2.5)-thickness,0)"
+		"thicknessDelta": "max(-10.5-thickness,0)+min(-2.5-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

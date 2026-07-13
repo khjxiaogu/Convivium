@@ -16,7 +16,7 @@
 			],
 			"effect": "convivium:thrusted",
 			"level": "1",
-			"time": "600.0*min(if(abs(astringency)-abs(7.5),(1+(abs(astringency)-abs(7.5))/3)^2,1),if(abs(soothingness)-8,(1+(abs(soothingness)-8)/2.5)^2,1))"
+			"time": "600.0*min(if(abs(astringency)-7.5,(1+(abs(astringency)-7.5)/3)^2,1),if(abs(soothingness)-8,(1+(abs(soothingness)-8)/2.5)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/thrusted",
@@ -24,7 +24,7 @@
 		"display": "max(0,10-(abs(astringency-7.5)+abs(soothingness+8)))",
 		"astringencyDelta": "max(4.5-astringency,0)+min(10.5-astringency,0)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max((-10.5)-soothingness,0)+min((-5.5)-soothingness,0)",
+		"soothingnessDelta": "max(-10.5-soothingness,0)+min(-5.5-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

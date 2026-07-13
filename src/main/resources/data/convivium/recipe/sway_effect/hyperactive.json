@@ -16,7 +16,7 @@
 			],
 			"effect": "caupona:hyperactive",
 			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,soothingness-7.8)/3)),-log(abs(max(0.1,thickness-6)/3.5))))))",
-			"time": "200.0*min(if(abs(soothingness)-abs(7.8),(1+(abs(soothingness)-abs(7.8))/3)^2,1),if(abs(thickness)-6,(1+(abs(thickness)-6)/3.5)^2,1))"
+			"time": "200.0*min(if(abs(soothingness)-7.8,(1+(abs(soothingness)-7.8)/3)^2,1),if(abs(thickness)-6,(1+(abs(thickness)-6)/3.5)^2,1))"
 		}
 	],
 	"icon": "caupona:mob_effect/hyperactive",

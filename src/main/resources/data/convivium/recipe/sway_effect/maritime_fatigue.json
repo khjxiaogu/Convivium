@@ -5,7 +5,7 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "astringency-(-7.5)",
+					"left": "astringency+7.5",
 					"right": 3
 				},
 				{
@@ -16,13 +16,13 @@
 			],
 			"effect": "convivium:maritime_fatigue",
 			"level": "1",
-			"time": "500.0*min(if(abs(astringency)-abs((-7.5)),(1+(abs(astringency)-abs((-7.5)))/3)^2,1),if(abs(soothingness)-abs(7.5),(1+(abs(soothingness)-abs(7.5))/3)^2,1))"
+			"time": "500.0*min(if(abs(astringency)-7.5,(1+(abs(astringency)-7.5)/3)^2,1),if(abs(soothingness)-7.5,(1+(abs(soothingness)-7.5)/3)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/maritime_fatigue",
 	"locals": {
-		"display": "max(0,10-(abs(astringency-(-7.5))+abs(soothingness-7.5)))",
-		"astringencyDelta": "max((-10.5)-astringency,0)+min((-4.5)-astringency,0)",
+		"display": "max(0,10-(abs(astringency+7.5)+abs(soothingness-7.5)))",
+		"astringencyDelta": "max(-10.5-astringency,0)+min(-4.5-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "max(4.5-soothingness,0)+min(10.5-soothingness,0)",
 		"sweetnessDelta": 0.0,

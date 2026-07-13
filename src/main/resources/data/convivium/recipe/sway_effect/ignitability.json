@@ -16,7 +16,7 @@
 			],
 			"effect": "convivium:ignitability",
 			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,sweetness+6)/2)),-log(abs(max(0.1,thickness-5.5)/2))))))",
-			"time": "600.0*min(if(abs(sweetness)-6,(1+(abs(sweetness)-6)/2)^2,1),if(abs(thickness)-abs(5.5),(1+(abs(thickness)-abs(5.5))/2)^2,1))"
+			"time": "600.0*min(if(abs(sweetness)-6,(1+(abs(sweetness)-6)/2)^2,1),if(abs(thickness)-5.5,(1+(abs(thickness)-5.5)/2)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/ignitability",
@@ -25,7 +25,7 @@
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max((-8)-sweetness,0)+min((-4)-sweetness,0)",
+		"sweetnessDelta": "max(-8-sweetness,0)+min(-4-sweetness,0)",
 		"thicknessDelta": "max(3.5-thickness,0)+min(7.5-thickness,0)"
 	},
 	"priority": 0,

@@ -28,6 +28,7 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -150,7 +151,8 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	}
 	@Override
 	public boolean canConnect(BlockPos pos, BlockState state, Direction from) {
-		// TODO Auto-generated method stub
+		if(from.getAxis()==Axis.Y)
+			return false;
 		return from.getClockWise().getAxis()==state.getValue(FACING).getAxis();
 	}
 

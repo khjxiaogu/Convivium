@@ -19,6 +19,7 @@
 package com.khjxiaogu.convivium.blocks.aqueduct;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.StringRepresentable;
 
 public enum AqueductMainConnection implements StringRepresentable{

@@ -116,7 +116,7 @@ public class FruitPlatterRenderState extends BlockEntityRenderState {
 			if(dmr!=null) {
 				drawModel(dmr,submitNodeCollector,poseStack,rss.getRenderType(),instance,rss.hasFoil());
 			}else {
-				for(int i=1;i<position;i++) {
+				for(int i=1;i<=position;i++) {
 					drawModel(rss.getPiled(position-1, i-1),submitNodeCollector,poseStack,rss.getRenderType(),instance,rss.hasFoil());
 				}
 			}

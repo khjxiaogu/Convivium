@@ -192,7 +192,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					for(CurrentSwayInfo swh:getBlockEntity().swayhint) {
 						if(swh.getActive()>0) {
 							
-							drawActiveSway(graphics,18+9*(n2++),65,swh);
+							drawActiveSway(graphics,21+9*(n2++),17,swh);
 						}else {
 							for(int n=0;n<Constants.TASTES.length;n++) {
 								drawSwayBubble(graphics,n,swh,info.variants,mouseX,mouseY);

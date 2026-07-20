@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/haste",
 	"locals": {
-		"display": "max(0,10-(abs(sweetness+7.8)+abs(astringency+6.5)))",
+		"display": "max(0,20-(abs(sweetness+7.8)+abs(astringency+6.5)))",
 		"astringencyDelta": "max(-9.5-astringency,0)+min(-3.5-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

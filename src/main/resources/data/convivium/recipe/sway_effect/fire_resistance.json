@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/fire_resistance",
 	"locals": {
-		"display": "max(0,10-(abs(sweetness-5)+abs(thickness+6)))",
+		"display": "max(0,20-(abs(sweetness-5)+abs(thickness+6)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

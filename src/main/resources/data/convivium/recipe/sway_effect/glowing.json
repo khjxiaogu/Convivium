@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/glowing",
 	"locals": {
-		"display": "max(0,10-(abs(thickness-6.5)+abs(soothingness+5)))",
+		"display": "max(0,20-(abs(thickness-6.5)+abs(soothingness+5)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "max(-8-soothingness,0)+min(-2-soothingness,0)",

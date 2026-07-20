@@ -21,7 +21,7 @@
 	],
 	"icon": "caupona:mob_effect/hyperactive",
 	"locals": {
-		"display": "max(0,10-(abs(soothingness-7.8)+abs(thickness-6)))",
+		"display": "max(0,20-(abs(soothingness-7.8)+abs(thickness-6)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "max(4.8-soothingness,0)+min(10.8-soothingness,0)",

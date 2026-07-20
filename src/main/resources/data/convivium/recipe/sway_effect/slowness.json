@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/slowness",
 	"locals": {
-		"display": "max(0,10-(abs(astringency-6.5)+abs(thickness-7)))",
+		"display": "max(0,20-(abs(astringency-6.5)+abs(thickness-7)))",
 		"astringencyDelta": "max(3.5-astringency,0)+min(9.5-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

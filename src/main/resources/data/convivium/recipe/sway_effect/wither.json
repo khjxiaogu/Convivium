@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/wither",
 	"locals": {
-		"display": "max(0,10-(abs(soothingness+7.5)+abs(pungency-7.5)))",
+		"display": "max(0,20-(abs(soothingness+7.5)+abs(pungency-7.5)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": "max(4.5-pungency,0)+min(10.5-pungency,0)",
 		"soothingnessDelta": "max(-10.5-soothingness,0)+min(-4.5-soothingness,0)",

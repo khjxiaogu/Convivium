@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/unluck",
 	"locals": {
-		"display": "max(0,10-(abs(sweetness-6.5)+abs(soothingness+6.2)))",
+		"display": "max(0,20-(abs(sweetness-6.5)+abs(soothingness+6.2)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "max(-9.2-soothingness,0)+min(-3.2-soothingness,0)",

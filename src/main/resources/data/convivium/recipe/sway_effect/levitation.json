@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/levitation",
 	"locals": {
-		"display": "max(0,10-(abs(soothingness-6)+abs(sweetness-6.5)))",
+		"display": "max(0,20-(abs(soothingness-6)+abs(sweetness-6.5)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": "max(3.5-soothingness,0)+min(8.5-soothingness,0)",

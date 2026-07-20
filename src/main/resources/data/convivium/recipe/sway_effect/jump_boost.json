@@ -21,7 +21,7 @@
 	],
 	"icon": "minecraft:mob_effect/jump_boost",
 	"locals": {
-		"display": "max(0,10-(abs(soothingness-7)+abs(pungency+8)))",
+		"display": "max(0,20-(abs(soothingness-7)+abs(pungency+8)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": "max(-11-pungency,0)+min(-5-pungency,0)",
 		"soothingnessDelta": "max(3-soothingness,0)+min(11-soothingness,0)",

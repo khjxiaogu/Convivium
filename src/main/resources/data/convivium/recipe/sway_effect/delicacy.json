@@ -21,7 +21,7 @@
 	],
 	"icon": "convivium:mob_effect/delicacy",
 	"locals": {
-		"display": "max(0,10-(abs(thickness+8)+abs(astringency-7)))",
+		"display": "max(0,20-(abs(thickness+8)+abs(astringency-7)))",
 		"astringencyDelta": "max(4-astringency,0)+min(10-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,

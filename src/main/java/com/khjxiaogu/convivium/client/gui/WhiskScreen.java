@@ -230,11 +230,18 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		if (getBlockEntity().processMax > 0) {
 			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 135, topPos + 36, 176, 0,
 					(int) (14 * (getBlockEntity().processMax - getBlockEntity().process) * 1f / getBlockEntity().processMax), 11, 256, 256);
+		}
+		if (getBlockEntity().convertion.getFinishedProgress()>0) {
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 135, topPos + 36, 176, 0,
+					(int) (14 * getBlockEntity().convertion.getFinishedProgress() * 1f / getBlockEntity().convertion.getProcessMax()), 11, 256, 256);
+		}
+		if (getBlockEntity().processMax > 0) {
 			int idx=0;
 			if(getBlockEntity().getSpeed()>0)
 				idx=(RotationUtils.getTicks()/5)%4;
 			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos+131,topPos+55, 234, 52*idx, 22,52, 256, 256);
 		}
+		
 	}
 
 }

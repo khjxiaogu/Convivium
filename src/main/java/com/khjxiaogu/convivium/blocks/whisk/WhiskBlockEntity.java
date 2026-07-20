@@ -163,9 +163,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			FluidResource resource=tank.getResource(0);
 			int amount=tank.getAmountAsInt(0);
 			ItemResource stack=inv.getResource(0);
-			try(Transaction trans=Transaction.openRoot()){
+			
+
+			try(@SuppressWarnings("deprecation")
+			Transaction trans=Transaction.open(Transaction.getCurrentOpenedTransaction())){
 				swayInfo.updateSnapshots(trans);
-				if(inv.extract(amount, stack, 1, trans)==1) {
+				if(inv.extract(0, stack, 1, trans)==1) {
 					BeverageInfo info=getOrCreateCopy(resource);
 					int total=0;
 					for(int ent:info.relishes.values()) {

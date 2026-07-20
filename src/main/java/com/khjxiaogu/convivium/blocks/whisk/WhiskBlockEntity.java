@@ -431,6 +431,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		}
 		if(lastIsHeating!=isHeating) {
 			convertion.onContainerChanged();
+			this.syncData();
 		}
 		if(getSpeed() > 0) {
 			if(processMax>0) {

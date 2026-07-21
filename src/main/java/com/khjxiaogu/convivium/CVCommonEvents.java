@@ -26,6 +26,7 @@ import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
+import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
 import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
 
 import net.minecraft.util.TriState;
@@ -34,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -44,30 +46,14 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 @EventBusSubscriber
 public class CVCommonEvents {
 
-	/*@SubscribeEvent
+	@SubscribeEvent
 	public static void bowlContainerFood(ContanerContainFoodEvent ev) {
 		if (ev.origin.getItem() == Items.GLASS_BOTTLE) {
-			if (!ev.isBlockAccess) {
-				RecipeHolder<ContainingRecipe> recipe = ContainingRecipe.recipes.get(ev.fs.getFluid());
-				if (recipe != null) {
-					ev.out = recipe.value().handle(ev.fs);
-					ev.setResult(EventResult.ALLOW);
-				}
+			if (ev.isBlockAccess&&ev.fs.is(Fluids.WATER)) {
+				ev.setCanceled(true);
 			}
 		}
-	}*/
-
-	/*@SubscribeEvent
-	public static void isExtractAllowed(FoodExchangeItemEvent.Pre event) {
-		if (!event.getOrigin().is(Items.GLASS_BOTTLE))
-			event.setResult(EventResult.ALLOW);
 	}
-
-	@SubscribeEvent
-	public static void isExchangeAllowed(FoodExchangeItemEvent.Post event) {
-		if ((!event.getOrigin().is(Items.GLASS_BOTTLE)) && event.getTarget().is(Items.GLASS_BOTTLE))
-			event.setResult(EventResult.ALLOW);
-	}*/
 	@SubscribeEvent
 	public static void modifyDamage(LivingIncomingDamageEvent event) {
 		if(event.getEntity().hasEffect(CVMobEffects.DELICACY)) {

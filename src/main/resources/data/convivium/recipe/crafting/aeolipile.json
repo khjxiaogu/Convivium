@@ -7,7 +7,7 @@
 	"key": {
 		"C": "minecraft:copper_ingot",
 		"L": "#c:ingots/lead",
-		"X": "minecraft:cut_copper",
+		"X": "minecraft:copper_helmet",
 		"%": "convivium:cog"
 	},
 	"result": {

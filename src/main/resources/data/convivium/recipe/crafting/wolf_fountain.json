@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"LW",
+		"C#"
+	],
+	"key": {
+		"L": "minecraft:lapis_lazuli",
+		"W": "caupona:wolf_statue",
+		"C": "convivium:cog",
+		"#": "minecraft:copper_grate"
+	},
+	"result": {
+		"id": "convivium:wolf_fountain"
+	}
+}

@@ -5,12 +5,12 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "soothingness+7.2",
+					"left": "abs(soothingness+7.2)",
 					"right": 3
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "sweetness-7.5",
+					"left": "abs(sweetness-7.5)",
 					"right": 3
 				}
 			],

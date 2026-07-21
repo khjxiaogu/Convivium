@@ -5,12 +5,12 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "soothingness-7.8",
+					"left": "abs(soothingness-7.8)",
 					"right": 3
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "thickness-6",
+					"left": "abs(thickness-6)",
 					"right": 3.5
 				}
 			],

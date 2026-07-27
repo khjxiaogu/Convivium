@@ -128,6 +128,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 			this.level.setBlockAndUpdate(this.getBlockPos(),state);
 			this.setChanged();
 		}
+		
 		if(active) {
 			Direction dir=this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 			Direction moving;
@@ -138,6 +139,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 			if(nxt--==0) {
 				tonxt=nxt=40/Math.max(1, spd);
 				move(moving);
+			
 			}
 		}
 		
@@ -145,8 +147,13 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 	}
 	@Override
 	public boolean isReceiver() {
-		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public void addPush(Direction from, int nxt) {
+		boolean active=this.getBlockState().getValue(KineticBasedBlock.ACTIVE);
+		if(!active)
+			super.addPush(from, nxt);
 	}
 	@Override
 	public boolean isCogTowards(Direction facing) {

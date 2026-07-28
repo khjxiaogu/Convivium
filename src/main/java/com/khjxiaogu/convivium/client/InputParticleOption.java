@@ -27,22 +27,21 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class InputParticleOption implements ParticleOptions {
     private final ParticleType<InputParticleOption> type;
-    private final Either<ItemStack, FluidStack> stack;
+    private final Either<Integer, FluidStack> stack;
 
     public static MapCodec<InputParticleOption> codec(ParticleType<InputParticleOption> particleType) {
-        return Codec.mapEither(ItemStack.CODEC.fieldOf("item"),FluidStack.CODEC.fieldOf("fluid")).xmap(v -> new InputParticleOption(particleType, v), p_333908_ -> p_333908_.getStack()).fieldOf("stack");
+        return Codec.mapEither(Codec.INT.fieldOf("item"),FluidStack.CODEC.fieldOf("fluid")).xmap(v -> new InputParticleOption(particleType, v), p_333908_ -> p_333908_.getStack()).fieldOf("stack");
     }
 
     public static StreamCodec<RegistryFriendlyByteBuf, InputParticleOption> streamCodec(ParticleType<InputParticleOption> type) {
-        return ByteBufCodecs.either(ItemStack.STREAM_CODEC, FluidStack.STREAM_CODEC).map(o->new InputParticleOption(type,o),o->o.getStack());
+        return ByteBufCodecs.either(ByteBufCodecs.INT, FluidStack.STREAM_CODEC).map(o->new InputParticleOption(type,o),o->o.getStack());
     }
 
-    private InputParticleOption(ParticleType<InputParticleOption> type, Either<ItemStack, FluidStack> stack) {
+    private InputParticleOption(ParticleType<InputParticleOption> type, Either<Integer, FluidStack> stack) {
         this.type = type;
         this.stack = stack;
     }
@@ -53,11 +52,11 @@ public class InputParticleOption implements ParticleOptions {
     }
 
 
-    public static InputParticleOption create(ParticleType<InputParticleOption> type, Either<ItemStack, FluidStack> stack) {
+    public static InputParticleOption create(ParticleType<InputParticleOption> type, Either<Integer, FluidStack> stack) {
         return new InputParticleOption(type, stack);
     }
 
-	public Either<ItemStack, FluidStack> getStack() {
+	public Either<Integer, FluidStack> getStack() {
 		return stack;
 	}
 

@@ -25,7 +25,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class InputParticleType extends ParticleType<InputParticleOption> {
@@ -44,8 +43,8 @@ public class InputParticleType extends ParticleType<InputParticleOption> {
     public MapCodec<InputParticleOption> codec() {
         return this.codec;
     }
-	public ParticleOptions with(ItemStack stack) {
-		return InputParticleOption.create(this, Either.left(stack));
+	public ParticleOptions with(int tint) {
+		return InputParticleOption.create(this, Either.left(tint));
 	}
 	public ParticleOptions with(FluidStack stack) {
 		return InputParticleOption.create(this, Either.right(stack));

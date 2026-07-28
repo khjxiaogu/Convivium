@@ -254,10 +254,15 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 				}else if(fluid.getAmountAsInt(0)>0) {
 					Consumable cons=fluid.getResource(0).get(DataComponents.CONSUMABLE);
 					FoodProperties food=fluid.getResource(0).get(DataComponents.FOOD);
-					appliedFood=FoodPropertieHelper.copyWithPart(food, 5);
-					appliedConsumable=FoodPropertieHelper.copyWithPart(cons, 5);
-					if(appliedConsumable==null)
+					if(food==null) {
+						appliedFood=null;
+					}else {
+						appliedFood=FoodPropertieHelper.copyWithPart(food, 5);
+					}
+					if(cons==null) {
 						appliedConsumable=EMPTY;
+					}else
+						appliedConsumable=FoodPropertieHelper.copyWithPart(cons, 5);
 				}
 			}
 			if(appliedConsumable!=null) {
@@ -358,6 +363,7 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 					
 				}else {
 					FluidUtil.tryPickupFluid(fluid, null, level, back, backFace);
+					this.syncData();
 				} 
 			}
 			if(fluid.getAmountAsInt(0)>0||item!=null) {

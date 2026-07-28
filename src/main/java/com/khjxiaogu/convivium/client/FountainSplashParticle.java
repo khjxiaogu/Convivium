@@ -67,13 +67,13 @@ public class FountainSplashParticle extends SingleQuadParticle {
 			
 			this.setColor(ARGB.redFloat(tint), ARGB.greenFloat(tint), ARGB.blueFloat(tint));
 			float alpha = ARGB.alphaFloat(tint);
-			this.setAlpha(alpha == 0 ? 1 : alpha);
+			this.setAlpha(alpha <= 0.01 ? 1 : alpha);
 			//System.out.println("f"+alpha);
 			this.setSprite(sprite);
-			v1=(v1-v0)/8+v0;
-			u1=(u1-u0)/8+u0;
+			//v1=(v1-v0)/8+v0;
+			//u1=(u1-u0)/8+u0;
 			layer=Layer.TRANSLUCENT;
-			this.quadSize/=8;
+			//this.quadSize/=8;
 		});
 
 

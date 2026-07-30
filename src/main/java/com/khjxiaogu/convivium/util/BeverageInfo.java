@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 
 import org.joml.Vector3f;
 
+import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
@@ -67,7 +68,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -76,14 +76,15 @@ import net.minecraft.world.food.FoodProperties.Builder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -96,6 +97,15 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public Object2IntRBTreeMap<Holder<Fluid>> relishes=new Object2IntRBTreeMap<Holder<Fluid>>(Comparator.comparing(t->t.getKey()));
 	public List<String> activeRelish = new ArrayList<>(3);
 
+	public BeverageInfo(Holder<Fluid> f) {
+		effects = new ArrayList<>();
+		swayeffects = new ArrayList<>();
+		stacks = new ArrayList<>();
+		variants=new Object2FloatOpenHashMap<>();
+		foodeffect = new ArrayList<>();
+		relishes.put(f, 1);
+	}
+
 	public BeverageInfo() {
 		effects = new ArrayList<>();
 		swayeffects = new ArrayList<>();
@@ -103,7 +113,6 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		variants=new Object2FloatOpenHashMap<>();
 		foodeffect = new ArrayList<>();
 	}
-
 	public static final Codec<BeverageInfo> CODEC = RecordCodecBuilder.create(t -> t.group(
 		Codec.list(FloatemStack.CODEC).fieldOf("items").forGetter(o -> o.stacks),
 		SUtils.VARIANTS_CODEC.fieldOf("variants").forGetter(o->o.variants),
@@ -392,13 +401,13 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 		recalculateHAS();
 		return Pair.of(swi,
 			BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).<Either<BeverageTypeRecipe,Fluid>>map(t -> Either.left(t)).findFirst()
-				.orElse(Either.right(CVFluids.mixedf.get())));
+				.orElse(Either.right(CVFluids.MIXED_FLUID.get())));
 	}
 
 	public Fluid checkFluidType() {
 		BeveragePendingContext ctx = new BeveragePendingContext(this);
 		return BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).map(t -> t.output).findFirst()
-			.orElse(CVFluids.mixedf.get());
+			.orElse(CVFluids.MIXED_FLUID.get());
 	}
 
 	public void merge(BeverageInfo f, float cparts, float oparts) {
@@ -518,11 +527,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	}
 	@Override
 	public Consumable.Builder getConsumable() {
-		Consumable.Builder b=Consumable.builder()
-		.consumeSeconds(1.6F)
-		.animation(ItemUseAnimation.DRINK)
-		.sound(SoundEvents.GENERIC_DRINK)
-		.hasConsumeParticles(true);
+		Consumable.Builder b=Consumables.defaultDrink();
 		for (ChancedEffect eff : effects) {
 			eff.toPossibleEffects(b);
 		}
@@ -600,5 +605,9 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 
 
 
+	public static void setInfo(MutableDataComponentHolder stack,BeverageInfo info) {
+		stack.set(CVComponents.BEVERAGE_INFO, info);
+		stack.set(DataComponents.CONSUMABLE, info.getConsumable().build());
+	}
 
 }

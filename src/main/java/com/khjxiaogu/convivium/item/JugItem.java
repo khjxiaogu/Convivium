@@ -22,11 +22,9 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVMain;
-import com.khjxiaogu.convivium.blocks.foods.BeverageBlockEntity;
-import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
+import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.util.CreativeTabItemHelper;
 import com.teammoeg.caupona.util.ICreativeModeTabItem;
 import com.teammoeg.caupona.util.Utils;
@@ -39,7 +37,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -89,9 +86,9 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 					}
 				}
 			}
-			if(worldIn.getBlockEntity(blockpos) instanceof BeverageBlockEntity be) {
-				ItemResource ir=be.getInternal().getResource(0);
-				if(ir.is(Items.GLASS_BOTTLE)&&handler!=null) {
+			if(worldIn.getBlockEntity(blockpos) instanceof IFoodContainer be) {
+				ItemResource ir=be.getValidContainer(0);
+				if(handler!=null) {
 					FluidResource rs=handler.getResource(0);
 					if(!rs.isEmpty()) {
 						if(!worldIn.isClientSide()) {
@@ -99,9 +96,8 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 								int amt = handler.extract(rs,250, ctx);
 								ContanerContainFoodEvent ev=Utils.contain(ir,rs,amt);
 								if (ev.isAllowed()) {
-									if(be.exchangeInternal(ev.getOutput(),ctx).is(Items.GLASS_BOTTLE)) {
+									if(be.exchangeInternal(ev.getOutput(),ctx).equals(ir)) {
 										ctx.commit();
-										be.syncData();
 									}
 								}
 							}
@@ -151,13 +147,10 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 	public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
 		@Nullable @org.jspecify.annotations.Nullable ResourceHandler<FluidResource> e=itemStack.getCapability(Capabilities.Fluid.ITEM,ItemAccess.forStack(itemStack));
 		if(e!=null){
-			FluidResource f=e.getResource(0);
+			FluidStack f=FluidUtil.getStack(e, 0);
 			if(!f.isEmpty()) {
-				builder.accept(f.getHoverName());
-				BeverageInfo info = f.get(CVComponents.BEVERAGE_INFO);
-				if(info!=null){
-					info.addToTooltip(context, builder, tooltipFlag, f);
-				}
+				f.getTooltipLines(context, context.player(), tooltipFlag).forEach(builder::accept);
+			
 				builder.accept(Utils.string(e.getAmountAsInt(0)+"/1250 mB"));
 				
 			}

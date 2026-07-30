@@ -29,6 +29,7 @@ import com.teammoeg.caupona.util.LazyTickWorker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
@@ -54,6 +55,8 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 		if(speed!=val) {
 			if(getSpeed()==0) {
 				this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, true));
+			}else if(val==0) {
+				this.level.setBlockAndUpdate(worldPosition,this.getBlockState().setValue(KineticBasedBlock.ACTIVE, false));
 			}
 			speed = val;
 			this.syncData();
@@ -84,7 +87,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 		BlockState state=this.getBlockState();
 		if(this.level.isClientSide()) {
 			if(state.getValue(KineticBasedBlock.ACTIVE)&&!state.getValue(KineticBasedBlock.LOCKED)) {
-				Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
+				Direction dir=this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 				Direction moving;
 				if(RotationUtils.isBlackGrid(getBlockPos())) {
 					moving=dir.getClockWise();
@@ -105,6 +108,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 			return;
 		}
 		if(process.tick()) {
+			
 			this.syncData();
 		}
 		boolean isChanged=false;
@@ -114,14 +118,19 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 			state=state.setValue(KineticBasedBlock.LOCKED, hasSignal);
 			isChanged=true;
 		}
+		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
+		int spd=getSpeed();
+		if(spd==0&&active) {
+			state=state.setValue(KineticBasedBlock.ACTIVE, false);
+			isChanged=true;
+		}
 		if(isChanged) {
 			this.level.setBlockAndUpdate(this.getBlockPos(),state);
 			this.setChanged();
 		}
-		boolean active=state.getValue(KineticBasedBlock.ACTIVE);
-		int spd=getSpeed();
+		
 		if(active) {
-			Direction dir=this.getBlockState().getValue(AqueductControllerBlock.FACING);
+			Direction dir=this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 			Direction moving;
 			if(RotationUtils.isBlackGrid(getBlockPos())) {
 				moving=dir.getClockWise();
@@ -130,6 +139,7 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 			if(nxt--==0) {
 				tonxt=nxt=40/Math.max(1, spd);
 				move(moving);
+			
 			}
 		}
 		
@@ -137,16 +147,25 @@ public class AqueductControllerBlockEntity extends AqueductBlockEntity implement
 	}
 	@Override
 	public boolean isReceiver() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	@Override
+	public void addPush(Direction from, int nxt) {
+		boolean active=this.getBlockState().getValue(KineticBasedBlock.ACTIVE);
+		if(!active)
+			super.addPush(from, nxt);
+	}
+	@Override
 	public boolean isCogTowards(Direction facing) {
-		return facing==this.getBlockState().getValue(AqueductControllerBlock.FACING);
+		return facing==this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 	}
 	@Override
 	public boolean isCageTowards(Direction facing) {
 		return false;
+	}
+	@Override
+	public void revalidateSpeed() {
+		speed=0;
 	}
 
 }

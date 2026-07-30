@@ -56,19 +56,19 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 		for (String s : new String[] { "felsic_tuff", "stone", "sandstone" }) {
 			this.tag(CVTags.Blocks.AQUEDUCT).add(cv(s + "_aqueduct")).add(cv(s + "_aqueduct_wavemaker"));
 		}
-		adds(this.tag(CPTags.Blocks.CHIMNEY_IGNORES), CVBlocks.aeolipile.getKey());
-		adds(this.tag(CVTags.Blocks.AQUEDUCT_MOVE), CPBlocks.BOWL.getKey(), CPBlocks.DISH.getKey(), CVBlocks.platter.getKey(), CPBlocks.WOLF.getKey(),
+		adds(this.tag(CPTags.Blocks.CHIMNEY_IGNORES), CVBlocks.AEOLIPILE.getKey());
+		adds(this.tag(CVTags.Blocks.AQUEDUCT_MOVE), CPBlocks.BOWL.getKey(), CPBlocks.DISH.getKey(), CVBlocks.PLATTER.getKey(), CPBlocks.WOLF.getKey(),
 			CPBlocks.COPPER_PAN.getKey(), CPBlocks.LEAD_PAN.getKey(), CPBlocks.IRON_PAN.getKey(), CPBlocks.GRAVY_BOAT.getKey(), CPBlocks.STONE_PAN.getKey(), CVBlocks.BEVERAGE.getKey());
 		for (String s : CPItems.dishes) {
 			this.tag(CVTags.Blocks.AQUEDUCT_MOVE).add(cpn(s));
 		}
-		adds(tag(BlockTags.MINEABLE_WITH_AXE), CVBlocks.cage.getKey(), CVBlocks.cog.getKey(), CVBlocks.platter.getKey(), CVBlocks.CAMELLIA.getKey());
-		adds(tag(BlockTags.MINEABLE_WITH_PICKAXE), CVBlocks.whisk.getKey(), CVBlocks.aeolipile.getKey(), CVBlocks.pam.getKey(), CVBlocks.basin.getKey(), CVBlocks.lead_basin.getKey(),
+		adds(tag(BlockTags.MINEABLE_WITH_AXE), CVBlocks.CAGE.getKey(), CVBlocks.COG.getKey(), CVBlocks.PLATTER.getKey(), CVBlocks.CAMELLIA.getKey());
+		adds(tag(BlockTags.MINEABLE_WITH_PICKAXE), CVBlocks.WHISK.getKey(), CVBlocks.AEOLIPILE.getKey(), CVBlocks.PAM.getKey(), CVBlocks.BASIN.getKey(), CVBlocks.LEAD_BASIN.getKey(),
 			CVBlocks.BEVERAGE_VENDING_MACHINE.getKey());
-		for (DeferredHolder<Block, Block> i : CVBlocks.aqueducts) {
+		for (DeferredHolder<Block, Block> i : CVBlocks.AQUEDUCTS) {
 			tag(BlockTags.MINEABLE_WITH_PICKAXE).add(i.getKey());
 		}
-		for (DeferredHolder<Block, Block> i : CVBlocks.aqueduct_mains) {
+		for (DeferredHolder<Block, Block> i : CVBlocks.AQUEDUCT_CONTROLLERS) {
 			tag(BlockTags.MINEABLE_WITH_PICKAXE).add(i.getKey());
 		}
 

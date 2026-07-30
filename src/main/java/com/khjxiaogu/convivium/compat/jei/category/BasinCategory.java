@@ -52,7 +52,7 @@ public class BasinCategory implements CPCategory<RecipeHolder<BasinRecipe>> {
 	private IDrawable ICON;
 
 	public BasinCategory(IGuiHelper guiHelper) {
-		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.lead_basin.get()));
+		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.LEAD_BASIN.get()));
 		Identifier guiMain = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/jei/basin.png");
 		this.BACKGROUND = guiHelper.createDrawable(guiMain, 0, 0, 127, 63);
 	}
@@ -119,7 +119,7 @@ public class BasinCategory implements CPCategory<RecipeHolder<BasinRecipe>> {
 		.addRichTooltipCallback(new BaseCallback(recipe.base, recipe.density));
 		if(recipe.requireBasin) {
 			builder.addSlot(RecipeIngredientRole.CRAFTING_STATION , 3, 22)
-			.addIngredients(VanillaTypes.ITEM_STACK,Arrays.asList(new ItemStack(CVBlocks.lead_basin.get())));
+			.addIngredients(VanillaTypes.ITEM_STACK,Arrays.asList(new ItemStack(CVBlocks.LEAD_BASIN.get())));
 		}
 		
 		for(int i=0;i<4;i++) {

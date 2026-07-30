@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -48,27 +49,27 @@ public class CVBlockEntityTypes {
 	public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister
 		.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, CVMain.MODID);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CogeCageBlockEntity>> COG_CAGE = REGISTER.register("cog_cage",
-		makeTypes2(CogeCageBlockEntity::new, () -> List.of(CVBlocks.cog, CVBlocks.cage)));
+		makeTypes2(CogeCageBlockEntity::new, () -> List.of(CVBlocks.COG, CVBlocks.CAGE)));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AeolipileBlockEntity>> AOELIPILE = REGISTER.register("aoelipile",
-		makeType(AeolipileBlockEntity::new, () -> CVBlocks.aeolipile));
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlatterBlockEntity>> PLATTER = REGISTER.register("platter", makeType(PlatterBlockEntity::new, () -> CVBlocks.platter));
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WhiskBlockEntity>> WHISK = REGISTER.register("whisk", makeType(WhiskBlockEntity::new, () -> CVBlocks.whisk));
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PamBlockEntity>> PAM = REGISTER.register("pestle_and_mortar", makeType(PamBlockEntity::new, () -> CVBlocks.pam));
+		makeType(AeolipileBlockEntity::new, () -> CVBlocks.AEOLIPILE));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlatterBlockEntity>> PLATTER = REGISTER.register("platter", makeType(PlatterBlockEntity::new, () -> CVBlocks.PLATTER));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WhiskBlockEntity>> WHISK = REGISTER.register("whisk", makeType(WhiskBlockEntity::new, () -> CVBlocks.WHISK));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PamBlockEntity>> PAM = REGISTER.register("pestle_and_mortar", makeType(PamBlockEntity::new, () -> CVBlocks.PAM));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasinBlockEntity>> BASIN = REGISTER.register("basin",
-		makeTypes2(BasinBlockEntity::new, () -> List.of(CVBlocks.basin, CVBlocks.lead_basin)));
+		makeTypes2(BasinBlockEntity::new, () -> List.of(CVBlocks.BASIN, CVBlocks.LEAD_BASIN)));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AqueductBlockEntity>> AQUEDUCT = REGISTER.register("aqueduct",
-		makeTypes2(AqueductBlockEntity::new, () -> CVBlocks.aqueducts));
+		makeTypes2(AqueductBlockEntity::new, () -> CVBlocks.AQUEDUCTS));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AqueductControllerBlockEntity>> AQUEDUCT_MAIN = REGISTER.register("aqueduct_controller",
-		makeTypes2(AqueductControllerBlockEntity::new, () -> CVBlocks.aqueduct_mains));
+		makeTypes2(AqueductControllerBlockEntity::new, () -> CVBlocks.AQUEDUCT_CONTROLLERS));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WolfFountainBlockEntity>> WOLF_FOUNTAIN = REGISTER.register("wolf_fountain",
-		makeType(WolfFountainBlockEntity::new, () -> CVBlocks.wolf_fountain));
+		makeType(WolfFountainBlockEntity::new, () -> CVBlocks.WOLF_FOUNTAIN));
 	
 	
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageBlockEntity>> BEVERAGE = REGISTER.register("beverage", makeType(BeverageBlockEntity::new, () -> CVBlocks.BEVERAGE));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageBlockEntity>> BEVERAGE = REGISTER.register("beverage", makeTypes2(BeverageBlockEntity::new, () -> CVBlocks.BEVERAGE_BLOCKS));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BeverageVendingBlockEntity>> BEVERAGE_VENDING_MACHINE = REGISTER.register("beverage_vending_machine",
 		makeType(BeverageVendingBlockEntity::new, () -> CVBlocks.BEVERAGE_VENDING_MACHINE));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SorbetBlockEntity>> SORBET = REGISTER.register("sorbet",
-		makeTypes(SorbetBlockEntity::new, () -> CVBlocks.sorbets));
+		makeTypes(SorbetBlockEntity::new, () -> CVBlocks.SORBETS));
 	
 	
 
@@ -81,7 +82,7 @@ public class CVBlockEntityTypes {
 		return () -> new BlockEntityType<>(create, valid.get().stream().collect(Collectors.toSet()));
 	}
 	private static <T extends BlockEntity, E extends Block> Supplier<BlockEntityType<T>> makeTypes2(BlockEntitySupplier<T> create,
-		Supplier<List<DeferredHolder<Block, E>>> valid) {
+		Supplier<List<DeferredBlock<E>>> valid) {
 		return () -> new BlockEntityType<>(create, valid.get().stream().map(DeferredHolder<Block, E>::get).collect(Collectors.toSet()));
 	}
 

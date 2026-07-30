@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "ppunsoblend",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(pungency-7)",
+					"right": 4
 				},
 				{
-					"compare": "greater",
-					"left": "pthnswbalance",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(soothingness+7)",
+					"right": 3
 				}
 			],
 			"effect": "minecraft:strength",
-			"level": "max(1,min(2,floor((ppunsoblend+pthnswbalance)/4/0.18+0.5)))",
-			"time": "600.0*min(6,((ppunsoblend+pthnswbalance)/2/0.18-max(0,1-abs((ppunsoblend+pthnswbalance)/2/0.18-3))))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,pungency-7)/4)),-log(abs(max(0.1,soothingness+7)/3))))))",
+			"time": "600.0*min(if(abs(pungency)-7,(1+(abs(pungency)-7)/4)^2,1),if(abs(soothingness)-7,(1+(abs(soothingness)-7)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/strength",
 	"locals": {
-		"display": "ppunsoblend+pthnswbalance",
+		"display": "max(0,20-(abs(pungency-7)+abs(soothingness+7)))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "if(pungency-2,max(0,3-1.0*sqrt(ppu*nso)/2),10)",
-		"soothingnessDelta": "if(-soothingness-2,-max(0,3-1.0*sqrt(nso*ppu)/2),-10)",
-		"sweetnessDelta": "if(-sweetness+0,-if(10/1.0-max(nsw,pth),10,(nsw-pth)/(4*1.0)),-10)",
-		"thicknessDelta": "if(thickness+0,if(10/1.0-max(pth,nsw),10,(pth-nsw)/(4*1.0)),10)",
-		"ppu": "max(0,pungency-2)",
-		"nso": "max(0,-soothingness-2)",
-		"ppunsoblend": "1.0*sqrt(ppu*nso)/2",
-		"pth": "max(0,thickness+0)",
-		"nsw": "max(0,-sweetness+0)",
-		"pthnswbalance": "1.0*max(0,log((pth^2+nsw^2)/(abs(pth-nsw)+1))/1.5)"
+		"pungencyDelta": "max(3-pungency,0)+min(11-pungency,0)",
+		"soothingnessDelta": "max(-10-soothingness,0)+min(-4-soothingness,0)",
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": 0.0
 	},
 	"priority": 0,
 	"relish": [

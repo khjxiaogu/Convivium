@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "nthpasbalance",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(thickness+6.5)",
+					"right": 4
 				},
 				{
-					"compare": "greater",
-					"left": "pswppubalance",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(astringency-7)",
+					"right": 3
 				}
 			],
 			"effect": "minecraft:blindness",
 			"level": "1",
-			"time": "300.0*2^max(0,min(3,(nthpasbalance+pswppubalance)/2/0.18-1))"
+			"time": "1200.0*min(if(abs(thickness)-6.5,(1+(abs(thickness)-6.5)/4)^2,1),if(abs(astringency)-7,(1+(abs(astringency)-7)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/blindness",
 	"locals": {
-		"display": "nthpasbalance+pswppubalance",
-		"astringencyDelta": "if(astringency+1,if(10/1.0-max(pas,nth),10,(pas-nth)/(4*1.0)),10)",
-		"pungencyDelta": "if(pungency+0,if(10/1.0-max(ppu,psw),10,(ppu-psw)/(4*1.0)),10)",
+		"display": "max(0,20-(abs(thickness+6.5)+abs(astringency-7)))",
+		"astringencyDelta": "max(4-astringency,0)+min(10-astringency,0)",
+		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "if(sweetness+0,if(10/1.0-max(psw,ppu),10,(psw-ppu)/(4*1.0)),10)",
-		"thicknessDelta": "if(-thickness+1,-if(10/1.0-max(nth,pas),10,(nth-pas)/(4*1.0)),-10)",
-		"nth": "max(0,-thickness+1)",
-		"pas": "max(0,astringency+1)",
-		"nthpasbalance": "1.0*max(0,log((nth^2+pas^2)/(abs(nth-pas)+1))/1.5)",
-		"psw": "max(0,sweetness+0)",
-		"ppu": "max(0,pungency+0)",
-		"pswppubalance": "1.0*max(0,log((psw^2+ppu^2)/(abs(psw-ppu)+1))/1.5)"
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "max(-10.5-thickness,0)+min(-2.5-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

@@ -192,7 +192,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					for(CurrentSwayInfo swh:getBlockEntity().swayhint) {
 						if(swh.getActive()>0) {
 							
-							drawActiveSway(graphics,18+9*(n2++),65,swh);
+							drawActiveSway(graphics,21+9*(n2++),17,swh);
 						}else {
 							for(int n=0;n<Constants.TASTES.length;n++) {
 								drawSwayBubble(graphics,n,swh,info.variants,mouseX,mouseY);
@@ -230,11 +230,18 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		if (getBlockEntity().processMax > 0) {
 			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 135, topPos + 36, 176, 0,
 					(int) (14 * (getBlockEntity().processMax - getBlockEntity().process) * 1f / getBlockEntity().processMax), 11, 256, 256);
+		}
+		if (getBlockEntity().convertion.getFinishedProgress()>0) {
+			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 135, topPos + 36, 176, 0,
+					(int) (14 * getBlockEntity().convertion.getFinishedProgress() * 1f / getBlockEntity().convertion.getProcessMax()), 11, 256, 256);
+		}
+		if (getBlockEntity().processMax > 0) {
 			int idx=0;
 			if(getBlockEntity().getSpeed()>0)
 				idx=(RotationUtils.getTicks()/5)%4;
 			graphics.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos+131,topPos+55, 234, 52*idx, 22,52, 256, 256);
 		}
+		
 	}
 
 }

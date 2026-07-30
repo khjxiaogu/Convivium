@@ -31,6 +31,7 @@ import com.khjxiaogu.convivium.client.renderer.FruitModel.ModelType;
 import com.khjxiaogu.convivium.client.renderer.FruitPlatterRenderState.FruitPlatterRenderingContext;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -55,14 +56,14 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 
 	public void fillContext(PlatterBlockEntity blockEntity,FruitPlatterRenderingContext ctx) {
 		//System.out.println("updated rendering info");
-		Map<Item,Integer> items=new HashMap<>();
+		Reference2IntOpenHashMap<Item> items=new Reference2IntOpenHashMap<>();
 		boolean canFull=blockEntity.config==GlobalConfig.PILED;
 		FruitModel[] model=new FruitModel[4];
 		for(int i=0;i<4;i++) {
 			ItemResource is=blockEntity.storage.getResource(i);
 			if(!is.isEmpty()) {
 				Item it=is.getItem();
-				items.compute(it, (_,v)->v==null?1:v+1);
+				items.addTo(it, 1);
 				if(blockEntity.config!=GlobalConfig.SEPERATE||blockEntity.slotconfig[i]==SlotConfig.MODEL) {
 					model[i]=models.get(it);
 					if(model[i]!=null)continue;
@@ -75,7 +76,7 @@ public class FruitPlatterRenderer implements BlockEntityRenderer<PlatterBlockEnt
 				Item is=items.keySet().stream().findFirst().orElse(null);
 				FruitModel rss=models.get(is);
 				if(rss!=null) {
-					ctx.setPart(items.get(is), rss,false);
+					ctx.setPart(items.getInt(is), rss,false);
 					return;
 				}
 			}else {

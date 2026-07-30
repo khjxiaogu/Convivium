@@ -20,11 +20,17 @@ package com.khjxiaogu.convivium.util;
 
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
+
 import com.teammoeg.caupona.util.ChancedEffect;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class FoodPropertieHelper {
 
@@ -39,6 +45,17 @@ public class FoodPropertieHelper {
         	fpb.alwaysEdible();
 		return fpb.build();
 		
+	}
+	public static ItemStack getReminder(
+		ItemResource ir,
+		ItemStack usedStack,
+		int stackCountBeforeUsing,
+		boolean hasInfiniteMaterials,
+		UseRemainder.OnExtraCreatedRemainder onExtraCreatedRemainder) {
+		@Nullable UseRemainder reminder=ir.get(DataComponents.USE_REMAINDER);
+		if(reminder!=null)
+			return reminder.convertIntoRemainder(usedStack, stackCountBeforeUsing, hasInfiniteMaterials, onExtraCreatedRemainder);
+		return usedStack;
 	}
 	public static Consumable copyWithPart(Consumable cur,int parts) {
 		Consumable.Builder fpb=Consumable.builder();

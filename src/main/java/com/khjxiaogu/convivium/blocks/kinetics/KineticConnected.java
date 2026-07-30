@@ -26,12 +26,12 @@ public interface KineticConnected {
 	int getSpeed();
 
 	void setSpeed(int val);
-
+	void revalidateSpeed();
 	boolean isReceiver();
 	public static LazyTickWorker createKineticValidator(KineticConnected entity) {
 		return new LazyTickWorker(CVConfig.SERVER.kineticValidation.get(),()->{
 			if(entity.getSpeed()!=0) {
-				entity.setSpeed(0);
+				entity.revalidateSpeed();
 				return true;
 			}
 			return false;

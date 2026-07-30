@@ -18,7 +18,7 @@
 
 package com.khjxiaogu.convivium.util.evaluator;
 
-class ConstNode implements Node{
+public class ConstNode implements Node{
 	double val;
 
 	@Override

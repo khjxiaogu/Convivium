@@ -18,14 +18,18 @@
 
 package com.khjxiaogu.convivium.blocks.foods;
 
+import org.jspecify.annotations.Nullable;
+
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.teammoeg.caupona.blocks.foods.IFoodContainer;
 import com.teammoeg.caupona.network.CPBaseBlockEntity;
 import com.teammoeg.caupona.util.IInfinitable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -89,7 +93,7 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 
 	@Override
 	public boolean accepts(int slot, ItemResource is) {
-		return is.getItem() instanceof BeverageItem||is.is(Items.GLASS_BOTTLE)||is.is(Items.POTION);
+		return is.getItem() instanceof BeverageItem||is.getItem() instanceof EmptyBeverageBlockItem||is.is(Items.GLASS_BOTTLE)||is.is(Items.POTION);
 	}
 
 	@Override
@@ -118,6 +122,14 @@ public class BeverageBlockEntity extends CPBaseBlockEntity implements IInfinitab
 
 	@Override
 	public ItemResource getValidContainer(int slot) {
+		ItemResource ir=getInternal().getResource(0);
+		if(ir.getItem() instanceof BeverageItem) {
+			@Nullable UseRemainder reminder=ir.get(DataComponents.USE_REMAINDER);
+			if(reminder!=null)
+				return ItemResource.of(reminder.convertInto());
+		}else if(ir.getItem() instanceof EmptyBeverageBlockItem) {
+			return ir;
+		}
 		return ItemResource.of(Items.GLASS_BOTTLE);
 	}
 

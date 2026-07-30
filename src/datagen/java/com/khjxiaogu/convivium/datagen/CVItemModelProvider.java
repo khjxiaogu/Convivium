@@ -49,22 +49,22 @@ public class CVItemModelProvider extends ItemModelGenerators {
 	
 	@Override
 	public void run() {
-		for (String mt : CVItems.base_material) {
+		for (String mt : CVItems.BASE_MATERIAL) {
 			texture(mt);
 		}
-		for (String mt : CVItems.base_drinks) {
+		for (String mt : CVItems.BASE_DRINKS) {
 			simpleTexture(mt, "beverages/");
 		}
-		for (String mt : CVFluids.intern.keySet()) {
+		for (String mt : CVFluids.SPECIAL_FLUIDS.keySet()) {
 			simpleTexture(mt, "beverages/");
 		}
-		for(String mt:CVFluids.sorbets) {
+		for(String mt:CVFluids.SORBETS) {
 			texture(mt+"_sorbet","sorbets/" + mt);
 
 		}
 		texture("flatbread");
 		potTexture("beverage", "alcohol_bottle", "beverages/");
-		for(String bottleType:CVItems.bottles) {
+		for(String bottleType:CVItems.BOTTLE_TYPES) {
 			texture("glass_"+bottleType,"beverages/glass_" + bottleType + "_empty");
 			potTexture("beverage_"+bottleType, "glass_"+bottleType, "beverages/");
 		}

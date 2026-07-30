@@ -20,8 +20,6 @@ package com.khjxiaogu.convivium.client;
 
 import java.util.List;
 
-import com.khjxiaogu.convivium.CVComponents;
-import com.khjxiaogu.convivium.util.BeverageInfo;
 import com.mojang.datafixers.util.Either;
 import com.teammoeg.caupona.client.util.FluidRenderHelper;
 
@@ -36,28 +34,22 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FountainSplashParticle extends SingleQuadParticle {
 	Layer layer;
-	FountainSplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet, Either<ItemStack, FluidStack> stacks) {
+	FountainSplashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet spriteSet, Either<Integer, FluidStack> stacks) {
 		super(pLevel, pX, pY, pZ,spriteSet.first());
 		this.setSize(0.01F, 0.01F);
 		this.lifetime = 20;
 		this.setColor(0.3F, 0.5F, 1.0F);
-		stacks.ifLeft(stack -> {
-			this.setSpriteFromAge(spriteSet);
-			BeverageInfo cmp=stack.get(CVComponents.BEVERAGE_INFO);
-			if(cmp!=null) {
-				int tint=cmp.getIColor();
-				this.setColor(ARGB.redFloat(tint), ARGB.greenFloat(tint), ARGB.blueFloat(tint));
-				float alpha = ARGB.alphaFloat(tint);
-				this.setAlpha(alpha == 0 ? 1 : alpha);
-			}
-			
-			layer=Layer.TRANSLUCENT;
+		layer=Layer.TRANSLUCENT;
+		this.setSpriteFromAge(spriteSet);
+		stacks.ifLeft(tint -> {
+			this.setColor(ARGB.redFloat(tint), ARGB.greenFloat(tint), ARGB.blueFloat(tint));
+			float alpha = ARGB.alphaFloat(tint);
+			this.setAlpha(alpha <= 0.01 ? 1 : alpha);
 		});
 		
 		stacks.ifRight(stack -> {
@@ -67,13 +59,13 @@ public class FountainSplashParticle extends SingleQuadParticle {
 			
 			this.setColor(ARGB.redFloat(tint), ARGB.greenFloat(tint), ARGB.blueFloat(tint));
 			float alpha = ARGB.alphaFloat(tint);
-			this.setAlpha(alpha == 0 ? 1 : alpha);
+			this.setAlpha(alpha <= 0.01 ? 1 : alpha);
 			//System.out.println("f"+alpha);
-			this.setSprite(sprite);
+			this.setSprite(model.stillMaterial().sprite());
+			layer=Layer.bySprite(model.stillMaterial().sprite());
 			v1=(v1-v0)/8+v0;
 			u1=(u1-u0)/8+u0;
-			layer=Layer.TRANSLUCENT;
-			this.quadSize/=8;
+			this.quadSize/=4;
 		});
 
 
@@ -122,6 +114,7 @@ public class FountainSplashParticle extends SingleQuadParticle {
 	protected float getV1() {
 		return v1;
 	}
+
 
 	private boolean stoppedByCollision;
 	private boolean isSplashed;

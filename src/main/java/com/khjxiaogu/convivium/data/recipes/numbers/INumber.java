@@ -23,16 +23,21 @@ import java.util.function.ToDoubleFunction;
 import com.khjxiaogu.convivium.util.evaluator.IEnvironment;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public interface INumber extends ToDoubleFunction<IEnvironment>{
-
-	Codec<INumber> CODEC=Codec.either(Codec.STRING.xmap(Expression::new,o->o.expr), Codec.FLOAT.xmap(Expression::of,o->o.num)).xmap(Either::unwrap, o->(o instanceof Expression.Constant cons)?Either.right(cons):Either.left((Expression)o));
-	Codec<INumber> STRING_CODEC=Codec.STRING.xmap(Expression::of, Object::toString);
-	public static final StreamCodec<ByteBuf,INumber> STREAM_CODEC=ByteBufCodecs.either(ByteBufCodecs.STRING_UTF8.map(Expression::new,o->o.expr), ByteBufCodecs.FLOAT.map(Expression::of,o->o.num)).map(Either::unwrap, o->(o instanceof Expression.Constant cons)?Either.right(cons):Either.left((Expression)o));
-
+	Codec<INumber> STRING_CODEC=Codec.STRING.flatXmap(Expression::parse, INumber::asExpression);
+	Codec<INumber> NUMBER_CODEC=Codec.DOUBLE.flatComapMap(Expression::of,INumber::asConstant);
+	Codec<INumber> CODEC=Codec.withAlternative(NUMBER_CODEC,STRING_CODEC);
 	
+	public static final StreamCodec<ByteBuf,INumber> STREAM_CODEC=ByteBufCodecs.either(
+		ByteBufCodecs.STRING_UTF8.map(Expression::new,Expression::expr),
+		ByteBufCodecs.DOUBLE.map(Expression::of,Expression.Constant::num))
+		.map(Either::unwrap, o->(o instanceof Expression.Constant cons)?Either.right(cons):Either.left((Expression)o));
+	public DataResult<Double> asConstant();
+	public DataResult<String> asExpression();
 }

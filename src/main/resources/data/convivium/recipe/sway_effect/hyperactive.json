@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "nsonthblend",
-					"right": 0.24
+					"compare": "lesser_equals",
+					"left": "abs(soothingness-7.8)",
+					"right": 3
 				},
 				{
-					"compare": "greater",
-					"left": "nswnasbalance",
-					"right": 0.24
+					"compare": "lesser_equals",
+					"left": "abs(thickness-6)",
+					"right": 3.5
 				}
 			],
 			"effect": "caupona:hyperactive",
-			"level": "max(1,min(3,floor((nsonthblend+nswnasbalance)/2/0.24)-1))",
-			"time": "200.0*max(1,min(2,(nsonthblend+nswnasbalance)/2/0.24))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,soothingness-7.8)/3)),-log(abs(max(0.1,thickness-6)/3.5))))))",
+			"time": "200.0*min(if(abs(soothingness)-7.8,(1+(abs(soothingness)-7.8)/3)^2,1),if(abs(thickness)-6,(1+(abs(thickness)-6)/3.5)^2,1))"
 		}
 	],
 	"icon": "caupona:mob_effect/hyperactive",
 	"locals": {
-		"display": "nsonthblend+nswnasbalance",
-		"astringencyDelta": "if(-astringency+0,-if(10/0.9-max(nas,nsw),10,(nas-nsw)/(4*0.9)),-10)",
+		"display": "max(0,20-(abs(soothingness-7.8)+abs(thickness-6)))",
+		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "if(-soothingness-1,-max(0,3-1.0*sqrt(nso*nth)/2),-10)",
-		"sweetnessDelta": "if(-sweetness+0,-if(10/0.9-max(nsw,nas),10,(nsw-nas)/(4*0.9)),-10)",
-		"thicknessDelta": "if(-thickness+1,-max(0,3-1.0*sqrt(nth*nso)/2),-10)",
-		"nso": "max(0,-soothingness-1)",
-		"nth": "max(0,-thickness+1)",
-		"nsonthblend": "1.0*sqrt(nso*nth)/2",
-		"nsw": "max(0,-sweetness+0)",
-		"nas": "max(0,-astringency+0)",
-		"nswnasbalance": "0.9*max(0,log((nsw^2+nas^2)/(abs(nsw-nas)+1))/1.5)"
+		"soothingnessDelta": "max(4.8-soothingness,0)+min(10.8-soothingness,0)",
+		"sweetnessDelta": 0.0,
+		"thicknessDelta": "max(2.5-thickness,0)+min(9.5-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

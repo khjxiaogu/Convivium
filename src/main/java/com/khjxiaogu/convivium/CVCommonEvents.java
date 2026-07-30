@@ -26,7 +26,8 @@ import com.khjxiaogu.convivium.data.recipes.RelishFluidRecipe;
 import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.SwayRecipe;
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
-import com.teammoeg.caupona.data.recipes.*;
+import com.teammoeg.caupona.api.events.ContanerContainFoodEvent;
+import com.teammoeg.caupona.data.recipes.BowlContainingRecipe;
 
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -44,30 +46,14 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 @EventBusSubscriber
 public class CVCommonEvents {
 
-	/*@SubscribeEvent
+	@SubscribeEvent
 	public static void bowlContainerFood(ContanerContainFoodEvent ev) {
 		if (ev.origin.getItem() == Items.GLASS_BOTTLE) {
-			if (!ev.isBlockAccess) {
-				RecipeHolder<ContainingRecipe> recipe = ContainingRecipe.recipes.get(ev.fs.getFluid());
-				if (recipe != null) {
-					ev.out = recipe.value().handle(ev.fs);
-					ev.setResult(EventResult.ALLOW);
-				}
+			if (ev.isBlockAccess&&ev.fs.is(Fluids.WATER)) {
+				ev.setCanceled(true);
 			}
 		}
-	}*/
-
-	/*@SubscribeEvent
-	public static void isExtractAllowed(FoodExchangeItemEvent.Pre event) {
-		if (!event.getOrigin().is(Items.GLASS_BOTTLE))
-			event.setResult(EventResult.ALLOW);
 	}
-
-	@SubscribeEvent
-	public static void isExchangeAllowed(FoodExchangeItemEvent.Post event) {
-		if ((!event.getOrigin().is(Items.GLASS_BOTTLE)) && event.getTarget().is(Items.GLASS_BOTTLE))
-			event.setResult(EventResult.ALLOW);
-	}*/
 	@SubscribeEvent
 	public static void modifyDamage(LivingIncomingDamageEvent event) {
 		if(event.getEntity().hasEffect(CVMobEffects.DELICACY)) {
@@ -93,15 +79,17 @@ public class CVCommonEvents {
 	public static void onBlockClick(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack is = event.getItemStack();
 		Player playerIn = event.getEntity();
-		if (CVConfig.COMMON.canPlacePotion.get() && is.is(Items.POTION) && playerIn.isShiftKeyDown()) {
-			ItemStack replace = is.transmuteCopy(CVItems.POTION.get());
-			replace.set(CVComponents.POTION_ITEM, ItemStackTemplate.fromNonEmptyStack(is));
-			playerIn.setItemInHand(event.getHand(), replace);
-			CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn, event.getHand(), event.getHitVec()));
-			is.setCount(replace.getCount());
-			playerIn.setItemInHand(event.getHand(), is);
+		if (CVConfig.COMMON.canPlacePotion.get() && playerIn.isShiftKeyDown()) {
+			if(is.is(Items.POTION)||is.is(Items.GLASS_BOTTLE)) {
+				ItemStack replace = is.transmuteCopy(CVItems.POTION.get());
+				replace.set(CVComponents.POTION_ITEM, ItemStackTemplate.fromNonEmptyStack(is));
+				playerIn.setItemInHand(event.getHand(), replace);
+				CommonHooks.onPlaceItemIntoWorld(new UseOnContext(playerIn, event.getHand(), event.getHitVec()));
+				is.setCount(replace.getCount());
+				playerIn.setItemInHand(event.getHand(), is);
+			}
 		}
-		if (playerIn.isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).is(CVBlocks.platter.get())) {
+		if (playerIn.isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).is(CVBlocks.PLATTER.get())) {
 			event.setUseItem(TriState.FALSE);
 			event.setUseBlock(TriState.TRUE);
 		}

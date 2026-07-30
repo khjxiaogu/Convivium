@@ -52,7 +52,7 @@ class TermNode implements Node{
 
 	@Override
 	public boolean isPrimary() {
-		return false;
+		return positive.stream().allMatch(Node::isPrimary)&&negative.stream().allMatch(Node::isPrimary);
 	}
 
 	@Override
@@ -126,7 +126,10 @@ class TermNode implements Node{
 			if(primaryExprp.isEmpty())
 				return new ConstNode(primaries);
 			positive.addAll(primaryExprp);
-			if(primaries!=1)
+			if(primaries==0) {
+				positive.clear();
+				positive.add(new ConstNode(0));
+			}else if(primaries!=1)
 				positive.add(new ConstNode(primaries));
 			if(positive.isEmpty())
 				positive.add(new ConstNode(1));
@@ -136,8 +139,12 @@ class TermNode implements Node{
 			return this;
 		}
 		positive.addAll(primaryExprp);
-		if(primaries!=1)
+		if(primaries==0)
+			positive.clear();
+		else if(primaries!=1)
 			positive.add(new ConstNode(primaries));
+		
+		
 		/*ExprNode en=(ExprNode)positive.remove(0);
 		en.positive.replaceAll(nxx->{
 			TermNode tn=new TermNode();

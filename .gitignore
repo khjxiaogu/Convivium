@@ -124,3 +124,6 @@ run/
 /bin/
 /run1/
 /runs
+
+# Python scripts
+/src/main/resources/assets/convivium/lang/sync_entries.py

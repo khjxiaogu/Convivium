@@ -163,9 +163,12 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 			FluidResource resource=tank.getResource(0);
 			int amount=tank.getAmountAsInt(0);
 			ItemResource stack=inv.getResource(0);
-			try(Transaction trans=Transaction.openRoot()){
+			
+
+			try(@SuppressWarnings("deprecation")
+			Transaction trans=Transaction.open(Transaction.getCurrentOpenedTransaction())){
 				swayInfo.updateSnapshots(trans);
-				if(inv.extract(amount, stack, 1, trans)==1) {
+				if(inv.extract(0, stack, 1, trans)==1) {
 					BeverageInfo info=getOrCreateCopy(resource);
 					int total=0;
 					for(int ent:info.relishes.values()) {
@@ -217,7 +220,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		setSwayhint(swi.getFirst());
 		Either<BeverageTypeRecipe, Fluid> right=swi.getSecond();
 		info.completeData();
-		target=FluidResource.of(right.<Fluid>map(t->t.output, t->t),orig.getComponentsPatch()).with(CVComponents.BEVERAGE_INFO, info);
+		target=FluidResource.of(right.<Fluid>map(t->t.output, t->t),orig.getComponentsPatch()).with(CVComponents.BEVERAGE_INFO, info).with(DataComponents.CONSUMABLE, info.getConsumable().build());
 		processMax=time;
 		right.ifLeft(t->{
 			if(t.output!=orig.getFluid())
@@ -428,6 +431,7 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 		}
 		if(lastIsHeating!=isHeating) {
 			convertion.onContainerChanged();
+			this.syncData();
 		}
 		if(getSpeed() > 0) {
 			if(processMax>0) {

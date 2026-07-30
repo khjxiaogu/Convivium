@@ -190,6 +190,6 @@ public class Evaluator {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(eval("sin(v+1+2+3*5*n)*(v*2*5*8*1)*cos(90)+PI"));
+		System.out.println(eval("sin(v+1+2+3*5*n)*(v*2*5*8*1)*0+PI"));
 	}
 }

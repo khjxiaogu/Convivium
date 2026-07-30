@@ -1,11 +1,11 @@
-// 26.1.2	2026-06-23T12:02:12.171625	Model Definitions - convivium
+// 26.1.2	2026-07-12T15:45:11.3180447	Model Definitions - convivium
 7b6aec1eddcc0930499d128603f89c1d63a161d6 assets/convivium/blockstates/aeolipile.json
 0898337ce06471fa6329d0fd4f64140683dd6e76 assets/convivium/blockstates/basin.json
 51554397b376befce96eb79a9842170d04f80e52 assets/convivium/blockstates/beverage.json
-26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_bowl.json
-26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_cup.json
-26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_jug.json
-26775bd9393ba9cd93044700e74a14e04cdd86cd assets/convivium/blockstates/beverage_mug.json
+dcebd1f6d4a14519cf16f34c71cd1b64d168a9ba assets/convivium/blockstates/beverage_bowl.json
+4912f4b69f13242f5179e99ae68684ae16e2f9e2 assets/convivium/blockstates/beverage_cup.json
+3da40070bb885dbf111be7573dfd18c9615ab5ad assets/convivium/blockstates/beverage_jug.json
+a5eea9b844ed5f6cfb29fc6da6b513979c0365b3 assets/convivium/blockstates/beverage_mug.json
 09876292773882d4139aea6c3c345cf641ff3790 assets/convivium/blockstates/beverage_vending_machine.json
 51a8f6b55c0d5946eb32f550e118ebfec8f17f0f assets/convivium/blockstates/cage_wheel.json
 d8942c00871959636625f71be72fbdbf013c3c9a assets/convivium/blockstates/camellia_plant.json

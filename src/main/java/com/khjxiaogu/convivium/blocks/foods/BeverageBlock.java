@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import com.khjxiaogu.convivium.CVBlockEntityTypes;
 import com.khjxiaogu.convivium.CVBlocks;
 import com.khjxiaogu.convivium.CVComponents;
+import com.khjxiaogu.convivium.util.FoodPropertieHelper;
 import com.teammoeg.caupona.blocks.CPRegisteredEntityBlock;
 import com.teammoeg.caupona.util.WorldDropOperation;
 
@@ -38,11 +39,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -53,15 +56,27 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> {
 
-
-	public BeverageBlock(Properties blockProps) {
+	final VoxelShape shape;
+	public BeverageBlock(Properties blockProps,VoxelShape shape) {
 		super(blockProps, CVBlockEntityTypes.BEVERAGE);
-		CVBlocks.beverage.add(this);
+		CVBlocks.BEVERAGES.add(this);
+		this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
+		this.shape=shape;
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection());
+
 	}
 
 
-	static final VoxelShape shape = Block.box(4, 0, 4, 12, 15, 12);
+	public static final VoxelShape BOWL_SHAPE = Block.box(1, 0, 1, 15, 5.2, 15);
 
+	public static final VoxelShape BOTTLE_SHAPE = Block.box(4, 0, 4, 12, 15, 12);
+	public static final VoxelShape MUG_SHAPE = Block.box(4, 0, 4, 12, 14, 12);
+	public static final VoxelShape JUG_SHAPE = Block.box(4, 0, 4, 12, 16, 12);
+	public static final VoxelShape CUP_SHAPE = Block.box(4, 0, 4, 12, 11, 12);
 	@Override
 	public float getShadeBrightness(BlockState state, BlockGetter worldIn, BlockPos pos) {
 		return 1.0F;
@@ -109,15 +124,16 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 					if(fp.canConsume(player, stack)) {
 						try(Transaction trans=Transaction.openRoot()){
 							if(bowl.getInternal().extract(ir, 1, trans)>0) {
-								ItemStack iout=fp.onConsume(worldIn, player, stack);
+								WorldDropOperation drops=new WorldDropOperation(worldIn,pos);
+								drops.updateSnapshots(trans);
+								ItemStack iout=FoodPropertieHelper.getReminder(ir, fp.onConsume(worldIn, player, stack), 1, player.getAbilities().instabuild, drops::addDrop);
 								int count=iout.getCount();
 								if(!iout.isEmpty()) {
 									ItemResource toOut=bowl.getInternal().getResourceFrom(iout);
 									count-=bowl.getInternal().insert(toOut, count, trans);
 									if(count>0) {
-										WorldDropOperation drops=new WorldDropOperation(worldIn,pos);
 										drops.addDrops(toOut.toStack(count));
-										drops.updateSnapshots(trans);
+										
 									}
 								}else
 									worldIn.removeBlock(pos, false);
@@ -169,6 +185,13 @@ public class BeverageBlock extends CPRegisteredEntityBlock<BeverageBlockEntity> 
 		return 0;
 	}
 	
+	@Override
+	protected void createBlockStateDefinition(
+			net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(BlockStateProperties.HORIZONTAL_FACING);
+	}
+
 	@Override
 	public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 		return 20;

@@ -44,10 +44,10 @@ public class CVMain {
 	public static final String MODNAME = "Convivium";
 	public static final Logger logger = LogManager.getLogger(MODNAME);
 	public static final String BOOK_NBT_TAG = CVMain.MODID + ":book_given";
-	public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
-	public static DeferredHolder<CreativeModeTab, CreativeModeTab> main = TABS.register("aaa_caupona_9v8_main", () -> CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey())
-		.withTabsAfter(CPMain.foods.getKey()).icon(() -> new ItemStack(CVBlocks.aeolipile.get())).title(Utils.translate("itemGroup.convivium")).build());
-	public static final TabType MAIN_TAB = new TabType(v -> main.getKey().equals(v));
+	public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CVMain.MODID);
+	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB_HOLDER = TABS.register("aaa_caupona_9v8_main", () -> CreativeModeTab.builder().withTabsBefore(CPMain.main.getKey())
+		.withTabsAfter(CPMain.foods.getKey()).icon(() -> new ItemStack(CVBlocks.AEOLIPILE.get())).title(Utils.translate("itemGroup.convivium")).build());
+	public static final TabType MAIN_TAB = new TabType(v -> MAIN_TAB_HOLDER.getKey().equals(v));
 
 	public static Identifier rl(String path) {
 		return Identifier.fromNamespaceAndPath(MODID, path);

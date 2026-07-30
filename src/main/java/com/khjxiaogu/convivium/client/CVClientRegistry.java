@@ -118,10 +118,10 @@ public class CVClientRegistry {
 			    }
 			},
             null
-            ),CVFluids.mixedf.get());
+            ),CVFluids.MIXED_FLUID.get());
 
 
-		for(Entry<Supplier<? extends Fluid>, TextureColorPair> s:CVFluids.clientExtensiondata.entrySet()) {
+		for(Entry<Supplier<? extends Fluid>, TextureColorPair> s:CVFluids.FLUID_MODELS.entrySet()) {
 			TextureColorPair tcp=s.getValue();
 			event.register(new FluidModel.Unbaked(
 				new Material(tcp.texture()),

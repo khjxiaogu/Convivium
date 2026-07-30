@@ -51,7 +51,7 @@ class ExprNode implements Node{
 
 	@Override
 	public boolean isPrimary() {
-		return false;
+		return positive.stream().allMatch(Node::isPrimary)&&negative.stream().allMatch(Node::isPrimary);
 	}
 
 	@Override

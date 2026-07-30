@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "nthpsoblend",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(thickness+8.2)",
+					"right": 1.5
 				},
 				{
-					"compare": "greater",
-					"left": "nasnpuwanewax",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(soothingness-6)",
+					"right": 3
 				}
 			],
 			"effect": "minecraft:invisibility",
 			"level": "1",
-			"time": "1200.0*2^max(0,min(3,(nthpsoblend+nasnpuwanewax)/2/0.18-1))"
+			"time": "1200.0*min(if(abs(thickness)-8.2,(1+(abs(thickness)-8.2)/1.5)^2,1),if(abs(soothingness)-6,(1+(abs(soothingness)-6)/3)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/invisibility",
 	"locals": {
-		"display": "nthpsoblend+nasnpuwanewax",
-		"astringencyDelta": "if(-astringency+0,-if(nas-npu,max(0,10/1.0-nas),-nas)/4,-10)",
-		"pungencyDelta": "if(-pungency+0,-if(npu-nas,max(0,10/1.0-npu),-npu)/4,-10)",
-		"soothingnessDelta": "if(soothingness+0,max(0,3-0.75*sqrt(pso*nth)/2),10)",
+		"display": "max(0,20-(abs(thickness+8.2)+abs(soothingness-6)))",
+		"astringencyDelta": 0.0,
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "max(3-soothingness,0)+min(9-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "if(-thickness+0,-max(0,3-0.75*sqrt(nth*pso)/2),-10)",
-		"nth": "max(0,-thickness+0)",
-		"pso": "max(0,soothingness+0)",
-		"nthpsoblend": "0.75*sqrt(nth*pso)/2",
-		"nas": "max(0,-astringency+0)",
-		"npu": "max(0,-pungency+0)",
-		"nasnpuwanewax": "1.0*sqrt(abs(nas^2-npu^2))/5"
+		"thicknessDelta": "max(-9.7-thickness,0)+min(-6.7-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

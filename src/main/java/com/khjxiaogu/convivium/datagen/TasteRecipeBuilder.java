@@ -20,10 +20,14 @@ package com.khjxiaogu.convivium.datagen;
 
 import com.khjxiaogu.convivium.data.recipes.TasteRecipe;
 
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class TasteRecipeBuilder{
@@ -31,8 +35,10 @@ public class TasteRecipeBuilder{
 	private Ingredient item;
 	private Identifier rl;
 	VariantDataBuilder<TasteRecipeBuilder> vars=new VariantDataBuilder<TasteRecipeBuilder>(this);
-	public TasteRecipeBuilder(Identifier rl) {
+	private final Provider registries;
+	public TasteRecipeBuilder(Identifier rl,Provider registries) {
 		this.rl = rl;
+		this.registries=registries;
 	}
 	public VariantDataBuilder<TasteRecipeBuilder> vars(){
 		return vars;
@@ -40,6 +46,15 @@ public class TasteRecipeBuilder{
 	public TasteRecipeBuilder item(Ingredient igd) {
 		item=igd;
 		return this;
+	}
+	public TasteRecipeBuilder item(ItemStack igd) {
+		return item(Ingredient.of(igd.getItem()));
+	}
+	public TasteRecipeBuilder item(Item igd) {
+		return item(Ingredient.of(igd));
+	}
+	public TasteRecipeBuilder item(TagKey<Item> igd) {
+		return item(Ingredient.of(registries.getOrThrow(igd)));
 	}
 	public TasteRecipeBuilder priority(int ig) {
 		priority=ig;

@@ -67,14 +67,14 @@ public class CVLootGenerator extends LootTableProvider {
 
 		@Override
 		protected void generate() {
-			dropSelf(CVBlocks.aeolipile.get());
-			dropSelf(CVBlocks.cage.get());
-			dropSelf(CVBlocks.cog.get());
-			dropSelf(CVBlocks.pam.get());
-			dropSelf(CVBlocks.platter.get());
-			dropSelf(CVBlocks.whisk.get());
-			dropSelf(CVBlocks.basin.get());
-			dropSelf(CVBlocks.lead_basin.get());
+			dropSelf(CVBlocks.AEOLIPILE.get());
+			dropSelf(CVBlocks.CAGE.get());
+			dropSelf(CVBlocks.COG.get());
+			dropSelf(CVBlocks.PAM.get());
+			dropSelf(CVBlocks.PLATTER.get());
+			dropSelf(CVBlocks.WHISK.get());
+			dropSelf(CVBlocks.BASIN.get());
+			dropSelf(CVBlocks.LEAD_BASIN.get());
 			add(CVBlocks.CAMELLIA_FLOWER.get(), LootTable.lootTable()
 				.withPool(LootPool.lootPool()
 					.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(CVBlocks.CAMELLIA_FLOWER.get())
@@ -98,10 +98,10 @@ public class CVLootGenerator extends LootTableProvider {
 					.add(LootItem.lootTableItem(cpi("camellia_flower")).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2))))));
 			dropSelf(CVBlocks.BEVERAGE_VENDING_MACHINE.get());
 
-			for (DeferredHolder<Block, Block> b : CVBlocks.aqueducts) {
+			for (DeferredHolder<Block, Block> b : CVBlocks.AQUEDUCTS) {
 				dropSelf(b.get());
 			}
-			for (DeferredHolder<Block, Block> b : CVBlocks.aqueduct_mains) {
+			for (DeferredHolder<Block, Block> b : CVBlocks.AQUEDUCT_CONTROLLERS) {
 				dropSelf(b.get());
 			}
 		}

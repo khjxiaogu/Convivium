@@ -4,25 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "xthxsomulti",
-					"right": 1.2
+					"compare": "lesser_equals",
+					"left": "abs(thickness+7.5)",
+					"right": 3.5
+				},
+				{
+					"compare": "lesser_equals",
+					"left": "abs(soothingness-7.5)",
+					"right": 3.5
 				}
 			],
 			"effect": "minecraft:water_breathing",
-			"level": 1.0,
-			"time": "500/min(0.1,2.05-xthxsomulti)"
+			"level": "1",
+			"time": "500.0*min(if(abs(thickness)-7.5,(1+(abs(thickness)-7.5)/3.5)^2,1),if(abs(soothingness)-7.5,(1+(abs(soothingness)-7.5)/3.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/water_breathing",
 	"locals": {
-		"xthxsomulti": "abs(sin(2*thickness/PI)-sin(2*soothingness/PI))",
-		"display": "xthxsomulti",
+		"display": "max(0,20-(abs(thickness+7.5)+abs(soothingness-7.5)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "2-xthxsomulti",
+		"soothingnessDelta": "max(4.0-soothingness,0)+min(11.0-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "2-xthxsomulti"
+		"thicknessDelta": "max(-11.0-thickness,0)+min(-4.0-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

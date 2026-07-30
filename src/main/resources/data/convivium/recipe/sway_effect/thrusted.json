@@ -4,35 +4,29 @@
 		{
 			"condition": [
 				{
-					"compare": "greater",
-					"left": "pasnsobalance",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(astringency-7.5)",
+					"right": 3
 				},
 				{
-					"compare": "greater",
-					"left": "ppupthwanewax",
-					"right": 0.18
+					"compare": "lesser_equals",
+					"left": "abs(soothingness+8)",
+					"right": 2.5
 				}
 			],
 			"effect": "convivium:thrusted",
-			"level": "max(1,min(2,floor((pasnsobalance+ppupthwanewax)/4/0.18+0.5)))",
-			"time": "600.0*min(6,((pasnsobalance+ppupthwanewax)/2/0.18-max(0,1-abs((pasnsobalance+ppupthwanewax)/2/0.18-3))))"
+			"level": "1",
+			"time": "600.0*min(if(abs(astringency)-7.5,(1+(abs(astringency)-7.5)/3)^2,1),if(abs(soothingness)-8,(1+(abs(soothingness)-8)/2.5)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/thrusted",
 	"locals": {
-		"display": "pasnsobalance+ppupthwanewax",
-		"astringencyDelta": "if(astringency+0,if(10/1.0-max(pas,nso),10,(pas-nso)/(4*1.0)),10)",
-		"pungencyDelta": "if(pungency+3,if(ppu-pth,max(0,10/1.0-ppu),-ppu)/4,10)",
-		"soothingnessDelta": "if(-soothingness+0,-if(10/1.0-max(nso,pas),10,(nso-pas)/(4*1.0)),-10)",
+		"display": "max(0,20-(abs(astringency-7.5)+abs(soothingness+8)))",
+		"astringencyDelta": "max(4.5-astringency,0)+min(10.5-astringency,0)",
+		"pungencyDelta": 0.0,
+		"soothingnessDelta": "max(-10.5-soothingness,0)+min(-5.5-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "if(thickness+3,if(pth-ppu,max(0,10/1.0-pth),-pth)/4,10)",
-		"pas": "max(0,astringency+0)",
-		"nso": "max(0,-soothingness+0)",
-		"pasnsobalance": "1.0*max(0,log((pas^2+nso^2)/(abs(pas-nso)+1))/1.5)",
-		"ppu": "max(0,pungency+3)",
-		"pth": "max(0,thickness+3)",
-		"ppupthwanewax": "1.0*sqrt(abs(ppu^2-pth^2))/5"
+		"thicknessDelta": 0.0
 	},
 	"priority": 0,
 	"relish": [

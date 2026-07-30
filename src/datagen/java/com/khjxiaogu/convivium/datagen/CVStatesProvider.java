@@ -36,14 +36,10 @@ import com.khjxiaogu.convivium.blocks.aqueduct.AqueductBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductConnection;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductControllerBlock;
 import com.khjxiaogu.convivium.blocks.aqueduct.AqueductMainConnection;
-import com.khjxiaogu.convivium.blocks.camellia.CamelliaFlowerBlock;
-import com.khjxiaogu.convivium.blocks.kinetics.CogCageBlock;
 import com.khjxiaogu.convivium.blocks.kinetics.KineticBasedBlock;
 import com.khjxiaogu.convivium.blocks.vending.BeverageVendingBlock;
 import com.mojang.math.Quadrant;
 import com.teammoeg.caupona.CPMain;
-import com.teammoeg.caupona.util.Utils;
-
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.MultiVariant;
@@ -70,6 +66,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class CVStatesProvider extends BlockModelGenerators {
@@ -105,19 +102,19 @@ public class CVStatesProvider extends BlockModelGenerators {
 		kineticDirectionalBlockModel("aeolipile", "aeolipile_stator");
 		kineticMixedBlockModel("whisk", "whisk_stator", "whisk_rotor");
 		kineticMixedBlockModel("pestle_and_mortar", "pestle_and_mortar_stator", "pestle_and_mortar_rotor");
-		horizontalBlock(CVBlocks.basin.get(), bmf("earthen_basin"));
+		horizontalBlock(CVBlocks.BASIN.get(), bmf("earthen_basin"));
 		blockItemModel("basin");
 		blockItemModel("lead_basin");
-		horizontalBlock(CVBlocks.lead_basin.get(), bmf("lead_basin"));
+		horizontalBlock(CVBlocks.LEAD_BASIN.get(), bmf("lead_basin"));
 		blockItemModel("fruit_platter");
 		simpleBlock(cvblock("beverage"), bmf("beverage"));
 		simpleBlock(cvblock("fruit_platter"), bmf(CPMain.rl("block/dish")));
 		simpleBlockItem(cvblock("camellia_plant"), CVMain.rl("camellia_plant"));
 		blockItemModel(CVBlocks.CAMELLIA_FLOWER.get(), CVMain.rl("camellia_product_stage_c"));
-		this.horizontalBlock(CVBlocks.wolf_fountain.get(), PropertyDispatch.initial(KineticBasedBlock.ACTIVE).generate(bs->bs?bmf("wolf_fountain_2"):bmf("wolf_fountain_1")));
+		this.horizontalBlock(CVBlocks.WOLF_FOUNTAIN.get(), PropertyDispatch.initial(KineticBasedBlock.ACTIVE).generate(bs->bs?bmf("wolf_fountain_2"):bmf("wolf_fountain_1")));
 		blockItemModel("wolf_fountain","_1");
 		this.blockStateOutput.accept(this.getVariantBuilder(CVBlocks.CAMELLIA_FLOWER.get())
-		.with(PropertyDispatch.initial(CamelliaFlowerBlock.AGE)
+		.with(PropertyDispatch.initial(CropBlock.AGE)
 			.generate(t->switch(t) {
 			case 0->createRotatedVariants(bmfs("camellia_product_stage_1"));
 			case 1->createRotatedVariants(bmfs("camellia_product_stage_2b"));
@@ -163,11 +160,11 @@ public class CVStatesProvider extends BlockModelGenerators {
 			this.blockItemModel(cvblock(s + "_aqueduct_wavemaker"), CVMain.rl(s + "_aqueduct_wavemaker_stator"));
 		}
 		empty(CVBlocks.FLAT_BREAD.get());
-		for(String s:CVFluids.sorbets) {
+		for(String s:CVFluids.SORBETS) {
 			empty(s+"_sorbet");
 		}
-		for(String bottleType:CVItems.bottles) {
-			empty("beverage_"+bottleType);
+		for(String bottleType:CVItems.BOTTLE_TYPES) {
+			horizontalBlock(cvblock("beverage_"+bottleType),bmf("beverage_"+bottleType));
 		}
 	}
 
@@ -207,7 +204,7 @@ public class CVStatesProvider extends BlockModelGenerators {
 	protected void kineticBlockModel(String name) {
 		this.blockStateOutput.accept(
 		this.getMultipartBuilder(cvblock(name))
-		.with(condition(CogCageBlock.ACTIVE, false), bmf("dynamic/" + name))
+		.with(condition(KineticBasedBlock.ACTIVE, false), bmf("dynamic/" + name))
 		);
 
 		blockItemModel(name);
@@ -281,15 +278,6 @@ public class CVStatesProvider extends BlockModelGenerators {
 
 			throw new IllegalArgumentException("model does not exists: "+p);
 		}
-	}
-
-	public void stove(Block block) {
-		this.blockStateOutput.accept(
-		
-			horizontalMultipart(this.getMultipartBuilder(block),
-				bmf(Utils.getRegistryName(block).getPath())));
-		blockItemModel(block, Utils.getRegistryName(block));
-
 	}
 
 	public boolean existsModel(Identifier id) {

@@ -28,6 +28,7 @@ import com.teammoeg.caupona.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -137,22 +138,45 @@ public class AqueductBlock extends CPRegisteredEntityBlock<AqueductBlockEntity> 
 
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-		if(pPos.equals(pEntity.blockPosition()))
+		if(pPos.getY()==pEntity.getBlockY())
 			if(pLevel.getBlockEntity(pPos) instanceof AqueductBlockEntity aq) {
 				if(aq.tonxt>0&&aq.from!=null) {
 					Direction[] dirs=pState.getValue(AqueductBlock.CONN).getNext(aq.from);
+					float spd=40f/aq.tonxt;
 					if(dirs.length>0) {
-						Vec3i v3=dirs[pLevel.getRandom().nextInt(dirs.length)].getUnitVec3i();
-						Vec3i vd=v3.offset(aq.from.getOpposite().getUnitVec3i());
-						//System.out.println(v3);
-						float spd=40f/aq.tonxt;
-						pEntity.addDeltaMovement(Vec3.atLowerCornerOf(v3).scale(0.0125).add(Vec3.atLowerCornerOf(vd).scale(0.0125)).scale(spd*0.5));
+						Direction to=dirs[pLevel.getRandom().nextInt(dirs.length)];
+						Vec3i v3=to.getUnitVec3i();
+						pEntity.addDeltaMovement(computeVelocity(pEntity.position().subtract(Vec3.atLowerCornerOf(pPos)),Vec3.atLowerCornerOf(v3),spd*0.5*0.0125));
+						
+					}else{
+						Vec3 from=Vec3.atLowerCornerOf(aq.from.getOpposite().getUnitVec3i());
+						pEntity.addDeltaMovement(computeVelocity(pEntity.position().subtract(Vec3.atLowerCornerOf(pPos)),from,spd*0.5*0.0125));
 						
 					}
 				}
 			}
 		
 	}
+    private static final double CENTER = 0.5;     // 0.4375
+    private static final double EPSILON = 1e-9;   // 0.4375
+    private static final double MAXD = 0.05;
+
+    public static Vec3 computeVelocity(Vec3 opos, Vec3 direction,double speed) {
+        if (Math.abs(direction.x()) > EPSILON) {
+        	double distToCenter=opos.z() - CENTER;
+            if (Math.abs(distToCenter) > MAXD) {
+                double vy = -Mth.sign(distToCenter) * speed;
+                return new Vec3(0,0, vy);
+            }
+			return direction.add(0, 0, -distToCenter).scale(speed);
+        }
+        double distToCenter=opos.x() - CENTER;
+		if (Math.abs(distToCenter) > MAXD) {
+		    double vx = -Mth.sign(distToCenter) * speed;
+		    return new Vec3(vx, 0, 0);
+		}
+		return direction.add(-distToCenter, 0, 0).scale(speed);
+    }
 
 	@Override
 	public boolean canConnect(BlockPos pos, BlockState state, Direction from) {

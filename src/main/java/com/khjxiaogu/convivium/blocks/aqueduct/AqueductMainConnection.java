@@ -52,7 +52,6 @@ public enum AqueductMainConnection implements StringRepresentable{
 	}
 	@Override
 	public String getSerializedName() {
-		// TODO Auto-generated method stub
 		return this.name().toLowerCase();
 	}
 }

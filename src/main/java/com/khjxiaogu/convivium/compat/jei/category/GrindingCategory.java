@@ -56,7 +56,7 @@ public class GrindingCategory implements CPCategory<RecipeHolder<GrindingRecipe>
 	private IDrawable ICON;
 
 	public GrindingCategory(IGuiHelper guiHelper) {
-		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.pam.get()));
+		this.ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CVBlocks.PAM.get()));
 		Identifier guiMain = Identifier.fromNamespaceAndPath(CVMain.MODID, "textures/gui/jei/pestle_and_mortar.png");
 		this.BACKGROUND = guiHelper.createDrawable(guiMain, 0, 0, 127, 63);
 	}

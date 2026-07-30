@@ -21,6 +21,8 @@ package com.khjxiaogu.convivium.client.renderer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.jspecify.annotations.Nullable;
 
 import com.khjxiaogu.convivium.CVBlocks;
@@ -54,7 +56,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity,BeverageRenderState> {
 	private static final Map<Block,DynamicBlockModelReference> MODELS=Util.make(()->{
 		Map<Block,DynamicBlockModelReference> map=new HashMap<>();
-		for(String s:CVItems.bottles) {
+		for(String s:CVItems.BOTTLE_TYPES) {
 			map.put(BuiltInRegistries.BLOCK.getValue(CVMain.rl("beverage_"+s)), DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/beverage_"+s)));
 		}
 		map.put(CVBlocks.BEVERAGE.get(), DynamicBlockModelReference.getModel(CVMain.rl("block/dynamic/beverage")));
@@ -95,11 +97,21 @@ public class BeverageRenderer implements BlockEntityRenderer<BeverageBlockEntity
 				int overlay=OverlayTexture.NO_OVERLAY;
 				int color=state.clr;
 				submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose,buffer)->{
+					
 					for(BakedQuad quads:state.model.get().getAll()) {
-						buffer.addVertex(pose, quads.position0()).setColor(color).setUv(u0, v0).setOverlay(overlay).setLight(light);
-						buffer.addVertex(pose, quads.position1()).setColor(color).setUv(u0, v1).setOverlay(overlay).setLight(light);
-						buffer.addVertex(pose, quads.position2()).setColor(color).setUv(u1, v1).setOverlay(overlay).setLight(light);
-						buffer.addVertex(pose, quads.position3()).setColor(color).setUv(u1, v0).setOverlay(overlay).setLight(light);
+						Vector3fc normalVec = quads.direction().getUnitVec3f();
+				        Vector3f normal = pose.transformNormal(normalVec, new Vector3f());
+				        buffer.applyBakedNormals(normal, quads.bakedNormals(), 0, pose.normal());
+						buffer.addVertex(pose, quads.position0()).setColor(color).setUv(u0, v0).setOverlay(overlay).setLight(light).setNormal(normal.x(), normal.y(), normal.z());
+				        normal = pose.transformNormal(normalVec, normal);
+				        buffer.applyBakedNormals(normal, quads.bakedNormals(), 1, pose.normal());
+						buffer.addVertex(pose, quads.position1()).setColor(color).setUv(u0, v1).setOverlay(overlay).setLight(light).setNormal(normal.x(), normal.y(), normal.z());
+				        normal = pose.transformNormal(normalVec, normal);
+				        buffer.applyBakedNormals(normal, quads.bakedNormals(), 2, pose.normal());
+						buffer.addVertex(pose, quads.position2()).setColor(color).setUv(u1, v1).setOverlay(overlay).setLight(light).setNormal(normal.x(), normal.y(), normal.z());
+				        normal = pose.transformNormal(normalVec, normal);
+				        buffer.applyBakedNormals(normal, quads.bakedNormals(), 3, pose.normal());
+						buffer.addVertex(pose, quads.position3()).setColor(color).setUv(u1, v0).setOverlay(overlay).setLight(light).setNormal(normal.x(), normal.y(), normal.z());
 					}
 				});
 				

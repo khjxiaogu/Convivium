@@ -37,5 +37,4 @@ public class CVComponents {
 
 	public CVComponents() {
 	}
-
 }

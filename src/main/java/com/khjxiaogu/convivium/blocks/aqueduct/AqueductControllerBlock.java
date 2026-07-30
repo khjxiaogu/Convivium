@@ -28,6 +28,7 @@ import com.teammoeg.caupona.util.Utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -39,6 +40,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -123,7 +125,7 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
 		if(pPos.equals(pEntity.blockPosition()))
 			if(pState.getValue(KineticBasedBlock.ACTIVE)) {
-				Direction dir=pState.getValue(AqueductControllerBlock.FACING);
+				Direction dir=pState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 				Direction moving;
 				if(RotationUtils.isBlackGrid(pPos)) {
 					moving=dir.getClockWise();
@@ -149,7 +151,8 @@ public class AqueductControllerBlock extends CPHorizontalEntityBlock<AqueductCon
 	}
 	@Override
 	public boolean canConnect(BlockPos pos, BlockState state, Direction from) {
-		// TODO Auto-generated method stub
+		if(from.getAxis()==Axis.Y)
+			return false;
 		return from.getClockWise().getAxis()==state.getValue(FACING).getAxis();
 	}
 

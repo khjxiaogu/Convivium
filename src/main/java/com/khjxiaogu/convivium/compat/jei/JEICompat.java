@@ -56,9 +56,9 @@ public class JEICompat implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addCraftingStation(GrindingCategory.TYPE,new ItemStack(CVBlocks.pam.get()));
-		registration.addCraftingStation(BasinCategory.TYPE,new ItemStack(CVBlocks.basin.get()));
-		registration.addCraftingStation(BasinCategory.TYPE,new ItemStack(CVBlocks.lead_basin.get()));
+		registration.addCraftingStation(GrindingCategory.TYPE,new ItemStack(CVBlocks.PAM.get()));
+		registration.addCraftingStation(BasinCategory.TYPE,new ItemStack(CVBlocks.BASIN.get()));
+		registration.addCraftingStation(BasinCategory.TYPE,new ItemStack(CVBlocks.LEAD_BASIN.get()));
 	}
 
 	@Override

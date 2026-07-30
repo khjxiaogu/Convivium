@@ -191,11 +191,11 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.test(tanks, inv);
 			if(recipe!=null) {
 				recipeHandler.setRecipe(recipe, recipe.value().processTime);
+				this.syncData();
 			}
-			this.syncData();
 		}else
 		if(recipeHandler.getProcessMax()>0) {
-			recipeHandler.tickProcess(getSpeed());
+			if(recipeHandler.tickProcess(getSpeed()))
 			this.syncData();
 		}
 	}

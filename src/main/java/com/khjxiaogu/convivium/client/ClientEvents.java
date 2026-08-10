@@ -99,21 +99,21 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void addTooltip(ItemTooltipEvent ev)
 	{
-		if(ev.getEntity()!=null)
-		for(RecipeHolder<TasteRecipe> ti:TasteRecipe.recipes) {
-			if(ti.value().item.test(ev.getItemStack())) {
-				for(int i=0;i<Constants.TASTES.length;i++) {
-					String sway=Constants.TASTES[i];
-					float sn=ti.value().variantData.getOrDefault(sway, 0f);
-					if(sn==0)continue;
-					String key="taste.convivium."+sway;
-					if(sn<0)
-						key+=".negate";
-					sn=Mth.abs(sn);
-					ev.getToolTip().add(Utils.translate(key,Component.translatable("enchantment.level." + Mth.ceil(sn))).withStyle(Style.EMPTY.withColor(Constants.COLOR_OF_TASTES[i])));
+		if(ev.getEntity()!=null&&TasteRecipe.recipes!=null)
+			for(RecipeHolder<TasteRecipe> ti:TasteRecipe.recipes) {
+				if(ti.value().item.test(ev.getItemStack())) {
+					for(int i=0;i<Constants.TASTES.length;i++) {
+						String sway=Constants.TASTES[i];
+						float sn=ti.value().variantData.getOrDefault(sway, 0f);
+						if(sn==0)continue;
+						String key="taste.convivium."+sway;
+						if(sn<0)
+							key+=".negate";
+						sn=Mth.abs(sn);
+						ev.getToolTip().add(Utils.translate(key,Component.translatable("enchantment.level." + Math.round(sn))).withStyle(Style.EMPTY.withColor(Constants.COLOR_OF_TASTES[i])));
+					}
+					break;
 				}
-				break;
 			}
-		}
 	}
 }

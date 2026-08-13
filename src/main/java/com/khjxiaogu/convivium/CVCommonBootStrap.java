@@ -103,6 +103,7 @@ public class CVCommonBootStrap {
 		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.JUG.get().asItem());
 		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.MUG.get().asItem());
 		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.CUP.get().asItem());
+		event.registerItem(Capabilities.Fluid.ITEM, (_, o) -> new FluidItemWrapper(o), CVBlocks.SORBETS.stream().map(t->t.asItem()).toArray(Item[]::new));
 		
 	}
 

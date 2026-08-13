@@ -19,21 +19,27 @@
 package com.khjxiaogu.convivium.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 import com.khjxiaogu.convivium.CVComponents;
 import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVIngredients;
+import com.khjxiaogu.convivium.data.recipes.BeverageTypeRecipe;
+import com.khjxiaogu.convivium.data.recipes.RelishRecipe;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishCondition;
 import com.khjxiaogu.convivium.data.recipes.relishcondition.RelishConditions;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teammoeg.caupona.util.FloatemTagStack;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -104,11 +110,28 @@ public class BeverageFluidIngredient extends FluidIngredient {
 
 		return true;
 	}
-
+	private Set<Holder<Fluid>> display;
 	@Override
 	protected Stream<Holder<Fluid>> generateFluids() {
-
-		return Stream.of(CVFluids.MIXED_FLUID.getDelegate());
+		if(display==null) {
+			Set<Holder<Fluid>> disps=new HashSet<>();
+			for(String s1:RelishRecipe.recipes.keySet())
+				for(String s2:RelishRecipe.recipes.keySet()) {
+					BeverageInfo bi=new BeverageInfo(s1,s2);
+					BeveragePendingContext ctx = new BeveragePendingContext(bi);
+					if(!relish.isEmpty())
+						if(!relish.stream().anyMatch(t->t.test(ctx))) {
+							disps.add(BuiltInRegistries.FLUID.wrapAsHolder(
+							BeverageTypeRecipe.sorted.stream().filter(t -> t.value().matches(ctx)).map(t -> t.value().output).findFirst()
+							.orElse(CVFluids.MIXED_FLUID.get())));
+						}
+				}
+			if(disps.isEmpty()) {
+				disps.add(CVFluids.MIXED_FLUID);
+			}
+			display=disps;
+		}
+		return display.stream();
 	}
 
 	@Override

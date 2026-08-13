@@ -96,7 +96,27 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 	public List<ChancedEffect> foodeffect;
 	public Object2IntRBTreeMap<Holder<Fluid>> relishes=new Object2IntRBTreeMap<Holder<Fluid>>(Comparator.comparing(t->t.getKey()));
 	public List<String> activeRelish = new ArrayList<>(3);
-
+	public BeverageInfo(String active1,String active2) {
+		effects = new ArrayList<>();
+		swayeffects = new ArrayList<>();
+		stacks = new ArrayList<>();
+		variants=new Object2FloatOpenHashMap<>();
+		foodeffect = new ArrayList<>();
+		activeRelish.add(active1);
+		activeRelish.add(active2);
+		for(RecipeHolder<RelishFluidRecipe> rfr:RelishFluidRecipe.recipes.values()) {
+			if(active1.equals(rfr.value().relish)) {
+				relishes.addTo(rfr.value().fluid, 1);
+				break;
+			}
+		}
+		for(RecipeHolder<RelishFluidRecipe> rfr:RelishFluidRecipe.recipes.values()) {
+			if(active2.equals(rfr.value().relish)) {
+				relishes.addTo(rfr.value().fluid, 1);
+				break;
+			}
+		}
+	}
 	public BeverageInfo(Holder<Fluid> f) {
 		effects = new ArrayList<>();
 		swayeffects = new ArrayList<>();
@@ -400,7 +420,7 @@ public class BeverageInfo implements IFoodInfo,TooltipProvider {
 			.thenComparing(e -> e.chance));
 		recalculateHAS();
 		return Pair.of(swi,
-			BeverageTypeRecipe.sorted.stream().map(t -> t.value()).filter(t -> t.matches(ctx)).<Either<BeverageTypeRecipe,Fluid>>map(t -> Either.left(t)).findFirst()
+			BeverageTypeRecipe.sorted.stream().filter(t -> t.value().matches(ctx)).<Either<BeverageTypeRecipe,Fluid>>map(t -> Either.left(t.value())).findFirst()
 				.orElse(Either.right(CVFluids.MIXED_FLUID.get())));
 	}
 

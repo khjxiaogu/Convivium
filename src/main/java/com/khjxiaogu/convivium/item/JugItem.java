@@ -107,16 +107,14 @@ public class JugItem extends Item  implements ICreativeModeTabItem{
 					}
 				}
 			}
-			try(Transaction trans=Transaction.openRoot()){
-				if(handler!=null) {
-					FluidStack res=FluidUtil.tryPickupFluid(handler, playerIn, worldIn, blockpos,ray.getDirection());
-					if(!res.isEmpty()) {
-						trans.commit();
-						return InteractionResult.SUCCESS;
-					}
-					
+			if(handler!=null) {
+				FluidStack res=FluidUtil.tryPickupFluid(handler, playerIn, worldIn, blockpos,ray.getDirection());
+				if(!res.isEmpty()) {
+					return InteractionResult.SUCCESS;
 				}
+				
 			}
+			
 		}else if(ray.getType() == Type.MISS) {
 			if(playerIn.isShiftKeyDown()) {
 				ResourceHandler<FluidResource> handler=cur.getCapability(Capabilities.Fluid.ITEM,ia);

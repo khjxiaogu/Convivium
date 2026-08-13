@@ -47,18 +47,20 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
 import net.neoforged.neoforge.transfer.RangedResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class PamBlockEntity extends KineticTransferBlockEntity implements MenuProvider {
 	public ItemStacksResourceHandler inv = new ItemStacksResourceHandler(6) {
 		@Override
 		public boolean isValid(int slot, ItemResource stack) {
-			return slot >=3||GrindingRecipe.testInput(stack.toStack());
+			return slot >=3||GrindingRecipe.testInput(stack.toStack(64));
 		}
 
 		@Override
@@ -79,7 +81,40 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		}
 		
 	};
+	public final DelegatingResourceHandler<FluidResource> modtank=new DelegatingResourceHandler<>(tanks) {
 
+		@Override
+		public boolean isValid(int index, FluidResource resource) {
+			if(index==1)return false;
+			return super.isValid(index, resource);
+		}
+
+		@Override
+		public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+			if(index==1)return 0;
+			return super.insert(index, resource, amount, transaction);
+		}
+
+		@Override
+		public int insert(FluidResource resource, int amount, TransactionContext transaction) {
+			return super.insert(0, resource, amount, transaction);
+		}
+
+		@Override
+		public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+			if(index==0)return 0;
+			return super.extract(index, resource, amount, transaction);
+		}
+
+		@Override
+		public int extract(FluidResource resource, int amount, TransactionContext transaction) {
+			return super.extract(1, resource, amount, transaction);
+		}
+
+	
+		
+	};
+	
 	public RecipeHandler<GrindingRecipe> recipeHandler=new RecipeHandler<>(rcp->{
 		RecipeHolder<GrindingRecipe> recipe=GrindingRecipe.recipes.get(rcp);
 		if(recipe!=null) {
@@ -176,11 +211,11 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		// TODO Auto-generated method stub
 		super.tick();
 		if(level.isClientSide()) {
-			if(recipeHandler.getProcess()!=0)
+			if(recipeHandler.getProcessMax()!=0)
 				for(int i=0;i<3;i++) {
 					ItemResource stackInSlot = inv.getResource(i);
 					if (!stackInSlot.isEmpty()){
-						if(Math.random()<0.05)
+						if(Math.random()<0.2)
 							spawnParticleFor(stackInSlot);
 					}
 				}
@@ -196,7 +231,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 		}else
 		if(recipeHandler.getProcessMax()>0) {
 			if(recipeHandler.tickProcess(getSpeed()))
-			this.syncData();
+				this.setChanged();
 		}
 	}
 
@@ -218,7 +253,7 @@ public class PamBlockEntity extends KineticTransferBlockEntity implements MenuPr
 			return RangedResourceHandler.of(inv, 0, 3);
 		}
 		if (type == Capabilities.Fluid.BLOCK)
-			return tanks;
+			return modtank;
 		return super.getCapability(type, d);
 	}
 }

@@ -113,7 +113,7 @@ public class PamRenderer extends RotationRenderer<PamBlockEntity,PamRenderState>
 				poseStack.translate(5/16f,type?(4/16f):(8/16f),5/16f);
 				poseStack.mulPose(new Quaternionf().rotateXYZ(type?30:-10,0,30));
 				poseStack.scale(0.5f, 0.5f, 0.5f);
-				is.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0xff000000);
+				is.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 				poseStack.popPose();
 				
 			}

@@ -160,7 +160,7 @@ public class GrindingRecipe extends IDataRecipe implements TimedRecipe{
 */
 
 	public static boolean testInput(ItemStack stack) {
-		return recipes.values().stream().map(t->t.value()).anyMatch(t -> t.items.stream().anyMatch(i -> i.test(stack)));
+		return recipes.values().stream().anyMatch(t -> t.value().items.stream().anyMatch(i -> i.test(stack)));
 	}
 
 	public static RecipeHolder<GrindingRecipe> test(ResourceHandler<FluidResource> f, ResourceHandler<ItemResource> inv) {

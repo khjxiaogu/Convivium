@@ -42,6 +42,7 @@ public class PamContainer extends CPBaseContainer<PamBlockEntity> {
 		this.addSlot(new OutputSlot(blockEntity.inv, blockEntity.inv::set, 4, 155, 39));
 		this.addSlot(new OutputSlot(blockEntity.inv, blockEntity.inv::set, 5, 155, 57));
 		super.addPlayerInventory(inv, 8, 82, 140);
+		this.addDataSlots(blockEntity.recipeHandler);
 	}
 	@Override
 	public boolean quickMoveIn(ItemStack slotStack) {

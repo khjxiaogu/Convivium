@@ -58,9 +58,11 @@ public class CVBlockTagGenerator extends TagsProvider<Block> {
 		}
 		adds(this.tag(CPTags.Blocks.CHIMNEY_IGNORES), CVBlocks.AEOLIPILE.getKey());
 		adds(this.tag(CVTags.Blocks.AQUEDUCT_MOVE), CPBlocks.BOWL.getKey(), CPBlocks.DISH.getKey(), CVBlocks.PLATTER.getKey(), CPBlocks.WOLF.getKey(),
-			CPBlocks.COPPER_PAN.getKey(), CPBlocks.LEAD_PAN.getKey(), CPBlocks.IRON_PAN.getKey(), CPBlocks.GRAVY_BOAT.getKey(), CPBlocks.STONE_PAN.getKey(), CVBlocks.BEVERAGE.getKey());
+			CPBlocks.COPPER_PAN.getKey(), CPBlocks.LEAD_PAN.getKey(), CPBlocks.IRON_PAN.getKey(), CPBlocks.GRAVY_BOAT.getKey(), CPBlocks.STONE_PAN.getKey(), CVBlocks.BEVERAGE.getKey(),
+			CPBlocks.LOAF_BOWL.getSecond().getKey(),CVBlocks.CUP.getKey(),CVBlocks.BOWL.getKey(),CVBlocks.JUG.getKey(),CVBlocks.MUG.getKey());
 		for (String s : CPItems.dishes) {
 			this.tag(CVTags.Blocks.AQUEDUCT_MOVE).add(cpn(s));
+			this.tag(CVTags.Blocks.AQUEDUCT_MOVE).add(cpn(s+"_loaf"));
 		}
 		adds(tag(BlockTags.MINEABLE_WITH_AXE), CVBlocks.CAGE.getKey(), CVBlocks.COG.getKey(), CVBlocks.PLATTER.getKey(), CVBlocks.CAMELLIA.getKey());
 		adds(tag(BlockTags.MINEABLE_WITH_PICKAXE), CVBlocks.WHISK.getKey(), CVBlocks.AEOLIPILE.getKey(), CVBlocks.PAM.getKey(), CVBlocks.BASIN.getKey(), CVBlocks.LEAD_BASIN.getKey(),

@@ -5,27 +5,27 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness-6.5)",
-					"right": 4
+					"left": "abs(sweetness-3.25)",
+					"right": 2.0
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness+6.2)",
-					"right": 3
+					"left": "abs(soothingness+3.1)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:unluck",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,sweetness-6.5)/4)),-log(abs(max(0.1,soothingness+6.2)/3))))))",
-			"time": "1200.0*min(if(abs(sweetness)-6.5,(1+(abs(sweetness)-6.5)/4)^2,1),if(abs(soothingness)-6.2,(1+(abs(soothingness)-6.2)/3)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,sweetness-3.25)/2.0)),-log(abs(max(0.1,soothingness+3.1)/1.5))))))",
+			"time": "1200.0*min(if(abs(sweetness)-3.25,(1+(abs(sweetness)-3.25)/2.0)^2,1),if(abs(soothingness)-3.1,(1+(abs(soothingness)-3.1)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/unluck",
 	"locals": {
-		"display": "max(0,20-(abs(sweetness-6.5)+abs(soothingness+6.2)))",
+		"display": "max(0,15-(abs(sweetness-3.25)+abs(soothingness+3.1)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(-9.2-soothingness,0)+min(-3.2-soothingness,0)",
-		"sweetnessDelta": "max(2.5-sweetness,0)+min(10.5-sweetness,0)",
+		"soothingnessDelta": "max(-4.6-soothingness,0)+min(-1.6-soothingness,0)",
+		"sweetnessDelta": "max(1.25-sweetness,0)+min(5.25-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

@@ -5,27 +5,27 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-6)",
-					"right": 2.5
+					"left": "abs(soothingness-3.0)",
+					"right": 1.25
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness-6.5)",
-					"right": 3
+					"left": "abs(sweetness-3.25)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:levitation",
-			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,soothingness-6)/2.5)),-log(abs(max(0.1,sweetness-6.5)/3))))))",
-			"time": "160.0*min(if(abs(soothingness)-6,(1+(abs(soothingness)-6)/2.5)^2,1),if(abs(sweetness)-6.5,(1+(abs(sweetness)-6.5)/3)^2,1))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,soothingness-3.0)/1.25)),-log(abs(max(0.1,sweetness-3.25)/1.5))))))",
+			"time": "160.0*min(if(abs(soothingness)-3.0,(1+(abs(soothingness)-3.0)/1.25)^2,1),if(abs(sweetness)-3.25,(1+(abs(sweetness)-3.25)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/levitation",
 	"locals": {
-		"display": "max(0,20-(abs(soothingness-6)+abs(sweetness-6.5)))",
+		"display": "max(0,15-(abs(soothingness-3.0)+abs(sweetness-3.25)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(3.5-soothingness,0)+min(8.5-soothingness,0)",
-		"sweetnessDelta": "max(3.5-sweetness,0)+min(9.5-sweetness,0)",
+		"soothingnessDelta": "max(1.75-soothingness,0)+min(4.25-soothingness,0)",
+		"sweetnessDelta": "max(1.75-sweetness,0)+min(4.75-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

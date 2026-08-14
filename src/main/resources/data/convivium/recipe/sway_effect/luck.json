@@ -5,27 +5,27 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness+7.5)",
-					"right": 3
+					"left": "abs(sweetness+3.75)",
+					"right": 1.5
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-6.5)",
-					"right": 3
+					"left": "abs(soothingness-3.25)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:luck",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,sweetness+7.5)/3)),-log(abs(max(0.1,soothingness-6.5)/3))))))",
-			"time": "1200.0*min(if(abs(sweetness)-7.5,(1+(abs(sweetness)-7.5)/3)^2,1),if(abs(soothingness)-6.5,(1+(abs(soothingness)-6.5)/3)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,sweetness+3.75)/1.5)),-log(abs(max(0.1,soothingness-3.25)/1.5))))))",
+			"time": "1200.0*min(if(abs(sweetness)-3.75,(1+(abs(sweetness)-3.75)/1.5)^2,1),if(abs(soothingness)-3.25,(1+(abs(soothingness)-3.25)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/luck",
 	"locals": {
-		"display": "max(0,20-(abs(sweetness+7.5)+abs(soothingness-6.5)))",
+		"display": "max(0,15-(abs(sweetness+3.75)+abs(soothingness-3.25)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(3.5-soothingness,0)+min(9.5-soothingness,0)",
-		"sweetnessDelta": "max(-10.5-sweetness,0)+min(-4.5-sweetness,0)",
+		"soothingnessDelta": "max(1.75-soothingness,0)+min(4.75-soothingness,0)",
+		"sweetnessDelta": "max(-5.25-sweetness,0)+min(-2.25-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

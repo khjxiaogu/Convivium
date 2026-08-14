@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness-5)",
-					"right": 2
+					"left": "abs(sweetness-2.5)",
+					"right": 1.0
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness+6)",
-					"right": 2
+					"left": "abs(thickness+3.0)",
+					"right": 1.0
 				}
 			],
 			"effect": "minecraft:fire_resistance",
 			"level": "1",
-			"time": "600.0*min(if(abs(sweetness)-5,(1+(abs(sweetness)-5)/2)^2,1),if(abs(thickness)-6,(1+(abs(thickness)-6)/2)^2,1))"
+			"time": "600.0*min(if(abs(sweetness)-2.5,(1+(abs(sweetness)-2.5)/1.0)^2,1),if(abs(thickness)-3.0,(1+(abs(thickness)-3.0)/1.0)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/fire_resistance",
 	"locals": {
-		"display": "max(0,20-(abs(sweetness-5)+abs(thickness+6)))",
+		"display": "max(0,15-(abs(sweetness-2.5)+abs(thickness+3.0)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(3-sweetness,0)+min(7-sweetness,0)",
-		"thicknessDelta": "max(-8-thickness,0)+min(-4-thickness,0)"
+		"sweetnessDelta": "max(1.5-sweetness,0)+min(3.5-sweetness,0)",
+		"thicknessDelta": "max(-4.0-thickness,0)+min(-2.0-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

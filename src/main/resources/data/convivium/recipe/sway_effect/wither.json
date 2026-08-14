@@ -5,26 +5,26 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness+7.5)",
-					"right": 3
+					"left": "abs(soothingness+3.75)",
+					"right": 1.5
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(pungency-7.5)",
-					"right": 3
+					"left": "abs(pungency-3.75)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:wither",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,soothingness+7.5)/3)),-log(abs(max(0.1,pungency-7.5)/3))))))",
-			"time": "100.0*min(if(abs(soothingness)-7.5,(1+(abs(soothingness)-7.5)/3)^2,1),if(abs(pungency)-7.5,(1+(abs(pungency)-7.5)/3)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,soothingness+3.75)/1.5)),-log(abs(max(0.1,pungency-3.75)/1.5))))))",
+			"time": "100.0*min(if(abs(soothingness)-3.75,(1+(abs(soothingness)-3.75)/1.5)^2,1),if(abs(pungency)-3.75,(1+(abs(pungency)-3.75)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/wither",
 	"locals": {
-		"display": "max(0,20-(abs(soothingness+7.5)+abs(pungency-7.5)))",
+		"display": "max(0,15-(abs(soothingness+3.75)+abs(pungency-3.75)))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "max(4.5-pungency,0)+min(10.5-pungency,0)",
-		"soothingnessDelta": "max(-10.5-soothingness,0)+min(-4.5-soothingness,0)",
+		"pungencyDelta": "max(2.25-pungency,0)+min(5.25-pungency,0)",
+		"soothingnessDelta": "max(-5.25-soothingness,0)+min(-2.25-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

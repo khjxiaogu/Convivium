@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness+6)",
-					"right": 3
+					"left": "abs(thickness+3.0)",
+					"right": 1.5
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency+2.8)",
-					"right": 1.5
+					"left": "abs(astringency+1.4)",
+					"right": 0.75
 				}
 			],
 			"effect": "convivium:toss_power",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness+6)/3)),-log(abs(max(0.1,astringency+2.8)/1.5))))))",
-			"time": "1200.0*min(if(abs(thickness)-6,(1+(abs(thickness)-6)/3)^2,1),if(abs(astringency)-2.8,(1+(abs(astringency)-2.8)/1.5)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness+3.0)/1.5)),-log(abs(max(0.1,astringency+1.4)/0.75))))))",
+			"time": "1200.0*min(if(abs(thickness)-3.0,(1+(abs(thickness)-3.0)/1.5)^2,1),if(abs(astringency)-1.4,(1+(abs(astringency)-1.4)/0.75)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/toss_power",
 	"locals": {
-		"display": "max(0,20-(abs(thickness+6)+abs(astringency+2.8)))",
-		"astringencyDelta": "max(-4.3-astringency,0)+min(-1.3-astringency,0)",
+		"display": "max(0,15-(abs(thickness+3.0)+abs(astringency+1.4)))",
+		"astringencyDelta": "max(-2.15-astringency,0)+min(-0.65-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(-9-thickness,0)+min(-3-thickness,0)"
+		"thicknessDelta": "max(-4.5-thickness,0)+min(-1.5-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

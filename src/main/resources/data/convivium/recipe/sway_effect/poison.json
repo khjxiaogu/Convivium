@@ -5,25 +5,25 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(pungency-6)",
-					"right": 4
+					"left": "abs(pungency-3.0)",
+					"right": 2.0
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency-6)",
-					"right": 4
+					"left": "abs(astringency-3.0)",
+					"right": 2.0
 				}
 			],
 			"effect": "minecraft:poison",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,pungency-6)/4)),-log(abs(max(0.1,astringency-6)/4))))))",
-			"time": "160.0*min(if(abs(pungency)-6,(1+(abs(pungency)-6)/4)^2,1),if(abs(astringency)-6,(1+(abs(astringency)-6)/4)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,pungency-3.0)/2.0)),-log(abs(max(0.1,astringency-3.0)/2.0))))))",
+			"time": "160.0*min(if(abs(pungency)-3.0,(1+(abs(pungency)-3.0)/2.0)^2,1),if(abs(astringency)-3.0,(1+(abs(astringency)-3.0)/2.0)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/poison",
 	"locals": {
-		"display": "max(0,20-(abs(pungency-6)+abs(astringency-6)))",
-		"astringencyDelta": "max(2-astringency,0)+min(10-astringency,0)",
-		"pungencyDelta": "max(2-pungency,0)+min(10-pungency,0)",
+		"display": "max(0,15-(abs(pungency-3.0)+abs(astringency-3.0)))",
+		"astringencyDelta": "max(1.0-astringency,0)+min(5.0-astringency,0)",
+		"pungencyDelta": "max(1.0-pungency,0)+min(5.0-pungency,0)",
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0

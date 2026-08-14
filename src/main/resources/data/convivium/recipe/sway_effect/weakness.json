@@ -5,26 +5,26 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(pungency+7)",
-					"right": 4
+					"left": "abs(pungency+3.5)",
+					"right": 2.0
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-6)",
-					"right": 3
+					"left": "abs(soothingness-3.0)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:weakness",
-			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,pungency+7)/4)),-log(abs(max(0.1,soothingness-6)/3))))))",
-			"time": "500.0*min(if(abs(pungency)-7,(1+(abs(pungency)-7)/4)^2,1),if(abs(soothingness)-6,(1+(abs(soothingness)-6)/3)^2,1))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,pungency+3.5)/2.0)),-log(abs(max(0.1,soothingness-3.0)/1.5))))))",
+			"time": "500.0*min(if(abs(pungency)-3.5,(1+(abs(pungency)-3.5)/2.0)^2,1),if(abs(soothingness)-3.0,(1+(abs(soothingness)-3.0)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/weakness",
 	"locals": {
-		"display": "max(0,20-(abs(pungency+7)+abs(soothingness-6)))",
+		"display": "max(0,15-(abs(pungency+3.5)+abs(soothingness-3.0)))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "max(-11-pungency,0)+min(-3-pungency,0)",
-		"soothingnessDelta": "max(3-soothingness,0)+min(9-soothingness,0)",
+		"pungencyDelta": "max(-5.5-pungency,0)+min(-1.5-pungency,0)",
+		"soothingnessDelta": "max(1.5-soothingness,0)+min(4.5-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness+8.2)",
-					"right": 1.5
+					"left": "abs(thickness+4.1)",
+					"right": 0.75
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-6)",
-					"right": 3
+					"left": "abs(soothingness-3.0)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:invisibility",
 			"level": "1",
-			"time": "1200.0*min(if(abs(thickness)-8.2,(1+(abs(thickness)-8.2)/1.5)^2,1),if(abs(soothingness)-6,(1+(abs(soothingness)-6)/3)^2,1))"
+			"time": "1200.0*min(if(abs(thickness)-4.1,(1+(abs(thickness)-4.1)/0.75)^2,1),if(abs(soothingness)-3.0,(1+(abs(soothingness)-3.0)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/invisibility",
 	"locals": {
-		"display": "max(0,20-(abs(thickness+8.2)+abs(soothingness-6)))",
+		"display": "max(0,15-(abs(thickness+4.1)+abs(soothingness-3.0)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(3-soothingness,0)+min(9-soothingness,0)",
+		"soothingnessDelta": "max(1.5-soothingness,0)+min(4.5-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(-9.7-thickness,0)+min(-6.7-thickness,0)"
+		"thicknessDelta": "max(-4.85-thickness,0)+min(-3.35-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

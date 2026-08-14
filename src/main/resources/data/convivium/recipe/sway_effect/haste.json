@@ -5,27 +5,27 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness+7.8)",
-					"right": 3.5
+					"left": "abs(sweetness+3.9)",
+					"right": 1.75
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency+6.5)",
-					"right": 3
+					"left": "abs(astringency+3.25)",
+					"right": 1.5
 				}
 			],
 			"effect": "minecraft:haste",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,sweetness+7.8)/3.5)),-log(abs(max(0.1,astringency+6.5)/3))))))",
-			"time": "900.0*min(if(abs(sweetness)-7.8,(1+(abs(sweetness)-7.8)/3.5)^2,1),if(abs(astringency)-6.5,(1+(abs(astringency)-6.5)/3)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,sweetness+3.9)/1.75)),-log(abs(max(0.1,astringency+3.25)/1.5))))))",
+			"time": "900.0*min(if(abs(sweetness)-3.9,(1+(abs(sweetness)-3.9)/1.75)^2,1),if(abs(astringency)-3.25,(1+(abs(astringency)-3.25)/1.5)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/haste",
 	"locals": {
-		"display": "max(0,20-(abs(sweetness+7.8)+abs(astringency+6.5)))",
-		"astringencyDelta": "max(-9.5-astringency,0)+min(-3.5-astringency,0)",
+		"display": "max(0,15-(abs(sweetness+3.9)+abs(astringency+3.25)))",
+		"astringencyDelta": "max(-4.75-astringency,0)+min(-1.75-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(-11.3-sweetness,0)+min(-4.3-sweetness,0)",
+		"sweetnessDelta": "max(-5.65-sweetness,0)+min(-2.15-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

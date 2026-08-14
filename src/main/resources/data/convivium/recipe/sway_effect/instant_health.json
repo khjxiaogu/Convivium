@@ -5,27 +5,27 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency-3.6)",
-					"right": 2.5
+					"left": "abs(astringency-2.88)",
+					"right": 2.0
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness+3.0)",
-					"right": 1.5
+					"left": "abs(sweetness+2.4)",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:instant_health",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,astringency-3.6)/2.5)),-log(abs(max(0.1,sweetness+3.0)/1.5))))))",
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,abs(astringency-2.88))/2.0)),-log(abs(max(0.1,abs(sweetness+2.4))/1.2))))))",
 			"time": "1.0"
 		}
 	],
 	"icon": "minecraft:mob_effect/instant_health",
 	"locals": {
-		"display": "max(0,15-(abs(astringency-3.6)+abs(sweetness+3.0)))",
-		"astringencyDelta": "max(1.1-astringency,0)+min(6.1-astringency,0)",
+		"display": "max(0,15-(abs(astringency-2.88)+abs(sweetness+2.4)))",
+		"astringencyDelta": "max(0.88-astringency,0)+min(4.88-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(-4.5-sweetness,0)+min(-1.5-sweetness,0)",
+		"sweetnessDelta": "max(-3.6-sweetness,0)+min(-1.2-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

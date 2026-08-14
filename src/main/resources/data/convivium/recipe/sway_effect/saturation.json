@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness+4.0)",
-					"right": 2.0
+					"left": "abs(thickness+3.2)",
+					"right": 1.6
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness+3.25)",
-					"right": 1.5
+					"left": "abs(sweetness+2.6)",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:saturation",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness+4.0)/2.0)),-log(abs(max(0.1,sweetness+3.25)/1.5))))))",
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,abs(thickness+3.2))/1.6)),-log(abs(max(0.1,abs(sweetness+2.6))/1.2))))))",
 			"time": "2.0"
 		}
 	],
 	"icon": "minecraft:mob_effect/saturation",
 	"locals": {
-		"display": "max(0,15-(abs(thickness+4.0)+abs(sweetness+3.25)))",
+		"display": "max(0,15-(abs(thickness+3.2)+abs(sweetness+2.6)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(-4.75-sweetness,0)+min(-1.75-sweetness,0)",
-		"thicknessDelta": "max(-6.0-thickness,0)+min(-2.0-thickness,0)"
+		"sweetnessDelta": "max(-3.8-sweetness,0)+min(-1.4-sweetness,0)",
+		"thicknessDelta": "max(-4.8-thickness,0)+min(-1.6-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

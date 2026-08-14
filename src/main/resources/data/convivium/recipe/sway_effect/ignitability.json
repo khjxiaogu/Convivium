@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness+3.0)",
-					"right": 1.0
+					"left": "abs(sweetness+2.4)",
+					"right": 0.8
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness-2.75)",
-					"right": 1.0
+					"left": "abs(thickness-2.2)",
+					"right": 0.8
 				}
 			],
 			"effect": "convivium:ignitability",
-			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,sweetness+3.0)/1.0)),-log(abs(max(0.1,thickness-2.75)/1.0))))))",
-			"time": "600.0*min(if(abs(sweetness)-3.0,(1+(abs(sweetness)-3.0)/1.0)^2,1),if(abs(thickness)-2.75,(1+(abs(thickness)-2.75)/1.0)^2,1))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,abs(sweetness+2.4))/0.8)),-log(abs(max(0.1,abs(thickness-2.2))/0.8))))))",
+			"time": "600.0*min(if(abs(sweetness)-2.4,(1+(abs(sweetness)-2.4)/0.8)^2,1),if(abs(thickness)-2.2,(1+(abs(thickness)-2.2)/0.8)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/ignitability",
 	"locals": {
-		"display": "max(0,15-(abs(sweetness+3.0)+abs(thickness-2.75)))",
+		"display": "max(0,15-(abs(sweetness+2.4)+abs(thickness-2.2)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
-		"sweetnessDelta": "max(-4.0-sweetness,0)+min(-2.0-sweetness,0)",
-		"thicknessDelta": "max(1.75-thickness,0)+min(3.75-thickness,0)"
+		"sweetnessDelta": "max(-3.2-sweetness,0)+min(-1.6-sweetness,0)",
+		"thicknessDelta": "max(1.4-thickness,0)+min(3.0-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

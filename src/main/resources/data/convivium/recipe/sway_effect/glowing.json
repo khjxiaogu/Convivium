@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness-3.25)",
-					"right": 2.0
+					"left": "abs(thickness-2.6)",
+					"right": 1.6
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness+2.5)",
-					"right": 1.5
+					"left": "abs(soothingness+2.0)",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:glowing",
 			"level": "1",
-			"time": "1200.0*min(if(abs(thickness)-3.25,(1+(abs(thickness)-3.25)/2.0)^2,1),if(abs(soothingness)-2.5,(1+(abs(soothingness)-2.5)/1.5)^2,1))"
+			"time": "1200.0*min(if(abs(thickness)-2.6,(1+(abs(thickness)-2.6)/1.6)^2,1),if(abs(soothingness)-2.0,(1+(abs(soothingness)-2.0)/1.2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/glowing",
 	"locals": {
-		"display": "max(0,15-(abs(thickness-3.25)+abs(soothingness+2.5)))",
+		"display": "max(0,15-(abs(thickness-2.6)+abs(soothingness+2.0)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(-4.0-soothingness,0)+min(-1.0-soothingness,0)",
+		"soothingnessDelta": "max(-3.2-soothingness,0)+min(-0.8-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(1.25-thickness,0)+min(5.25-thickness,0)"
+		"thicknessDelta": "max(1.0-thickness,0)+min(4.2-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

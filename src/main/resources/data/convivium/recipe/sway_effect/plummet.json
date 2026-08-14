@@ -5,27 +5,27 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness+3.6)",
-					"right": 1.5
+					"left": "abs(soothingness+2.88)",
+					"right": 1.2
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(sweetness-3.75)",
-					"right": 1.5
+					"left": "abs(sweetness-3.0)",
+					"right": 1.2
 				}
 			],
 			"effect": "convivium:plummet",
 			"level": "1",
-			"time": "300.0*min(if(abs(soothingness)-3.6,(1+(abs(soothingness)-3.6)/1.5)^2,1),if(abs(sweetness)-3.75,(1+(abs(sweetness)-3.75)/1.5)^2,1))"
+			"time": "300.0*min(if(abs(soothingness)-2.88,(1+(abs(soothingness)-2.88)/1.2)^2,1),if(abs(sweetness)-3.0,(1+(abs(sweetness)-3.0)/1.2)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/plummet",
 	"locals": {
-		"display": "max(0,15-(abs(soothingness+3.6)+abs(sweetness-3.75)))",
+		"display": "max(0,15-(abs(soothingness+2.88)+abs(sweetness-3.0)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(-5.1-soothingness,0)+min(-2.1-soothingness,0)",
-		"sweetnessDelta": "max(2.25-sweetness,0)+min(5.25-sweetness,0)",
+		"soothingnessDelta": "max(-4.08-soothingness,0)+min(-1.68-soothingness,0)",
+		"sweetnessDelta": "max(1.8-sweetness,0)+min(4.2-sweetness,0)",
 		"thicknessDelta": 0.0
 	},
 	"priority": 0,

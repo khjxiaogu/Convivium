@@ -5,26 +5,26 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-4.25)",
-					"right": 2.0
+					"left": "abs(soothingness-3.4)",
+					"right": 1.6
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(pungency+3.25)",
-					"right": 1.5
+					"left": "abs(pungency+2.6)",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:regeneration",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,soothingness-4.25)/2.0)),-log(abs(max(0.1,pungency+3.25)/1.5))))))",
-			"time": "100.0*min(if(abs(soothingness)-4.25,(1+(abs(soothingness)-4.25)/2.0)^2,1),if(abs(pungency)-3.25,(1+(abs(pungency)-3.25)/1.5)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,abs(soothingness-3.4))/1.6)),-log(abs(max(0.1,abs(pungency+2.6))/1.2))))))",
+			"time": "100.0*min(if(abs(soothingness)-3.4,(1+(abs(soothingness)-3.4)/1.6)^2,1),if(abs(pungency)-2.6,(1+(abs(pungency)-2.6)/1.2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/regeneration",
 	"locals": {
-		"display": "max(0,15-(abs(soothingness-4.25)+abs(pungency+3.25)))",
+		"display": "max(0,15-(abs(soothingness-3.4)+abs(pungency+2.6)))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "max(-4.75-pungency,0)+min(-1.75-pungency,0)",
-		"soothingnessDelta": "max(2.25-soothingness,0)+min(6.25-soothingness,0)",
+		"pungencyDelta": "max(-3.8-pungency,0)+min(-1.4-pungency,0)",
+		"soothingnessDelta": "max(1.8-soothingness,0)+min(5.0-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

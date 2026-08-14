@@ -5,26 +5,26 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness+3.5)",
-					"right": 1.75
+					"left": "abs(soothingness+2.8)",
+					"right": 1.4
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(pungency-3.5)",
-					"right": 1.75
+					"left": "abs(pungency-2.8)",
+					"right": 1.4
 				}
 			],
 			"effect": "convivium:radication",
-			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,soothingness+3.5)/1.75)),-log(abs(max(0.1,pungency-3.5)/1.75))))))",
-			"time": "900.0*min(if(abs(soothingness)-3.5,(1+(abs(soothingness)-3.5)/1.75)^2,1),if(abs(pungency)-3.5,(1+(abs(pungency)-3.5)/1.75)^2,1))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,abs(soothingness+2.8))/1.4)),-log(abs(max(0.1,abs(pungency-2.8))/1.4))))))",
+			"time": "900.0*min(if(abs(soothingness)-2.8,(1+(abs(soothingness)-2.8)/1.4)^2,1),if(abs(pungency)-2.8,(1+(abs(pungency)-2.8)/1.4)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/radication",
 	"locals": {
-		"display": "max(0,15-(abs(soothingness+3.5)+abs(pungency-3.5)))",
+		"display": "max(0,15-(abs(soothingness+2.8)+abs(pungency-2.8)))",
 		"astringencyDelta": 0.0,
-		"pungencyDelta": "max(1.75-pungency,0)+min(5.25-pungency,0)",
-		"soothingnessDelta": "max(-5.25-soothingness,0)+min(-1.75-soothingness,0)",
+		"pungencyDelta": "max(1.4-pungency,0)+min(4.2-pungency,0)",
+		"soothingnessDelta": "max(-4.2-soothingness,0)+min(-1.4-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

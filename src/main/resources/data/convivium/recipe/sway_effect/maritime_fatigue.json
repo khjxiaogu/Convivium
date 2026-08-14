@@ -5,26 +5,26 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency+3.75)",
-					"right": 1.5
+					"left": "abs(astringency+3.0)",
+					"right": 1.2
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-3.75)",
-					"right": 1.5
+					"left": "abs(soothingness-3.0)",
+					"right": 1.2
 				}
 			],
 			"effect": "convivium:maritime_fatigue",
 			"level": "1",
-			"time": "500.0*min(if(abs(astringency)-3.75,(1+(abs(astringency)-3.75)/1.5)^2,1),if(abs(soothingness)-3.75,(1+(abs(soothingness)-3.75)/1.5)^2,1))"
+			"time": "500.0*min(if(abs(astringency)-3.0,(1+(abs(astringency)-3.0)/1.2)^2,1),if(abs(soothingness)-3.0,(1+(abs(soothingness)-3.0)/1.2)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/maritime_fatigue",
 	"locals": {
-		"display": "max(0,15-(abs(astringency+3.75)+abs(soothingness-3.75)))",
-		"astringencyDelta": "max(-5.25-astringency,0)+min(-2.25-astringency,0)",
+		"display": "max(0,15-(abs(astringency+3.0)+abs(soothingness-3.0)))",
+		"astringencyDelta": "max(-4.2-astringency,0)+min(-1.8-astringency,0)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(2.25-soothingness,0)+min(5.25-soothingness,0)",
+		"soothingnessDelta": "max(1.8-soothingness,0)+min(4.2-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

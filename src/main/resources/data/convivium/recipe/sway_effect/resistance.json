@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness-3.8)",
-					"right": 1.75
+					"left": "abs(thickness-3.04)",
+					"right": 1.4
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency+3.5)",
-					"right": 1.5
+					"left": "abs(astringency+2.8)",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:resistance",
-			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,thickness-3.8)/1.75)),-log(abs(max(0.1,astringency+3.5)/1.5))))))",
-			"time": "600.0*min(if(abs(thickness)-3.8,(1+(abs(thickness)-3.8)/1.75)^2,1),if(abs(astringency)-3.5,(1+(abs(astringency)-3.5)/1.5)^2,1))"
+			"level": "max(0,min(3,1+floor(min(-log(abs(max(0.1,abs(thickness-3.04))/1.4)),-log(abs(max(0.1,abs(astringency+2.8))/1.2))))))",
+			"time": "600.0*min(if(abs(thickness)-3.04,(1+(abs(thickness)-3.04)/1.4)^2,1),if(abs(astringency)-2.8,(1+(abs(astringency)-2.8)/1.2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/resistance",
 	"locals": {
-		"display": "max(0,15-(abs(thickness-3.8)+abs(astringency+3.5)))",
-		"astringencyDelta": "max(-5.0-astringency,0)+min(-2.0-astringency,0)",
+		"display": "max(0,15-(abs(thickness-3.04)+abs(astringency+2.8)))",
+		"astringencyDelta": "max(-4.0-astringency,0)+min(-1.6-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(2.05-thickness,0)+min(5.55-thickness,0)"
+		"thicknessDelta": "max(1.64-thickness,0)+min(4.44-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

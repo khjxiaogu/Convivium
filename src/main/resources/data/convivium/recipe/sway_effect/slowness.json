@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency-3.25)",
-					"right": 1.5
+					"left": "abs(astringency-2.6)",
+					"right": 1.2
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness-3.5)",
-					"right": 1.5
+					"left": "abs(thickness-2.8)",
+					"right": 1.2
 				}
 			],
 			"effect": "minecraft:slowness",
-			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,astringency-3.25)/1.5)),-log(abs(max(0.1,thickness-3.5)/1.5))))))",
-			"time": "500.0*min(if(abs(astringency)-3.25,(1+(abs(astringency)-3.25)/1.5)^2,1),if(abs(thickness)-3.5,(1+(abs(thickness)-3.5)/1.5)^2,1))"
+			"level": "max(0,min(2,1+floor(min(-log(abs(max(0.1,abs(astringency-2.6))/1.2)),-log(abs(max(0.1,abs(thickness-2.8))/1.2))))))",
+			"time": "500.0*min(if(abs(astringency)-2.6,(1+(abs(astringency)-2.6)/1.2)^2,1),if(abs(thickness)-2.8,(1+(abs(thickness)-2.8)/1.2)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/slowness",
 	"locals": {
-		"display": "max(0,15-(abs(astringency-3.25)+abs(thickness-3.5)))",
-		"astringencyDelta": "max(1.75-astringency,0)+min(4.75-astringency,0)",
+		"display": "max(0,15-(abs(astringency-2.6)+abs(thickness-2.8)))",
+		"astringencyDelta": "max(1.4-astringency,0)+min(3.8-astringency,0)",
 		"pungencyDelta": 0.0,
 		"soothingnessDelta": 0.0,
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(2.0-thickness,0)+min(5.0-thickness,0)"
+		"thicknessDelta": "max(1.6-thickness,0)+min(4.0-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

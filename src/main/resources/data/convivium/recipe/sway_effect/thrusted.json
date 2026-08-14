@@ -5,26 +5,26 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(astringency-3.75)",
-					"right": 1.5
+					"left": "abs(astringency-3.0)",
+					"right": 1.2
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness+4.0)",
-					"right": 1.25
+					"left": "abs(soothingness+3.2)",
+					"right": 1.0
 				}
 			],
 			"effect": "convivium:thrusted",
 			"level": "1",
-			"time": "600.0*min(if(abs(astringency)-3.75,(1+(abs(astringency)-3.75)/1.5)^2,1),if(abs(soothingness)-4.0,(1+(abs(soothingness)-4.0)/1.25)^2,1))"
+			"time": "600.0*min(if(abs(astringency)-3.0,(1+(abs(astringency)-3.0)/1.2)^2,1),if(abs(soothingness)-3.2,(1+(abs(soothingness)-3.2)/1.0)^2,1))"
 		}
 	],
 	"icon": "convivium:mob_effect/thrusted",
 	"locals": {
-		"display": "max(0,15-(abs(astringency-3.75)+abs(soothingness+4.0)))",
-		"astringencyDelta": "max(2.25-astringency,0)+min(5.25-astringency,0)",
+		"display": "max(0,15-(abs(astringency-3.0)+abs(soothingness+3.2)))",
+		"astringencyDelta": "max(1.8-astringency,0)+min(4.2-astringency,0)",
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(-5.25-soothingness,0)+min(-2.75-soothingness,0)",
+		"soothingnessDelta": "max(-4.2-soothingness,0)+min(-2.2-soothingness,0)",
 		"sweetnessDelta": 0.0,
 		"thicknessDelta": 0.0
 	},

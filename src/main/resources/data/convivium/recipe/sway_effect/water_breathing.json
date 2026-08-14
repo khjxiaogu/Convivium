@@ -5,28 +5,28 @@
 			"condition": [
 				{
 					"compare": "lesser_equals",
-					"left": "abs(thickness+3.75)",
-					"right": 1.75
+					"left": "abs(thickness+3.0)",
+					"right": 1.4
 				},
 				{
 					"compare": "lesser_equals",
-					"left": "abs(soothingness-3.75)",
-					"right": 1.75
+					"left": "abs(soothingness-3.0)",
+					"right": 1.4
 				}
 			],
 			"effect": "minecraft:water_breathing",
 			"level": "1",
-			"time": "500.0*min(if(abs(thickness)-3.75,(1+(abs(thickness)-3.75)/1.75)^2,1),if(abs(soothingness)-3.75,(1+(abs(soothingness)-3.75)/1.75)^2,1))"
+			"time": "500.0*min(if(abs(thickness)-3.0,(1+(abs(thickness)-3.0)/1.4)^2,1),if(abs(soothingness)-3.0,(1+(abs(soothingness)-3.0)/1.4)^2,1))"
 		}
 	],
 	"icon": "minecraft:mob_effect/water_breathing",
 	"locals": {
-		"display": "max(0,15-(abs(thickness+3.75)+abs(soothingness-3.75)))",
+		"display": "max(0,15-(abs(thickness+3.0)+abs(soothingness-3.0)))",
 		"astringencyDelta": 0.0,
 		"pungencyDelta": 0.0,
-		"soothingnessDelta": "max(2.0-soothingness,0)+min(5.5-soothingness,0)",
+		"soothingnessDelta": "max(1.6-soothingness,0)+min(4.4-soothingness,0)",
 		"sweetnessDelta": 0.0,
-		"thicknessDelta": "max(-5.5-thickness,0)+min(-2.0-thickness,0)"
+		"thicknessDelta": "max(-4.4-thickness,0)+min(-1.6-thickness,0)"
 	},
 	"priority": 0,
 	"relish": [

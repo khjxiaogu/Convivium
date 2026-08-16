@@ -110,7 +110,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		String taste=Constants.TASTES[barIdx];
 		int v=info.getTasteDelta(taste);
 		if(v!=0) {
-			drawSwayBubble(transform,barIdx,(v+Mth.floor(variants.getFloat(taste)*10f))/10f,info.image,info.icon,mouseX,mouseY);
+			drawSwayBubble(transform,barIdx,Mth.floor((v+variants.getFloat(taste))*10f)/10f,info.image,info.icon,mouseX,mouseY);
 		}
 
 	}

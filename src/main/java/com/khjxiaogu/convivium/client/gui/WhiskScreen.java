@@ -181,12 +181,9 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 					}
 					
 				}
-
-				drawTaste(graphics,0,info.variants.getFloat("sweetness"));
-				drawTaste(graphics,1,info.variants.getFloat("astringency"));
-				drawTaste(graphics,2,info.variants.getFloat("pungency"));
-				drawTaste(graphics,3,info.variants.getFloat("thickness"));
-				drawTaste(graphics,4,info.variants.getFloat("soothingness"));
+				for(int n=0;n<Constants.TASTES.length;n++) {
+					drawTaste(graphics,n,info.variants.getFloat(Constants.TASTES[n]));
+				}
 				if(!getBlockEntity().swayhint.isEmpty()) {
 					int n2=0;
 					for(CurrentSwayInfo swh:getBlockEntity().swayhint) {

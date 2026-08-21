@@ -1,4 +1,4 @@
-// 26.1.2	2026-07-12T15:45:11.3180447	Model Definitions - convivium
+// 26.1.2	2026-08-21T23:22:02.9805365	Model Definitions - convivium
 7b6aec1eddcc0930499d128603f89c1d63a161d6 assets/convivium/blockstates/aeolipile.json
 0898337ce06471fa6329d0fd4f64140683dd6e76 assets/convivium/blockstates/basin.json
 51554397b376befce96eb79a9842170d04f80e52 assets/convivium/blockstates/beverage.json
@@ -50,6 +50,7 @@ d7887d80897e3c00ca128abd5c9cd475b2dc964d assets/convivium/items/beverage_cup.jso
 fc92e5b50700a2130fb986cee505507f70fa9b97 assets/convivium/items/beverage_jug.json
 07f7209532ba6d5f792b7d14c101c24503af08b1 assets/convivium/items/beverage_mug.json
 a85e7002e25bccd45c2110b3597d8e4161a6b89b assets/convivium/items/beverage_vending_machine.json
+d041665eaba0815b2a1a195627045ac04b55ca5f assets/convivium/items/book.json
 6f3b3271d8526b3e043420093386544df7e76068 assets/convivium/items/cage_wheel.json
 9902c4d48f39fb2845060e28057d2b5f1f9aa7b6 assets/convivium/items/camellia_flower.json
 b3f7e8b1b9e8e8f4ead1df29f2e519a525f26e72 assets/convivium/items/camellia_plant.json
@@ -132,6 +133,7 @@ cc1d4f67e4c70433132105373b79922a9373c5f6 assets/convivium/models/item/ade.json
 abffa00a479dbd9fa2febc0ffc421de14731475c assets/convivium/models/item/beverage_cup.json
 b21065d30b8bc15e816a1b4928ea8275c6a6adb3 assets/convivium/models/item/beverage_jug.json
 5979191e6a234df05a0515a8388ffb0a0545ef62 assets/convivium/models/item/beverage_mug.json
+1d851960cffbcd306f338fc6db54b965a5788014 assets/convivium/models/item/book.json
 64dc2f920b0b2db1198bda67e5b59a4950d6f6a5 assets/convivium/models/item/cage_wheel.json
 9ce901d0a950a5a2008cbb32a445ce2d07aacfde assets/convivium/models/item/camellia_flower.json
 c6aacf37378e27c4be527194b94e782369d9d054 assets/convivium/models/item/camellia_seeds.json

@@ -208,7 +208,8 @@ dependencies {
 	
 	//implementation fg.deobf("curse.maven:simple-farming-327554:3400041")
 	implementation "com.khjxiaogu:Caupona:${minecraft_version}-${caupona_version}"
-    //compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-81-FORGE:api")
+    compileOnly "vazkii.patchouli:patchouli-neoforge:${patchouli_version}:api"
+    runtimeOnly "vazkii.patchouli:patchouli-neoforge:${patchouli_version}"
 	//implementation "mcjty.theoneprobe:theoneprobe:${top_version}"
 	//compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
 	//clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"

@@ -74,18 +74,18 @@ public class CurrentSwayInfo {
 		this.image = Identifier.fromNamespaceAndPath(icon.getNamespace(), "textures/" + icon.getPath() + ".png");
 	}
 
-	public int getTasteDelta(String sw) {
+	public float getTasteDelta(String sw) {
 		switch (sw) {
 		case Constants.ASTRINGENCY:
-			return this.dastringent;
+			return this.dastringent/10f;
 		case Constants.PUNGENCY:
-			return this.dpungent;
+			return this.dpungent/10f;
 		case Constants.SOOTHINGNESS:
-			return this.drousing;
+			return this.drousing/10f;
 		case Constants.SWEETNESS:
-			return this.dsweet;
+			return this.dsweet/10f;
 		case Constants.THICKNESS:
-			return this.dthick;
+			return this.dthick/10f;
 		}
 		return 0;
 	}

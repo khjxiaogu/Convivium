@@ -268,14 +268,11 @@ public class WhiskBlockEntity extends KineticTransferBlockEntity implements IInf
 					int beforeParts=beforeAmount/250;
 					int insertParts=amount/250;
 					int toAdd=info.addableRelish(beforeParts);
-					System.out.println(toAdd);
 					int toAdd2=ninfo.addableRelish(insertParts,beforeParts);
-					System.out.println(toAdd2);
 					if(toAdd2<=toAdd) {
 						info.addRelishes(beforeParts, ninfo.relishes, toAdd2);
 						info.merge(ninfo, beforeParts, toAdd2);
 						setFluid(info,orig,beforeAmount+toAdd2*250,40);
-						System.out.println("succeed");
 						return toAdd2*250;
 					}
 					return 0;

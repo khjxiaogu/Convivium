@@ -24,6 +24,7 @@ import com.khjxiaogu.convivium.CVFluids;
 import com.khjxiaogu.convivium.CVItems;
 import com.khjxiaogu.convivium.CVMain;
 import com.khjxiaogu.convivium.client.BeverageTint;
+import com.teammoeg.caupona.CPMain;
 
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ItemModelOutput;
@@ -34,6 +35,7 @@ import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.item.ClientItem;
 import net.minecraft.client.renderer.item.ItemModel.Unbaked;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -69,6 +71,9 @@ public class CVItemModelProvider extends ItemModelGenerators {
 			potTexture("beverage_"+bottleType, "glass_"+bottleType, "beverages/");
 		}
 		texture("jug");
+		this.itemModelOutput.register(CVMain.rl("book"), new ClientItem(ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM
+				.create(CVMain.rl("item/"+"book"), TextureMapping.layer0(new Material(
+						CVMain.rl("item/"+"book"))), this.modelOutput)),ClientItem.Properties.DEFAULT));
 	}
 
 	public void potTexture(String n, String name, String par) {

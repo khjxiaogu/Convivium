@@ -83,7 +83,7 @@ public abstract class KineticTransferBlockEntity extends CPBaseBlockEntity imple
 
 	@Override
 	public void revalidateSpeed() {
-		speed=0;
+		setSpeed(0);
 	}
 
 }

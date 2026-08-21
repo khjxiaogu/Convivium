@@ -83,6 +83,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 		transform.blit(RenderPipelines.GUI_TEXTURED,info.image, leftPos + x, topPos + y, 0, 0, 9, 9,9,9);
 	}
 	public void drawTaste(GuiGraphicsExtractor transform,int barIdx,float value) {
+		value=Mth.clamp(value,-10,10);
 		if(value>0)
 			transform.blit(RenderPipelines.GUI_TEXTURED,TEXTURE, leftPos + 20+21*barIdx,topPos + 33+Mth.ceil(37*(1-(value/10))), 176+7*barIdx,122+Mth.ceil(37*(1-(value/10))), 7, Mth.floor(37*(value/10)),256,256);
 		else
@@ -108,7 +109,7 @@ public class WhiskScreen extends AbstractContainerScreen<WhiskContainer> {
 	public void drawSwayBubble(GuiGraphicsExtractor transform,int barIdx,CurrentSwayInfo info,Object2FloatOpenHashMap<String> variants,int mouseX,int mouseY) {
 		
 		String taste=Constants.TASTES[barIdx];
-		int v=info.getTasteDelta(taste);
+		float v=info.getTasteDelta(taste);
 		if(v!=0) {
 			drawSwayBubble(transform,barIdx,Mth.floor((v+variants.getFloat(taste))*10f)/10f,info.image,info.icon,mouseX,mouseY);
 		}

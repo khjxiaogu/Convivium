@@ -1,6 +1,7 @@
 {
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "convivium:block/beverage_vending_machine",

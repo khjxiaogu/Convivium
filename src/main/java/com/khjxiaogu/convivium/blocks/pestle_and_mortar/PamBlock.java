@@ -84,7 +84,7 @@ public class PamBlock extends KineticBasedBlock<PamBlockEntity> {
 			return p;
 		BlockEntity be = level.getBlockEntity(pos);
 		if (be instanceof PamBlockEntity pam) {
-			if (FluidUtil.interactWithFluidHandler(player, hand, pos, pam.tanks))
+			if (FluidUtil.interactWithFluidHandler(player, hand, pos, pam.modtank))
 				return InteractionResult.SUCCESS;
 		}
 

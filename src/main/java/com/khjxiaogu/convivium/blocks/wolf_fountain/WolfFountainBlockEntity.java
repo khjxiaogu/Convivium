@@ -248,7 +248,6 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 	public void applyEffectTo(int currentVersion, LivingEntity entity) {
 		if (this.level.isClientSide()) return;
 		if (currentVersion == this.currentVersion) {
-			System.out.println(entity);
 			if (appliedConsumable == null) {
 				if (item != null) {
 					PotionContents potc = item.get(DataComponents.POTION_CONTENTS);
@@ -353,7 +352,7 @@ public class WolfFountainBlockEntity extends KineticTransferBlockEntity implemen
 				ResourceHandler<FluidResource> blockSource = this.getLevel().getCapability(Capabilities.Fluid.BLOCK, back, face);
 				if (blockSource != null) {
 					try (Transaction trans = Transaction.openRoot()) {
-						if (ResourceHandlerUtil.move(fluid, blockSource, _ -> true, 250, trans) > 0) {
+						if (ResourceHandlerUtil.move(blockSource, fluid, _ -> true, 250, trans) > 0) {
 							trans.commit();
 						}
 

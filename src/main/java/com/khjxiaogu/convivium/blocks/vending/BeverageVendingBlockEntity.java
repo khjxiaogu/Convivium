@@ -62,9 +62,6 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 
 		@Override
 		public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
-
-			System.out.println("subupdate");
-			new Exception().printStackTrace();
 			return super.extract(index, resource, amount, transaction);
 		}
 
@@ -102,13 +99,11 @@ public class BeverageVendingBlockEntity extends CPBaseBlockEntity implements IIn
 				int extracted;
 				try(Transaction trans=Transaction.open(transaction)){
 					extracted=super.extract(index, resource, 250, trans);
-					System.out.println("trans");
 					if(!isInfinite) {
 						trans.commit();
 					}
 				}
 				if(extracted>=250) {
-					System.out.println("update");
 					BlockState nxtbs=getBlockState().setValue(BeverageVendingBlock.ACTIVE,false);
 
 					RootCommitJournal journal=new RootCommitJournal(()->getLevel().setBlockAndUpdate(getBlockPos(), nxtbs));
